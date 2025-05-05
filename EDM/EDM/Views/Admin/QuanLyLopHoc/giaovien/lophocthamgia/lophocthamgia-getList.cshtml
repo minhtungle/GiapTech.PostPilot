@@ -1,0 +1,142 @@
+﻿@using Applications.QuanLyLopHoc.Models
+@model List<tbLopHocExtend>
+
+<div class="card-body" intro-container="dulieu-container">
+    <table class="table table-hover table-bordered table-sticky w-100" id="lophocthamgia-getList" data-page-length="5">
+        <thead class="nowrap" style="white-space: nowrap !important">
+            <tr>
+                <th class="text-center">Tên lớp học</th>
+                <th class="text-center">Thông tin</th>
+
+                <th class="text-center w-5" data-orderable="false">Tác vụ</th>
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var lopHoc in Model)
+            {
+                string tenGiaoVien = string.Join(",", lopHoc.GiaoViens.Select(x => x.TenNguoiDung));
+                string tenKhachHang = string.Join(",", lopHoc.GiaoViens.Select(x => x.TenNguoiDung));
+
+                <tr id="@lopHoc.LopHoc.IdLopHoc">
+                    <td class="text-center">
+                        <span title="@lopHoc.LopHoc.TenLopHoc">@Public.Handle.TruncateString(input: lopHoc.LopHoc.TenLopHoc, maxLength: 60)</span> <br />
+                        @if (lopHoc.LopHoc.TrangThaiLopHoc == 0)
+                        {
+                            <small class="font-bold fst-italic text-danger">Đã xóa</small>
+                        }
+                        else if (lopHoc.LopHoc.TrangThaiLopHoc == 1)
+                        {
+                            <small class="font-bold fst-italic text-primary">Chưa bắt đầu</small>
+                        }
+                        else if (lopHoc.LopHoc.TrangThaiLopHoc == 2)
+                        {
+                            <small class="font-bold fst-italic text-success">Đang học</small>
+                        }
+                        else if (lopHoc.LopHoc.TrangThaiLopHoc == 3)
+                        {
+                            <small class="font-bold fst-italic text-warning">Tạm dừng</small>
+                        }
+                        else
+                        {
+                            <small class="font-bold fst-italic text-danger">Kết thúc</small>
+                        }
+                        <hr />
+                        <table class="table table-bordered table-responsive w-100">
+                            <tbody>
+                                <tr>
+                                    <td class="text-left font-bold">Giáo viên</td>
+                                    <td class="text-left ">@tenGiaoVien</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left font-bold">Khách hàng</td>
+                                    <td class="text-left ">@tenKhachHang</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        @{
+                            var ngayHomNay = DateTime.Now.Date;
+                            var buoiHocHomNay = lopHoc.BuoiHocs
+                                .FirstOrDefault(x => x.BuoiHoc.ThoiGianBatDau.Value.Date == ngayHomNay);
+                            var soBuoiDaHoc = lopHoc.BuoiHocs
+                                .Where(x => x.BuoiHoc.ThoiGianBatDau.Value.Date < ngayHomNay).Count();
+                        }
+                        <table class="table table-bordered table-responsive w-100">
+                            <tbody>
+                                <tr>
+                                    <td class="text-danger">Buổi đã qua</td>
+                                    <td class="text-center">@soBuoiDaHoc</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-success">Tổng số buổi</td>
+                                    <td class="text-center">@lopHoc.BuoiHocs.Count</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered table-responsive w-100">
+                            <tbody>
+                                <tr>
+                                    <td>Hôm nay</td>
+                                    <td>
+                                        @if (buoiHocHomNay == null)
+                                        {
+                                            <span class="font-bold text-danger">Không có lớp</span>
+                                        }
+                                        else
+                                        {
+                                            if (buoiHocHomNay.BuoiHoc.DiemDanh == 0)
+                                            {
+                                                <span class="font-bold text-danger">Chưa điểm danh</span>
+                                            }
+                                            else if (buoiHocHomNay.BuoiHoc.DiemDanh == 1)
+                                            {
+                                                <span class="font-bold text-success">Đã điểm danh</span>
+                                            }
+                                            else if (buoiHocHomNay.BuoiHoc.DiemDanh == 2)
+                                            {
+                                                <span class="font-bold text-warning">HV nghỉ không phép</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="font-bold text-warning">HV nghỉ có phép</span>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="">Ngày bắt đầu</td>
+                                    <td class="">@lopHoc.BuoiHocs.FirstOrDefault().BuoiHoc.ThoiGianBatDau.Value.ToString("dd/MM/yyyy")</td>
+                                </tr>
+                                <tr>
+                                    <td class="">Dự kiến kết thúc</td>
+                                    <td class="">@lopHoc.BuoiHocs.Last().BuoiHoc.ThoiGianBatDau.Value.ToString("dd/MM/yyyy")</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <div style="white-space: nowrap">
+                            <a class="btn btn-sm btn-light-secondary" title="Xem lịch học"
+                               onclick="quanLyLopHoc.lopHoc.lichHoc.displayModal_XemLichHoc('read',@string.Format("'{0}'", lopHoc.LopHoc.IdLopHoc))">
+                                <i class="bi bi-calendar2-check-fill"></i>
+                            </a>
+                            <a class="btn btn-sm btn-light-secondary" title="Xem lớp học"
+                               onclick="quanLyLopHoc.lopHoc.displayModal_CRUD_LopHoc('read',@string.Format("'{0}'", lopHoc.LopHoc.IdLopHoc))">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

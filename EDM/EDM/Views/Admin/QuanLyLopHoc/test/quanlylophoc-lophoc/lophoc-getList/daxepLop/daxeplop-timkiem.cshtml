@@ -1,0 +1,130 @@
+﻿@using EDM_DB
+@{
+    var loaiSanPhams = Session["LOAISANPHAMs"] as List<tbSanPham_LoaiSanPham>;
+    var giaoViens = Session["GIAOVIENs"] as List<tbNguoiDung>;
+    var khachHangs = Session["KHACHHANGs"] as List<tbKhachHang>;
+    var trinhDos = Session["TRINHDOs"] as List<tbSanPham_LoaiSanPham_TrinhDo>;
+    var sanPhams = Session["SANPHAMs"] as List<tbSanPham>;
+    var donHang_TrangThaiHocs = Session["DONHANG_TRANGTHAIHOCs"] as List<tbKhachHang_DonHang_TrangThaiHoc>;
+    var lopHoc_TrangThaiHocs = Session["LOPHOC_TRANGTHAIHOCs"] as List<tbLopHoc_TrangThaiHoc>;
+}
+<div class="row">
+    <!--Thời gian-->
+    <div class="col-sm-12 col-md-12">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="">Thời gian</label>
+                <input type="text" class="form-control monthformat" placeholder="Nhập thông tin ..."
+                       id="input-thoigian" name="input-thoigian"
+                       value="@DateTime.Now.ToString("MM/yyyy")">
+            </div>
+        </div>
+    </div>
+    <!--Tên lớp học-->
+    <div class="col-sm-12 col-md-6">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="">Tên lớp học</label>
+                <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                       id="input-tenlophoc" name="input-tenlophoc">
+            </div>
+        </div>
+    </div>
+    <!--Lớp học - Trạng thái học-->
+    <div class="col-sm-12 col-md-6">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="" for="select-lophoc-trangthaihoc">Lớp học - Trạng thái học</label>
+                <select class="form-control form-select2"
+                        id="select-lophoc-trangthaihoc" name="select-lophoc-trangthaihoc">
+                    <option selected>Chọn thông tin</option>
+                    @foreach (var trangThai in lopHoc_TrangThaiHocs)
+                    {
+                        <option value="@trangThai.IdTrangThai">
+                            @trangThai.TenTrangThai
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--Loại sản phẩm-->
+    <div class="col-sm-12 col-md-6">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="" for="select-loaisanpham">Loại sản phẩm</label>
+                <select class="form-control form-select2"
+                        id="select-loaisanpham" name="select-loaisanpham">
+                    <option selected>Chọn thông tin</option>
+                    @foreach (var loaiSanPham in loaiSanPhams)
+                    {
+                        <option value="@loaiSanPham.IdLoaiSanPham">
+                            @loaiSanPham.TenLoaiSanPham
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--Sản phẩm-->
+    <div class="col-sm-12 col-md-6">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="" for="select-sanpham">Sản phẩm</label>
+                <select class="form-control form-select2"
+                        id="select-sanpham" name="select-sanpham">
+                    <option selected>Chọn thông tin</option>
+                    @foreach (var sanPham in sanPhams)
+                    {
+                        <option value="@sanPham.IdSanPham">
+                            @sanPham.TenSanPham
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!--Giáo viên-->
+    <div class="col-sm-12 col-md-6">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="" for="select-giaovien">Giáo viên</label>
+                <select class="form-control form-select2"
+                        id="select-giaovien" name="select-giaovien">
+                    <option selected>Chọn thông tin</option>
+                    @foreach (var giaoVien in giaoViens)
+                    {
+                        <option value="@giaoVien.IdNguoiDung">
+                            @giaoVien.TenNguoiDung
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--Khách hàng-->
+    <div class="col-sm-12 col-md-6">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="" for="input-khachhang">Khách hàng</label>
+                <select class="form-control form-select2"
+                        id="select-khachhang" name="select-khachhang">
+                    <option selected>Chọn thông tin</option>
+                    @foreach (var khachHang in khachHangs)
+                    {
+                        <option value="@khachHang.IdKhachHang">
+                            @khachHang.TenKhachHang
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 py-2 text-center">
+        <button type="button" class="btn btn-sm btn-primary ml-1 button-timkiem"
+                onclick="quanLyLopHoc.lopHoc.daXepLop.locThongTin.timKiem()">
+            <span class="">Tìm kiếm</span>
+        </button>
+    </div>
+</div>

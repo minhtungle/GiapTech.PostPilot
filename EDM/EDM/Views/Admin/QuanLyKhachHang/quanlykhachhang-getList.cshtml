@@ -1,0 +1,40 @@
+﻿<div class="card-body" intro-container="dulieu-container">
+    <input id="input-quyentruycap-hangloat" value="" hidden />
+    <div class="mb-2 toggle-vis-bar" intro-container="dulieu-hienthicot">
+        Hiển thị:
+        @*<a href="#" class="toggle-vis" data-table="quanlykhachhang-getList" data-column="2">Tên khách hàng</a> |*@
+    @*<a href="#" class="toggle-vis" data-table="quanlykhachhang-getList" data-column="3">Email</a> |*@
+        <a href="#" class="toggle-vis" data-table="quanlykhachhang-getList" data-column="4">Nhân viên tư vấn</a> |
+        <a href="#" class="toggle-vis" data-table="quanlykhachhang-getList" data-column="5">Ngày tạo</a> |
+        <a href="#" class="toggle-vis" data-table="quanlykhachhang-getList" data-column="6">Ngày sửa</a>
+        @*<a href="#" class="toggle-vis" data-table="quanlykhachhang-getList" data-column="7">Tác vụ</a>*@
+    </div>
+    <table class="table table-hover table-bordered table-sticky w-100" id="quanlykhachhang-getList" data-page-length="10">
+        <thead class="nowrap" style="white-space: nowrap !important">
+            <tr>
+                <th class="text-center" data-orderable="false"></th>
+
+                <th class="text-center">Tên khách hàng</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Nhân viên tư vấn</th>
+                <th class="text-center">Ngày tạo</th>
+                <th class="text-center">Ngày sửa</th>
+
+                <th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th class="text-center"><input class="form-check-input checkAll-quanlykhachhang-getList" type="checkbox" title="Chọn tất cả" /></th>
+
+                <th intro-container="dulieu-timkiem"><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>

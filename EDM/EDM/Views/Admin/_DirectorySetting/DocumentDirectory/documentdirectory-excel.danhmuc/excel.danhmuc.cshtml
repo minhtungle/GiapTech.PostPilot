@@ -1,0 +1,52 @@
+﻿<div class="modal fade text-left" id="excel-danhmuc" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document" style="align-items: normal !important">
+        <div class="modal-content">
+            <div class="modal-header justify-content-start gap-1">
+                <!--#-->
+                <div class="btn-group btn-group-sm" role="group">
+                    <a class="btn btn-primary" title="Làm mới"><i class="bi bi-repeat"></i></a>
+                    <a class="btn btn-light-secondary" onclick="dd.excelDanhMuc.reload()">
+                        Làm mới
+                    </a>
+                    <a class="btn btn-primary" title="Thêm tệp"><i class="bi bi-upload"></i></a>
+                    <label class="btn btn-light-secondary" for="select-file">
+                        Thêm tệp
+                    </label>
+                    <input class="btn btn-success" id="select-file" type="file" accept=".xlsx, .xls" onchange="dd.excelDanhMuc.upload()" hidden>
+                    <a class="btn btn-primary" title="Tải xuống"><i class="bi bi-download"></i></a>
+                    <div class="btn-group btn-group-sm dropdown">
+                        <a class="btn btn-light-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" title="Tải xuống">
+                            Tải xuống
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" onclick="dd.excelDanhMuc.download('data')"><i class="bi bi-file-bar-graph"></i> Xuất dữ liệu <span class="text-danger">(Bản ghi đang chọn)</span></a>
+                            <a class="dropdown-item" href="#" onclick="dd.excelDanhMuc.download('no-data')"><i class="bi bi-file-earmark"></i> Tải tệp mẫu</a>
+                        </div>
+                    </div>
+                </div>
+                <!--#-->
+                <div class="btn-group btn-group-sm" role="group">
+                    <a class="btn btn-primary" title="Cập nhật trường thông tin"><i class="bi bi-pencil-square"></i></a>
+                    <a class="btn btn-light-secondary" onclick="dd.excelDanhMuc.displayModal_UpdateMultipleCell()">
+                        Cập nhật
+                    </a>
+                </div>
+            </div>
+            <div class="modal-body table-responsive" id="excel-danhmuc-getList-container"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" onclick="" hidden>
+                    @*<i class="bi bi-fast-forward d-flex d-sm-none"></i>*@
+                    <span class="">Kiểm tra</span>
+                </button>
+                <button type="button" class="btn btn-primary" onclick="dd.excelDanhMuc.saveByGroup()">
+                    @*<i class="bi bi-check d-flex d-sm-none"></i>*@
+                    <span class="">Lưu</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    @*<i class="bi bi-x d-flex d-sm-none"></i>*@
+                    <span class="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

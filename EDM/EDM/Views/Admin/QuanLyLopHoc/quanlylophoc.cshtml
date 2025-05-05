@@ -1,0 +1,132 @@
+﻿@using Public.Models
+@{
+    ViewBag.Title = "Quản lý lớp học";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+    List<ThaoTac> thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Quản lý lớp học</li>
+}
+@section styles {
+    @*<link href="~/Content/Admin/QuanLyLopHoc/quanlylophoc.css" rel="stylesheet" />*@
+}
+
+<!--Hồ sơ-->
+@if (thaoTacs.Exists(x => x.MaThaoTac == "quanlylophoc-giaodiengiaovien"))
+{
+    @section scripts {
+        <script src="~/Content/Admin/QuanLyLopHoc/_quanlylophoc.js"></script>
+        <script>
+            var quanLyLopHoc = new QuanLyLopHoc();
+            quanLyLopHoc.init();
+            quanLyLopHoc.funcs_GiaoDienQuanLy();
+            quanLyLopHoc.funcs_GiaoDienGiaoVien();
+        </script>
+    }
+    <section class="section" page-group="page-group-quanlylophoc" id="page-quanlylophoc" data-aos="fade-up">
+        <div class="card">
+            <div class="card-body">
+                @Html.Partial("~/Views/Admin/QuanLyLopHoc/giaovien/getList-tab.cshtml")
+            </div>
+        </div>
+    </section>
+}
+@if (thaoTacs.Exists(x => x.MaThaoTac == "quanlylophoc-giaodienquanly"))
+{
+    @section scripts {
+        <script src="~/Content/Admin/QuanLyLopHoc/_quanlylophoc.js"></script>
+        <script>
+            var quanLyLopHoc = new QuanLyLopHoc();
+            quanLyLopHoc.init();
+            quanLyLopHoc.funcs_GiaoDienQuanLy();
+        </script>
+    }
+    <section class="section" page-group="page-group-quanlylophoc" id="page-quanlylophoc" data-aos="fade-up">
+        <div class="card" intro-container="thanhtacvu" id="thaotac-donhang-container">
+            <div class="card-content">
+                <div class="card-body" intro-container="thaotac-coban">
+                    <div class="btn-group btn-group-sm" role="group">
+                        @{
+                            if (thaoTacs.Exists(x => x.MaThaoTac == "quanlylophoc-themmoi-lophoc"))
+                            {
+                                <!--Thêm mới-->
+                                <a class="btn btn-primary"><i class="bi bi-plus-circle-fill"></i></a>
+                                <a class="btn btn-light-secondary"
+                                   onclick="quanLyLopHoc.lopHoc.displayModal_CRUD_LopHoc('create')">
+                                    Thêm lớp học
+                                </a>
+                            }
+                            if (thaoTacs.Exists(x => x.MaThaoTac == "quanlylophoc-capnhat-lophoc"))
+                            {
+                                <!--Cập nhật-->
+                                <a class="btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
+                                <a class="btn btn-light-secondary"
+                                   onclick="quanLyLopHoc.lopHoc.displayModal_CRUD_LopHoc('update')">
+                                    Cập nhật lớp học
+                                </a>
+                            }
+                            if (thaoTacs.Exists(x => x.MaThaoTac == "quanlylophoc-xoabo-lophoc"))
+                            {
+                                <!--Xóa bỏ-->
+                                <a class="btn btn-primary"><i class="bi bi-trash3-fill"></i></a>
+                                <a class="btn btn-light-secondary"
+                                   onclick="quanLyLopHoc.lopHoc.delete('multiple')">
+                                    Xóa lớp học
+                                </a>
+                            }
+                        }
+                    </div>
+                    <div class="btn-group btn-group-sm" role="group">
+                        @{
+                            if (thaoTacs.Exists(x => x.MaThaoTac == "quanlylophoc-capnhat-lichhoc"))
+                            {
+                                <!--Cập nhật lịch học-->
+                                <a class="btn btn-primary"><i class="bi bi-calendar2-check-fill"></i></a>
+                                <a class="btn btn-light-secondary"
+                                   onclick="quanLyLopHoc.lopHoc.lichHoc.displayModal_XemLichHoc('update')">
+                                    Cập nhật lịch học
+                                </a>
+                            }
+                            if (thaoTacs.Exists(x => x.MaThaoTac == "quanlylophoc-guimail"))
+                            {
+                                <!--Gửi mail-->
+                                <a class="btn btn-primary"><i class="bi bi-envelope-paper-fill"></i></a>
+                                <a class="btn btn-light-secondary"
+                                   onclick="quanLyLopHoc.lopHoc.guiMail()">
+                                    Gửi mail
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                @Html.Partial("~/Views/Admin/QuanLyLopHoc/test/quanlylophoc-lophoc/lophoc-getList/getList-tab.cshtml")
+            </div>
+        </div>
+    </section>
+}
+<!--Tìm kiếm-->
+<!--quanlylophoc-khachhang-xemchitiet-->
+<div class="modal fade text-left" id="quanlylophoc-khachhang-xemchitiet" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--quanlylophoc-crud-->
+<div class="modal fade text-left" id="quanlylophoc-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--quanlylophoc-lichhoc-xemlichhoc-->
+<div class="modal fade text-left" id="quanlylophoc-lichhoc-xemlichhoc" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--quanlylophoc-lichhoc-taolichhoc-->
+<div class="modal fade text-left" id="quanlylophoc-lichhoc-taolichhoc" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--quanlylophoc-buoihoc-crud-->
+<div class="modal fade text-left" id="quanlylophoc-buoihoc-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--quanlylophoc-mail-->
+<div class="modal fade text-left" id="quanlylophoc-mail" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>

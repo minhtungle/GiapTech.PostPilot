@@ -1,0 +1,31 @@
+﻿<div class="card" id="tinnhan">
+    <div class="card-header">
+        <i class="bi bi-pin-angle-fill"></i> - <span class="text-danger">50</span> tin nhắn chưa đọc
+    </div>
+    <div class="card-body position-relative">
+        <a href="~/Messenger/Index" class="card-opacity bg-body">
+            <p class="fs-1"><i class="bi bi-messenger"></i></p>
+        </a>
+        <div class="row">
+            <div class="list-group" style="height: 300px; overflow-y: auto">
+                @for (int i = 0; i < 10; i++) {
+                    <a href="#" class="list-group-item list-group-item-action position-relative">
+                        <div class="position-absolute top-0 bottom-0 end-0 justify-content-center d-flex align-items-center bg-body px-2">
+                            <small><i class="bi bi-clock-history"></i> 6h</small>
+                        </div>
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">VIETTEL_4G</h5>
+                        </div>
+                        <p class="mb-1 long-text">
+                            [TB] TRỌN GÓI 10K - BAO DATA, GỌI CẢ NGÀY!<br />
+                            1. Soạn 1N gửi 191: 10K/ngày có 5GB, miễn phí gọi điện (10p/cuộc nội mạng, 5p ngoại mạng), SMS nội mạng, TV360<br />
+                            2. Soạn 3N gửi 191: 30K/3 ngày có 15GB (5GB/ngày🪱), miễn phí gọi điện (10p/cuộc nội mạng, 15p ngoại mạng), SMS nội mạng, TV360<br />
+                            Gói cước gia hạn khi hết chu kỳ.<br />
+                        </p>
+                        <small>LH 198 (0đ).</small>
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

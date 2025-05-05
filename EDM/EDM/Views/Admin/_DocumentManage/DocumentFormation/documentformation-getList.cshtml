@@ -1,0 +1,71 @@
+﻿<div class="card-body" intro-container="dulieu-container">
+    <input id="input-quyentruycap-hangloat" value="" hidden />
+    <div class="mb-2 toggle-vis-bar" intro-container="dulieu-hienthicot">
+        Hiển thị:
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="1">Nộp lưu</a> |
+        @*<a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="2">Mã hồ sơ</a> |
+            <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="3">Tiêu đề hồ sơ</a> |*@
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="4">Người tạo</a> |
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="5">Ngày tạo</a> |
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="6">Ngày sửa</a> |
+
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="7">Thời hạn bảo quản</a> |
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="8">Chế độ sử dụng</a> |
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="9">Ngôn ngữ</a> |
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="10">Thời gian BĐ</a> |
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="11">Thời gian KT</a> |
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="12">Số văn bản</a> |
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="13">Số tờ</a> |
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="14">Số trang</a> |
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="15">Tình trạng vật lý</a> |
+        <a href="#" class="toggle-vis" data-table="documentformation-getList" data-column="16">Tác vụ</a>
+    </div>
+    <table class="table table-hover table-bordered table-sticky w-100" id="documentformation-getList" data-page-length="10">
+        <thead class="nowrap" style="white-space: nowrap !important">
+            <tr>
+                <th class="text-center" data-orderable="false"></th>
+                <th class="text-center" intro-container="dulieu-tencot">Nộp lưu</th>
+                <th class="text-center">Mã hồ sơ</th>
+                <th class="text-center">Tiêu đề hồ sơ</th>
+
+                <th class="text-center">Người tạo</th>
+                <th class="text-center">Ngày tạo</th>
+                <th class="text-center">Ngày sửa</th>
+
+                <th class="text-center">Thời hạn bảo quản</th>
+                <th class="text-center">Chế độ sử dụng</th>
+                <th class="text-center">Ngôn ngữ</th>
+                <th class="text-center">Thời gian BĐ</th>
+                <th class="text-center">Thời gian KT</th>
+                <th class="text-center">Số văn bản</th>
+                <th class="text-center">Số tờ</th>
+                <th class="text-center">Số trang</th>
+                <th class="text-center">Tình trạng vật lý</th>
+                <th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th class="text-center"><input class="form-check-input checkAll-documentformation-getList" type="checkbox" title="Chọn tất cả" /></th>
+                <th intro-container="dulieu-timkiem"><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>

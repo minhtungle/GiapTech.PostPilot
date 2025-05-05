@@ -1,0 +1,77 @@
+﻿<div class="modal fade text-left" id="saoluu-vanban" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document" style="align-items: normal !important">
+        <div class="modal-content">
+            <div class="modal-header justify-content-start gap-1">
+                <!--#-->
+                <div class="btn-group btn-group-sm" role="group">
+                    <a class="btn btn-primary" title="Làm mới"><i class="bi bi-repeat"></i></a>
+                    <a class="btn btn-light-secondary" onclick="df.fileVanBan.reload()">
+                        Làm mới
+                    </a>
+                    <a class="btn btn-primary" title="Thêm tệp"><i class="bi bi-upload"></i></a>
+                    <label class="btn btn-light-secondary" for="select-file-vanban">
+                        Thêm tệp
+                    </label>
+                    <input class="btn btn-success" id="select-file-vanban" type="file" accept=".zip, .rar" onchange="df.fileVanBan.upload()" hidden>
+                    <a class="btn btn-primary" title="Tải xuống"><i class="bi bi-download"></i></a>
+                    <a class="btn btn-light-secondary" href="~/Assets/files/[Mẫu thư mục văn bản].rar">
+                        Tải xuống
+                    </a>
+                </div>
+            </div>
+            <div class="modal-body table-responsive" id="file-vanban-getList-container"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="df.fileVanBan.displayModal_HinhThucNapDuLieu()">
+                    @*<i class="bi bi-check d-flex d-sm-none"></i>*@
+                    <span class="">Chọn hình thức</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    @*<i class="bi bi-x d-flex d-sm-none"></i>*@
+                    <span class="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Hình thức nạp dữ liệu-->
+<div class="modal fade text-left" id="file-vanban-hinhthucnapdulieu" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content" style="border: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);">
+            <div class="modal-header">
+                <h5 class="modal-title">Chọn hình thức nạp dữ liệu</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p class="text-danger">Lưu ý: Hãy chắc chắn với dữ liệu vì không thể hoàn tác</p>
+                    <div class="col-12">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <select class="form-control" id="select-hinhthucnapdulieu">
+                                    @*<option value="themmoi&capnhat" disabled>
+                                        THÊM MỚI & CẬP NHẬT
+                                    </option>
+                                    <option value="themmoi" disabled>
+                                        THÊM MỚI - Không thay đổi các bản ghi đã tồn tại
+                                    </option>*@
+                                    <option value="capnhat" selected>
+                                        CẬP NHẬT - Chỉ thay đổi các bản ghi đã tồn tại
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="df.fileVanBan.saveByGroup()">
+                    @*<i class="bi bi-check d-flex d-sm-none"></i>*@
+                    <span class="">Lưu</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    @*<i class="bi bi-x d-flex d-sm-none"></i>*@
+                    <span class="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

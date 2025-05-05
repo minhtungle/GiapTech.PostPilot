@@ -1,0 +1,82 @@
+﻿@using Public.Models
+@{
+    ViewBag.Title = "Quản lý lương";
+    List<ThaoTac> thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Quản lý lương</li>
+}
+@section styles {
+    @*<link href="~/Content/Admin/QuanLyLuong/quanlyluong.css" rel="stylesheet" />*@
+}
+@section scripts {
+    <script src="~/Content/Admin/QuanLyLuong/quanlyluong.js"></script>
+    <script>
+        var quanLyLuong = new QuanLyLuong();
+        quanLyLuong.init();
+    </script>
+}
+<section claưss="section" page-group="page-group-quanlyluong" id="page-quanlyluong" data-aos="fade-up">
+    <div class="card" intro-container="thanhtacvu">
+        <div class="card-body" intro-container="thaotac-coban">
+            <div class="btn-group btn-group-sm" role="group">
+                @{
+                    if (thaoTacs.Exists(x => x.MaThaoTac == "quanlyluong-tinhtongluong"))
+                    {
+                        <!--Tính tổng lương-->
+                        <a class="btn btn-primary"><i class="bi bi-plus-circle-fill"></i></a>
+                        <a class="btn btn-light-secondary"
+                           onclick="quanLyLuong.nguoiDung.displayModal_TinhTongLuong()">
+                            Tính tổng lương
+                        </a>
+                    }
+                    if (thaoTacs.Exists(x => x.MaThaoTac == "quanlyluong-guimail"))
+                    {
+                        <!--Gửi mail-->
+                        <a class="btn btn-primary"><i class="bi bi-send-fill"></i></a>
+                        <a class="btn btn-light-secondary"
+                           onclick="quanLyLuong.nguoiDung.guiMail('multiple')">
+                            Gửi mail
+                        </a>
+                    }
+                }
+            </div>
+            <div class="btn-group btn-group-sm float-end" role="group">
+                <!--Tìm kiếm-->
+                <a class="btn btn-primary"><i class="bi bi-search"></i></a>
+                <a class="btn btn-light-secondary"
+                   onclick="quanLyLuong.locThongTin.displayModal_TimKiem()">
+                    Tìm kiếm
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="list-group list-group-horizontal mb-1 text-center  col-md-6 col-sm-12 justify-content-sm-start justify-content-center" id="hinhthuccapnhat" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="danhsachnhanvien-list"
+                   data-bs-toggle="list" href="#danhsachnhanvien-container" role="tab">Danh sách nhân viên</a>
+                <a class="list-group-item list-group-item-action" id="tinhluong-list"
+                   data-bs-toggle="list" href="#tinhluong-container" role="tab">Tính lương</a>
+            </div>
+            <div class="tab-content text-justify">
+                <div class="tab-pane fade show active" id="danhsachnhanvien-container" role="tabpanel"
+                     aria-labelledby="danhsachnhanvien-list">
+                    @Html.Partial("~/Views/Admin/QuanLyLuong/quanlyluong-nguoidung.getList.cshtml")
+                </div>
+                <div class="tab-pane fade" id="tinhluong-container" role="tabpanel"
+                     aria-labelledby="tinhluong-list"></div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--quanlyluong-crud-->
+<div class="modal fade text-left" id="quanlyluong-xemchitiet-nguoidung" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--quanlyluong-tinhtongluong-->
+<div class="modal fade text-left" id="tinhtongluong-nguoidung" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+@Html.Partial("~/Views/Admin/QuanLyLuong/quanlyluong-timkiem/timkiem.cshtml")

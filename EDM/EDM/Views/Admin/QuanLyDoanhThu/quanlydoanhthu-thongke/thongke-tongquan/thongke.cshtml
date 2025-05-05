@@ -1,0 +1,170 @@
+﻿@using EDM_DB
+@model Applications.QuanLyDoanhThu.Dtos.ThongKeTongQuanOutput_Dto
+
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-8">
+        <canvas id="chart-theonam-container"></canvas>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-4">
+        <table class="table table-hover table-bordered w-100">
+            <thead>
+                <tr>
+                    <th colspan="2" class="font-bold">💵 Doanh thu</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Doanh thu mục tiêu</td>
+                    <td><span class="text-danger">@Public.Handle.FormatCurrency(amount: Model.DoanhThuMucTieu)</span></td>
+                </tr>
+                <tr>
+                    <td>Doanh thu thực tế</td>
+                    <td><span class="text-danger">@Public.Handle.FormatCurrency(amount: Model.DoanhThuThucTe)</span></td>
+                </tr>
+                <tr>
+                    <td>Doanh thu tiếng Anh</td>
+                    <td><span class="text-danger">@Public.Handle.FormatCurrency(amount: Model.DoanhThuTiengAnh)</span></td>
+                </tr>
+                <tr>
+                    <td>Doanh thu tiếng Đức</td>
+                    <td><span class="text-danger">@Public.Handle.FormatCurrency(amount: Model.DoanhThuTiengDuc)</span></td>
+                </tr>
+                <tr>
+                    <td>Phần trăm hoàn thiện mục tiêu</td>
+                    <td><span class="text-danger">@Model.PhanTramHoanThanhMucTieu %</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-hover table-bordered w-100">
+            <thead>
+                <tr>
+                    <th colspan="2" class="font-bold">🏆 Nhân viên kinh doanh</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Top 3 doanh thu</td>
+                    <td>
+                        <ul>
+                            @foreach (var nvkd in Model.NVKD_TopDoanhThu)
+                            {
+                                <li>
+                                    @nvkd.NguoiDung.TenNguoiDung <br />
+                                    💰 <small class="text-danger">@Public.Handle.FormatCurrency(amount: nvkd.TongDoanhThu)</small>
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-sm-12 col-md-8">
+        <table class="table table-hover table-bordered w-100">
+            <thead>
+                <tr>
+                    <th colspan="4" class="font-bold">👫 Khách hàng & Đơn hàng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Số lượng đơn hàng</td>
+                    <td>@Model.SoLuongDonHang</td>
+                    <td>Số lượng thanh toán</td>
+                    <td>@Model.SoLuongThanhToan</td>
+                </tr>
+                <tr>
+                    <td>Số lượng khách hàng mới</td>
+                    <td>@Model.SoLuongKhachHangMoi</td>
+                    <td>Số lượng khách hàng upsell</td>
+                    <td>@Model.SoLuongKhachHangUpSell</td>
+                </tr>
+                <tr>
+                    <td>Số lượng khách hàng học thử</td>
+                    <td>@Model.SoLuongKhachHangHocThu</td>
+                    <td>Số lượng khách hàng học chính</td>
+                    <td>@Model.SoLuongKhachHangHocChinh</td>
+                </tr>
+                <tr>
+                    <td>Số lượng khách hàng học thử sang học chính</td>
+                    <td>@Model.SoLuongKhachHangHocThuSangHocChinh</td>
+                    <td>Số lượng khách hàng chưa đăng ký học</td>
+                    <td>@Model.SoLuongKhachHangChuaDangKyHoc</td>
+                </tr>
+                <tr>
+                    <td>Số lượng khách hàng đang học</td>
+                    <td>@Model.SoLuongKhachHangDangHoc</td>
+                    <td>Số lượng khách hàng đã học xong</td>
+                    <td>@Model.SoLuongKhachHangDaHocXong</td>
+                </tr>
+                <tr>
+                    <td>Số lượng khách hàng thanh toán nhiều lần/một đơn hàng</td>
+                    <td>@Model.SoLuongKhachHangThanhToanNhieuLanTrenMotDonHang</td>
+                    <td>Số lượng khách hàng thanh toán trọn gói</td>
+                    <td>@Model.SoLuongKhachHangThanhToanTronGoi</td>
+                </tr>
+                <tr>
+                    <td>Phần trăm thanh toán nhiều lần</td>
+                    <td>@Model.PhanTramThanhToanNhieuLan %</td>
+                    <td>Phần trăm upsell chung</td>
+                    <td>@Model.PhanTramUpSellChung %</td>
+                </tr>
+                <tr>
+                    <td>Phần trăm khách hàng học thử sang học chính</td>
+                    <td>@Model.PhanTramKhachHang_HocThuSangHocChinh %</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <table class="table table-hover table-bordered w-100">
+            <thead>
+                <tr>
+                    <th colspan="2" class="font-bold">📦 Sản phẩm</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Số lượng sản phẩm tiếng Anh</td>
+                    <td>@Model.SoLuongSanPham_TiengAnh</td>
+                </tr>
+                <tr>
+                    <td>Số lượng sản phẩm tiếng Đức</td>
+                    <td>@Model.SoLuongSanPham_TiengDuc</td>
+                </tr>
+                <tr>
+                    <td>Top 3 sản phẩm bán chạy</td>
+                    <td>
+                        <ul>
+                            @foreach (var sp in Model.SanPham_BanChay)
+                            {
+                                <li>
+                                    @sp.SanPham.TenSanPham <br />
+                                    📚 <small class="text-danger">@sp.SoLuongDaBan</small> sản phẩm
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Top 3 sản phẩm doanh thu cao nhất</td>
+                    <td>
+                        <ul>
+                            @foreach (var sp in Model.SanPham_TopDoanhThu)
+                            {
+                                <li>
+                                    @sp.SanPham.TenSanPham <br>
+                                    💰 <small class="text-danger">@Public.Handle.FormatCurrency(amount: sp.TongDoanhThu)</small>
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

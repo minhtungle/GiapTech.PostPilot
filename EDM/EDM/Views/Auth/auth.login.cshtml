@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Auth/auth.cshtml";
+}
+<h1 class="auth-title">Đăng nhập</h1>
+<p class="auth-subtitle mb-5 text-white-50">Truy cập hệ thống dưới tư cách quản trị viên</p>
+
+<div class="form-group position-relative has-icon-left mb-4">
+    <input type="text" class="form-control form-control-xl" id="input-tendangnhap" placeholder="Tên đăng nhập ...">
+    <div class="form-control-icon"><i class="bi bi-person"></i></div>
+</div>
+<div class="form-group position-relative has-icon-left mb-4">
+    <input type="password" class="form-control form-control-xl" id="input-matkhau" placeholder="Mật khẩu ...">
+    <div class="form-control-icon"><i class="bi bi-key"></i></div>
+</div>
+
+<div class="form-check form-check-lg d-flex align-items-end">
+    <input class="form-check-input me-2" type="checkbox" value="" id="input-ghinho">
+    <label class="form-check-label text-white" for="rememberMe">
+        Ghi nhớ mật khẩu
+    </label>
+</div>
+<hr class="text-white-50" />
+<button type="button" class="btn btn-primary btn-block btn-lg mt-5 btn-submit box-shadow" onclick="auth.login()">Đăng nhập</button>
+<div class="text-center mt-5 text-lg fs-4">
+    <p class="text-white-50" hidden>
+        Chưa có tài khoản ? <a href="~/Auth/Register" class="font-bold text-white">Đăng ký</a>.
+    </p>
+    <p class="text-white-50"><a class="font-bold text-white" href="~/Auth/Forgot">Quên mật khẩu</a>.</p>
+</div>

@@ -1,0 +1,57 @@
+﻿@using DocumentFormation.Models
+@{
+    tbHoSoExtend hoSo = Session["HOSO"] as tbHoSoExtend;
+}
+<div class="card-body">
+    <table class="table table-hover table-bordered table-sticky w-100 nowrap" id="vanban-getList" data-page-length="10">
+        <thead>
+            <tr>
+                <th class="text-center" data-orderable="false"></th>
+                <th class="text-center">Tên văn bản</th>
+                <th class="text-center">Tên biểu mẫu</th>
+                @*<th class="text-center" data-orderable="false">Xuất tệp</th>*@
+                <th class="text-center" data-orderable="false">Tác vụ</th>
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th class="text-center"><input class="form-check-input checkAll-vanban-getList" type="checkbox" title="Chọn tất cả" /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                @*<th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>*@
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+            </tr>
+        </tfoot>
+        @foreach (tbHoSo_VanBanExtend vanBan in hoSo.VanBans)
+        {
+            string tenVanBan = vanBan.TenVanBan != null ? vanBan.TenVanBan_BanDau : vanBan.TenVanBan;
+            <tr data-duongdanvanban="@vanBan.DuongDan" id="@vanBan.IdVanBan">
+                <td class="text-center"><input class="form-check-input checkRow-vanban-getList" type="checkbox" /></td>
+                <td>@string.Format("{0}{1}", tenVanBan, vanBan.Loai)</td>
+                <td class="text-center">
+                    @{
+                        string tenBieuMau = vanBan.BieuMau.TenBieuMau != null ? vanBan.BieuMau.TenBieuMau : string.Empty;
+                        <span class="badge @(tenBieuMau != string.Empty ? "bg-success" : "bg-danger")">
+                            @(tenBieuMau != string.Empty ? tenBieuMau : "Chưa có")
+                        </span>
+                    }
+                </td>
+                <td class="text-center">
+                    @if (hoSo.TrangThai == 1)
+                    {
+                        <a href="#" class="btn btn-sm btn-success" title="Số hóa" onclick="dd.vanBan.displayModal_Digitizing(@hoSo.IdHoSo , 'create', @vanBan.IdVanBan)"><i class="bi bi-cloud-arrow-up-fill"></i></a>
+                        if (!vanBan.Loai.Contains("mp4"))
+                        {
+                            <a class="btn btn-sm btn-primary" title="Ký số" onclick="dd.kySo.exc_sign_approved(@("'" + vanBan.DuongDan + "'"))"><i class="bi bi-shield-fill-check"></i></a>
+                        }
+                        <a href="#" class="btn btn-sm btn-danger" title="Xóa bỏ" onclick="dd.vanBan.delete('single', @vanBan.IdVanBan)"><i class="bi bi-trash3-fill"></i></a>
+                    }
+                    else
+                    {
+                        <a href="#" class="btn btn-sm btn-warning" title="Xem" onclick="dd.vanBan.displayModal_Digitizing(@hoSo.IdHoSo, 'read', @vanBan.IdVanBan)"><i class="bi bi-eye-fill"></i></a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

@@ -1,0 +1,113 @@
+﻿@using Public.Extensions
+@using Public.Enums
+@model Applications.QuanLyLopHoc.Dtos.DisplayModal_XemLichHoc_Output_Dto
+@{
+    string loai = Model.Loai;
+    var lopHoc = Model.LopHoc;
+    List<string> loaiThaoTac_Disabled = new List<string> { "read", "diemdanh" };
+    List<string> loaiThaoTac_Disabled_2 = new List<string> { "create" };
+}
+<div class="modal-dialog modal-dialog-scrollable modal-full" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title col-md-6 col-sm-12 my-2">
+                @(loai == "create" ? "Thêm mới" : loai == "update" ? "Cập nhật" : "Xem chi tiết")
+                <a class="text-warning c-pointer p-1" data-bs-toggle="tooltip" data-bs-placement="right" title="Nhấn xem hướng dẫn"
+                   data-hint="Nhấn xem hướng dẫn" data-hint-position="top-left"
+                   onclick="huongDanSuDung.kichHoat('lophoc-themmoi')"><i class="bi bi-lightbulb fs-6"></i></a>
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="row" intro-container="thongtin-chung">
+                <div class="col-sm-12 col-md-12">
+                    <div class="row" id="thongtinchung-container">
+                        <!--Id-->
+                        <input id="input-idlophoc" value="@lopHoc.LopHoc.IdLopHoc" hidden />
+                        <!--Tên lớp học-->
+                        <div class="col-12 col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="required" for="input-tenlophoc">Tên lớp học</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                           id="input-tenlophoc" name="input-tenlophoc"
+                                           @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")
+                                           value="@(lopHoc.LopHoc.TenLopHoc ?? "")" required>
+                                    @* <input type="checkbox" class="form-check-input" id="checkbox-tenlophoc" style="position: absolute; z-index: 1; right: .6rem; top: 2rem;" onchange="quanLyLopHoc.choPhepTrungTenLopHoc(this, $('#input-tenlophoc'))" @(loai == "read" ? "disabled" : "") />*@
+                                    <div class="invalid-feedback feedback" for="input-tenlophoc">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Nền tảng học-->
+                        <div class="col-12 col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="required" for="input-nentanghoc">Nền tảng học</label>
+                                    <select class="form-control form-select2"
+                                            id="select-nentanghoc" name="select-nentanghoc"
+                                            @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>
+                                        <option disabled>Chọn thông tin</option>
+                                        <option value="Zoom" @(lopHoc.LopHoc.NenTangHoc == "Zoom" ? "selected" : "")>Zoom</option>
+                                        <option value="GG Meet" @(lopHoc.LopHoc.NenTangHoc == "GG Meet" ? "selected" : "")>GG Meet</option>
+                                        <option value="Skype" @(lopHoc.LopHoc.NenTangHoc == "Skype" ? "selected" : "")>Skype</option>
+                                        <option value="Mess" @(lopHoc.LopHoc.NenTangHoc == "Mess" ? "selected" : "")>Mess</option>
+                                    </select>
+                                    <div class="invalid-feedback feedback" for="input-nentanghoc">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Số buổi-->
+                        <div class="col-12 col-sm-12 col-md-12" hidden>
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="required" for="input-sobuoi">Số buổi</label>
+                                    <div class="input-group mb-3">
+                                        <input type="number" class="form-control" placeholder="Nhập thông tin ..."
+                                               id="input-sobuoi" name="input-sobuoi"
+                                               value="@(lopHoc.LopHoc.SoBuoi)" @(loai == "read" ? "disabled" : "")>
+                                        <span class="input-group-text">Đề xuất: &nbsp;<span class="text-danger" id="input-sobuoi-dexuat">0</span></span>
+                                    </div>
+                                    <div class="invalid-feedback feedback" for="input-sobuoi">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Ghi chú-->
+                        <div class="col-12 col-sm-12 col-md-12">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label for="input-ghichu">Ghi chú</label>
+                                    @{
+                                        string placeholder = $@"Thông tin cần lưu ý của lớp học:
+- Trình độ
+- Lịch học
+- ...";
+                            <textarea class="form-control min-h-50 max-h-100" id="input-ghichu" rows="2"
+                                      title="@placeholder"
+                                      placeholder="@placeholder"
+                                      @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")>@(lopHoc.LopHoc.GhiChu ?? "")</textarea>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    @Html.Partial("~/Views/Admin/QuanLyLopHoc/test/quanlylophoc-lophoc/lophoc-crud-tab.cshtml", Model)
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            @if (loai != "read")
+            {
+                <button type="button" class="btn btn-primary ml-1" onclick="quanLyLopHoc.lopHoc.save(@string.Format("'{0}'", loai))">
+                    <span class="">Lưu</span>
+                </button>
+            }
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

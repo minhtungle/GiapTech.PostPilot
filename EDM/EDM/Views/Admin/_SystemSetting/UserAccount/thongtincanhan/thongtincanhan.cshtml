@@ -1,0 +1,26 @@
+﻿@using UserType.Models
+@{
+    ViewBag.Title = "Thông tin cá nhân";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Thông tin cá nhân</li>
+}
+@section scripts {
+    <script src="~/Content/Admin/_SystemSetting/UserAccount/thongtincanhan.js"></script>
+    <script src="~/Content/Auth/doiMatKhau.js"></script>
+    <script>
+        var thongTinCaNhan = new ThongTinCaNhan();
+        thongTinCaNhan.init();
+    </script>
+}
+<section class="section" id="page-thongtincanhan" data-aos="fade-up">
+    <div class="card" id="thongtincanhan-crud">
+    </div>
+
+    <div class="card">
+        @Html.Partial("~/Views/Admin/_SystemSetting/UserAccount/thongtincanhan/thongtincanhan-getList.cshtml")
+    </div>
+</section>

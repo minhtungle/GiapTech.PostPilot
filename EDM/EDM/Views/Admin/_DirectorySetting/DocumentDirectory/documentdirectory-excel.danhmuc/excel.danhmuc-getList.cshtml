@@ -1,0 +1,132 @@
+﻿@using DocumentDirectory.Models;
+@using EDM_DB
+@{
+    List<tbDanhMucHoSoExtend> EXCEL_DANHMUCs_UPLOAD = Session["EXCEL_DANHMUCs_UPLOAD"] as List<tbDanhMucHoSoExtend>;
+    int EXCEL_DANHMUCs_UPLOAD_COUNT = EXCEL_DANHMUCs_UPLOAD.Count;
+    List<tbDonViSuDung_PhongLuuTru> PHONGLUUTRUS = Session["PHONGLUUTRUS"] as List<tbDonViSuDung_PhongLuuTru>;
+}
+<div class="row">
+    <div class="@(EXCEL_DANHMUCs_UPLOAD_COUNT == 0 ? "col-12": "col-sm-12 col-md-5 col-lg-6")">
+        <table class="table table-hover table-bordered w-100 nowrap" id="excel-danhmuc-getList" data-page-length="10" data-order="[[ 1, &quot;desc&quot; ]]">
+            <thead>
+                <tr>
+                    <th class="text-center" data-orderable="false">
+                        <a href="#" class="btn btn-sm btn-success" title="Thêm" onclick="dd.excelDanhMuc.createRow()" hidden><i class="bi bi-plus-square-fill"></i></a>
+                        <a href="#" class="btn btn-sm btn-danger" title="Xóa" onclick="dd.excelDanhMuc.deleteRow()"><i class="bi bi-trash3-fill"></i></a>
+                    </th>
+                    <th class="text-center text-danger" style="min-width: 10rem!important">KIỂM TRA</th>
+                    <th class="text-center" style="min-width: 10rem!important">Tên danh mục</th>
+                    <th class="text-center" style="min-width: 10rem!important">Tên danh mục cha</th>
+                </tr>
+            </thead>
+            <tfoot class="show-footer-above">
+                <tr>
+                    <th class="text-center"><input class="form-check-input checkAll-excel-danhmuc-getList" type="checkbox" title="Chọn tất cả" /></th>
+                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @for (int i = 0; i < EXCEL_DANHMUCs_UPLOAD_COUNT; i++) {
+                    tbDanhMucHoSoExtend danhMuc = EXCEL_DANHMUCs_UPLOAD[i];
+                    <tr row="@i" onclick="dd.excelDanhMuc.readRow(this)">
+                        <td class="text-center"><input class="form-check-input checkRow-excel-danhmuc-getList" type="checkbox" /></td>
+                        <td class="text-center">
+                            @{
+                                string className = "";
+                                if (danhMuc.KiemTraExcel.TrangThai == 0) {
+                                    className = "bg-danger";
+                                } else if (danhMuc.KiemTraExcel.TrangThai == 1) {
+                                    className = "bg-success";
+                                } else {
+                                    className = "bg-warning";
+                                }
+                            }
+                            <span class="badge @className" data-tentruong="TrangThaiKiemTra">@danhMuc.KiemTraExcel.KetQua</span>
+                        </td>
+                        <!--Tên danh mục-->
+                        <td class="" style="vertical-align: top;">
+                            <span data-tentruong="TenDanhMuc" for="input-tendanhmuc">@danhMuc.TenDanhMucHoSo</span>
+                        </td>
+                        <!--Tên danh mục cha-->
+                        <td class="" style="vertical-align: top;">
+                            <span data-tentruong="TenDanhMucCha" for="input-tendanhmuccha">@danhMuc.DanhMucCha.TenDanhMucHoSo</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (EXCEL_DANHMUCs_UPLOAD_COUNT > 0) {
+        <div class="col-sm-12 col-md-7 col-lg-6" id="excel-danhmuc-read-container" style="overflow-y: scroll; border: 1px solid #d3d3d35c;">
+            @for (int i = 0; i < EXCEL_DANHMUCs_UPLOAD_COUNT; i++) {
+                tbDanhMucHoSoExtend danhMuc = EXCEL_DANHMUCs_UPLOAD[i];
+                <div class="row excel-danhmuc-read" row="@i">
+                    <div class="col-12 border-1">
+                        <div class="divider divider-left">
+                            <div class="divider-text text-uppercase">
+                                <i class="bi bi-caret-right-fill"></i> Thông tin chung
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <span class="font-bold text-danger text-uppercase">Lưu ý:</span> Người dùng chủ động xóa bỏ đầu mục số thứ tự của danh mục cha
+                                    <span class="fst-italic font-bold">[1. Danh mục => Danh mục]</span>
+                                </div>
+                            </div>
+                            <!--Tên danh mục cha-->
+                            <div class="col-12">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="" for="input-tendanhmuccha">Tên danh mục cha</label>
+                                        <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                               id="input-tendanhmuccha" name="input-tendanhmuccha"
+                                               value="@(danhMuc.DanhMucCha.TenDanhMucHoSo ?? "")" onkeyup="dd.excelDanhMuc.updateSingleCell(this)">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Tên danh mục-->
+                            <div class="col-12 col-sm-12 col-md-6">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="input-tendanhmuc">Tên danh mục</label>
+                                        <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                               id="input-tendanhmuc" name="input-tendanhmuc"
+                                               value="@(danhMuc.TenDanhMucHoSo ?? "")" onkeyup="dd.excelDanhMuc.updateSingleCell(this)" required>
+                                        <div class="invalid-feedback feedback" for="input-tendanhmuc">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Phông lưu trữ-->
+                            <div class="col-12 col-sm-12 col-md-6">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="select-phongluutru">Phông lưu trữ</label>
+                                        <select class="form-control"
+                                                id="select-phongluutru" name="select-phongluutru" required>
+                                            @foreach (var phong in PHONGLUUTRUS) {
+                                                <option value="@phong.IdPhongLuuTru" @(phong.IdPhongLuuTru == danhMuc.IdPhongLuuTru ? "selected" : "")>@phong.TenPhongLuuTru</option>
+                                            }
+                                        </select>
+                                        <div class="invalid-feedback feedback" for="select-phongluutru">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Ghi chú-->
+                            <div class="col-12">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-ghichu">Ghi chú</label>
+                                        <textarea class="form-control min-h-100 max-h-200" id="input-ghichu" rows="3">@(danhMuc.GhiChu ?? "")</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

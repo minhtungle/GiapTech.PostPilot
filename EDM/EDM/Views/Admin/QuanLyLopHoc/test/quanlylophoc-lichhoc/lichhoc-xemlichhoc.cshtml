@@ -1,0 +1,113 @@
+﻿@using Public.Extensions
+@using Public.Enums
+@model Applications.QuanLyLopHoc.Dtos.DisplayModal_XemLichHoc_Output_Dto
+@{
+    string loai = Model.Loai;
+    var lopHoc = Model.LopHoc;
+    List<string> loaiThaoTac_Disabled = new List<string> { "read", "diemdanh" };
+    List<string> loaiThaoTac_Disabled_2 = new List<string> { "create" };
+
+    int soLuongBuoi_ChuaDiemDanh = lopHoc.BuoiHocs.Where(x => x.BuoiHoc.DiemDanh == 0).Count();
+    int soLuongBuoi_DaDiemDanh = lopHoc.BuoiHocs.Where(x => x.BuoiHoc.DiemDanh == 1).Count();
+    int soLuongBuoi_HVNghiKhongPhep = lopHoc.BuoiHocs.Where(x => x.BuoiHoc.DiemDanh == 2).Count();
+    int soLuongBuoi_HVNghiCoPhep = lopHoc.BuoiHocs.Where(x => x.BuoiHoc.DiemDanh == 3).Count();
+    int soLuongChuaHoc = lopHoc.BuoiHocs.Where(x => x.BuoiHoc.TrangThai == 1).Count();
+
+    string chuaDiemDanh = EnumExtensions.GetDescription<TrangThaiDiemDanhEnum>(tenTrangThai: "ChuaDiemDanh");
+    string daDiemDanh = EnumExtensions.GetDescription<TrangThaiDiemDanhEnum>(tenTrangThai: "DaDiemDanh");
+    string hocVienNghiKhongPhep = EnumExtensions.GetDescription<TrangThaiDiemDanhEnum>(tenTrangThai: "HocVienNghiKhongPhep");
+    string hocVienNghiCoPhep = EnumExtensions.GetDescription<TrangThaiDiemDanhEnum>(tenTrangThai: "HocVienNghiCoPhep");
+}
+<div class="modal-dialog modal-dialog-scrollable modal-full" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title col-md-6 col-sm-12 my-2">
+                Lịch học
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <!--Id-->
+                <input id="input-idlophoc" value="@lopHoc.LopHoc.IdLopHoc" hidden />
+                <!--Lịch học-->
+                <div class="col-sm-12 col-md-4">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <table class="table table-hover table-bordered table-responsive w-100 mt-2" id="table-lichhoc">
+                                <tbody>
+                                    <tr>
+                                        <td class="font-bold" rowspan="2">Buổi đã học</td>
+                                        <td class="text-danger">
+                                            @chuaDiemDanh
+                                        </td>
+                                        <td class="text-center">@soLuongBuoi_ChuaDiemDanh</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-success">
+                                            @daDiemDanh
+                                        </td>
+                                        <td class="text-center">@soLuongBuoi_DaDiemDanh</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold" colspan="2">
+                                            @hocVienNghiKhongPhep
+                                        </td>
+                                        <td class="text-center">@soLuongBuoi_HVNghiKhongPhep</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold" colspan="2">
+                                            @hocVienNghiCoPhep
+                                        </td>
+                                        <td class="text-center">@soLuongBuoi_HVNghiCoPhep</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold" colspan="2">Tổng số buổi</td>
+                                        <td class="text-center font-bold text-danger">@(lopHoc.LopHoc.SoBuoi ?? 0)</td>
+                                    </tr>
+                                    @*<tr>
+                                            <td class="text-center" colspan="3">
+                                                <div class="col-12 col-sm-12 col-md-12 text-center"></div>
+                                            </td>
+                                        </tr>*@
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-8" id="lichhoc-container">
+                    @Html.Partial("~/Views/Admin/QuanLyLopHoc/test/quanlylophoc-lichhoc/lichhoc-getList.cshtml", Model)
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            @if (loai != "read")
+            {
+                <!--<div class="dropdown">
+                    <button type="button" class="w-100 btn btn-outline-primary dropdown-toggle" dropdown-toggle" data-bs-toggle="dropdown">
+                        Cập nhật lịch học
+                    </button>
+                    <div class="dropdown-menu" style="border: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);">
+                        <a class="dropdown-item c-pointer thembuoihoc"
+                           onclick="quanLyLopHoc.lopHoc.lichHoc.displayModal_TaoLichHoc(@string.Format("'{0}'", lopHoc.LopHoc.IdLopHoc))">Thêm buổi học</a>-->
+                        @*<a class="dropdown-item c-pointer capnhatbuoihoc"
+                            onclick="quanLyLopHoc.lopHoc.lichHoc.displayModal_CapNhatBuoiHoc(@string.Format("'{0}'", lopHoc.LopHoc.IdLopHoc))">Cập nhật buổi học</a>*@
+                        <!--<a class="dropdown-item c-pointer xoabuoihoc"
+                           onclick="quanLyLopHoc.lopHoc.lichHoc.displayModal_XoaBuoiHoc(@string.Format("'{0}'", lopHoc.LopHoc.IdLopHoc))">Xóa buổi học</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button type="button" class="w-100 btn btn-outline-primary dropdown-toggle" dropdown-toggle" data-bs-toggle="dropdown">
+                        Cập nhật lớp học
+                    </button>
+                    <div class="dropdown-menu" style="border: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);">
+                        <a class="dropdown-item c-pointer tachlop" onclick="">Tách lớp</a>
+                        <a class="dropdown-item c-pointer goplop" onclick="">Gộp lớp</a>
+                    </div>
+                </div>-->
+            }
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

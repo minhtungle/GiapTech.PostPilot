@@ -1,0 +1,125 @@
+﻿@{
+    ViewBag.Title = "Quên mật khẩu";
+    Layout = "~/Views/Auth/auth.cshtml";
+}
+<h1 class="auth-title">Quên mật khẩu</h1>
+<p class="auth-subtitle mb-5 text-white-50">Gửi yêu cầu lấy lại tài khoản quản trị viên hệ thống</p>
+
+<div class="row" id="form-forgot">
+    <div class="col-12" id="thongtin-container">
+        <div class="row">
+            <div class="col-12">
+                <div class="position-relative">
+                    <div class="form-group position-relative has-icon-left mb-4">
+                        <input type="text" class="form-control form-control-xl" placeholder="Tên đăng nhập ..."
+                               id="input-tendangnhap" name="input-tendangnhap" required>
+                        <div class="form-control-icon"><i class="bi bi-person"></i></div>
+                        <div class="invalid-feedback feedback" for="input-tendangnhap">Không được để trống</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="position-relative">
+                    <div class="form-group position-relative has-icon-left mb-4">
+                        <input type="text" class="form-control form-control-xl" placeholder="Email ..."
+                               id="input-email" name="input-email" required>
+                        <div class="form-control-icon"><i class="bi bi-mailbox"></i></div>
+                        <div class="invalid-feedback feedback" for="input-email">Không được để trống</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="position-relative">
+                    <div class="form-group position-relative has-icon-left mb-4">
+                        <input type="text" class="form-control form-control-xl" placeholder="Mã xác thực ..."
+                               id="input-maxacthuc" name="input-maxacthuc" onkeyup="auth.kiemTraMaXacThuc(this)">
+                        <div class="form-control-icon"><i class="bi bi-shield-lock"></i></div>
+                        <div class="invalid-feedback feedback" for="input-maxacthuc">Không được để trống</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="text-white-50" />
+    <div class="col-12" id="matkhaumoi-container" style="display: none;">
+        <div class="row">
+            <div class="col-12">
+                <div class="position-relative">
+                    <div class="form-group position-relative has-icon-left mb-4">
+                        <input type="password" class="form-control form-control-xl" placeholder="Mật khẩu mới ..."
+                               id="input-matkhau-moi" name="input-matkhau-moi" required>
+                        <div class="form-control-icon"><i class="bi bi-keyboard"></i></div>
+                        <div class="invalid-feedback feedback" for="input-matkhau-moi">Không được để trống</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="position-relative">
+                    <div class="form-group position-relative has-icon-left mb-4">
+                        <input type="password" class="form-control form-control-xl" placeholder="Nhập lại mật khẩu mới ..."
+                               id="input-matkhau-moi-xacnhan" name="input-matkhau-moi-xacnhan" required>
+                        <div class="form-control-icon"><i class="bi bi-keyboard"></i></div>
+                        <div class="invalid-feedback feedback" for="input-matkhau-moi-xacnhan">Không được để trống</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="text-white-50" />
+    </div>
+    <div class="col-12 mb-4">
+        <div class="row">
+            <div class="col-sm-12 col-lg-6">
+                <div class="form-check form-check-lg d-flex align-items-end">
+                    <input class="form-check-input form-check-success me-2" type="checkbox" id="input-check-dodaitoithieu" disabled>
+                    <label class="form-check-label text-white">
+                        Độ dài tối thiểu 8 ký tự
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <div class="form-check form-check-lg d-flex align-items-end">
+                    <input class="form-check-input form-check-success me-2" type="checkbox" id="input-check-inthuong" disabled>
+                    <label class="form-check-label text-white">
+                        Phải chứa ký tự in thường
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <div class="form-check form-check-lg d-flex align-items-end">
+                    <input class="form-check-input form-check-success me-2" type="checkbox" id="input-check-inhoa" disabled>
+                    <label class="form-check-label text-white">
+                        Phải chứa ký tự in hoa
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <div class="form-check form-check-lg d-flex align-items-end">
+                    <input class="form-check-input form-check-success me-2" type="checkbox" id="input-check-kytuso" disabled>
+                    <label class="form-check-label text-white">
+                        Phải chứa ký tự số
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-6">
+                <div class="form-check form-check-lg d-flex align-items-end">
+                    <input class="form-check-input form-check-success me-2" type="checkbox" id="input-check-kytudacbiet" disabled>
+                    <label class="form-check-label text-white">
+                        Phải chứa ký tự đặc biệt
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <button type="button" class="btn btn-warning btn-block btn-lg box-shadow font-bold w-100" id="btn-maxacthuc" onclick="auth.layMaXacThuc()">Lấy mã xác thực</button>
+    </div>
+    <div class="col-12">
+        <button type="button" class="btn btn-primary btn-block btn-lg box-shadow font-bold w-100" id="btn-doimatkhau" onclick="doiMatKhau.doiMatKhau()" style="display: none">Đổi mật khẩu</button>
+    </div>
+</div>
+<div class="text-center mt-5 text-lg fs-4">
+    <p class="text-white-50" hidden>
+        Chưa có tài khoản ? <a href="~/Auth/Register" class="font-bold text-white">Đăng ký</a>.
+    </p>
+    <p class="text-white-50"><a class="font-bold text-white" href="~/Auth/Index">Đăng nhập</a>.</p>
+</div>

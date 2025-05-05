@@ -1,0 +1,23 @@
+﻿@using Public.Models
+@{
+    Layout = null;
+    Permission per = Session["Permission"] as Permission;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("~/Views/_Shared/User/TrangTaiLieu/lib/lib.css.cshtml")
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    @Html.Partial("~/Views/_Shared/User/TrangTaiLieu/user.navbar.cshtml")
+
+    @RenderBody()
+
+    @Html.Partial("~/Views/_Shared/User/TrangTaiLieu/user.footer.cshtml")
+
+    @Html.Partial("~/Views/_Shared/User/TrangTaiLieu/lib/lib.js.cshtml")
+    <script src="~/Content/User/TrangTaiLieu/user.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

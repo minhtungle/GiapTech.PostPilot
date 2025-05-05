@@ -1,0 +1,73 @@
+﻿@using Applications.QuanLyDoanhThu.Dtos
+@{
+    string loaiThongKe = ViewBag.loaiThongKe;
+    IEnumerable<ThongTinThongKeDto> thongTins = ViewBag.thongTinThongKe;
+}
+<div class="position-relative">
+    <div class="form-group mb-3">
+        <label class="required" for="select-thongtin">
+            @(loaiThongKe == "NVKD" ? "Nhân viên kinh doanh": "Sản phẩm")
+        </label>
+        <select class="form-control form-select2"
+                id="select-thongtin" name="select-thongtin">
+            <option disabled>Chọn thông tin</option>
+            @foreach (var thongTin in thongTins)
+            {
+                <option value="@thongTin.IdThongTin">@thongTin.TenThongTin</option>
+            }
+        </select>
+    </div>
+</div>
+
+<table class="table table-hover table-bordered table-sticky w-100" id="thongtin-getList" data-page-length="10">
+    <thead class="nowrap" style="white-space: nowrap !important">
+        <tr>
+            <th class="text-center" data-orderable="false"></th>
+            <th class="text-center">@(loaiThongKe == "NVKD" ? "Nhân viên KD": "Sản phẩm")</th>
+            @*<th class="text-center">Doanh thu</th>*@
+        </tr>
+    </thead>
+    <tfoot class="show-footer-above">
+        <tr>
+            <th class="text-center"><input class="form-check-input checkAll-thongtin-getList" type="checkbox" title="Chọn tất cả" /></th>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+        </tr>
+    </tfoot>
+    <tbody>
+        @foreach (var thongTin in thongTins)
+        {
+            @*var _doanhThuMucTieu = Public.Handle.FormatCurrency(amount: thongTin.DoanhThuTiengDuc)sys.convertInt2MoneyFormat(doanhThuMucTieu);
+                 var _doanhThuThucTe = Public.Handle.FormatCurrency(amount: thongTin.DoanhThuTiengDuc)sys.convertInt2MoneyFormat(doanhThuThucTe);
+                 var _doanhThuConLai = Public.Handle.FormatCurrency(amount: thongTin.DoanhThuTiengDuc)sys.convertInt2MoneyFormat((doanhThuMucTieu - doanhThuThucTe));
+                 var trangThai = "";
+                 var chiSoDoanhThu = `${_doanhThuThucTe} / <span class="font-bold">${_doanhThuMucTieu}</span>`;
+                 if (phanTramHoanThien < 30) {
+                     trangThai = "danger";
+                 } else if (phanTramHoanThien < 50) {
+                     trangThai = "warning";
+                 } else {
+                     trangThai = "success";
+                 };
+                <tr id="@thongTin.IdThongTin">
+                    <td class="text-center"><input class="form-check-input checkRow-thongtin-getList" type="checkbox" /></td>
+                    <td>@thongTin.TenThongTin</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="progress progress-sm progress-${trangThai} mx-5 mt-4 mb-2">
+                            <div class="progress-bar progress-label" role="progressbar"
+                                 style="width: ${phanTramHoanThien}%"
+                                 aria-valuenow="${phanTramHoanThien}"
+                                 aria-valuemin="0" aria-valuemax="${(phanTramHoanThien > 100 ? phanTramHoanThien : 100)}">
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-${trangThai}">${_doanhThuThucTe} / <span class="font-bold">${_doanhThuMucTieu}</span></span>
+                            ${(phanTramHoanThien == 100 ? `` : `- <span class="text-danger">còn ${_doanhThuConLai}</span>`)}
+                        </div>
+                    </td>
+                </tr>*@
+        }
+    </tbody>
+</table>

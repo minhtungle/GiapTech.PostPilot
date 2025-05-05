@@ -1,0 +1,65 @@
+﻿@using Public.Models
+@{
+    ViewBag.Title = "Quản lý sản phẩm";
+    List<ThaoTac> thaoTacs = ViewBag.thaoTacs;
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Quản lý sản phẩm</li>
+}
+@section styles {
+    @*<link href="~/Content/Admin/QuanLySanPham/quanlysanpham.css" rel="stylesheet" />*@
+}
+@section scripts {
+    <script src="~/Content/Admin/QuanLySanPham/quanlysanpham.js"></script>
+    <script>
+        var quanLySanPham = new QuanLySanPham();
+        quanLySanPham.init();
+    </script>
+}
+<!--Hồ sơ-->
+<section class="section" page-group="page-group-quanlysanpham" id="page-quanlysanpham" data-aos="fade-up">
+    <div class="card" intro-container="thanhtacvu">
+        <div class="card-content">
+            <div class="card-body" intro-container="thaotac-coban">
+                <div class="btn-group btn-group-sm" role="group">
+                    @{
+                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlysanpham-themmoi"))
+                        {
+                            <!--Thêm mới-->
+                            <a class="btn btn-primary"><i class="bi bi-plus-circle-fill"></i></a>
+                            <a class="btn btn-light-secondary"
+                               onclick="quanLySanPham.sanPham.displayModal_CRUD('create')">
+                                Thêm mới
+                            </a>
+                        }
+                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlysanpham-capnhat"))
+                        {
+                            <!--Cập nhật-->
+                            <a class="btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
+                            <a class="btn btn-light-secondary"
+                               onclick="quanLySanPham.sanPham.displayModal_CRUD('update')">
+                                Cập nhật
+                            </a>
+                        }
+                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlysanpham-xoabo"))
+                        {
+                            <!--Xóa bỏ-->
+                            <a class="btn btn-primary"><i class="bi bi-trash3-fill"></i></a>
+                            <a class="btn btn-light-secondary"
+                               onclick="quanLySanPham.sanPham.delete('multiple')">
+                                Xóa bỏ
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card" id="quanlysanpham-getList-container"></div>
+</section>
+<!--quanlysanpham-crud-->
+<div class="modal fade text-left" id="quanlysanpham-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>

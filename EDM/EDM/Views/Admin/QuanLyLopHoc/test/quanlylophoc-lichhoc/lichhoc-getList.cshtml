@@ -1,0 +1,89 @@
+﻿@model Applications.QuanLyLopHoc.Dtos.DisplayModal_XemLichHoc_Output_Dto
+<div class="card-body">
+    <table class="table table-hover table-bordered table-sticky w-100" id="lichhoc-getList" data-page-length="5">
+        <thead class="nowrap" style="white-space: nowrap !important">
+            <tr>
+                <th class="text-center" data-orderable="false"></th>
+                <th class="text-center">Buổi</th>
+                <th class="text-center">Thông tin</th>
+                <th class="text-center">Trạng thái</th>
+
+                <th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th class="text-center"><input class="form-check-input checkAll-lichhoc-getList" type="checkbox" title="Chọn tất cả" /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                <th class="text-center">
+                    @if (Model.Loai != "read")
+                    {
+                        <div style="white-space: nowrap">
+                            <a class="btn btn-sm btn-light-secondary" title="Tạo buổi học"
+                               onclick="quanLyLopHoc.lopHoc.lichHoc.displayModal_TaoLichHoc(@string.Format("'{0}'", Model.LopHoc.LopHoc.IdLopHoc))">
+                                <i class="bi bi-plus-circle-fill"></i>
+                            </a>
+                            <a class="btn btn-sm btn-light-secondary" title="Xóa buổi học"
+                               onclick="quanLyLopHoc.lopHoc.lichHoc.xoaBuoiHoc('multiple')">
+                                <i class="bi bi-trash3-fill"></i>
+                            </a>
+                        </div>
+                    }
+                </th>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var buoiHoc in Model.LopHoc.BuoiHocs)
+            {
+                var ngayHomNay = DateTime.Now.Date;
+                string clss = "text-primary";
+                string dd = "Học viên nghỉ có phép";
+                if (buoiHoc.BuoiHoc.DiemDanh == 0)
+                {
+                    dd = "Chưa điểm danh";
+                    clss = "text-danger";
+                }
+                else if (buoiHoc.BuoiHoc.DiemDanh == 1)
+                {
+                    dd = "Đã điểm danh";
+                    clss = "text-success";
+                }
+                else if (buoiHoc.BuoiHoc.DiemDanh == 2)
+                {
+                    dd = "Học viên nghỉ không phép";
+                };
+
+                string thoiGianBatDau = buoiHoc.BuoiHoc.ThoiGianBatDau == null
+                    ? "" : buoiHoc.BuoiHoc.ThoiGianBatDau.Value.ToString("dd/MM/yyyy - HH:mm ", System.Globalization.CultureInfo.InvariantCulture);
+
+                <tr id="@buoiHoc.BuoiHoc.IdLopHoc_BuoiHoc">
+                    <td class="text-center"><input class="form-check-input checkRow-lichhoc-getList" type="checkbox" /></td>
+                    <td class="text-center @(ngayHomNay == buoiHoc.BuoiHoc.ThoiGianBatDau.Value.Date ? "font-bold text-danger" : "")">@buoiHoc.BuoiHoc.ThuTuBuoiHoc</td>
+                    <td class="text-center">
+                        <span>@thoiGianBatDau</span> <br />
+                        <small>@string.Format("{0} phút", buoiHoc.BuoiHoc.ThoiLuong)</small>
+                    </td>
+                    <td class="text-center @clss">@dd</td>
+                    <td class="text-center @clss">
+                        <div style="white-space: nowrap">
+                            <a class="btn btn-sm btn-light-secondary" title="Xem chi tiết"
+                               onclick="quanLyLopHoc.lopHoc.lichHoc.buoiHoc.displayModal_XemBuoiHoc('read', @string.Format("'{0}'", buoiHoc.BuoiHoc.IdLopHoc_BuoiHoc))">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                            @if (Model.Loai != "read")
+                            {
+                                <a class="btn btn-sm btn-light-secondary" title="Xóa buổi học"
+                                   onclick="quanLyLopHoc.lopHoc.lichHoc.xoaBuoiHoc('single', @string.Format("'{0}'", buoiHoc.BuoiHoc.IdLopHoc_BuoiHoc))">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

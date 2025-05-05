@@ -1,0 +1,94 @@
+﻿@using EDM_DB
+@{
+    string loai = ViewBag.loai;
+    tbCoCauToChuc coCau = ViewBag.coCau;
+    tbCoCauToChuc coCauCha = ViewBag.coCauCha;
+    List<tbNguoiDung> nguoiDungs = ViewBag.nguoiDungs;
+}
+<div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                @(loai == "create" ? "Thêm mới" : loai == "update" ? "Cập nhật" : "Xem chi tiết")
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <!--Id && Kiểu người dùng chức năng-->
+                <input id="input-idcocaucha" value="@coCauCha.IdCoCauToChuc" hidden>
+                <input id="input-capdo" value="@(loai == "create" ? coCauCha.CapDo: coCau.CapDo)" hidden>
+                <input id="input-idcocau" value="@coCau.IdCoCauToChuc" hidden />
+                <!--Cơ cấu cấp trên-->
+                @if (coCauCha.IdCoCauToChuc != Guid.Empty)
+                {
+                    <div class="col-12 col-sm-12 col-md-12">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label for="input-tencocau">Cơ cấu cha</label>
+                                <input type="text" class="form-control" value="@coCauCha.TenCoCauToChuc" disabled>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <!--Tên cơ cấu-->
+                <div class="col-12">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label class="required" for="input-tencocau">Tên cơ cấu</label>
+                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                   id="input-tencocau" name="input-tencocau"
+                                   value="@(coCau.TenCoCauToChuc ?? "")" @(loai == "read" ? "disabled" : "") required>
+                            <div class="invalid-feedback feedback" for="input-tencocau">Không được để trống</div>
+                        </div>
+                    </div>
+                </div>
+                <!--Quản lý-->
+                <div class="col-12 col-sm-12 col-md-12">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label class="" for="select-quanly">Quản lý cơ cấu</label>
+                            <select class="form-control form-select2" multiple
+                                    id="select-quanly" name="select-quanly"
+                                    @(loai == "read" ? "disabled" : "")>
+                                <option disabled @(nguoiDungs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                @{
+                                    List<Guid> idQuanLys = new List<Guid>();
+                                    if (coCau.IdQuanLy != null)
+                                    {
+                                        coCau.IdQuanLy = coCau.IdQuanLy.Remove(startIndex: 0, count: 1); // Xóa dấu , ở đầu
+                                        idQuanLys = coCau.IdQuanLy.Split(',').Select(x => Guid.Parse(x.ToString())).ToList();
+                                    }
+                                    foreach (tbNguoiDung nguoiDung in nguoiDungs)
+                                    {
+                                        <option value="@nguoiDung.IdNguoiDung" @(idQuanLys.Contains(nguoiDung.IdNguoiDung) ? "selected" : "")>@nguoiDung.TenNguoiDung</option>
+                                    }
+                                }
+                            </select>
+                            <div class="invalid-feedback feedback" for="select-quanly">Không được để trống</div>
+                        </div>
+                    </div>
+                </div>
+                <!--Ghi chú-->
+                <div class="col-12 col-sm-12 col-md-12">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label for="input-ghichu">Ghi chú</label>
+                            <textarea class="form-control min-h-100 max-h-200" id="input-ghichu" rows="3" @(loai == "read" ? "disabled" : "")>@(coCau.GhiChu ?? "")</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            @if (loai != "read")
+            {
+                <button type="button" class="btn btn-primary ml-1" onclick="org.coCau.save(@string.Format("'{0}'", loai))">
+                    <span class="">Lưu</span>
+                </button>
+            }
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

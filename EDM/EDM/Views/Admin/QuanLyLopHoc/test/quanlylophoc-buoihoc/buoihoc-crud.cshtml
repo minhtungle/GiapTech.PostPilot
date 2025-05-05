@@ -1,0 +1,143 @@
+﻿@using Applications.QuanLyLopHoc.Models
+@using EDM_DB
+@using Public.Enums
+@using Public.Extensions
+@model Applications.QuanLyLopHoc.Dtos.DisplayModal_XemBuoiHoc_Output_Dto
+@{
+    var buoiHoc = Model.BuoiHoc;
+    var loai = Model.Loai;
+    List<string> loaiThaoTac_Disabled_1 = new List<string> { "read", "create", "update" };
+    List<string> loaiThaoTac_Disabled_2 = new List<string> { "read", "diemdanh" };
+
+    List<tbNguoiDung> giaoViens = buoiHoc.GiaoViens;
+    List<tbKhachHang> khachHangs = buoiHoc.KhachHangs;
+
+    string tenGiaoVien = (buoiHoc.GiaoViens == null || buoiHoc.GiaoViens.Count == 0) ? "Chưa có" : string.Join(", ", buoiHoc.GiaoViens.Select(x => x.TenNguoiDung));
+    string tenKhachHang = (buoiHoc.KhachHangs == null || buoiHoc.KhachHangs.Count == 0) ? "Chưa có" : string.Join(", ", buoiHoc.KhachHangs.Select(x => x.TenKhachHang));
+    string thoiGianBatDau = buoiHoc.BuoiHoc.ThoiGianBatDau == null ? "Chưa có"
+        : buoiHoc.BuoiHoc.ThoiGianBatDau.Value.ToString("dd/MM/yyyy",
+        System.Globalization.CultureInfo.InvariantCulture);
+}
+<div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content" style="border: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);">
+        <div class="modal-header">
+            <h5 class="modal-title col-md-6 col-sm-12 my-2 font-bold">
+                Buổi @buoiHoc.BuoiHoc.ThuTuBuoiHoc
+            </h5>
+            <small class="text-danger font-bold">(@string.Format("{0} - {1} phút", thoiGianBatDau, buoiHoc.BuoiHoc.ThoiLuong))</small>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <!--Id-->
+                <input id="input-idbuoihoc" value="@buoiHoc.BuoiHoc.IdLopHoc_BuoiHoc" hidden />
+                <input id="input-thutubuoihoc" value="@buoiHoc.BuoiHoc.ThuTuBuoiHoc" hidden />
+                <!--Thứ tự buổi học-->
+                <div class="col-12 col-sm-12 col-md-12">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <table class="table table-bordered table-responsive w-100 mt-2" id="table-lichhoc">
+                                @{
+
+                                }
+                                <tbody>
+                                    <tr>
+                                        <td class="font-bold">Học viên</td>
+                                        <td class="">@tenKhachHang</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Giáo viên</td>
+                                        <td class="">@tenGiaoVien</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Điểm danh</td>
+                                        <td>
+                                            <select class="form-control form-select2"
+                                                    id="select-diemdanh" name="select-diemdanh" required>
+                                                @foreach (TrangThaiDiemDanhEnum trangThaiDiemDanh in Enum.GetValues(typeof(TrangThaiDiemDanhEnum)))
+                                                {
+                                                    <option value="@((int)trangThaiDiemDanh)"
+                                                            @(buoiHoc.BuoiHoc.DiemDanh == (int)trangThaiDiemDanh ? "selected" : "")>
+                                                        @trangThaiDiemDanh.GetDescription()
+                                                    </option>
+                                                }
+                                            </select>
+                                            <div class="invalid-feedback feedback" for="select-diemdanh">Không được để trống</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Ghi chú</td>
+                                        <td class="">
+                                            <textarea class="form-control min-h-50 max-h-100" id="input-ghichu"
+                                                      rows="2" placeholder="Giáo viên ghi lại các thông tin lưu ý của buổi học nếu cần thiết">@(buoiHoc.BuoiHoc.GhiChu ?? "")</textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center" colspan="2" id="table-anhbuoihoc-container">
+                                            <table class="table table-bordered w-100" id="table-anhbuoihoc">
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="2" class="">
+                                                            <label class="btn btn-light-secondary w-100" for="btn-themanhbuoihoc"
+                                                                   @(loai != "diemdanh" ? "hidden" : "")>
+                                                                <i class="bi bi-camera-fill"></i> Thêm ảnh buổi học
+                                                            </label>
+                                                            <input hidden class="btn btn-primary" id="btn-themanhbuoihoc"
+                                                                   onchange="quanLyLopHoc.lopHoc.lichHoc.buoiHoc.themAnhBuoiHoc()"
+                                                                   type="file" accept=".png,.jpg,.jpeg" multiple>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody id="tbody-anhbuoihoc">
+                                                    @foreach (var hinhAnhBuoiHoc in buoiHoc.HinhAnhBuoiHocs)
+                                                    {
+                                                        string duongDanhHinhAnh = hinhAnhBuoiHoc.FileBase64;
+                                                        if (string.IsNullOrEmpty(duongDanhHinhAnh)) // Nếu không có base64 thì là gọi từ csdl nên lấy đường dẫn vật lý
+                                                        {
+                                                            duongDanhHinhAnh = hinhAnhBuoiHoc.DuongDanHinhAnh;
+                                                        }
+                                                        <tr data-idhinhanh="@hinhAnhBuoiHoc.IdHinhAnh"
+                                                            data-duongdananh="@duongDanhHinhAnh"
+                                                            data-tenhinhanh="@hinhAnhBuoiHoc.TenHinhAnh">
+                                                            <td class="text-start">
+                                                                📸 <a class="image-link c-pointer"
+                                                                      data-bs-toggle="tooltip" data-bs-placement="right" title="@hinhAnhBuoiHoc.TenHinhAnh"
+                                                                      data-original="@duongDanhHinhAnh">
+                                                                    @Public.Handle.TruncateString(input: hinhAnhBuoiHoc.TenHinhAnh, maxLength: 30)
+                                                                </a>
+                                                                <img src="@duongDanhHinhAnh" alt="@hinhAnhBuoiHoc.TenHinhAnh" hidden />
+                                                            </td>
+                                                            <td>
+                                                                <a class="btn btn-light-secondary c-pointer"
+                                                                   onclick="quanLyLopHoc.lopHoc.lichHoc.buoiHoc.xoaAnhBuoiHoc(this)"
+                                                                   @(loai != "diemdanh" ? "hidden" : "")>
+                                                                    <i class="bi bi-trash3-fill"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            @if (loai == "diemdanh")
+            {
+                <button type="button" class="btn btn-primary ml-1"
+                        onclick="quanLyLopHoc.lopHoc.lichHoc.buoiHoc.diemDanh()">
+                    <span class="">Cập nhật</span>
+                </button>
+            }
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

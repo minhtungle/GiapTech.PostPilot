@@ -1,0 +1,18 @@
+﻿@{
+    bool hasFile = ViewBag.hasFile;
+}
+@if (hasFile) {
+    <div class="card-body position-relative">
+        @MvcHtmlString.Create(ViewBag.iframeHtml)
+    </div>
+} else {
+    <div class="card-body position-relative">
+        <div class="border border-warning" id="drop_zone"
+             ondrop="guide.dropHandler(event);"
+             ondragover="guide.dragOverHandler(event);">
+            <label for="select-file">
+                <p class="fs-1"><i class="bi bi-camera-fill"> Chọn tệp đính kèm hoặc kéo thả</i></p>
+            </label>
+        </div>
+    </div>
+}

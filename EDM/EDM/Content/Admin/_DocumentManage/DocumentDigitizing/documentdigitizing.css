@@ -1,0 +1,24 @@
+﻿/*
+    absolute-grid, left-swip
+*/
+#file-nav, #truongdulieu-nav {
+    width: 50%;
+    padding: calc(var(--bs-gutter-x)*.5);
+    transition: width .3s, height .3s, transform 0.7s linear;
+}
+
+@media (max-width:768px) {
+    #truongdulieu-nav {
+        width: 100%;
+    }
+
+    #file-nav {
+        position: absolute;
+        width: 0px;
+        height: 0px;
+    }
+
+        #file-nav.active {
+            width: 99%;
+        }
+}

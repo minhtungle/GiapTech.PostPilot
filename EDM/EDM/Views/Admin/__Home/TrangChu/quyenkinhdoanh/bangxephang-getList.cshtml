@@ -1,0 +1,80 @@
+﻿@using Applications.QuanLyDoanhThu.Dtos
+@model List<BangXepHangDto>
+
+<table class="table table-hover table-bordered table-sticky w-100" id="bangxephang-getList" data-page-length="5">
+    <thead class="nowrap" style="white-space: nowrap !important">
+        <tr>
+            <th class="text-center">Xếp hạng</th>
+            <th class="text-center">Tên nhân viên</th>
+            <th class="text-center">Tổng doanh thu</th>
+        </tr>
+    </thead>
+    <tfoot class="show-footer-above">
+        <tr>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+        </tr>
+    </tfoot>
+    <tbody>
+        @foreach (var nguoiDung in Model)
+        {
+            <tr>
+                <td class="text-center">
+                    @if (nguoiDung.XepHang == 1)
+                    {
+                        <span class="font-bold text-success"> @nguoiDung.XepHang</span>
+                    }
+                    else if (nguoiDung.XepHang == 2)
+                    {
+                        <span class="font-bold text-warning"> @nguoiDung.XepHang</span>
+                    }
+                    else if (nguoiDung.XepHang == 3)
+                    {
+                        <span class="font-bold text-primary"> @nguoiDung.XepHang</span>
+                    }
+                    else
+                    {
+                        <span class=""> @nguoiDung.XepHang</span>
+                    }
+                </td>
+                <td>
+                    @if (nguoiDung.XepHang == 1)
+                    {
+                        <span class="font-bold text-success">@nguoiDung.TenNguoiDung ️🥇</span>
+                    }
+                    else if (nguoiDung.XepHang == 2)
+                    {
+                        <span class="font-bold text-warning">@nguoiDung.TenNguoiDung 🥈</span>
+                    }
+                    else if (nguoiDung.XepHang == 3)
+                    {
+                        <span class="font-bold text-primary">@nguoiDung.TenNguoiDung 🥉</span>
+                    }
+                    else
+                    {
+                        <span class="">@nguoiDung.TenNguoiDung</span>
+                    }
+                </td>
+                <td>
+                    @if (nguoiDung.XepHang == 1)
+                    {
+                        <span class="font-bold text-success">@Public.Handle.FormatCurrency((long)nguoiDung.TongDoanhThu)</span>
+                    }
+                    else if (nguoiDung.XepHang == 2)
+                    {
+                        <span class="font-bold text-warning">@Public.Handle.FormatCurrency((long)nguoiDung.TongDoanhThu)</span>
+                    }
+                    else if (nguoiDung.XepHang == 3)
+                    {
+                        <span class="font-bold text-primary">@Public.Handle.FormatCurrency((long)nguoiDung.TongDoanhThu)</span>
+                    }
+                    else
+                    {
+                        <span class="">@Public.Handle.FormatCurrency((long)nguoiDung.TongDoanhThu)</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

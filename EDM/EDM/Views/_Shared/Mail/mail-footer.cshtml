@@ -1,0 +1,21 @@
+﻿@using Public.Models
+@{
+    Permission per = Session["Permission"] as Permission;
+}
+@*<div class="col-12" style="flex: 0 0 auto; width: 100%;">
+    <p>
+        Nếu có bất kỳ thắc mắc nào, vui lòng liên hệ hotline:
+        <a href="tel:@per.DonViSuDung.SoDienThoai">@per.DonViSuDung.SoDienThoai</a> hoặc gửi phản hồi tới hòm thư:
+        <a href="mailto:@per.DonViSuDung.Email">@per.DonViSuDung.Email</a>.
+    </p>
+</div>*@
+<div class="col-12" style="flex: 0 0 auto; width: 100%;">
+    @{
+        //string imagePath = "~/Assets/images/mail-sign.jpg"; // hoặc .png
+        //string base64Image = Public.Handle.ConvertImageToBase64(imagePath: imagePath);
+        @*<img src="@per.DonViSuDung.TenMien/Assets/images/mail-sign.jpg" style="width: 100%;" />*@
+        <img src="https://vietgenedu.com/Assets/images/mail-sign.png" style="width: 100%;" />
+    }
+    @*<p class="text-uppercase italic" style="text-transform: uppercase !important; font-style: italic !important;">Trân trọng.</p>
+        <p>@per.DonViSuDung.TenDonViSuDung - @per.DonViSuDung.TenMien</p>*@
+</div>

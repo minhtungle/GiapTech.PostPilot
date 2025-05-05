@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Lịch sử truy cập";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Lịch sử truy cập</li>
+}
+@section scripts {
+    <script src="~/Content/Admin/_SystemUtilities/History/history.js"></script>
+    <script>
+        var h = new History();
+        h.init();
+    </script>
+}
+<section class="section" page-group="page-group-systemutilities" id="page-history" data-aos="fade-up">
+    <div class="card">
+        <div class="card-body">
+            @Html.Partial("~/Views/Admin/_SystemUtilities/History/history-getList.cshtml")
+        </div>
+    </div>
+</section>

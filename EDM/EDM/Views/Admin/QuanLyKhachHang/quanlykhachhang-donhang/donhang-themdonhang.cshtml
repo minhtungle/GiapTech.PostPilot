@@ -1,0 +1,213 @@
+﻿@using EDM_DB
+@using QuanLyKhachHang.Models
+@{
+    string loaiThemMoi = ViewBag.loaiThemMoi;
+    string loai = ViewBag.loai;
+    List<tbSanPham> sanPhams = Session["SANPHAMs"] as List<tbSanPham>;
+    List<tbDonViTien> donViTiens = Session["DONVITIENs"] as List<tbDonViTien>;
+    List<tbSanPham_LoaiSanPham_TrinhDo> trinhDos = Session["TRINHDOs"] as List<tbSanPham_LoaiSanPham_TrinhDo>;
+    List<tbSanPham_LoaiSanPham_TrinhDo> trinhDos_DauVao = trinhDos.Where(x => x.LoaiTrinhDo == "dauvao").ToList();
+    List<tbSanPham_LoaiSanPham_TrinhDo> trinhDos_DauRa = trinhDos.Where(x => x.LoaiTrinhDo == "daura").ToList();
+    List<tbKhachHang_DonHangExtend> khachHang_DonHangs = ViewBag.khachHang_DonHangs;
+
+    List<string> loaiThaoTac_Disabled = new List<string> { "read" };
+}
+
+@if (loaiThemMoi == "donhang")
+{
+    for (int i = (khachHang_DonHangs.Count - 1); i >= 0; i--)
+    {
+        tbKhachHang_DonHangExtend khachHang_DonHang = khachHang_DonHangs[i];
+        Guid idSanPham = khachHang_DonHang.SanPham.IdSanPham;
+        List<tbKhachHang_DonHang_ThanhToan> thanhToans = khachHang_DonHang.ThanhToans;
+        <table class="table table-bordered table-hover w-100 table-donhang" data-iddonhang="@khachHang_DonHang.IdDonHang">
+            <thead>
+                <tr>
+                    <td colspan="2" class="w-40 font-bold text-center text-danger stt-donhang">
+                        Khóa học @(i+1)
+                    </td>
+                    <td colspan="2">
+                        <select class="form-control form-select2 select-sanpham" onchange="quanLyKhachHang.khachHang.chonSanPham(this)"
+                                @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>
+                            <option value="" @(sanPhams.Count > 0 ? "" : "selected")>Chọn sản phẩm</option>
+                            @foreach (tbSanPham sanPham in sanPhams)
+                            {
+                                <option value="@sanPham.IdSanPham"
+                                        data-giatien="@sanPham.GiaTien"
+                                        @(sanPham.IdSanPham == idSanPham ? "selected" : "")>
+                                    @sanPham.TenSanPham
+                                </option>
+                            }
+                        </select>
+                    </td>
+
+                    <td class="text-center">
+                        <a class="btn btn-danger c-pointer"
+                           onclick="quanLyKhachHang.khachHang.xoaDonHang(this, 'donhang')"
+                           @(loaiThaoTac_Disabled.Contains(loai) ? "hidden" : "")>
+                            <i class="bi bi-trash3-fill"></i>
+                        </a>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="donhang">
+                    <td>
+                        <select class="form-control form-select2 select-trinhdodauvao"
+                                @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>
+                            <option value="" @(sanPhams.Count > 0 ? "" : "selected")>Chọn trình độ đầu vào</option>
+                            @foreach (tbSanPham_LoaiSanPham_TrinhDo trinhDo in trinhDos_DauVao)
+                            {
+                                <option value="@trinhDo.IdTrinhDo"
+                                        @(trinhDo.IdTrinhDo == khachHang_DonHang.IdTrinhDoDauVao ? "selected" : "")>
+                                    @trinhDo.TenTrinhDo
+                                </option>
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control form-select2 select-trinhdodaura"
+                                @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>
+                            <option value="" @(sanPhams.Count > 0 ? "" : "selected")>Chọn trình độ đầu ra</option>
+                            @foreach (tbSanPham_LoaiSanPham_TrinhDo trinhDo in trinhDos_DauRa)
+                            {
+                                <option value="@trinhDo.IdTrinhDo"
+                                        @(trinhDo.IdTrinhDo == khachHang_DonHang.IdTrinhDoDauRa ? "selected" : "")>
+                                    @trinhDo.TenTrinhDo
+                                </option>
+                            }
+                        </select>
+                    </td>
+
+                    <td><input class="form-control input-tongsotien" value="0" disabled /></td>
+                    <td><input class="form-control input-phantramtong" value="0%" disabled /></td>
+                    <td class="text-center">
+                        <a class="btn btn-light-secondary c-pointer"
+                           onclick="quanLyKhachHang.khachHang.themDonHang(this, 'thanhtoan', @string.Format("'{0}'", loai))">
+                            <i class="bi bi-plus-circle-fill"></i>
+                        </a>
+                    </td>
+                </tr>
+                @for (int j = (thanhToans.Count - 1); j >= 0; j--)
+                {
+                    var thanhToan = thanhToans[j];
+                    string ngayTao = thanhToan.NgayTao == null ? "" : thanhToan.NgayTao.Value.ToString("dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                    ngayTao = thanhToan.IdDonHang != Guid.Empty ? ngayTao : DateTime.Now.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                    <tr class="thanhtoan" data-idthanhtoan="@thanhToan.IdThanhToan"
+                        data-bs-toggle="tooltip" data-bs-placement="left" title="@string.Format("Đóng lần {0}: {1}", (j+1) , ngayTao)">
+                        <td>
+                            <select class="form-control form-select2 select-donvitien" onchange="quanLyKhachHang.khachHang.chonDonViTien(this)"
+                                    @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")>
+                                <option disabled @(donViTiens.Count > 0 ? "" : "selected")>Chọn đơn vị</option>
+                                @foreach (tbDonViTien donViTien in donViTiens)
+                                {
+                                    var selected = (thanhToan.IdDonViTien == null && donViTien.TenDonViTien == "VND") ||
+                                                   (thanhToan.IdDonViTien != null && donViTien.IdDonViTien == thanhToan.IdDonViTien)
+                                                    ? "selected" : "";
+
+                                    <option value="@donViTien.GiaTriQuyDoiVND" @selected data-iddonvitien="@donViTien.IdDonViTien">
+                                        @donViTien.TenDonViTien
+                                    </option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input class="form-control input-sotiendadong"
+                                   type="number" placeholder="Số tiền trước quy đổi ..." value="@thanhToan.SoTienDaDong"
+                                   onchange="quanLyKhachHang.khachHang.nhapSoTienDaDong(this)"
+                                   @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required />
+                        </td>
+                        <td>
+                            <input class="form-control input-sotiendadong-sauquydoi"
+                                   type="number" placeholder="Số tiền sau quy đổi ..." value="@thanhToan.SoTienDaDong"
+                                   disabled />
+                        </td>
+                        <td>
+                            <input class="form-control input-phantramdadong"
+                                   value="@(thanhToan.PhanTramDaDong)%" disabled />
+                        </td>
+                        <td class="text-center">
+                            <!--Chỉ không hiển thị nếu là cập nhật đơn hàng và đã tồn tại trước đó-->
+                            @if (!(loai == "update-donhang" && thanhToan.IdThanhToan != Guid.Empty))
+                            {
+                                <a class="btn btn-light-secondary c-pointer"
+                                   onclick="quanLyKhachHang.khachHang.xoaDonHang(this, 'thanhtoan')"
+                                   @(loai == "read" ? "hidden" : "")>
+                                    <i class="bi bi-trash3-fill"></i>
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+                <!--Các đơn mới sẽ thêm tại đây-->
+                <tr>
+                    <td colspan="5">
+                        <!--Ghi chú-->
+                        <div class="col-12 col-sm-12 col-md-12">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label for="input-ghichu">Ghi chú</label>
+                                    @{
+                                        string placeholder = $@"Note đủ theo form sau:
+- Lớp 1 - 1 / 1 - 2 / 1 - 3...,
+-Khoảng ngày, giờ học của hvien
+-Số buổi học
+-Mọi yêu cầu khác của hvien về khóa học này thật chi tiết, ngắn gọn, dễ hiểu";
+                    <textarea class="form-control min-h-50 max-h-200 input-ghichu" rows="2"
+                              title="@placeholder"
+                              placeholder="@placeholder">@(khachHang_DonHang.GhiChu ?? "")</textarea>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+}
+else
+{
+    tbKhachHang_DonHangExtend khachHang_DonHang = khachHang_DonHangs[0];
+    List
+    <tbKhachHang_DonHang_ThanhToan> thanhToans = khachHang_DonHang.ThanhToans;
+    for (int j = (thanhToans.Count - 1); j >= 0; j--)
+    {
+        tbKhachHang_DonHang_ThanhToan thanhToan = thanhToans[j];
+        string ngayTao = thanhToan.NgayTao == null ? "" : thanhToan.NgayTao.Value.ToString("dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        ngayTao = thanhToan.IdDonHang != Guid.Empty ? ngayTao : DateTime.Now.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        <tr class="thanhtoan" data-idthanhtoan="@thanhToan.IdThanhToan"
+            data-bs-toggle="tooltip" data-bs-placement="left" title="@string.Format("Đóng lần {0}: {1}", (j+1) , ngayTao)">
+            <td>
+                <select class="form-control form-select2 select-donvitien" onchange="quanLyKhachHang.khachHang.chonDonViTien(this)">
+                    <option disabled @(donViTiens.Count > 0 ? "" : "selected")>Chọn đơn vị</option>
+                    @foreach (tbDonViTien donViTien in donViTiens)
+                    {
+                        <option value="@donViTien.GiaTriQuyDoiVND" data-iddonvitien="@donViTien.IdDonViTien">@donViTien.TenDonViTien</option>
+                    }
+                </select>
+            </td>
+            <td>
+                <input class="form-control input-sotiendadong"
+                       type="number" placeholder="Số tiền trước quy đổi ..." value="@thanhToan.SoTienDaDong"
+                       onchange="quanLyKhachHang.khachHang.nhapSoTienDaDong(this)"
+                       required />
+            </td>
+            <td>
+                <input class="form-control input-sotiendadong-sauquydoi"
+                       type="number" placeholder="Số tiền sau quy đổi ..." value="@thanhToan.SoTienDaDong"
+                       disabled />
+            </td>
+            <td class="w-15">
+                <input class="form-control input-phantramdadong"
+                       value="@(thanhToan.PhanTramDaDong)%" disabled />
+            </td>
+            <td class="text-center">
+                <a class="btn btn-light-secondary c-pointer"
+                   onclick="quanLyKhachHang.khachHang.xoaDonHang(this, 'thanhtoan')">
+                    <i class="bi bi-trash3-fill"></i>
+                </a>
+            </td>
+        </tr>
+    }
+}

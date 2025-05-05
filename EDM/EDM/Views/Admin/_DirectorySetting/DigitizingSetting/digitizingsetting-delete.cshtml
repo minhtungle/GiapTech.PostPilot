@@ -1,0 +1,54 @@
+﻿@using DigitizingSetting.Models
+@using EDM_DB
+@{
+    List<tbBieuMauExtend> bieuMaus = ViewBag.bieuMaus;
+    List<string> idBieuMaus_XOA = ViewBag.idBieuMaus_XOA;
+}
+<div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <table class="table table-hover table-bordered w-100 nowrap" id="digitizingsetting-thaythe-getList" data-page-length="10">
+                <thead>
+                    <tr>
+                        <th class="text-center" data-orderable="false"></th>
+                        <th class="text-center">Chọn biểu mẫu thay thế cho các văn bản đang sử dụng</th>
+                    </tr>
+                </thead>
+                <tfoot class="show-footer-above">
+                    <tr>
+                        <th></th>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (tbBieuMau bieuMau in bieuMaus) {
+                        if (idBieuMaus_XOA.Contains(bieuMau.IdBieuMau.ToString())) {
+                            <tr id="@bieuMau.IdBieuMau">
+                                <td></td>
+                                <td class="text-decoration-line-through">@bieuMau.TenBieuMau</td>
+                            </tr>
+                        } else {
+                            <tr id="@bieuMau.IdBieuMau">
+                                <td class="text-center"><input class="form-check-input checkRow-digitizingsetting-thaythe-getList" type="checkbox" data-id="@bieuMau.IdBieuMau"/></td>
+                                <td>@bieuMau.TenBieuMau</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer p-2 flex-column">
+            <p class="text-center" id="phong-confirmdialog-content"></p>
+            <div class="w-100 flex-row text-center">
+                <button type="button" class="btn btn-primary ml-1" onclick="ds.bieuMau.delete()">
+                    <i class="bi bi-check d-flex d-sm-none"></i>
+                    <span class="d-none d-sm-block">Đồng ý</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x d-flex d-sm-none"></i>
+                    <span class="d-none d-sm-block">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

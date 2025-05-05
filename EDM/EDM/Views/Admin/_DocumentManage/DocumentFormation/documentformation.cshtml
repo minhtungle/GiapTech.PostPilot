@@ -1,0 +1,166 @@
+﻿@using UserType.Models
+@{
+    ViewBag.Title = "Quản lý hồ sơ";
+    List<ThaoTac> thaoTacs = ViewBag.thaoTacs;
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Tạo lập hồ sơ</li>
+}
+@section styles {
+    <link href="~/Content/Admin/_DocumentManage/DocumentFormation/documentformation.css" rel="stylesheet" />
+    <link href="~/Content/Admin/_DocumentManage/DocumentDigitizing/documentdigitizing.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/Content/Admin/_DocumentManage/DocumentFormation/documentformation.js"></script>
+    <script src="~/Content/Admin/_DocumentManage/DocumentDigitizing/documentdigitizing.js"></script>
+    <script>
+        var df = new DocumentFormation();
+        //var dd = new DocumentDigitizing();
+        df.init();
+        df.viTriLuuTru.getList();
+        df.danhMucHoSo.getList();
+    </script>
+}
+<!--Hồ sơ-->
+<section class="section" page-group="page-group-documentmanage" id="page-documentformation" data-aos="fade-up">
+    <div class="card" intro-container="thanhtacvu">
+        <div class="card-content">
+            <div class="card-body" intro-container="thaotac-coban">
+                <div class="btn-group btn-group-sm" role="group">
+                    <!--Thao tác-->
+                    <a class="btn btn-primary"><i class="bi bi-three-dots-vertical"></i></a>
+                    <div class="btn-group btn-group-sm dropdown">
+                        <button type="button" title="Thêm mới" class="btn btn-light-secondary dropdown-toggle dropdown-toggle-split"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                data-reference="parent">
+                            Thao tác
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item"
+                               onclick="sys.phanQuyenThaoTac(
+                                        '@thaoTacs.Exists(x => x.MaThaoTac == "hoso-themmoi").ToString()',
+                                        function () { df.hoSo.displayModal_CRUD('create', 0) })">
+                                <i class="bi bi-plus-square"></i> Thêm mới
+                            </a>
+                            <a class="dropdown-item"
+                               onclick="sys.phanQuyenThaoTac(
+                                        '@thaoTacs.Exists(x => x.MaThaoTac == "hoso-themmoihosoexcel").ToString()',
+                                        function () { df.displayModal_Excel_HoSo() })">
+                                <i class="bi bi-file-excel"></i> Thêm excel - hồ sơ
+                            </a>
+                            <a class="dropdown-item"
+                               onclick="sys.phanQuyenThaoTac(
+                                        '@thaoTacs.Exists(x => x.MaThaoTac == "hoso-themmoivanbanzip").ToString()',
+                                        function () { df.displayModal_File_VanBan() })">
+                                <i class="bi bi-file-excel"></i> Thêm zip/rar - văn bản
+                            </a>
+                            <a class="dropdown-item"
+                               onclick="sys.phanQuyenThaoTac(
+                                        '@thaoTacs.Exists(x => x.MaThaoTac == "hoso-xoabo").ToString()',
+                                        function () { df.hoSo.delete('multiple') })">
+                                <i class="bi bi-trash3-fill"></i> Xóa bỏ
+                            </a>
+                        </div>
+                    </div>
+                    <a class="btn btn-primary"><i class="bi bi-shield-lock-fill"></i></a>
+                    <a class="btn btn-light-secondary"
+                       onclick="sys.phanQuyenThaoTac(
+                                '@thaoTacs.Exists(x => x.MaThaoTac == "hoso-thietlapquyen").ToString()',
+                                function () { df.displayModal_ThietLapQuyen('#input-quyentruycap-hangloat', 'multiple') })">
+                        Thiết lập quyền
+                    </a>
+                    <a class="btn btn-primary"><i class="bi bi-download"></i></a>
+                    <a class="btn btn-light-secondary"
+                       onclick="sys.phanQuyenThaoTac(
+                                '@thaoTacs.Exists(x => x.MaThaoTac == "hoso-saoluu").ToString()',
+                                function () { df.hoSo.saoLuu() })">
+                        Sao lưu
+                    </a>
+                </div>
+                <div class="btn-group btn-group-sm" role="group">
+                    <a class="btn btn-primary"><i class="bi bi-shield-fill-check"></i></a>
+                    <a class="btn btn-light-secondary"
+                       onclick="sys.phanQuyenThaoTac(
+                            '@thaoTacs.Exists(x => x.MaThaoTac == "hoso-kysohangloat").ToString()',
+                            function () { df.displayModal_KySoHangLoat() })">
+                        Ký số hàng loạt
+                    </a>
+                </div>
+                <div class="btn-group btn-group-sm" role="group">
+                    <a class="btn btn-success"><i class="bi bi-send-check"></i></a>
+                    <a class="btn btn-light-secondary"
+                       onclick="sys.phanQuyenThaoTac(
+                            '@thaoTacs.Exists(x => x.MaThaoTac == "hoso-nopluu").ToString()',
+                            function () { df.hoSo.nopLuu('multiple') })">
+                        Nộp lưu
+                    </a>
+                    <a class="btn btn-danger"><i class="bi bi-send-x"></i></a>
+                    <a class="btn btn-light-secondary"
+                       onclick="sys.phanQuyenThaoTac(
+                            '@thaoTacs.Exists(x => x.MaThaoTac == "hoso-huynopluu").ToString()',
+                            function () { df.hoSo.huyNopLuu('multiple') })">
+                        Hủy nộp lưu
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        @Html.Partial("~/Views/Admin/_DocumentManage/DocumentFormation/documentformation-locthongtin/locthongtin.cshtml")
+    </div>
+    <div class="card" intro-container="danhsachhoso">
+        @Html.Partial("~/Views/Admin/_DocumentManage/DocumentFormation/documentformation-getList.cshtml")
+    </div>
+    <div id="vanban-container">
+
+    </div>
+</section>
+<!--Văn bản-->
+<section class="section" page-group="page-group-documentmanage" id="page-documentdigitizing" data-aos="fade-up">
+</section>
+
+<!--Hướng dẫn-->
+<a class="huongdan c-poiter" data-bs-toggle="tooltip" data-bs-placement="left" title="Hướng dẫn" onclick="df.displayModal_HuongDan()" hidden>
+    <i class="bi bi-stack-overflow"></i>
+</a>
+@Html.Partial("~/Views/Admin/_DocumentManage/DocumentFormation/documentformation-huongdan.cshtml")
+<!--documentformation-crud-->
+<div class="modal fade text-left" id="documentformation-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--documentformation-kysohangloat-->
+<div class="modal fade text-left" id="documentformation-lichsu" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--documentformation-thietlapquyen-->
+<div class="modal fade text-left" id="documentformation-thietlapquyen" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--documentformation-kysohangloat-->
+<div class="modal fade text-left" id="documentformation-kysohangloat" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--documentformation-excel.hoso-->
+@Html.Partial("~/Views/Admin/_DocumentManage/DocumentFormation/documentformation-excel.hoso/excel.hoso.cshtml")
+<!--documentformation-excel.hoso-capnhattruong-->
+@Html.Partial("~/Views/Admin/_DocumentManage/DocumentFormation/documentformation-excel.hoso/excel.hoso-capnhattruong.cshtml")
+<!--documentformation-file.vanban-->
+@Html.Partial("~/Views/Admin/_DocumentManage/DocumentFormation/documentformation-file.vanban/file.vanban.cshtml")
+<!--Xác thực sao lưu-->
+<div class="modal fade text-center" id="xacnhansaoluu" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="xacnhansaoluu-content"></div>
+            <div class="modal-footer p-2 justify-content-center">
+                <button type="button" class="btn btn-sm btn-primary ml-1" name="hoso">
+                    <span class="">Hồ sơ</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-primary ml-1" name="vanban">
+                    <span class="">Văn bản</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" name="no">
+                    <span class="">Hủy bỏ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

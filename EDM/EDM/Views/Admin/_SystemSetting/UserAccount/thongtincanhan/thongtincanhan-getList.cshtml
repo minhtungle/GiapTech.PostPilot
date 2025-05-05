@@ -1,0 +1,61 @@
+﻿@using Public.Models
+@{
+    Permission per = Session["Permission"] as Permission;
+}
+<div class="card-body" intro-container="dulieu-container">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 p-4 text-center" id="process-capdodoanhthu-canhan-container">
+            <div class="position-relative">
+                <div class="form-group">
+                    <div class="row justify-content-between px-2">
+                        <h4 class="font-bold mb-3" style="width: fit-content;" id="tencapdodoanhthu-hientai">@per.CapDo_DoanhThu.TenCapDo_DoanhThu</h4>
+                        <h4 class="font-bold mb-3" style="width: fit-content;" id="tencapdodoanhthu-tieptheo">@per.CapDo_DoanhThu.TenCapDo_DoanhThu</h4>
+                    </div>
+                    <div class="w-100" id="process-capdodoanhthu-canhan"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 p-4 text-center" id="process-muctieudoanhthu-canhan-container">
+            <div class="position-relative">
+                <div class="form-group">
+                    <div class="row justify-content-center">
+                        <h4 class="font-bold mb-3">MỤC TIÊU CÁ NHÂN @DateTime.Now.ToString("MM/yyyy")</h4>
+                    </div>
+                    <div class="w-100" id="process-muctieudoanhthu-canhan"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="mb-2 toggle-vis-bar" intro-container="dulieu-hienthicot">
+        Hiển thị:
+        @*<a href="#" class="toggle-vis" data-table="thongtincanhan-getList" data-column="1">Tiến độ</a>*@ |
+        <a href="#" class="toggle-vis" data-table="thongtincanhan-getList" data-column="2">Ngày lên mục tiêu</a> |
+        <a href="#" class="toggle-vis" data-table="thongtincanhan-getList" data-column="3">Ngày đạt mục tiêu</a>
+        <a href="#" class="toggle-vis" data-table="thongtincanhan-getList" data-column="4">Tác vụ</a>
+    </div>
+    <table class="table table-hover table-bordered table-sticky w-100" id="thongtincanhan-getList" data-page-length="10">
+        <thead class="nowrap" style="white-space: nowrap !important">
+            <tr>
+                <th class="text-center" data-orderable="false"></th>
+
+                <th class="text-center w-40">Tiến độ</th>
+                <th class="text-center">Ngày lên mục tiêu</th>
+                <th class="text-center">Ngày đạt mục tiêu</th>
+
+                <th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th class="text-center"><input class="form-check-input checkAll-thongtincanhan-getList" type="checkbox" title="Chọn tất cả" /></th>
+
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>

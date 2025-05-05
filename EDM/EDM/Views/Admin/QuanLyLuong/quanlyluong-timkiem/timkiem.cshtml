@@ -1,0 +1,58 @@
+﻿@using EDM_DB
+@{
+    List<default_tbChucVu> CHUCVUs = Session["CHUCVUs"] as List<default_tbChucVu>;
+    CHUCVUs = CHUCVUs.Where(x => x.MaChucVu == "GV"
+    //|| x.MaChucVu == "NVKD"
+    ).ToList();
+}
+<div class="modal fade text-left" id="modal-timkiem" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-md-6 col-sm-12 my-2">
+                    Tìm kiếm
+                </h5>
+            </div>
+            <div class="modal-body" style="overflow: unset;">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="">Chức vụ</label>
+                                <select class="form-control form-select2"
+                                        id="select-chucvu" name="select-chucvu">
+                                    <option disabled data-ma="" @(CHUCVUs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                    @foreach (default_tbChucVu chucVu in CHUCVUs)
+                                    {
+                                        <option style="white-space: pre!important"
+                                                value="@chucVu.MaChucVu">
+                                            @chucVu.TenChucVu
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="">Thời gian</label>
+                                <input type="text" class="form-control monthformat" placeholder="Nhập thông tin ..."
+                                       id="input-thoigian" name="input-thoigian"
+                                       value="@DateTime.Now.ToString("MM/yyyy")">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary ml-1" onclick="quanLyLuong.locThongTin.timKiem()">
+                    <span class="">Tìm kiếm</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <span class="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

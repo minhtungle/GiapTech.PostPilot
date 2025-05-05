@@ -1,0 +1,40 @@
+﻿@using Public.Models
+@{
+    Layout = null;
+    Permission per = Session["Permission"] as Permission;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("~/Views/_Shared/_lib/lib.css.cshtml")
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <div id="system">
+        <div class="body-content" id="user">
+            <!--user.sidebar-->
+            <!--...-->
+            <div class="layout-horizontal">
+                <div class="p-0 main">
+                    <!--user.navbar-->
+                    @Html.Partial("~/Views/_Shared/Auth/auth.navbar.cshtml")
+                    <div hidden>
+                        @RenderSection("hBreadcrumb", false)
+                        @RenderSection("hTitle", false)
+                    </div>
+                    <!--user.page.body-->
+                    @RenderBody()
+                </div>
+                <!--user.footer-->
+                @Html.Partial("~/Views/_Shared/Auth/auth.footer.cshtml")
+                <a href="#" class="back-to-top">
+                    <i class="bi bi-arrow-up-short"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/_Shared/_lib/lib.js.cshtml")
+    <script src="~/Content/User/user.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

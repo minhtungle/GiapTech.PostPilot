@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Vị trí lưu trữ";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Vị trí lưu trữ</li>
+}
+@section scripts {
+    <script src="~/Content/Admin/_DirectorySetting/StorageLocation/storagelocation.js"></script>
+    <script>
+        var sl = new StorageLocation();
+        sl.init();
+    </script>
+}
+<section class="section" page-group="page-group-directorysetting" id="page-storagelocation" data-aos="fade-up">
+    <div class="card">
+        <div class="card-content" id="storagelocation-getList-container">
+            @Html.Partial("~/Views/Admin/_DirectorySetting/StorageLocation/storagelocation-getList.cshtml")
+        </div>
+    </div>
+</section>
+<!--storagelocation-crud-->
+<div class="modal fade text-left" id="storagelocation-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--storagelocation-confirmdialog-->
+<div class="modal fade text-left" id="storagelocation-delete" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--storagelocation-excel.vitri-->
+@Html.Partial("~/Views/Admin/_DirectorySetting/StorageLocation/storagelocation-excel.vitri/excel.vitri.cshtml")
+<!--storagelocation-excel.vitri-capnhattruong-->
+@Html.Partial("~/Views/Admin/_DirectorySetting/StorageLocation/storagelocation-excel.vitri/excel.vitri-capnhattruong.cshtml")

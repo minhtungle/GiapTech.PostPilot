@@ -1,0 +1,90 @@
+﻿@using Applications.QuanLyLopHoc.Models
+@model List<tbDonHangExtend>
+
+
+<table class="table table-hover table-bordered table-sticky w-100" id="donhang-getList" data-page-length="2">
+    <thead class="nowrap" style="white-space: nowrap !important">
+        <tr>
+            <th class="text-center" data-orderable="false"></th>
+
+            <th class="text-center">Tên nhân viên</th>
+            <th class="text-center w-50">Thông tin đơn hàng</th>
+            <th class="text-center w-50">Ghi chú</th>
+
+            <th class="text-center" data-orderable="false">Tác vụ</th>
+        </tr>
+    </thead>
+    <tfoot class="show-footer-above">
+        <tr>
+            <th class="text-center">
+                <input class="form-check-input checkAll-donhang-getList" type="checkbox" title="Chọn tất cả"
+                       onclick="quanLyLopHoc.lopHoc.lichHoc.donHang.chonDonHang()" />
+            </th>
+
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+        </tr>
+    </tfoot>
+    <tbody>
+        @foreach (var donHang in Model)
+        {
+            <tr id="@donHang.DonHang.IdDonHang"
+                data-iddonhang="@donHang.DonHang.IdDonHang"
+                data-idkhachhang="@donHang.DonHang.IdKhachHang"
+                data-tenkhachhang="@donHang.KhachHang.TenKhachHang"
+                data-sobuoi="@donHang.SanPham.SoBuoi">
+                <td class="text-center">
+                    <input class="form-check-input checkRow-donhang-getList" type="checkbox"
+                           onclick="quanLyLopHoc.lopHoc.lichHoc.donHang.chonDonHang()" />
+                </td>
+                <td class="text-center">@donHang.ThongTinNguoiTao.TenNguoiDung</td>
+                <td>
+                    <table class="table table-bordered table-responsive w-100">
+                        <tbody>
+                            <tr>
+                                <td>Khóa học</td>
+                                <td>
+                                    <span class="font-bold text-primary">@donHang.SanPham.TenSanPham</span> <br />
+                                    <small class="fst-italic">@string.Format("({0}  phút/buổi - tổng {1} buổi)", donHang.SanPham.ThoiGianBuoiHoc, donHang.SanPham.SoBuoi)</small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Khách hàng</td>
+                                <td>
+                                    <span class="font-bold text-danger">@donHang.KhachHang.TenKhachHang</span> <br />
+                                    <small class="fst-italic">@string.Format("đăng ký lần {0}", donHang.DonHang.ThuTuDonHang)</small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Trình độ đầu vào</td>
+                                <td>@donHang.TrinhDoDauVao.TenTrinhDo</td>
+                            </tr>
+                            <tr>
+                                <td>Trình độ đầu ra</td>
+                                <td>@donHang.TrinhDoDauRa.TenTrinhDo</td>
+                            </tr>
+                            <tr>
+                                <td>Ngày đóng học phí</td>
+                                <td>@donHang.DonHang.NgayTao.Value.ToString("dd/MM/yyyy")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td class="nowrap" title="@donHang.DonHang.GhiChu">
+                    @Html.Raw(Public.Handle.TruncateString(input: donHang.DonHang.GhiChu, maxLength: 60).Replace("\n", "<br />"))
+                </td>
+                <td class="text-center">
+                    <div style="white-space: nowrap">
+                        <a class="btn btn-sm btn-light-secondary" title="Xem chi tiết"
+                           onclick="quanLyLopHoc.khachHang.displayModal_KhachHang_XemChiTiet(@string.Format("'{0}'", donHang.KhachHang.IdKhachHang))">
+                            <i class="bi bi-eye-fill"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

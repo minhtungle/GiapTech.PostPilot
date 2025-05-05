@@ -1,0 +1,69 @@
+﻿@using Public.Models
+@{
+    Permission per = Session["Permission"] as Permission ?? new Permission();
+}
+<!--
+* Mọi thông tin bên dưới kèm theo phần view chạy qua đây sẽ được đưa vào SectionBody()
+-->
+<!--Loading-->
+<div class="modal-backdrop fade show justify-content-center align-items-center" id="sys-loading" style="display: flex; z-index: 10000">
+    <img src="@per.DonViSuDung.Logo" class="spin me-4" style="height:50px; width:50px;" />
+</div>
+<!--Confirm dialog-->
+<div class="modal fade text-center" id="confirmdialog" tabindex="-1" role="dialog" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="confirmdialog-content"></div>
+            <div class="modal-footer p-2 justify-content-center">
+                <button type="button" class="btn btn-sm btn-primary ml-1" name="yes">
+                    <span class="">Đồng ý</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" name="no">
+                    <span class="">Hủy bỏ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Alert dialog-->
+<div class="modal fade text-center" id="alertdialog" tabindex="-1" role="dialog" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center"></div>
+            <div class="modal-body"></div>
+            <div class="modal-footer p-2 justify-content-center">
+                @*<button type="button" class="btn btn-sm btn-primary ml-1" name="yes">
+                        <span class="">Đồng ý</span>
+                    </button>*@
+                <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal" name="no">
+                    <span class="">Chiến tiếp 🦀</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--System logout-->
+<div class="modal fade text-center" id="logoutdialog" tabindex="-1" role="dialog" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p class="text-danger font-bold" id="logoutdialog-content"></p>
+                <p>Hệ thống sẽ tiến hành đăng xuất, vui lòng đăng nhập lại để cập nhật thay đổi</p>
+            </div>
+            <div class="modal-footer p-2 justify-content-center">
+                <a href="~/Auth/Logout" class="btn btn-sm btn-primary ml-1" name="yes">
+                    <span class="">Đồng ý</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Viewer modal - mở lên để khi tắt viewer sẽ đóng modal này và không ảnh hưởng modal khác-->
+<div class="modal fade text-center" id="modal-bait-viewer" tabindex="-1" role="dialog" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>

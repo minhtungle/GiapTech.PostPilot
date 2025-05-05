@@ -1,0 +1,158 @@
+﻿
+#page-messenger .noidung-hoithoai {
+    height: 65vh;
+}
+
+#khungchat-tinnhanmoi {
+    display: none;
+    position: absolute;
+    top: -.5rem;
+    left: -.5rem;
+    border-radius: 45rem;
+}
+
+    #khungchat-tinnhanmoi.active {
+        display: block;
+    }
+
+#btn-huongdansudung-tongquat {
+    /*z-index: 100000;*/
+    display: flex;
+    /*background: #F1C93B;*/
+    color: white;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 1rem;
+    bottom: 4.5rem;
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50px !important;
+    opacity: .5;
+}
+
+    #btn-huongdansudung-tongquat:hover {
+        opacity: 1;
+    }
+
+#khungchat-active {
+    display: flex;
+    background: #435ebe;
+    color: white;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50px !important;
+    opacity: .5;
+}
+
+    #khungchat-active:hover {
+        opacity: 1;
+    }
+
+#khungchat-container {
+    display: none;
+    width: 30rem;
+    position: absolute;
+    bottom: 1rem;
+    right: 4rem;
+}
+
+    #khungchat-container .card {
+        width: 100%;
+    }
+
+    #khungchat-container.active {
+        display: flex;
+    }
+
+        #khungchat-container.active #khungchat-active {
+            display: none;
+        }
+
+.noidung-hoithoai-container {
+    border: 1px solid #dfe3e7;
+    border-radius: .267rem;
+}
+
+.noidung-hoithoai {
+    overflow-y: scroll;
+    height: 25rem;
+    padding: .5rem 0rem;
+}
+
+.noidung-xuongcuoi {
+    display: none;
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: .5rem;
+    opacity: .8;
+    animation: UpAnDown 2s ease infinite 1s;
+    transition: opacity .5s ease;
+}
+
+    .noidung-xuongcuoi:hover {
+        opacity: 1;
+    }
+
+.noidung-xemthem {
+    /*display: none;*/
+    z-index: 1;
+    opacity: .8;
+    transition: opacity .5s ease;
+}
+
+    .noidung-xemthem:hover {
+        opacity: 1;
+    }
+
+.tinnhan-noidung {
+    max-width: 80%;
+    background: var(--bs-body-bg);
+    padding: .5rem .75rem;
+    border-radius: .75rem;
+    text-align: justify;
+}
+
+.tinnhan-thoigian {
+    display: flex;
+    align-items: center;
+    margin: 0 1rem;
+}
+
+@media (max-width:576px) {
+    #khungchat-container {
+        width: auto;
+        height: auto;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        top: 0;
+        left: 0;
+        background-color: rgba(0,0,0,.5);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+    }
+
+        #khungchat-container .card {
+            position: absolute;
+            width: 80%;
+        }
+}
+
+@keyframes UpAnDown {
+    0%, 100% {
+        transform: translateY(0rem);
+    }
+
+    50% {
+        transform: translateY(-.5rem)
+    }
+}

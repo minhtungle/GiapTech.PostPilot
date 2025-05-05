@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Danh mục hồ sơ";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Danh mục hồ sơ</li>
+}
+@section scripts {
+    <script src="~/Content/Admin/_DirectorySetting/DocumentDirectory/documentdirectory.js"></script>
+    <script>
+        var dd = new DocumentDirectory();
+        dd.init();
+    </script>
+}
+<section class="section" page-group="page-group-directorysetting" id="page-documentdirectory" data-aos="fade-up">
+    <div class="card">
+        <div class="card-content" id="documentdirectory-getList-container">
+            @Html.Partial("~/Views/Admin/_DirectorySetting/DocumentDirectory/documentdirectory-getList.cshtml")
+        </div>
+    </div>
+</section>
+<!--documentdirectory-crud-->
+<div class="modal fade text-left" id="documentdirectory-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--documentdirectory-delete-->
+<div class="modal fade text-left" id="documentdirectory-delete" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--documentdirectory-excel.danhmuc-->
+@Html.Partial("~/Views/Admin/_DirectorySetting/DocumentDirectory/documentdirectory-excel.danhmuc/excel.danhmuc.cshtml")
+<!--documentdirectory-excel.danhmuc-capnhattruong-->
+@Html.Partial("~/Views/Admin/_DirectorySetting/DocumentDirectory/documentdirectory-excel.danhmuc/excel.danhmuc-capnhattruong.cshtml")

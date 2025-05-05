@@ -1,0 +1,57 @@
+﻿@{
+    string ngayHomNay = DateTime.Now.ToString("dd/MM/yyyy");
+}
+<div class="list-group list-group-horizontal mb-1 text-center col-md-6 col-sm-12 justify-content-sm-start justify-content-center"
+     id="tab_danhsachlophoc" role="tablist">
+    <a class="list-group-item list-group-item-action active" id="buoihocsaptoi-container-tab"
+       data-bs-toggle="list" href="#buoihocsaptoi-container" role="tab">
+        🔔 Buổi học sắp tới
+        @*<small class="fst-italic text-danger">(sau @ngayHomNay)</small>*@
+    </a>
+    <a class="list-group-item list-group-item-action" id="lophocthamgia-container-tab"
+       data-bs-toggle="list" href="#lophocthamgia-container" role="tab">
+        📚 Lớp học tham gia
+        @*<small class="fst-italic text-danger">(Đang hoạt động)</small>*@
+    </a>
+</div>
+<div class="tab-content text-justify">
+    <div class="tab-pane fade show active py-2" id="buoihocsaptoi-container" role="tabpanel"
+         aria-labelledby="buoihocsaptoi-container-tab">
+        @*<div class="row">
+                <div class="col-12">
+                    <div class="divider divider-right" data-bs-toggle="collapse" href="#buoihocsaptoi-collapse">
+                        <div class="divider-text font-bold">
+                            <div class="badges">
+                                <span class="badge bg-primary c-pointer">Nhấn xem bộ lọc</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapse" id="buoihocsaptoi-collapse">
+                        @Html.Partial("~/Views/Admin/QuanLyLopHoc/giaovien/buoihocsaptoi/buoihocsaptoi-timkiem.cshtml")
+                        <hr />
+                    </div>
+                </div>
+            </div>*@
+        <div class="row" id="buoihocsaptoi-getlist-container"></div>
+    </div>
+    <div class="tab-pane fade py-2" id="lophocthamgia-container" role="tabpanel"
+         aria-labelledby="lophocthamgia-container-tab">
+        @*<div class="row">
+                <div class="col-12">
+                    <div class="divider divider-right
+                         " data-bs-toggle="collapse" href="#lophocthamgia-collapse">
+                        <div class="divider-text font-bold">
+                            <div class="badges">
+                                <span class="badge bg-primary c-pointer">Nhấn xem bộ lọc</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapse" id="lophocthamgia-collapse">
+                        @Html.Partial("~/Views/Admin/QuanLyLopHoc/giaovien/lophocthamgia/lophocthamgia-timkiem.cshtml")
+                        <hr />
+                    </div>
+                </div>
+            </div>*@
+        <div class="row" id="lophocthamgia-getlist-container"></div>
+    </div>
+</div>

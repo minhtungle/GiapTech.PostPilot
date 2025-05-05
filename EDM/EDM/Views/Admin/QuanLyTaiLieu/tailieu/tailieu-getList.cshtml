@@ -1,0 +1,48 @@
+﻿@using Applications.QuanLyTaiLieu.Models
+@model List<tbTaiLieuExtend>
+
+<div class="card-body" intro-container="dulieu-container">
+    <table class="table table-hover table-bordered table-sticky w-100" id="tailieu-getList" data-page-length="10">
+        <thead class="nowrap" style="white-space: nowrap !important">
+            <tr>
+                <th class="text-center" data-orderable="false"></th>
+
+                <th class="text-center">Tên tài liệu</th>
+                <th class="text-center">Loại tệp</th>
+                @*   <th class="text-center">Nhãn dán</th>*@
+
+                <th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th class="text-center"><input class="form-check-input checkAll-tailieu-getList" type="checkbox" title="Chọn tất cả" /></th>
+
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                @*     <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>*@
+
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var taiLieu in Model)
+            {
+                <tr id="@taiLieu.TaiLieu.IdTaiLieu">
+                    <td class="text-center"><input class="form-check-input checkRow-tailieu-getList" type="checkbox" /></td>
+                    <td class="text-center">@taiLieu.TaiLieu.TenTaiLieuGoc</td>
+                    <td class="text-center">@taiLieu.TaiLieu.LoaiTep</td>
+                    @*<td class="text-center">@taiLieu.NhanDan.TenNhanDan</td>*@
+                    <td class="text-center">
+                        <div style="white-space: nowrap">
+                            <a class="btn btn-sm btn-light-secondary" title="Xem chi tiết"
+                               onclick="quanLyTaiLieu.taiLieu.displayModal_XemChiTiet(@string.Format("'{0}'", taiLieu.TaiLieu.IdTaiLieu))">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,169 @@
+﻿@using EDM_DB
+@using Applications.QuanLyLopHoc.Dtos
+@model  DisplayModal_TaoLichHoc_Output_Dto
+@{
+    var giaoViens = Session["GIAOVIENs"] as List<tbNguoiDung>;
+}
+<div class="modal-dialog modal-dialog-scrollable modal-full" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title col-md-6 col-sm-12 my-2">
+                Thêm buổi học
+            </h5>
+            <div class="list-group list-group-horizontal mb-1 text-center col-md-6 col-sm-12 justify-content-sm-end justify-content-center" id="" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="thongtin-list"
+                   data-bs-toggle="list" href="#thongtin" role="tab">Thông tin chung</a>
+                <a class="list-group-item list-group-item-action" id="donhang-list"
+                   data-bs-toggle="list" href="#donhang" role="tab">Đơn chờ xếp lớp</a>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="tab-content text-justify">
+                <div class="tab-pane fade show active" id="thongtin" role="tabpanel"
+                     aria-labelledby="thongtin-list">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="row">
+                                <!--Lịch học-->
+                                <div class="col-sm-12 col-md-12">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3 overflow-auto">
+                                            <table class="table table-hover table-bordered w-100 mt-2" id="table-lichhoc">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">Ngày/giờ học</th>
+                                                        <th class="text-center">Thời lượng (phút)</th>
+                                                        <th class="text-center">
+                                                            <a class="btn btn-light-secondary"
+                                                               onclick="quanLyLopHoc.lopHoc.lichHoc.themDongBuoiHoc(this)">
+                                                                <i class="bi bi-plus-circle-fill"></i>
+                                                            </a>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="thongtin-buoihoc">
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <input type="datetime-local" min="" class="form-control input-thoigianbatdau" placeholder="Nhập thông tin ..."
+                                                                   name="input-thoigianbatdau"
+                                                                   value="" required>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <input type="number" class="form-control input-thoiluong" placeholder="Nhập thông tin ..."
+                                                                   name="input-thoiluong"
+                                                                   value="75" required>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <a class="btn btn-light-secondary"
+                                                               onclick="quanLyLopHoc.lopHoc.lichHoc.xoaDongBuoiHoc(this)">
+                                                                <i class="bi bi-trash3-fill"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <div class="row">
+                                <!--Giáo viên-->
+                                <div class="col-12 col-sm-12 col-md-6">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="select-giaovien">Giáo viên</label>
+                                            <select class="form-control form-select2" multiple
+                                                    id="select-giaovien" name="select-giaovien"
+                                                    required>
+                                                <option disabled>Chọn thông tin</option>
+                                                @foreach (tbNguoiDung giaoVien in giaoViens)
+                                                {
+                                                    <option value="@giaoVien.IdNguoiDung">@giaoVien.TenNguoiDung</option>
+                                                }
+                                            </select>
+                                            <div class="invalid-feedback feedback" for="select-giaovien">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Lương theo buổi-->
+                                <div class="col-12 col-sm-12 col-md-6">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="input-luongtheobuoi">Lương theo buổi</label>
+                                            <div class="input-group mb-3">
+                                                <input type="money" class="form-control" placeholder="Nhập thông tin ..."
+                                                       id="input-luongtheobuoi" name="input-luongtheobuoi"
+                                                       value="0" required>
+                                                <span class="input-group-text">VND</span>
+                                            </div>
+                                            <div class="invalid-feedback feedback" for="input-luongtheobuoi">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Khách hàng-->
+                                <div class="col-12 col-sm-12 col-md-12">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="input-tenkhachhang">Khách hàng</label>
+                                            <input type="text" class="form-control min-h-50 max-h-100" 
+                                                   id="input-tenkhachhang"
+                                                   data-idkhachhang=""
+                                                   data-iddonhang=""
+                                                   placeholder="Tích chọn tại mục [Đơn cần xếp lớp]"
+                                                   readonly required />
+                                            <div class="invalid-feedback feedback" for="select-tenkhachhang">Chọn tại bảng danh sách cần xếp lớp</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Chế độ-->
+                                <div class="col-12 col-sm-12 col-md-12">
+                                    <div class="position-relative mb-3" id="radio-chedocapnhatlichhoc">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="flexRadioDefault" id="checkbox-chedocapnhatlichhoc"
+                                                   onchange="quanLyLopHoc.lopHoc.lichHoc.switchTaoLichHocTuDong()">
+                                            <label class="form-check-label" for="checkbox-chedocapnhatlichhoc">
+                                                Tạo lịch học tự động <small class="text-danger fst-italic font-bold">(Lặp lại lịch học trên theo số buổi)</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--Số buổi-->
+                                <div class="col-12 col-sm-12 col-md-12" id="input-sobuoi-container" style="display: none">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="input-sobuoi">Tổng số buổi</label>
+                                            <div class="input-group mb-3">
+                                                <input type="number" class="form-control" placeholder="Nhập thông tin ..."
+                                                       id="input-sobuoi" name="input-sobuoi"
+                                                       value="2">
+                                                <span class="input-group-text">Đề xuất: &nbsp;<span class="text-danger" id="input-sobuoi-dexuat">0</span></span>
+                                            </div>
+                                            <div class="invalid-feedback feedback" for="input-sobuoi">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="donhang" role="tabpanel"
+                 aria-labelledby="donhang-list">
+                @Html.Partial("~/Views/Admin/QuanLyLopHoc/test/quanlylophoc-lichhoc/donhang-getList.cshtml", Model.DonHangs)
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary ml-1" id="btn-taolichhoc"
+                    onclick="quanLyLopHoc.lopHoc.lichHoc.taoBuoiHoc(@string.Format("'{0}'", Model.IdLopHoc))">
+                <span class="">Lưu</span>
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,146 @@
+﻿@using LoanManage.Models
+@{
+    ViewBag.Title = "Khai thác hồ sơ mượn";
+    Layout = "~/Views/_Shared/User/user.cshtml";
+
+    tbPhieuMuonExtend phieuMuon = ViewBag.phieuMuon;
+    int thoiHanMuon = ViewBag.thoiHanMuon;
+    string trangThaiMuon = ViewBag.trangThaiMuon;
+    string hostName = ViewBag.hostName;
+}
+@section styles{
+    <link href="~/Content/Admin/LoanManage/khaithachoso.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/Content/Admin/LoanManage/khaithachoso.js"></script>
+    <script>
+        var khaiThac = new KhaiThacHoSo();
+        khaiThac.init();
+    </script>
+}
+<section class="section p-5" id="page-khaithachosomuon" data-aos="fade-up">
+    <div class="container h-100">
+        <div class="card">
+            <div class="card-body">
+                @if (trangThaiMuon == "khongtontai") {
+                    <div class="row">
+                        <div class="col-md-8 col-12 offset-md-2">
+                            <div class="text-center">
+                                <img class="img-error" src="/Assets/templates/assets/images/samples/error-404.svg" alt="Not Found">
+                                <h3 class="error-title text-danger"><i class="bi bi-wrench"></i> PHIẾU KHÔNG TỒN TẠI !</h3>
+                                <p class='fs-5 text-gray-600'>Rất tiếc thông tin phiếu của bạn chưa chính xác, vui lòng kiểm tra lại đường dẫn khai thác chúng tôi đã cung cấp tại hòm thư của bạn.</p>
+                                <a href="~/Auth/Login" class="btn btn-lg btn-outline-primary mt-3">Trở lại</a>
+                            </div>
+                        </div>
+                    </div>
+                } else {
+                    <div class="row">
+                        <!--Id-->
+                        <input id="input-idphieumuon" value="@phieuMuon.IdPhieuMuon" hidden />
+                        <div class="col-12 table-responsive">
+                            <table class="table table-hover table-bordered w-100" id="thongtinphieumuon">
+                                <tbody class="bg-body">
+                                    <tr>
+                                        <td colspan="2" class="font-bold text-center text-uppercase">Thông tin phiếu mượn</td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-bold w-50">Hình thức mượn</td>
+                                        <td class="w-50 text-justify">@phieuMuon.HinhThucMuon.TenHinhThucMuon</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold w-50">Họ tên</td>
+                                        <td class="text-justify w-50">@phieuMuon.NguoiMuon_HoTen</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold w-50">CCCD/CMND</td>
+                                        <td class="text-justify w-50">@phieuMuon.NguoiMuon_CCCD</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold w-50">Vị trí lưu trữ</td>
+                                        <td class="text-justify w-50">@phieuMuon.NguoiMuon_SoDienThoai</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold w-50">Email</td>
+                                        <td class="text-justify w-50">@phieuMuon.NguoiMuon_Email</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold w-50">Đơn vị công tác</td>
+                                        <td class="text-justify w-50">@phieuMuon.NguoiMuon_DonViCongTac</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Lý do mượn</td>
+                                        <td class="text-justify">@phieuMuon.NguoiMuon_LyDoMuon</td>
+                                    </tr>
+                                </tbody>
+                                <tbody class="bg-body">
+                                    <tr>
+                                        <td class="font-bold">Thời hạn mượn</td>
+                                        <td class="text-justify">
+                                            Từ
+                                            <span class="text-success">
+                                                @(phieuMuon.NgayYeuCau == null ? "" : phieuMuon.NgayYeuCau.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture))
+                                            </span>
+                                            tới
+                                            <span class="text-success">
+                                                @(phieuMuon.NgayHenTra == null ? "" : phieuMuon.NgayHenTra.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture))
+                                            </span>
+                                            @if (trangThaiMuon == "hethan") {
+                                                <span class="badge bg-danger">
+                                                    🕐 Hết hạn
+                                                </span>
+                                            } else {
+                                                @*<span class="badge bg-success">
+                                                        còn @(thoiHanMuon) ngày
+                                                    </span>*@
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        @if (trangThaiMuon != "hethan") {
+                            <div class="col-sm-12 col-md-6">
+                                <table class="table table-hover table-bordered w-100 nowrap" id="vanBanMuon-getList" data-page-length="10">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Tiêu đề hồ sơ</th>
+                                            <th class="text-center">Tên văn bản</th>
+                                            <th class="text-center" data-orderable="false">Số trang <br /><span class="text-danger fst-italic">(từ trang đến trang)</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot class="show-footer-above">
+                                        <tr>
+                                            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (tbPhieuMuon_VanBanExtend vanBan in phieuMuon.PhieuMuon_VanBans) {
+                                            string duongDan = string.Format("{0}/KhaiThacHoSo/xemPDF?idPhieuMuon={1}&idVanBan={2}", hostName, phieuMuon.IdPhieuMuon, vanBan.VanBan.IdVanBan);
+                                            string tenVanBan = vanBan.VanBan.TenVanBan != null ? vanBan.VanBan.TenVanBan_BanDau : vanBan.VanBan.TenVanBan;
+                                            if (vanBan.VanBan.Loai.Contains("mp4")) {
+                                                duongDan = vanBan.DuongDanFile_DaXuLy;
+                                            }
+                                            <tr onclick="khaiThac.phieuMuon.hienThiFile(@("'" + duongDan + "'"))">
+                                                @*<td class="text-center"><input class="form-check-input checkRow-vanBanMuon-getList" type="checkbox" /></td>*@
+                                                <td>@vanBan.HoSo.TieuDeHoSo</td>
+                                                <td>@tenVanBan</td>
+                                                <td>Từ trang <span class="text-danger">[@vanBan.TuTrang]</span> tới <span class="text-danger">[@vanBan.DenTrang]</span></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="bg-bs-body col-sm-12 col-md-6" id="vanBanMuon-xemtep">
+                                <iframe class="col-12" src="" title="Chi tiết" style="height: 70vh"></iframe>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

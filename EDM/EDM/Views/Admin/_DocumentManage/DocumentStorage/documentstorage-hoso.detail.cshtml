@@ -1,0 +1,257 @@
+﻿@using Public.Models
+@using EDM_DB
+@{
+    string loai = ViewBag.loai;
+    List<EDM_DB.tbDonViSuDung_PhongLuuTru> phongLuuTrus = ViewBag.phongLuuTrus;
+    List<EDM_DB.default_tbCheDoSuDung> cheDoSuDungs = ViewBag.cheDoSuDungs;
+
+    List<Tree<tbViTriLuuTru>> viTriLuuTrus = ViewBag.viTriLuuTrus;
+    List<Tree<tbDanhMucHoSo>> danhMucHoSos = ViewBag.danhMucHoSos;
+    string hienthiViTris = ViewBag.hienthiViTris;
+    string hienthiDanhMucs = ViewBag.hienthiDanhMucs;
+    EDM_DB.tbHoSo hoSo = ViewBag.hoSo;
+    string thoiGianBatDau = hoSo.ThoiGianBatDau == null ? "" : hoSo.ThoiGianBatDau.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+    string thoiGianKetThuc = hoSo.ThoiGianKetThuc == null ? "" : hoSo.ThoiGianKetThuc.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+}
+<div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                @(loai == "create" ? "Thêm mới" : loai == "update" ? "Cập nhật" : "Xem chi tiết")
+            </h5>
+            <button type="button" class="close rounded-pill" data-bs-dismiss="modal"
+                    aria-label="Close">
+                <i data-feather="x"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <!--Id-->
+                <input id="input-idhoso" value="@hoSo.IdHoSo" hidden />
+                <div class="col-12 border-1">
+                    <div class="divider divider-left">
+                        <div class="divider-text text-uppercase">
+                            <i class="bi bi-caret-right-fill"></i> Thông tin chung
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!--Tiêu đề hồ sơ-->
+                        <div class="col-12 col-sm-12 col-md-12">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label class="required" for="input-tieudehoso">Tiêu đề hồ sơ</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-tieudehoso" value="@(hoSo.TieuDeHoSo ?? "")" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Phông lưu trữ-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label class="required" for="select-phongluutru">Phông lưu trữ</label>
+                                    <select class="form-control" id="select-phongluutru" @(loai == "read" ? "disabled" : "")>
+                                        <option disabled data-ma="" @(phongLuuTrus.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                        @foreach (var p in phongLuuTrus)
+                                        {
+                                            <option value="@p.IdPhongLuuTru" @(p.IdPhongLuuTru == hoSo.IdPhongLuuTru ? "selected" : "")>@p.TenPhongLuuTru</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Vị trí lưu trữ-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label class="required" for="select-vitriluutru">Vị trí lưu trữ</label>
+                                    <select class="form-control" id="select-vitriluutru" @(loai == "read" ? "disabled" : "")>
+                                        <option disabled data-ma="" @(viTriLuuTrus.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                        @MvcHtmlString.Create(hienthiViTris);
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Danh mục hồ sơ-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label class="required" for="select-danhmuchoso">Danh mục hồ sơ</label>
+                                    <select class="form-control" id="select-danhmuchoso" @(loai == "read" ? "disabled" : "")>
+                                        <option disabled data-ma="" @(danhMucHoSos.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                        @MvcHtmlString.Create(hienthiDanhMucs);
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--##-->
+                <div class="col-12 border-1">
+                    <div class="divider divider-left">
+                        <div class="divider-text text-uppercase">
+                            <i class="bi bi-caret-right-fill"></i> Mã hồ sơ
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!--Mục lục số hoặc năm hình thành hồ sơ-->
+                        <div class="col-12 col-sm-12 col-md-6" hidden>
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label class="required" for="input-muclucso">Mục lục số hoặc năm hình thành hồ sơ</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-muclucso" value="@(hoSo.MucLucSo_NamHinhThanh ?? "")" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Số và ký hiệu hồ sơ-->
+                        <div class="col-12 col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label class="required" for="input-sokyhieu">Số và ký hiệu hồ sơ</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-sokyhieu" value="@(hoSo.So_KyHieu ?? "")" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Mã hồ sơ-->
+                        <div class="col-12 col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label class="required" for="input-mahoso">Mã hồ sơ</label>
+                                    <input readonly type="text" class="form-control text-success" placeholder="Nhập thông tin ..." id="input-mahoso" value="@(hoSo.MaHoSo ?? "")" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 border-1">
+                    <div class="divider divider-left">
+                        <div class="divider-text text-uppercase">
+                            <i class="bi bi-caret-right-fill"></i> Thông tin khác
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!--Thời hạn bảo quản-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label for="input-thoihanbaoquan">Thời hạn bảo quản</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-thoihanbaoquan" value="@(hoSo.ThoiHanBaoQuan ?? "")" @(loai == "read" ? "disabled" : "")>
+                                    <input type="checkbox" class="form-check-input" id="checkbox-thoihanbaoquan" style="position: absolute; z-index: 1; right: .6rem; top: 2.2rem;" @(hoSo.ThoiHanBaoQuan == "Vĩnh viễn" ? "checked" : "") @(loai == "read" ? "disabled" : "") />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Thời gian bắt đầu-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label for="input-thoigianbatdau">Thời gian bắt đầu</label>
+                                    <input type="date" class="form-control" placeholder="Nhập thông tin ..." id="input-thoigianbatdau" value="@thoiGianBatDau" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Thời gian kết thúc-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label for="input-thoigianketthuc">Thời gian kết thúc</label>
+                                    <input type="date" class="form-control" placeholder="Nhập thông tin ..." id="input-thoigianketthuc" value="@thoiGianKetThuc" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Chế độ sử dụng-->
+                        <div class="col-12 col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label class="required" for="select-chedosudung">Chế độ sử dụng</label>
+                                    <select class="form-control" id="select-chedosudung" @(loai == "read" ? "disabled" : "")>
+                                        <option disabled @(cheDoSuDungs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                        @foreach (var c in cheDoSuDungs)
+                                        {
+                                            <option value="@c.IdCheDoSuDung" @(c.IdCheDoSuDung == hoSo.IdCheDoSuDung ? "selected" : "")>@c.TenCheDoSuDung</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Tình trạng vật lý-->
+                        <div class="col-12 col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label for="input-tinhtrangvatly">Tình trạng vật lý</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-tinhtrangvatly" value="@(hoSo.TinhTrangVatLy ?? "")" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Ngôn ngữ-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label for="input-ngonngu">Ngôn ngữ</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-ngonngu" value="@(hoSo.NgonNgu ?? "")" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Từ khóa-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label for="input-tukhoa">Từ khóa</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-tukhoa" value="@(hoSo.TuKhoa ?? "")" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Ký hiệu thông tin-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label for="input-kyhieuthongtin">Ký hiệu thông tin</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-kyhieuthongtin" value="@(hoSo.KyHieuThongTin ?? "")" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Tổng số văn bản trong hồ sơ-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label for="input-tongsovanban">Tổng số văn bản trong hồ sơ</label>
+                                    <input type="number" class="form-control" placeholder="Nhập thông tin ..." id="input-tongsovanban" value="@(hoSo.TongSoVanBan ?? 0)" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Số lượng tờ-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label for="input-soluongtu">Số lượng tờ</label>
+                                    <input type="number" class="form-control" placeholder="Nhập thông tin ..." id="input-soluongto" value="@(hoSo.SoLuongTo ?? 0)" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Số lượng trang-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label for="input-soluongtrang">Số lượng trang</label>
+                                    <input type="number" class="form-control" placeholder="Nhập thông tin ..." id="input-soluongtrang" value="@(hoSo.SoLuongTrang ?? 0)" @(loai == "read" ? "disabled" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Ghi chú-->
+                        <div class="col-12 col-sm-12 col-md-12">
+                            <div class="position-relative">
+                                <div class="form-group with-title mb-3">
+                                    <label for="input-chugiai">Ghi chú</label>
+                                    <textarea class="form-control min-h-100 max-h-200" id="input-ghichu" rows="3" @(loai == "read" ? "disabled" : "")>@(hoSo.GhiChu ?? "")</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

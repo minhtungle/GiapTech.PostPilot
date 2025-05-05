@@ -1,0 +1,491 @@
+﻿@using EDM_DB
+@using QuanLyKhachHang.Models
+@using Public.Models
+@{
+    string loai = ViewBag.loai;
+    List<ChucNangs> kieuNguoiDung_IdChucNang = ViewBag.kieuNguoiDung_IdChucNang;
+
+    tbKhachHangExtend khachHang = ViewBag.khachHang;
+
+    List<tbKhachHang_LichSuExtend> khachHang_LichSus = khachHang.LichSus;
+    int khachHang_LichSus_Count = khachHang_LichSus.Count;
+
+    List<tbKhachHang_DonHangExtend> khachHang_DonHangs = khachHang.DonHangs;
+
+    // Nếu chưa có thì tạo bản ghi mẫu
+    khachHang_DonHangs = khachHang_DonHangs.Count > 0 ? khachHang_DonHangs : new List<tbKhachHang_DonHangExtend>();
+
+    List<ThaoTac> thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
+    List<default_tbQuocGia> quocGias = Session["QUOCGIAs"] as List<default_tbQuocGia>;
+    List<tbKhachHang_LoaiKhachHang> loaiKhachHangs = Session["LOAIKHACHHANGs"] as List<tbKhachHang_LoaiKhachHang>;
+    List<tbGoiChamSoc> goiChamSocs = Session["GOICHAMSOCs"] as List<tbGoiChamSoc>;
+    List<tbPhuongThucThanhToan> phuongThucThanhToans = Session["PHUONGTHUCTHANHTOANs"] as List<tbPhuongThucThanhToan>;
+
+    List<string> loaiThaoTac_Disabled = new List<string> { "read", "update-donhang" };
+    List<string> loaiThaoTac_Disabled_1 = new List<string> { "read" };
+}
+<div class="modal-dialog modal-dialog-scrollable modal-full" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title col-md-6 col-sm-12 my-2">
+                @(loai == "create" ? "Thêm mới" : loai == "update" ? "Cập nhật" : loai == "update-donhang" ? "Thêm đơn hàng" : "Xem chi tiết")
+                <a class="text-warning c-pointer p-1" data-bs-toggle="tooltip" data-bs-placement="right" title="Nhấn xem hướng dẫn"
+                   data-hint="Nhấn xem hướng dẫn" data-hint-position="top-left"
+                   onclick="huongDanSuDung.kichHoat('hoso-themmoi')"><i class="bi bi-lightbulb fs-6"></i></a>
+            </h5>
+            <div class="list-group list-group-horizontal mb-1 text-center col-md-6 col-sm-12 justify-content-sm-end justify-content-center" id="" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="thongtin-list"
+                   data-bs-toggle="list" href="#thongtin" role="tab">Thông tin khách hàng</a>
+                @if (loai != "create")
+                {
+                    <a class="list-group-item list-group-item-action" id="lichsuhoso-list"
+                       data-bs-toggle="list" href="#lichsuhoso" role="tab">Lịch sử thao tác</a>
+                }
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="tab-content text-justify">
+                <div class="tab-pane fade show active" id="thongtin" role="tabpanel"
+                     aria-labelledby="thongtin-list">
+                    <div class="row" intro-container="thongtin-chung">
+                        <!--Id-->
+                        <input id="input-idkhachhang" value="@khachHang.IdKhachHang" hidden />
+                        <div class="col-12 col-md-6 border-1">
+                            <div class="divider divider-left">
+                                <div class="divider-text text-uppercase">
+                                    <i class="bi bi-caret-right-fill"></i> Thông tin chung
+                                </div>
+                            </div>
+                            <div class="row">
+                                <!--Tên khách hàng-->
+                                <div class="col-12 col-sm-12 col-md-6" intro-container="thongtin-batbuoc">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="input-tenkhachhang">Tên khách hàng</label>
+                                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-tenkhachhang" name="input-tenkhachhang"
+                                                   value="@(khachHang.TenKhachHang ?? "")" @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>
+                                            @* <input type="checkbox" class="form-check-input" id="checkbox-tenkhachhang" style="position: absolute; z-index: 1; right: .6rem; top: 2rem;" onchange="quanLyKhachHang.choPhepTrungTenKhachHang(this, $('#input-tenkhachhang'))" @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") />*@
+                                            <div class="invalid-feedback feedback" for="input-tenkhachhang">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Email-->
+                                <div class="col-12 col-sm-12 col-md-6">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="input-email">Email</label>
+                                            <input type="email" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-email" name="input-email"
+                                                   value="@(khachHang.Email ?? "")" @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>
+                                            <div class="invalid-feedback feedback" for="input-email">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-12 col-md-12 text-center" id="update-container" style="display: none;">
+                                    <div class="btn-group btn-group-sm w-100 mb-3" role="group">
+                                        @{
+                                            if (thaoTacs.Exists(x => x.MaThaoTac == "quanlykhachhang-capnhat"))
+                                            {
+                                                <!--Cập nhật-->
+                                                <a class="btn btn-outline-danger" id="btn-update" onclick="">
+                                                    Cập nhật
+                                                </a>
+                                            }
+                                            if (thaoTacs.Exists(x => x.MaThaoTac == "quanlykhachhang-capnhatdonhang"))
+                                            {
+                                                <!--Thêm đơn hàng-->
+                                                <a class="btn btn-outline-danger" id="btn-update-donhang" onclick="">
+                                                    Thêm đơn hàng
+                                                </a>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+
+                                <!--Nguồn khách hàng-->
+                                <div class="col-12 col-sm-12 col-md-4">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="" for="input-nguonkhachhang">Nguồn KH</label>
+                                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-nguonkhachhang" name="input-nguonkhachhang"
+                                                   value="@(khachHang.NguonKhachHang ?? "")" @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")>
+                                            <div class="invalid-feedback feedback" for="input-nguonkhachhang">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Liên kết-->
+                                <div class="col-12 col-sm-12 col-md-4">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="" for="input-lienket">Liên kết MXH</label>
+                                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-lienket" name="input-lienket"
+                                                   value="@(khachHang.LienKet ?? "")" @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")>
+                                            <div class="invalid-feedback feedback" for="input-lienket">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Fb sale-->
+                                <div class="col-12 col-sm-12 col-md-4">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="input-lienketsale">Facebook sale</label>
+                                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-lienketsale" name="input-lienketsale"
+                                                   value="@(khachHang.LienKetSale ?? "")"
+                                                   @(loaiThaoTac_Disabled.Where(x => x != "update-donhang").Contains(loai) ? "disabled" : "") required>
+                                            <div class="invalid-feedback feedback" for="input-lienketsale">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Nghề nghiệp-->
+                                <div class="col-12 col-sm-12 col-md-4">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="" for="input-nghenghiep">Nghề nghiệp</label>
+                                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-nghenghiep" name="input-nghenghiep"
+                                                   value="@(khachHang.NgheNghiep ?? "")" @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")>
+                                            <div class="invalid-feedback feedback" for="input-nghenghiep">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Số điện thoại-->
+                                <div class="col-12 col-sm-12 col-md-4">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="" for="input-sodienthoai">Số điện thoại</label>
+                                            <input type="tel" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-sodienthoai" name="input-sodienthoai"
+                                                   value="@(khachHang.SoDienThoai ?? "")" @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")>
+                                            <div class="invalid-feedback feedback" for="input-sodienthoai">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Độ tuổi-->
+                                <div class="col-12 col-sm-12 col-md-4">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="" for="input-dotuoi">Độ tuổi</label>
+                                            <input type="number" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-dotuoi" name="input-dotuoi"
+                                                   value="@(khachHang.DoTuoi)" @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")>
+                                            <div class="invalid-feedback feedback" for="input-dotuoi">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Quốc gia sinh sống-->
+                                <div class="col-12 col-sm-12 col-md-6">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="select-quocgiasinhsong">Quốc gia sinh sống</label>
+                                            <select class="form-control form-select2"
+                                                    id="select-quocgiasinhsong" name="select-quocgiasinhsong"
+                                                    @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>
+                                                <option disabled @(quocGias.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                                @foreach (default_tbQuocGia quocGia in quocGias)
+                                                {
+                                                    <option value="@quocGia.IdQuocGia" @(quocGia.IdQuocGia == khachHang.IdQuocGiaSinhSong ? "selected" : "")>@quocGia.TenQuocGia</option>
+                                                }
+                                            </select>
+                                            <div class="invalid-feedback feedback" for="select-quocgiasinhsong">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Loại khách hàng-->
+                                <div class="col-12 col-sm-12 col-md-6">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="select-loaikhachhang">Phân loại khách hàng</label>
+                                            <select class="form-control form-select2"
+                                                    id="select-loaikhachhang" name="select-loaikhachhang"
+                                                    @(loaiThaoTac_Disabled.Where(x => x != "update-donhang").Contains(loai) ? "disabled" : "") required>
+                                                <option disabled @(loaiKhachHangs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                                @foreach (tbKhachHang_LoaiKhachHang loaiKhachHang in loaiKhachHangs)
+                                                {
+                                                    <option value="@loaiKhachHang.IdLoaiKhachHang" data-stt="@loaiKhachHang.Stt"
+                                                            @(loaiKhachHang.IdLoaiKhachHang == khachHang.IdLoaiKhachHang ? "selected" : "")>
+                                                        @loaiKhachHang.TenLoaiKhachHang
+                                                    </option>
+                                                }
+                                            </select>
+                                            <div class="invalid-feedback feedback" for="select-loaikhachhang">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Gói chăm sóc-->
+                                <div class="col-12 col-sm-12 col-md-6">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="select-goichamsoc">Gói chăm sóc</label>
+                                            <select class="form-control form-select2"
+                                                    id="select-goichamsoc" name="select-goichamsoc"
+                                                    @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>
+                                                <option disabled @(goiChamSocs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                                @foreach (tbGoiChamSoc goiChamSoc in goiChamSocs)
+                                                {
+                                                    <option value="@goiChamSoc.IdGoiChamSoc" @(goiChamSoc.IdGoiChamSoc == khachHang.IdGoiChamSoc ? "selected" : "")>@goiChamSoc.TenGoiChamSoc</option>
+                                                }
+                                            </select>
+                                            <div class="invalid-feedback feedback" for="select-goichamsoc">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Phương thức thanh toán-->
+                                <div class="col-12 col-sm-12 col-md-6">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="select-phuongthucthanhtoan">Phương thức thanh toán</label>
+                                            <select class="form-control form-select2"
+                                                    id="select-phuongthucthanhtoan" name="select-phuongthucthanhtoan"
+                                                    @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>
+                                                <option disabled @(phuongThucThanhToans.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                                @foreach (tbPhuongThucThanhToan phuongThucThanhToan in phuongThucThanhToans)
+                                                {
+                                                    <option value="@phuongThucThanhToan.IdPhuongThucThanhToan" @(phuongThucThanhToan.IdPhuongThucThanhToan == khachHang.IdPhuongThucThanhToan ? "selected" : "")>@phuongThucThanhToan.TenPhuongThucThanhToan</option>
+                                                }
+                                            </select>
+                                            <div class="invalid-feedback feedback" for="select-phuongthucthanhtoan">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Địa chỉ-->
+                                <div class="col-12 col-sm-12 col-md-12">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label for="input-diachi">Địa chỉ</label>
+                                            <textarea class="form-control min-h-50 max-h-200" id="input-diachi" rows="2" @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")
+                                                      placeholder="Nhập thông tin ...">@(khachHang.DiaChi ?? "")</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Ghi chú-->
+                                <div class="col-12 col-sm-12 col-md-12">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label for="input-ghichu">Ghi chú</label>
+                                            <textarea class="form-control min-h-50 max-h-200" id="input-ghichu" rows="2" @(loaiThaoTac_Disabled_1.Contains(loai) ? "disabled" : "")
+                                                      placeholder="Các bạn nhập đây đủ thông tin cần thiết của hvien, lưu ý phân loại khách hàng chính xác">@(khachHang.GhiChu ?? "")</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--##-->
+                        <div class="col-sm-12 col-md-6 border-1">
+                            <div class="divider divider-left">
+                                <div class="divider-text text-uppercase">
+                                    <i class="bi bi-caret-right-fill"></i> Danh sách khóa học
+                                </div>
+                            </div>
+                            <div class="row" style="overflow-y: scroll; height: 500px">
+                                <div class="col-12 col-sm-12 col-md-12" id="danhsach-donhang">
+                                    <table class="table table-bordered table-hover w-100" id="btn-themdonhang">
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="5" class="text-center c-pointer"
+                                                    onclick="quanLyKhachHang.khachHang.themDonHang(this, 'donhang', @string.Format("'{0}'" ,loai))">
+                                                    <i class="bi bi-plus-circle-fill"></i>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    @Html.Action("themDonHang", "QuanLyKhachHang", new
+                               {
+                                   // Nếu chưa có thì tạo bản ghi mẫu
+                                   khachHang_DonHangs = khachHang_DonHangs,
+                                   loaiThemMoi = "donhang",
+                                   loai = "read", // Hiển thị khi mở thì mặc định là xem
+                                   //loai = loai // Hiển thị khi mở thì mặc định là xem
+                               })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if (loai != "create")
+                {
+                    <div class="tab-pane fade" id="lichsuhoso" role="tabpanel"
+                         aria-labelledby="lichsuhoso-list">
+                        <div class="row" id="lichsu-getList-container">
+                            <div class="@(khachHang_LichSus_Count == 0 ? "col-12": "col-sm-12 col-md-6")">
+                                <table class="table table-hover table-bordered w-100 nowrap" id="lichsu-getList" data-page-length="10">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" style="min-width: 10rem!important">Nội dung</th>
+                                            <th class="text-center" style="min-width: 10rem!important">Người thao tác</th>
+                                            <th class="text-center" style="min-width: 10rem!important">Ngày thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot class="show-footer-above">
+                                        <tr>
+                                            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @for (int i = 0; i < khachHang_LichSus_Count; i++)
+                                        {
+                                            tbKhachHang_LichSuExtend khachHang_LichSu = khachHang_LichSus[i];
+                                            string ngayTao = khachHang_LichSu.NgayTao == null ? "" : khachHang_LichSu.NgayTao.Value.ToString("dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                                            <tr row="@i" onclick="quanLyKhachHang.hoSo_lichSu.readRow(this)">
+                                                <!--Nội dung-->
+                                                <td class="" style="vertical-align: top;">
+                                                    <span data-tentruong="NoiDung">@khachHang_LichSu.NoiDung</span>
+                                                </td>
+                                                <!--Người thao tác-->
+                                                <td class="" style="vertical-align: top;">
+                                                    <span data-tentruong="NguoiThaoTac">@khachHang_LichSu.ThongTinNguoiTao.TenNguoiDung</span>
+                                                </td>
+                                                <!--Ngày thao tác-->
+                                                <td class="" style="vertical-align: top;">
+                                                    <span data-tentruong="NgayThaoTac">@ngayTao</span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            @if (khachHang_LichSus_Count > 0)
+                            {
+                                <div class="col-sm-12 col-md-6" id="lichsu-read-container" style="overflow-y: scroll; border: 1px solid #d3d3d35c;">
+                                    @for (int i = 0; i < khachHang_LichSus_Count; i++)
+                                    {
+                                        <div class="row lichsu-read" row="@i">
+                                            <div class="col-12 border-1">
+                                                <div class="divider divider-left">
+                                                    <div class="divider-text text-uppercase">
+                                                        <i class="bi bi-caret-right-fill"></i> Thông tin thay đổi
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    @{
+                                                        tbKhachHang_LichSuExtend khachHang_LichSu = khachHang_LichSus[i];
+                                                        if (khachHang_LichSu.ChiTiet == "" || khachHang_LichSu.ChiTiet == null)
+                                                        {
+                                                            <div class="col-12 col-sm-12 col-md-12">
+                                                                <p class="">Không có thay đổi trước đó</p>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            List<DuLieu_LichSu_ChiTiet> chiTiets = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DuLieu_LichSu_ChiTiet>>(khachHang_LichSu.ChiTiet);
+                                                            //string thoiGianBatDau = khachHang_LichSu.ThoiGianBatDau == null ? "" : khachHang_LichSu.ThoiGianBatDau.Value.ToString("dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                                                            //string thoiGianKetThuc = khachHang_LichSu.ThoiGianKetThuc == null ? "" : khachHang_LichSu.ThoiGianKetThuc.Value.ToString("dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                                                            <div class="col-12 col-sm-12 col-md-12">
+                                                                <table class="table table-bordered" style="border: 1px solid black;">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="text-center" style="text-align: center !important; border: 1px solid black;">Trường dữ liệu</th>
+                                                                            <th class="text-center" style="text-align: center !important; border: 1px solid black;">Thông tin cũ</th>
+                                                                            <th class="text-center" style="text-align: center !important; border: 1px solid black;">Thông tin mới</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @if (chiTiets.Count == 0)
+                                                                        {
+                                                                            <tr>
+                                                                                <td colspan="3" class="text-danger fst-italic" style="text-align: center !important; border: 1px solid black;">Không có thay đổi</td>
+                                                                            </tr>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            foreach (DuLieu_LichSu_ChiTiet chiTiet in chiTiets)
+                                                                            {
+                                                                                if (chiTiet.TenTruongDuLieu == "TieuDeHoSo")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Tiêu đề hồ sơ";
+                                                                                }
+                                                                                else if (chiTiet.TenTruongDuLieu == "MaHoSo")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Mã hồ sơ";
+                                                                                }
+                                                                                else if (chiTiet.TenTruongDuLieu == "ThoiHanBaoQuan")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Thời hạn bảo quản";
+                                                                                }
+                                                                                else if (chiTiet.TenTruongDuLieu == "ThoiGianBatDau")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Thời gian bắt đầu";
+                                                                                    chiTiet.GiaTri_Cu = chiTiet.GiaTri_Cu == "" ? "" : chiTiet.GiaTri_Cu.AsDateTime().ToString("dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                                                                                    chiTiet.GiaTri_Moi = chiTiet.GiaTri_Moi == "" ? "" : chiTiet.GiaTri_Moi.AsDateTime().ToString("dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                                                                                }
+                                                                                else if (chiTiet.TenTruongDuLieu == "ThoiGianKetThuc")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Thời gian kết thúc";
+                                                                                    chiTiet.GiaTri_Cu = chiTiet.GiaTri_Cu == "" ? "" : chiTiet.GiaTri_Cu.AsDateTime().ToString("dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                                                                                    chiTiet.GiaTri_Moi = chiTiet.GiaTri_Moi == "" ? "" : chiTiet.GiaTri_Moi.AsDateTime().ToString("dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                                                                                }
+                                                                                else if (chiTiet.TenTruongDuLieu == "TinhTrangVatLy")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Tình trạng vật lý";
+                                                                                }
+                                                                                else if (chiTiet.TenTruongDuLieu == "NgonNgu")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Ngôn ngữ";
+                                                                                }
+                                                                                else if (chiTiet.TenTruongDuLieu == "TuKhoa")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Từ khóa";
+                                                                                }
+                                                                                else if (chiTiet.TenTruongDuLieu == "KyHieuThongTin")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Ký hiệu thông tin";
+                                                                                }
+                                                                                else if (chiTiet.TenTruongDuLieu == "TongSoVanBan")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Tổng số văn bản";
+                                                                                }
+                                                                                else if (chiTiet.TenTruongDuLieu == "SoLuongTo")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Số lượng tờ";
+                                                                                }
+                                                                                else if (chiTiet.TenTruongDuLieu == "SoLuongTrang")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Số lượng trang";
+                                                                                }
+                                                                                else if (chiTiet.TenTruongDuLieu == "GhiChu")
+                                                                                {
+                                                                                    chiTiet.TenTruongDuLieu = "Ghi chú";
+                                                                                }
+                                                                                <tr>
+                                                                                    <td style="text-align: center !important; border: 1px solid black;">@chiTiet.TenTruongDuLieu</td>
+                                                                                    <td style="text-align: center !important; border: 1px solid black;">@chiTiet.GiaTri_Cu</td>
+                                                                                    <td style="text-align: center !important; border: 1px solid black;">@chiTiet.GiaTri_Moi</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            @if (loai != "read")
+            {
+                <button type="button" class="btn btn-primary ml-1" onclick="quanLyKhachHang.khachHang.save(@string.Format("'{0}'", loai))">
+                    <span class="">Lưu</span>
+                </button>
+            }
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

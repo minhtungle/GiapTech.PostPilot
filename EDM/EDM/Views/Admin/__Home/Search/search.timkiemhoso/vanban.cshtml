@@ -1,0 +1,40 @@
+﻿@using Public.Models
+@{
+    ViewBag.Title = "Lưu trữ hồ sơ";
+    PermissionM per = Session["Permission"] as PermissionM;
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+    if (per.Role.ToLower() == "user") {
+        Layout = "~/Views/_Shared/User/user.cshtml";
+    }
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Danh sách văn bản</li>
+}
+@section styles{
+    <link href="~/Content/Admin/__Home/Search/search.css" rel="stylesheet" />
+    <link href="~/Content/Admin/_DocumentManage/DocumentDigitizing/documentdigitizing.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/Content/Admin/__Home/Search/search.js"></script>
+    <script>
+        var s = new Search();
+        s.init();
+        s.vanBan.getList();
+    </script>
+}
+<section class="section" id="page-home" data-aos="fade-up">
+    <div class="card">
+        @Html.Partial("~/Views/Admin/__Home/Search/search.timkiemhoso/vanban.thongtinhoso.cshtml")
+    </div>
+    <div class="card">
+        @Html.Partial("~/Views/Admin/__Home/Search/search.timkiemhoso/vanban.getList.cshtml")
+    </div>
+</section>
+<!--vanban-detail-->
+<div class="modal fade text-left" id="vanban-detail" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+</div>
+<!--hoso-detail-->
+<div class="modal fade text-left" id="hoso-detail" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+</div>

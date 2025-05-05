@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Thiết lập số hóa";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Thiết lập danh mục</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Thiết lập số hóa</li>
+}
+@section scripts {
+    <script src="~/Content/Admin/_DirectorySetting/DigitizingSetting/digitizingsetting.js"></script>
+    <script>
+        var ds = new DigitizingSetting();
+        ds.init();
+    </script>
+}
+<section class="section" page-group="page-group-directorysetting" id="page-digitizingsetting" data-aos="fade-up">
+    <div class="card">
+        <div class="card-content">
+            <div class="card-body">
+                <div class="btn-group btn-group-sm" role="group">
+                    <!--Thao tác-->
+                    <a class="btn btn-primary"><i class="bi bi-three-dots-vertical"></i></a>
+                    <div class="btn-group btn-group-sm dropdown">
+                        <button type="button" title="Thêm mới" class="btn btn-light-secondary dropdown-toggle dropdown-toggle-split"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                data-reference="parent">
+                            Thao tác
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" onclick="ds.bieuMau.displayModal_CRUD('create', 0)">
+                                <i class="bi bi-plus-square"></i> Thêm mới
+                            </a>
+                            <a class="dropdown-item" href="#" onclick="ds.displayModal_Excel_BieuMau()">
+                                <i class="bi bi-file-excel"></i> Thêm excel
+                            </a>
+                            <a class="dropdown-item" href="#" onclick="ds.bieuMau.delete('multiple')">
+                                <i class="bi bi-trash3-fill"></i> Xóa bỏ
+                            </a>
+                        </div>
+                    </div>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <!--Tải xuống-->
+                        <a class="btn btn-primary"><i class="bi bi-download"></i></a>
+                        <div class="btn-group btn-group-sm dropdown">
+                            <button type="button" title="Tải xuống" class="btn btn-light-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                Tải xuống
+                            </button>
+                            <div class="dropdown-menu">
+                                @*<a class="dropdown-item" href="#" onclick="ds.bieuMau.btnDownload('.buttons-copy')"><i class="bi bi-files"></i> Sao chép</a>*@
+                                <a class="dropdown-item" href="#" onclick="ds.bieuMau.btnDownload('.buttons-excel')"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
+                                @*<a class="dropdown-item" href="#" onclick="ds.bieuMau.btnDownload('.buttons-pdf')"><i class="bi bi-filetype-pdf"></i> PDF</a>*@
+                                @*<a class="dropdown-item" href="#" onclick="ds.bieuMau.btnDownload('.buttons-print')"><i class="bi bi-printer"></i> In</a>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-content">
+            @Html.Partial("~/Views/Admin/_DirectorySetting/DigitizingSetting/digitizingsetting-getList.cshtml")
+        </div>
+    </div>
+</section>
+<!--digitizingsetting-crud-->
+<div class="modal fade text-left" id="digitizingsetting-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--digitizingsetting-delete-->
+<div class="modal fade text-left" id="digitizingsetting-delete" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--digitizingsetting-excel.bieumau-->
+@Html.Partial("~/Views/Admin/_DirectorySetting/DigitizingSetting/digitizingsetting-excel.bieumau/excel.bieumau.cshtml")

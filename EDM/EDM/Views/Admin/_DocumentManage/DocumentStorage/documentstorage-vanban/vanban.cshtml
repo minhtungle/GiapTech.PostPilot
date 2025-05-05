@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Lưu trữ hồ sơ";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item"><a href="~/DocumentStorage/Index">Lưu trữ hồ sơ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Danh sách văn bản</li>
+}
+@section styles{
+    <link href="~/Content/Admin/_DocumentManage/DocumentDigitizing/documentdigitizing.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/Content/Admin/_DocumentManage/DocumentStorage/documentstorage.js"></script>
+    <script>
+        var ds = new DocumentStorage();
+        ds.init();
+        ds.vanBan.getList();
+    </script>
+}
+<section class="section" page-group="page-group-documentmanage" id="page-documentstorage" data-aos="fade-up">
+    <div class="card">
+        @Html.Partial("~/Views/Admin/_DocumentManage/DocumentStorage/documentstorage-vanban/vanban.thongtinhoso.cshtml")
+    </div>
+    <div class="card">
+        @Html.Partial("~/Views/Admin/_DocumentManage/DocumentStorage/documentstorage-vanban/vanban.getList.cshtml")
+    </div>
+</section>
+<!--vanban-detail-->
+<div class="modal fade text-left" id="vanban-detail" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+</div>
+<!--hoso-detail-->
+<div class="modal fade text-left" id="hoso-detail" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+</div>

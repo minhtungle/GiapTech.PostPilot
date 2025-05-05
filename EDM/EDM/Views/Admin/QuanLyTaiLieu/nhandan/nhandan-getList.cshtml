@@ -1,0 +1,34 @@
+﻿@using EDM_DB
+@model List<tbNhanDan>
+
+<div class="card-body" intro-container="dulieu-container">
+    <table class="table table-hover table-bordered table-sticky w-100" id="nhandan-getList" data-page-length="10">
+        <thead class="nowrap" style="white-space: nowrap !important">
+            <tr>
+                <th class="text-center" data-orderable="false"></th>
+
+                <th class="text-center">Tên nhãn dán</th>
+
+                @*<th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>*@
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th class="text-center"><input class="form-check-input checkAll-nhandan-getList" type="checkbox" title="Chọn tất cả" /></th>
+
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                <th>@*<input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled />*@</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var nhanDan in Model)
+            {
+                <tr id="@nhanDan.IdNhanDan">
+                    <td class="text-center"><input class="form-check-input checkRow-nhandan-getList" type="checkbox" /></td>
+                    <td class="text-center">@nhanDan.TenNhanDan</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,166 @@
+﻿@{
+    EDM_DB.tbDonViSuDung donViSuDung = ViewBag.donViSuDung;
+}
+<div class="card-body pt-0">
+    <div class="row">
+        <!--Demo-->
+        <div class="col-12">
+            <div class="form-group p-3 banner gradient-background demo-giaodien" style="border: 1px dotted; background: @donViSuDung.GiaoDien">
+                <div class="row position-relative">
+                    <div class="col-12 position-absolute text-center z-1" style="bottom: 0;">
+                        <span class="badge bg-secondary box-shadow"><i class="bi bi-camera"></i>&ensp;Xem trước</span>
+                    </div>
+                    <div class="col-12">
+                        <div class="logo">
+                            <h3 class="logo me-auto">
+                                <a class="text-white" onclick="">
+                                    <img src="@donViSuDung.Logo" class="spin-logo mb-1 demo-logo" style="width: 50px; height: 50px" />&ensp;VIETGEN
+                                </a>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1" data-aos="fade-up" data-aos-delay="200">
+                        <h1 class="text-uppercase" id="demo-tendonvisudung">@donViSuDung.TenDonViSuDung</h1>
+                        <h2 id="demo-tieudetrangchu">@donViSuDung.TieuDeTrangChu</h2>
+                        <div class="d-flex justify-content-center justify-content-lg-start">
+                            <a class="btn-animate-1" hidden>
+                                Đăng nhập
+                                <div class="icon">
+                                    <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path>
+                                    </svg>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
+                        <img src="@donViSuDung.Banner" class="img-fluid animated demo-banner" style="max-height: 25rem; max-width: 25rem;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Logo-->
+        <div class="col-12 col-sm-12 col-md-6">
+            <div class="position-relative">
+                <div class="form-group mb-3">
+                    <label class="">Chọn logo</label>
+                    <div class="input-group">
+                        <a class="input-group-text c-pointer" onclick="um.donViSuDung.xoaLogo()"><i class="bi bi-trash3"></i></a>
+                        <label class="form-control" for="input-logo">Chọn tệp đính kèm</label>
+                        <input class="btn btn-primary" id="input-logo" type="file" accept=".png,.jpg,.jpeg,.ico" onchange="um.donViSuDung.thayDoiLogo()" hidden>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Banner-->
+        <div class="col-12 col-sm-12 col-md-6">
+            <div class="position-relative">
+                <div class="form-group mb-3">
+                    <label class="">Chọn ảnh banner</label>
+                    <div class="input-group">
+                        <a class="input-group-text c-pointer" onclick="um.donViSuDung.xoaBanner()"><i class="bi bi-trash3"></i></a>
+                        <label class="form-control" for="input-banner">Chọn tệp đính kèm</label>
+                        <input class="btn btn-primary" id="input-banner" type="file" accept=".png,.jpg,.jpeg,.ico" onchange="um.donViSuDung.thayDoiBanner()" hidden>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Tiêu đề-->
+        <div class="col-12 col-sm-12 col-md-6">
+            <div class="position-relative">
+                <div class="form-group mb-3">
+                    <label class="" for="input-tieudetrangchu">Tiêu đề trang chủ</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                               id="input-tieudetrangchu" name="input-tieudetrangchu"
+                               value="@(donViSuDung.TieuDeTrangChu ?? "")" onkeyup="um.donViSuDung.thayDoiTieuDe()" required>
+                        <label type="text" class="form-control" id="input-tieudetrangchu" hidden></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Giao diện-->
+        <div class="col-12 col-sm-12 col-md-6">
+            <div class="position-relative">
+                <div class="form-group mb-3">
+                    <label class="" for="input-giaodien">Giao diện</label>
+                    <div class="input-group">
+                        <a class="input-group-text c-pointer" onclick="um.donViSuDung.thayDoiGiaoDien('xoa')"><i class="bi bi-trash3"></i></a>
+                        <input type="color" class="form-control h-auto" placeholder="Nhập thông tin ..."
+                               id="input-giaodien" name="input-giaodien"
+                               value="@(donViSuDung.GiaoDien ?? "")" oninput="um.donViSuDung.thayDoiGiaoDien()">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Tên đơn vị-->
+        <div class="col-12 col-sm-12 col-md-6">
+            <div class="position-relative">
+                <div class="form-group mb-3">
+                    <label class="required" for="input-tendonvisudung">Tên đơn vị sử dụng</label>
+                    <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                           id="input-tendonvisudung" name="input-tendonvisudung"
+                           value="@(donViSuDung.TenDonViSuDung ?? "")" onkeyup="um.donViSuDung.thayDoiTenDonViSuDung()" required>
+                    <div class="invalid-feedback feedback" for="input-tendonvisudung">Không được để trống</div>
+                </div>
+            </div>
+        </div>
+        <!--Sử dụng trang chủ-->
+        <div class="col-12 col-sm-12 col-md-6">
+            <div class="position-relative">
+                <div class="form-group mb-3">
+                    <label class="" for="select-sudungtrangnguoidung">Trang người dùng</label>
+                    <select class="form-control"
+                            id="select-sudungtrangnguoidung" name="select-sudungtrangnguoidung">
+                        <option disabled>Chọn thông tin</option>
+                        <option value="1" @(donViSuDung.SuDungTrangNguoiDung == true ? "selected" : "")>Kích hoạt</option>
+                        <option value="0" @(donViSuDung.SuDungTrangNguoiDung == false ? "selected" : "")>Vô hiệu hóa</option>
+                    </select>
+                    <div class="invalid-feedback feedback" for="select-sudungtrangnguoidung">Không được để trống</div>
+                </div>
+            </div>
+        </div>
+        <!--Số điện thoại-->
+        <div class="col-12 col-sm-12 col-md-6">
+            <div class="position-relative">
+                <div class="form-group mb-3">
+                    <label class="required" for="input-sodienthoai">Số điện thoại</label>
+                    <input type="tel" class="form-control" placeholder="Nhập thông tin ..."
+                           id="input-sodienthoai" name="input-sodienthoai"
+                           value="@(donViSuDung.SoDienThoai ?? "")" required>
+                    <div class="invalid-feedback feedback" for="input-sodienthoai">Không được để trống</div>
+                </div>
+            </div>
+        </div>
+        <!--Email-->
+        <div class="col-12 col-sm-12 col-md-6">
+            <div class="position-relative">
+                <div class="form-group mb-3">
+                    <label class="required" for="input-email">Email</label>
+                    <input type="email" class="form-control" placeholder="Nhập thông tin ..."
+                           id="input-email" name="input-email"
+                           value="@(donViSuDung.Email ?? "")" required>
+                    <div class="invalid-feedback feedback" for="input-email">Không được để trống</div>
+                </div>
+            </div>
+        </div>
+        <!--Địa chỉ-->
+        <div class="col-12 col-sm-12 col-md-12">
+            <div class="position-relative">
+                <div class="form-group mb-3">
+                    <label class="" for="input-diachi">Địa chỉ</label>
+                    <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-diachi" value="@(donViSuDung.DiaChi ?? "")">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-sm-center">
+            <button type="button" class="btn btn-success ml-1" onclick="um.donViSuDung.save()">
+                <i class="bi bi-check d-flex d-sm-none"></i>
+                <span class="d-none d-sm-block">Cập nhật</span>
+            </button>
+        </div>
+    </div>
+</div>

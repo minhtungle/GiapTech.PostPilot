@@ -1,0 +1,90 @@
+﻿@using Public.Models
+@{
+    ViewBag.Title = "Quản lý khách hàng";
+    List<ThaoTac> thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Quản lý khách hàng</li>
+}
+@section styles {
+    @*<link href="~/Content/Admin/QuanLyKhachHang/quanlykhachhang.css" rel="stylesheet" />*@
+}
+@section scripts {
+    <script src="~/Content/Admin/QuanLyKhachHang/quanlykhachhang.js"></script>
+    <script>
+        var quanLyKhachHang = new QuanLyKhachHangService();
+        quanLyKhachHang.init();
+    </script>
+}
+<!--Hồ sơ-->
+<section class="section" page-group="page-group-quanlykhachhang" id="page-quanlykhachhang" data-aos="fade-up">
+    <div class="card" intro-container="thanhtacvu">
+        <div class="card-content">
+            <div class="card-body" intro-container="thaotac-coban">
+                <div class="btn-group btn-group-sm" role="group">
+                    @{
+                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlykhachhang-themmoi"))
+                        {
+                            <!--Thêm mới-->
+                            <a class="btn btn-primary"><i class="bi bi-plus-circle-fill"></i></a>
+                            <a class="btn btn-light-secondary"
+                               onclick="quanLyKhachHang.khachHang.displayModal_CRUD('create')">
+                                Thêm mới
+                            </a>
+                        }
+                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlykhachhang-capnhat"))
+                        {
+                            <!--Cập nhật-->
+                            <a class="btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
+                            <a class="btn btn-light-secondary"
+                               onclick="quanLyKhachHang.khachHang.displayModal_CRUD('update')">
+                                Cập nhật
+                            </a>
+                        }
+                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlykhachhang-capnhatdonhang"))
+                        {
+                            <!--Thêm đơn hàng-->
+                            <a class="btn btn-primary"><i class="bi bi-cart-plus-fill"></i></a>
+                            <a class="btn btn-light-secondary"
+                               onclick="quanLyKhachHang.khachHang.displayModal_CRUD('update-donhang')">
+                                Thêm đơn hàng
+                            </a>
+                        }
+
+                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlykhachhang-xoabo"))
+                        {
+                            <!--Xóa bỏ-->
+                            <a class="btn btn-primary"><i class="bi bi-trash3-fill"></i></a>
+                            <a class="btn btn-light-secondary"
+                               onclick="quanLyKhachHang.khachHang.delete('multiple')">
+                                Xóa bỏ
+                            </a>
+                        }
+                    }
+                </div>
+                <div class="btn-group btn-group-sm float-end" role="group">
+                    <!--Tìm kiếm-->
+                    <a class="btn btn-primary"><i class="bi bi-search"></i></a>
+                    <a class="btn btn-light-secondary"
+                       onclick="quanLyKhachHang.locThongTin.displayModal_TimKiem()">
+                        Tìm kiếm
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card" intro-container="danhsachhoso">
+        @Html.Partial("~/Views/Admin/QuanLyKhachHang/quanlykhachhang-getList.cshtml")
+    </div>
+</section>
+<!--quanlykhachhang-crud-->
+<div class="modal fade text-left" id="quanlykhachhang-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--donhang-->
+<div class="modal fade text-left" id="donhang" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--Tìm kiếm-->
+@Html.Partial("~/Views/Admin/QuanLyKhachHang/quanlykhachhang-timkiem/timkiem.cshtml")

@@ -1,0 +1,143 @@
+﻿@using DigitizingSetting.Models;
+@using EDM_DB
+@{
+    List<tbBieuMauExtend> EXCEL_BIEUMAUs_UPLOAD = Session["EXCEL_BIEUMAUs_UPLOAD"] as List<tbBieuMauExtend>;
+    int EXCEL_BIEUMAUs_UPLOAD_COUNT = EXCEL_BIEUMAUs_UPLOAD.Count;
+    List<default_tbLoaiBieuMau> LOAIBIEUMAUs = Session["LOAIBIEUMAUs"] as List<default_tbLoaiBieuMau>;
+}
+<div class="row">
+    <div class="@(EXCEL_BIEUMAUs_UPLOAD_COUNT == 0 ? "col-12": "col-sm-12 col-md-5 col-lg-6")">
+        <table class="table table-hover table-bordered w-100 nowrap" id="excel-bieumau-getList" data-page-length="10" data-order="[[ 1, &quot;asc&quot; ]]">
+            <thead>
+                <tr>
+                    <th class="text-center" data-orderable="false">
+                        <a href="#" class="btn btn-sm btn-success" title="Thêm" onclick="ds.excelBieuMau.createRow()" hidden><i class="bi bi-plus-square-fill"></i></a>
+                        <a href="#" class="btn btn-sm btn-danger" title="Xóa" onclick="ds.excelBieuMau.deleteRow()"><i class="bi bi-trash3-fill"></i></a>
+                    </th>
+                    <th class="text-center text-danger" style="min-width: 10rem!important">KIỂM TRA</th>
+                    <th class="text-center w-70" style="min-width: 10rem!important">Tên biểu mẫu</th>
+                </tr>
+            </thead>
+            <tfoot class="show-footer-above">
+                <tr>
+                    <th class="text-center"><input class="form-check-input checkAll-excel-bieumau-getList" type="checkbox" title="Chọn tất cả" /></th>
+                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @for (int i = 0; i < EXCEL_BIEUMAUs_UPLOAD_COUNT; i++) {
+                    tbBieuMauExtend bieuMau = EXCEL_BIEUMAUs_UPLOAD[i];
+                    <tr row="@i" onclick="ds.excelBieuMau.readRow(this)">
+                        <td class="text-center"><input class="form-check-input checkRow-excel-bieumau-getList" type="checkbox" /></td>
+                        <td class="text-center">
+                            @{
+                                string className = "";
+                                if (bieuMau.KiemTraExcel.TrangThai == 0) {
+                                    className = "bg-danger";
+                                } else if (bieuMau.KiemTraExcel.TrangThai == 1) {
+                                    className = "bg-success";
+                                } else {
+                                    className = "bg-warning";
+                                }
+                            }
+                            <span class="badge @className" data-tentruong="TrangThaiKiemTra">@bieuMau.KiemTraExcel.KetQua</span>
+                        </td>
+                        <!--Tên biểu mẫu-->
+                        <td class="w-70" style="vertical-align: top;">
+                            <span data-tentruong="TenBieuMau">@bieuMau.TenBieuMau</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (EXCEL_BIEUMAUs_UPLOAD_COUNT > 0) {
+        <div class="col-sm-12 col-md-7 col-lg-6" id="excel-bieumau-read-container" style="overflow-y: scroll; border: 1px solid #d3d3d35c;">
+            @for (int i = 0; i < EXCEL_BIEUMAUs_UPLOAD_COUNT; i++) {
+                tbBieuMauExtend bieuMau = EXCEL_BIEUMAUs_UPLOAD[i];
+                <div class="row excel-bieumau-read" row="@i">
+                    <div class="col-12 border-1">
+                        <div class="divider divider-left">
+                            <div class="divider-text text-uppercase">
+                                <i class="bi bi-caret-right-fill"></i> Thông tin chung
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!--Tên biểu mẫu-->
+                            <div class="col-12 col-sm-12 col-md-6">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="input-tenbieumau">Tên biểu mẫu</label>
+                                        <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                               id="input-tenbieumau" name="input-tenbieumau"
+                                               value="@(bieuMau.TenBieuMau ?? "")" onkeyup="ds.excelBieuMau.updateSingleCell(this)" required>
+                                        <div class="invalid-feedback feedback" for="input-tenbieumau">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Loại biểu mẫu-->
+                            <div class="col-12 col-sm-12 col-md-6">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="select-loaibieumau">Loại biểu mẫu</label>
+                                        <select class="form-control"
+                                                id="select-loaibieumau" name="select-loaibieumau" required>
+                                            <option disabled @(LOAIBIEUMAUs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                            @foreach (var loaiBieuMau in LOAIBIEUMAUs) {
+                                                <option value="@loaiBieuMau.IdLoaiBieuMau" @(loaiBieuMau.TenLoaiBieuMau == bieuMau.LoaiBieuMau.TenLoaiBieuMau ? "selected" : "")>@loaiBieuMau.TenLoaiBieuMau</option>
+                                            }
+                                        </select>
+                                        <div class="invalid-feedback feedback" for="select-loaibieumau">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--##-->
+                            <div class="col-12 border-1">
+                                <div class="divider divider-left">
+                                    <div class="divider-text text-uppercase">
+                                        <i class="bi bi-caret-right-fill"></i> Danh sách trường dữ liệu
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <table class="table table-hover table-bordered w-100 nowrap table-truongdulieu" id="table-truongdulieu" data-page-length="5">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Tên trường</th>
+                                                    <th class="text-center" data-orderable="false">
+                                                        <a href="#" class="btn btn-sm btn-success" title="Thêm" onclick="ds.excelBieuMau.truongDuLieuDataTables[@i].create('excel', @i)"><i class="bi bi-plus-square"></i></a>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (bieuMau.TruongDuLieus.Count == 0) {
+                                                    <tr class="r" data-id="0">
+                                                        <td><input type="text" class="form-control input-tentruong" /></td>
+                                                        <td class="text-center">
+                                                            <a href="#" class="btn btn-sm btn-danger" title="Xóa bỏ" onclick="ds.excelBieuMau.truongDuLieuDataTables[@i].delete(this)"><i class="bi bi-trash3-fill"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                } else {
+
+                                                    foreach (EDM_DB.tbBieuMau_TruongDuLieu bieuMau_TruongDuLieu in bieuMau.TruongDuLieus) {
+                                                        <tr class="r" data-id="@bieuMau_TruongDuLieu.IdTruongDuLieu">
+                                                            <td><input type="text" class="form-control input-tentruong" value="@bieuMau_TruongDuLieu.TenTruong" /></td>
+                                                            <td class="text-center">
+                                                                <a href="#" class="btn btn-sm btn-danger" title="Xóa bỏ" onclick="ds.excelBieuMau.truongDuLieuDataTables[@i].delete(this)"><i class="bi bi-trash3-fill"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Hướng dẫn sử dụng";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Hướng dẫn sử dụng</li>
+}
+@section styles {
+    <link href="~/Content/Admin/_SystemUtilities/Guide/guide.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/Content/Admin/_SystemUtilities/Guide/guide.js"></script>
+    <script>
+        var guide = new Guide();
+        guide.init();
+        guide.getFile();
+    </script>
+}
+<section class="section" page-group="page-group-systemutilities" id="page-guide" data-aos="fade-up">
+    <div class="card">
+        <div class="card-content">
+            <div class="card-body">
+                <div class="btn-group btn-group-sm" role="group">
+                    <!--Thao tác-->
+                    <a class="btn btn-success"><i class="bi bi-upload"></i></a>
+                    <label class="btn btn-light-secondary" for="select-file">
+                        Thêm tệp đính kèm
+                    </label>
+                    <input class="btn btn-success" id="select-file" type="file" accept=".doc,.docx,.xls,.xlsx,.pdf,.png,.jpg,.jpeg,.mp4" onchange="guide.save()" hidden>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-content" id="getFile"></div>
+    </div>
+</section>

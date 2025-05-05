@@ -1,0 +1,14 @@
+﻿.input-span {
+    border: 0px solid transparent !important;
+    padding: 0px !important;
+    background: transparent !important;
+    cursor: pointer !important;
+}
+#chinhSuaTepChungThuc .canvas-container {
+    margin: auto !important;
+    /*width: 100%!important;*/
+}
+    #chinhSuaTepChungThuc .canvas-container .pdf-canvas {
+/*        width: 100% !important;
+        height: auto!important;*/
+    }

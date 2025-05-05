@@ -1,0 +1,225 @@
+﻿@using DocumentFormation.Models
+@using UserType.Models
+@using EDM_DB
+@{
+    ViewBag.Title = "Báo cáo";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+
+    List<ChucNangs> kieuNguoiDung_IdChucNang = ViewBag.kieuNguoiDung_IdChucNang;
+    List<tbDonViSuDung_PhongLuuTru> PHONGLUUTRUS = Session["PHONGLUUTRUS"] as List<tbDonViSuDung_PhongLuuTru>;
+    List<default_tbCheDoSuDung> CHEDOSUDUNGS = Session["CHEDOSUDUNGS"] as List<default_tbCheDoSuDung>;
+    List<tbViTriLuuTru> VITRILUUTRUS = Session["VITRILUUTRUS"] as List<tbViTriLuuTru>;
+    List<tbDanhMucHoSo> DANHMUCHOSOS = Session["DANHMUCHOSOS"] as List<tbDanhMucHoSo>;
+    // Hồ sơ
+    List<tbHoSoExtend> hoSos = ViewBag.hoSos;
+    List<tbHoSoExtend> hoSos_LuuTru = hoSos.Where(x => x.TrangThai == 1).ToList();
+    List<tbHoSoExtend> hoSos_NopLuu = hoSos.Where(x => x.TrangThai == 2).ToList();
+    int hoSos_soLuongTo = hoSos.Select(x => x.SoLuongTo ?? 0).Sum();
+    int hoSos_soLuongTrang = hoSos.Select(x => x.SoLuongTrang ?? 0).Sum();
+
+    DateTime hienTai = DateTime.Now;
+    List<tbHoSoExtend> hoSos_thang1 = hoSos.Where(x => x.NgayTao.Value.Year == hienTai.Year && x.NgayTao.Value.Month == 1).ToList();
+    List<tbHoSoExtend> hoSos_thang2 = hoSos.Where(x => x.NgayTao.Value.Year == hienTai.Year && x.NgayTao.Value.Month == 2).ToList();
+    List<tbHoSoExtend> hoSos_thang3 = hoSos.Where(x => x.NgayTao.Value.Year == hienTai.Year && x.NgayTao.Value.Month == 3).ToList();
+    List<tbHoSoExtend> hoSos_thang4 = hoSos.Where(x => x.NgayTao.Value.Year == hienTai.Year && x.NgayTao.Value.Month == 4).ToList();
+    List<tbHoSoExtend> hoSos_thang5 = hoSos.Where(x => x.NgayTao.Value.Year == hienTai.Year && x.NgayTao.Value.Month == 5).ToList();
+    List<tbHoSoExtend> hoSos_thang6 = hoSos.Where(x => x.NgayTao.Value.Year == hienTai.Year && x.NgayTao.Value.Month == 6).ToList();
+    List<tbHoSoExtend> hoSos_thang7 = hoSos.Where(x => x.NgayTao.Value.Year == hienTai.Year && x.NgayTao.Value.Month == 7).ToList();
+    List<tbHoSoExtend> hoSos_thang8 = hoSos.Where(x => x.NgayTao.Value.Year == hienTai.Year && x.NgayTao.Value.Month == 8).ToList();
+    List<tbHoSoExtend> hoSos_thang9 = hoSos.Where(x => x.NgayTao.Value.Year == hienTai.Year && x.NgayTao.Value.Month == 9).ToList();
+    List<tbHoSoExtend> hoSos_thang10 = hoSos.Where(x => x.NgayTao.Value.Year == hienTai.Year && x.NgayTao.Value.Month == 10).ToList();
+    List<tbHoSoExtend> hoSos_thang11 = hoSos.Where(x => x.NgayTao.Value.Year == hienTai.Year && x.NgayTao.Value.Month == 11).ToList();
+    List<tbHoSoExtend> hoSos_thang12 = hoSos.Where(x => x.NgayTao.Value.Year == hienTai.Year && x.NgayTao.Value.Month == 12).ToList();
+    // Văn bản
+    List<tbHoSo_VanBan> vanBans = ViewBag.vanBans;
+    List<tbHoSo_VanBan> vanBans_Excel = vanBans.Where(x => x.Loai.Contains("xls")).ToList();
+    List<tbHoSo_VanBan> vanBans_Word = vanBans.Where(x => x.Loai.Contains("doc")).ToList();
+    List<tbHoSo_VanBan> vanBans_PDF = vanBans.Where(x => x.Loai.Contains("pdf")).ToList();
+    List<tbHoSo_VanBan> vanBans_Video = vanBans.Where(x => x.Loai.Contains("mp")).ToList();
+    List<tbHoSo_VanBan> vanBans_Image = vanBans.Where(x =>
+    !x.Loai.Contains("xls") &&
+    !x.Loai.Contains("doc") &&
+    !x.Loai.Contains("pdf") &&
+    !x.Loai.Contains("mp")).ToList();
+    // Dữ liệu số
+    List<tbHoSo_VanBan_DuLieuSo> duLieuSos = ViewBag.duLieuSos;
+    List<tbHoSo_VanBan_DuLieuSo> duLieuSos_BangBieu = ViewBag.duLieuSos_BangBieu;
+    List<tbHoSo_VanBan_DuLieuSo> duLieuSos_VanBan = ViewBag.duLieuSos_VanBan;
+    // Phiếu mượn
+    List<tbPhieuMuon> phieuMuons = ViewBag.phieuMuons;
+    List<tbPhieuMuon> phieuMuons_Cho = phieuMuons.Where(x => x.TrangThai == 1).ToList();
+    List<tbPhieuMuon> phieuMuons_Duyet = phieuMuons.Where(x => x.TrangThai == 2).ToList();
+    List<tbPhieuMuon> phieuMuons_Huy = phieuMuons.Where(x => x.TrangThai == 3).ToList();
+    List<tbPhieuMuon> phieuMuons_HetHan = phieuMuons.Where(x => x.TrangThai == 4).ToList();
+}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Báo cáo</li>
+}
+@section styles {
+    <link href="~/Content/Admin/__Home/Search/search.css" rel="stylesheet" />
+    <link href="~/Content/Admin/_DocumentManage/DocumentDigitizing/documentdigitizing.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/Content/Admin/Report/report.js"></script>
+    <script>
+        var report = new Report();
+        report.init();
+    </script>
+}
+<section class="section" id="page-report" data-aos="fade-up">
+    <div class="row pb-4">
+        <div class="card-group gap-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h4 class="card-title text-uppercase"><i class="bi bi-folder-symlink"></i> - Hồ sơ</h4>
+                    <h5 class="card-text text-danger fs-1">@hoSos.Count</h5>
+
+                    <input hidden id="hoso-tongsoluong" value="@hoSos.Count" />
+                    <input hidden id="hoso-thang1" value="@hoSos_thang1.Count" />
+                    <input hidden id="hoso-thang2" value="@hoSos_thang2.Count" />
+                    <input hidden id="hoso-thang3" value="@hoSos_thang3.Count" />
+                    <input hidden id="hoso-thang4" value="@hoSos_thang4.Count" />
+                    <input hidden id="hoso-thang5" value="@hoSos_thang5.Count" />
+                    <input hidden id="hoso-thang6" value="@hoSos_thang6.Count" />
+                    <input hidden id="hoso-thang7" value="@hoSos_thang7.Count" />
+                    <input hidden id="hoso-thang8" value="@hoSos_thang8.Count" />
+                    <input hidden id="hoso-thang9" value="@hoSos_thang9.Count" />
+                    <input hidden id="hoso-thang10" value="@hoSos_thang10.Count" />
+                    <input hidden id="hoso-thang11" value="@hoSos_thang11.Count" />
+                    <input hidden id="hoso-thang12" value="@hoSos_thang12.Count" />
+
+                    <small>
+                        <span class="text-danger">@hoSos_LuuTru.Count</span> tạo lập | <span class="text-danger">@hoSos_NopLuu.Count</span> nộp lưu
+                    </small><br />
+                    <small>
+                        <span class="text-danger">@hoSos_soLuongTo</span> tờ | <span class="text-danger">@hoSos_soLuongTrang</span> trang
+                        <span class="text-danger fst-italic" hidden>(theo số liệu được cung cấp)</span>
+                    </small>
+                </div>
+                @if (kieuNguoiDung_IdChucNang.FirstOrDefault(x => x.ChucNang.MaChucNang == "DocumentFormation") != null)
+                {
+                    <div class="card-footer">
+                        👉 <a href="~/DocumentFormation/Index" class="small text-muted text-decoration-underline">Đi tới trang quản lý</a>
+                    </div>
+                }
+            </div>
+            <div class="card text-center">
+                <div class="card-body">
+                    <h4 class="card-title text-uppercase"><i class="bi bi-card-image"></i> - Văn bản</h4>
+                    <h5 class="card-text text-danger fs-1">@vanBans.Count</h5>
+                    <small>
+                        <span class="text-danger">@vanBans_Excel.Count</span> excel | <span class="text-danger">@vanBans_Word.Count</span> word |
+                        <span class="text-danger">@vanBans_PDF.Count</span> pdf | <span class="text-danger">@vanBans_Image.Count</span> image |
+                        <span class="text-danger">@vanBans_Video.Count</span> video
+                    </small>
+                </div>
+                @if (kieuNguoiDung_IdChucNang.FirstOrDefault(x => x.ChucNang.MaChucNang == "DocumentFormation") != null)
+                {
+                    <div class="card-footer">
+                        👉 <a href="~/DocumentFormation/Index" class="small text-muted text-decoration-underline">Đi tới trang quản lý</a>
+                    </div>
+                }
+            </div>
+            <div class="card text-center">
+                <div class="card-body">
+                    <h4 class="card-title text-uppercase"><i class="bi bi-clipboard-data"></i> - Dữ liệu số</h4>
+                    <h5 class="card-text text-danger fs-1">@duLieuSos.Count</h5>
+                    <small>
+                        <span class="text-danger">@duLieuSos_BangBieu.Count</span> dạng bảng biểu | <span class="text-danger">@duLieuSos_VanBan.Count</span> dạng văn bản
+                    </small>
+                </div>
+                <div class="card-footer" style="display: none">
+                    👉 <a href="~/DocumentFormation/Index" class="small text-muted text-decoration-underline">Đi tới trang quản lý</a>
+                </div>
+            </div>
+            <div class="card text-center">
+                <div class="card-body">
+                    <h4 class="card-title text-uppercase"><i class="bi bi-cart4"></i> - Phiếu mượn</h4>
+                    <h5 class="card-text text-danger fs-1">@phieuMuons.Count</h5>
+                    <small>
+                        <span class="text-danger">@phieuMuons_Cho.Count</span> chờ | <span class="text-danger">@phieuMuons_Duyet.Count</span> duyệt |
+                        <span class="text-danger">@phieuMuons_Huy.Count</span> hủy | <span class="text-danger">@phieuMuons_HetHan.Count</span> hết hạn
+                    </small>
+                </div>
+                @if (kieuNguoiDung_IdChucNang.FirstOrDefault(x => x.ChucNang.MaChucNang == "LoanManage") != null)
+                {
+                    <div class="card-footer">
+                        👉 <a href="~/LoanManage/Index" class="small text-muted text-decoration-underline">Đi tới trang quản lý</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 position-relative">
+            <div class="card" style="height: 95%">
+                <div class="card-header">
+                    <a href="~/Report/ThongKeTheoTieuChi" class="card-title">
+                        <i class="bi bi-bar-chart-line-fill"></i> - Thống kê hồ sơ theo tiêu chí <span class="text-danger fst-italic bold">(Nhấn xem chi tiết)</span>
+                    </a>
+                </div>
+                <div class="card-body position-relative">
+                    <a href="~/Report/ThongKeTheoTieuChi" class="card-opacity bg-body">
+                        <p class="fs-1"><i class="bi bi-bar-chart-line-fill"></i></p>
+                    </a>
+                    <div class="row pt-3">
+                        <div class="w-100">
+                            <canvas id="thongkehoso-lineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h4 class="card-title text-uppercase"><i class="bi bi-diagram-3"></i> - Danh mục hồ sơ</h4>
+                            <h5 class="card-text text-danger fs-1">@DANHMUCHOSOS.Count</h5>
+                        </div>
+                        @if (kieuNguoiDung_IdChucNang.FirstOrDefault(x => x.ChucNang.MaChucNang == "DocumentDirectory") != null)
+                        {
+                            <div class="card-footer">
+                                👉 <a href="~/DocumentDirectory/Index" class="small text-muted text-decoration-underline">Đi tới trang quản lý</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h4 class="card-title text-uppercase"><i class="bi bi-pin-angle-fill"></i> - Vị trí lưu trữ</h4>
+                            <h5 class="card-text text-danger fs-1">@VITRILUUTRUS.Count</h5>
+                        </div>
+                        @if (kieuNguoiDung_IdChucNang.FirstOrDefault(x => x.ChucNang.MaChucNang == "StorageLocation") != null)
+                        {<div class="card-footer">
+                                👉 <a href="~/StorageLocation/Index" class="small text-muted text-decoration-underline">Đi tới trang quản lý</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="w-100">
+                                <canvas id="thongkehoso-doughnut"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="w-100">
+                                <canvas id="thongkehoso-polarArea"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

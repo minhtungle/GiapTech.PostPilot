@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "Quản lý đăng ký mượn";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Quản lý đăng ký mượn</li>
+}
+@section styles{
+    <link href="~/Content/Admin/LoanManage/loanmanage.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/Content/Admin/LoanManage/loanmanage.js"></script>
+    <script>
+        var loan = new LoanManage();
+        loan.init();
+    </script>
+}
+<section class="section" id="page-loanmanage" data-aos="fade-up">
+    <div class="card">
+        <div class="card-body">
+            <div class="btn-group btn-group-sm" role="group">
+                <a class="btn btn-success"><i class="bi bi-check-circle"></i></a>
+                <a class="btn btn-light-secondary" onclick="loan.phieuMuon.update('multiple', 'duyet')">
+                    Duyệt
+                </a>
+
+                <a class="btn btn-warning"><i class="bi bi-x-circle"></i></a>
+                <a class="btn btn-light-secondary" onclick="loan.phieuMuon.lyDoHuyDuyet('multiple')">
+                    Hủy duyệt
+                </a>
+
+                <a class="btn btn-danger"><i class="bi bi-trash3-fill"></i></a>
+                <a class="btn btn-light-secondary" onclick="loan.phieuMuon.update('multiple', 'xoa')">
+                    Xóa bỏ
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        @Html.Partial("~/Views/Admin/LoanManage/loanmanage-getList.cshtml")
+    </div>
+</section>
+<!--phieumuon-update-->
+<div class="modal fade text-left" id="phieumuon-update" tabindex="-1" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
+</div>
+<!--phieumuon-chungthuc-->
+<div class="modal fade text-left" id="phieumuon-chungthuc" tabindex="-1" role="dialog" data-bs-keyboard="false" data-bs-backdrop="static">
+</div>
+<!--phieumuon-lydohuyduyet-->
+<div class="modal fade text-center" id="phieumuon-lydohuyduyet" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <label>Lý do hủy duyệt</label>
+                <textarea class="form-control min-h-100 max-h-200" rows="3"></textarea>
+            </div>
+            <div class="modal-footer p-2 justify-content-center">
+                <button type="button" class="btn btn-sm btn-primary" name="yes">
+                    <i class="bi bi-save d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Đồng ý</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" name="no">
+                    <i class="bi bi-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Hủy bỏ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

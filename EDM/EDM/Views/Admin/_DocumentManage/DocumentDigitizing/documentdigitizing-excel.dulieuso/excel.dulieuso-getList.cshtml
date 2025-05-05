@@ -1,0 +1,91 @@
+﻿@using DocumentFormation.Models;
+@using DocumentDigitizing.Models;
+@using EDM_DB
+@{
+    List<tbHoSoExtend> EXCEL_DULIEUSOs_UPLOAD = Session["EXCEL_DULIEUSOs_UPLOAD"] as List<tbHoSoExtend>;
+
+    List<tbBieuMauExtend> bieuMaus = ViewBag.bieuMaus;
+}
+<ul class="nav nav-tabs" role="tablist">
+    @for (int b = 0; b < bieuMaus.Count; b++) {
+        tbBieuMauExtend bieuMau = bieuMaus[b];
+        <li class="nav-item" role="presentation">
+            <a class="nav-link @(b == 0 ? "active" : "")" id="bieumau-@bieuMau.IdBieuMau-tab" data-bs-toggle="tab" href="#bieumau-@bieuMau.IdBieuMau" role="tab" aria-controls="bieumau-@bieuMau.IdBieuMau" aria-selected="@(b == 0 ? "true" : "false")">@bieuMau.TenBieuMau</a>
+        </li>
+    }
+</ul>
+<div class="tab-content">
+    @for (int b = 0; b < bieuMaus.Count; b++) {
+        tbBieuMauExtend bieuMau = bieuMaus[b];
+        // Danh sách trường dữ liệu của biểu mẫu
+        List<tbBieuMau_TruongDuLieuExtend> truongDuLieus = bieuMau.TruongDuLieus;
+        // Danh sách bản ghi hồ sơ cùng biểu mẫu
+        List<tbHoSoExtend> hoSos = EXCEL_DULIEUSOs_UPLOAD.Where(x => x.VanBans[0].BieuMau.TenBieuMau == bieuMau.TenBieuMau).ToList();
+        <div class="tab-pane py-2 fade @(b == 0 ? "active show":"")" id="bieumau-@bieuMau.IdBieuMau" role="tabpanel" aria-labelledby="bieumau-@bieuMau.IdBieuMau-tab">
+            <hr />
+            <table class="table table-hover table-bordered table-sticky w-100" id="excel-@bieuMau.IdBieuMau-getList" data-page-length="-1" data-order="[[ 1, &quot;asc&quot; ]]"
+                   data-idbieumau="@bieuMau.IdBieuMau" 
+                   data-idloaibieumau="@bieuMau.IdLoaiBieuMau" 
+                   data-tenbieumau="@bieuMau.TenBieuMau">
+                <thead>
+                    <tr>
+                        <th class="text-center" data-orderable="false"></th>
+                        <th class="text-center" style="min-width: 10rem!important">Mã-hồ-sơ</th>
+                        <th class="text-center" style="min-width: 10rem!important">Tên-tệp</th>
+                        @foreach (tbBieuMau_TruongDuLieuExtend truongDuLieu in truongDuLieus) {
+                            <th class="text-center" style="min-width: 10rem!important">@truongDuLieu.TenTruong</th>
+                        }
+                        <th class="text-center" style="min-width: 10rem!important">Trang-số</th>
+                        <th class="text-center" style="min-width: 10rem!important" data-orderable="false">Thao tác</th>
+                    </tr>
+                </thead>
+                <tfoot class="show-footer-above">
+                    <tr>
+                        <th class="text-center"><input class="form-check-input checkAll-excel-@bieuMau.IdBieuMau-getList" type="checkbox" title="Chọn tất cả" /></th>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                        @foreach (tbBieuMau_TruongDuLieuExtend truongDuLieu in truongDuLieus) {
+                            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                        }
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @for (int h = 0; h < hoSos.Count; h++) {
+                        tbHoSoExtend hoSo = hoSos[h];
+                        tbHoSo_VanBanExtend vanBan = hoSo.VanBans[0];
+                        List<tbBieuMau_TruongDuLieuExtend> hoSo_truongDuLieus = vanBan.BieuMau.TruongDuLieus;
+                        int trangSo = 1;
+                        <tr>
+                            <td class="text-center"><input class="form-check-input checkRow-excel-@bieuMau.IdBieuMau-getList" type="checkbox" /></td>
+                            <td>
+                                <span class="form-control" data-idhoso="@hoSo.IdHoSo" data-tentruong="MaHoSo" hidden>@hoSo.MaHoSo</span>
+                                <input type="text" class="form-control" data-tentruong="MaHoSo" value="@hoSo.MaHoSo" onchange="dd.excel.updateSingleCell(this)" />
+                            </td>
+                            <td>
+                                <span class="form-control" data-idvanban="@vanBan.IdVanBan" data-tentruong="TenVanBan" hidden>@vanBan.TenVanBan</span>
+                                <input type="text" class="form-control" data-tentruong="TenVanBan" value="@vanBan.TenVanBan" onchange="dd.excel.updateSingleCell(this)" />
+                            </td>
+                            @foreach (tbBieuMau_TruongDuLieuExtend hoSo_truongDuLieu in hoSo_truongDuLieus) {
+                                tbHoSo_VanBan_DuLieuSo duLieuSo = hoSo_truongDuLieu.DuLieuSos.FirstOrDefault();
+                                trangSo = duLieuSo.TrangSo ?? trangSo;
+                                <td>
+                                    <span class="form-control" data-idtruongdulieu="@hoSo_truongDuLieu.IdTruongDuLieu" data-tentruong="@hoSo_truongDuLieu.TenTruong" hidden>@duLieuSo.DuLieuSo</span>
+                                    <input type="text" class="form-control" data-tentruong="@hoSo_truongDuLieu.TenTruong" value="@duLieuSo.DuLieuSo" onchange="dd.excel.updateSingleCell(this)" />
+                                </td>
+                            }
+                            <td>
+                                <span class="form-control" data-tentruong="TrangSo" hidden>@trangSo</span>
+                                <input type="number" class="form-control" data-tentruong="TrangSo" value="@trangSo" onchange="dd.excel.updateSingleCell(this)" />
+                            </td>
+                            <td class="text-center">
+                                <a href="#" class="btn btn-sm btn-danger" title="Xóa" onclick="dd.excel.deleteRow(@bieuMau.IdBieuMau , this)"><i class="bi bi-trash3-fill"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

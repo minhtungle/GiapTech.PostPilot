@@ -1,0 +1,34 @@
+﻿@using DocumentFormation.Models
+@{
+    tbHoSoExtend hoSo = ViewBag.hoSo;
+}
+<div class="card-body">
+    <table class="table table-hover table-bordered w-100 nowrap" id="vanban-getList" data-page-length="10" data-order="[[ 1, &quot;asc&quot; ]]">
+        <thead>
+            <tr>
+                <th class="text-center">Tên văn bản</th>
+                <th class="text-center">Tên biểu mẫu</th>
+                <th class="text-center" data-orderable="false">Tác vụ</th>
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (tbHoSo_VanBanExtend vanBan in hoSo.VanBans) {
+                string tenVanBan = vanBan.TenVanBan != null ? vanBan.TenVanBan_BanDau : vanBan.TenVanBan;
+                <tr>
+                    <td>@string.Format("{0}{1}", tenVanBan, vanBan.Loai)</td>
+                    <td>@vanBan.BieuMau.TenBieuMau</td>
+                    <td class="text-center">
+                        <a href="#" class="btn btn-sm btn-warning" title="Xem" onclick="ds.vanBan.displayModal_Read_VanBan(@hoSo.IdHoSo, 'read', @vanBan.IdVanBan)"><i class="bi bi-eye-fill"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

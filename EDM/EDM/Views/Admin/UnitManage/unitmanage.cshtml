@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Quản lý đơn vị";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Quản lý đơn vị</li>
+}
+@section scripts {
+    <script src="~/Content/Admin/UnitManage/unitmanage.js"></script>
+    <script>
+        var um = new UnitManage();
+        um.init();
+    </script>
+}
+<section class="section page-group-systemutilities" id="page-unitmanage" data-aos="fade-up">
+    <div class="card">
+        <div class="card-header pb-0">
+            <h5><i class="bi bi-caret-right-fill"></i> THÔNG TIN ĐƠN VỊ</h5>
+            <hr />
+        </div>
+        <div class="card-content" id="donvisudung-getList">
+        </div>
+    </div>
+</section>

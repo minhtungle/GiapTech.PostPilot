@@ -1,0 +1,84 @@
+﻿@{
+    string HtmlCoCaus_THAYTHE = ViewBag.HtmlCoCaus_THAYTHE;
+    bool deleteChilds = ViewBag.deleteChilds;
+    Guid idCoCau = ViewBag.idCoCau;
+}
+<div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <table class="table table-hover table-bordered w-100 nowrap" id="cocautochuc-thaythe-getList" data-page-length="-1">
+                <thead>
+                    <tr>
+                        <th class="text-center" data-orderable="false">Chọn cơ cấu tổ chức thay thế cho các văn bản đang sử dụng</th>
+                    </tr>
+                </thead>
+                <tfoot class="show-footer-above">
+                    <tr>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                    </tr>
+                </tfoot>
+                @if (HtmlCoCaus_THAYTHE != "") {
+                    <tbody>
+                        @MvcHtmlString.Create(HtmlCoCaus_THAYTHE)
+                    </tbody>
+                }
+            </table>
+        </div>
+        <div class="modal-footer p-2 flex-column">
+            <p class="text-center" id="organization-confirmdialog-content"></p>
+            <div class="w-100 flex-row text-center">
+                <button type="button" class="btn btn-primary ml-1" onclick="org.coCau.delete(@(deleteChilds ? 1: 0), @string.Format("'{0}'", idCoCau))">
+                    <i class="bi bi-check d-flex d-sm-none"></i>
+                    <span class="d-none d-sm-block">Đồng ý</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x d-flex d-sm-none"></i>
+                    <span class="d-none d-sm-block">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade" id="organization-confirmdialog" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <table class="table table-hover table-bordered table-treeview w-100 nowrap" id="cocautochuc-thaythe-getList" data-page-length="-1">
+                        <thead>
+                            <tr>
+                                <th class="text-center" data-orderable="false">Chọn cơ cấu tổ chức thay thế cho các văn bản đang sử dụng</th>
+                            </tr>
+                        </thead>
+                        <tfoot class="show-footer-above">
+                            <tr>
+                                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                            </tr>
+                        </tfoot>
+                        @if (HtmlCoCaus_THAYTHE != "") {
+                            <tbody>
+                                @MvcHtmlString.Create(HtmlCoCaus_THAYTHE)
+                            </tbody>
+                        }
+                    </table>
+                </div>
+                <div class="modal-footer p-2 flex-column">
+                    <p class="text-center" id="organization-confirmdialog-content"></p>
+                    <div class="w-100 flex-row text-center">
+                        <button type="button" class="btn btn-sm btn-danger" name="all">
+                            <i class="bi bi-save d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Tất cả</span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-primary" name="single">
+                            <i class="bi bi-save d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Chỉ một</span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" name="no">
+                            <i class="bi bi-x d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Hủy bỏ</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@

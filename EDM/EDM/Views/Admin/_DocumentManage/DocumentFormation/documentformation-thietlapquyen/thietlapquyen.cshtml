@@ -1,0 +1,84 @@
+﻿@using UserAccount.Models
+@using Public.Models
+@using EDM_DB
+@{
+    PermissionM per = Session["Permission"] as PermissionM;
+    List<tbCoCauToChuc> COCAUTOCHUCS = Session["COCAUTOCHUCS"] as List<tbCoCauToChuc>;
+    List<tbNguoiDungExtend> NGUOIDUNGS = Session["NGUOIDUNGS"] as List<tbNguoiDungExtend>;
+}
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                Thiết lập quyền truy cập hồ sơ
+                <a class="text-warning c-poiter p-1" data-bs-toggle="tooltip" data-bs-placement="right" title="Nhấn xem hướng dẫn"
+                   data-hint="Nhấn xem hướng dẫn" data-hint-position="top-left"
+                   onclick="huongDanSuDung.kichHoat('hoso-thietlapquyen')"><i class="bi bi-lightbulb fs-6"></i></a>
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <div class="card-body">
+                            <table class="table table-hover table-bordered w-100 nowrap" id="nguoidung-getList" data-page-length="-1">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" data-orderable="false"></th>
+                                        <th class="text-center w-50">Tên cơ cấu tổ chức</th>
+                                        <th class="text-center w-50">Tên người dùng</th>
+                                    </tr>
+                                </thead>
+                                <tfoot class="show-footer-above">
+                                    <tr>
+                                        <th class="text-center">
+                                            <input class="form-check-input _checkAll-nguoidung-getList" type="checkbox" title="Chọn tất cả" />
+                                        </th>
+                                        <th intro-container="thietlapquyen-cocautochuc">
+                                            <select class="form-control form-select2"
+                                                    id="select-cocautochuc" name="select-cocautochuc">
+                                                <option value="0" @(COCAUTOCHUCS.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                                @foreach (tbCoCauToChuc coCau in COCAUTOCHUCS) {
+                                                    <option value="@coCau.IdCoCauToChuc">@coCau.TenCoCauToChuc</option>
+                                                }
+                                            </select>
+                                            <input type="text" class="form-control dt-search-col" for="select-cocautochuc" placeholder="Tìm kiếm ..." hidden />
+                                        </th>
+                                        <th intro-container="thietlapquyen-tennguoidung">
+                                            <input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..."/>
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    @foreach (tbNguoiDungExtend nguoiDung in NGUOIDUNGS) {
+                                        <tr data-idnguoidung="@nguoiDung.IdNguoiDung">
+                                            <td class="text-center">
+                                                <input class="form-check-input _checkRow-nguoidung-getList" type="checkbox"
+                                                       @(nguoiDung.IdCoCauToChuc == per.CoCauToChuc.IdCoCauToChuc ? "checked" : "") />
+                                            </td>
+                                            <td>@nguoiDung.CoCauToChuc.TenCoCauToChuc</td>
+                                            <td>
+                                                @nguoiDung.TenNguoiDung
+                                                @if (nguoiDung.IdNguoiDung == per.NguoiDung.IdNguoiDung) {
+                                                    <span class='fst-italic text-danger'>(Đang sử dụng)</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary ml-1" id="thietLapQuyen_Luu">
+                <span class="">Lưu</span>
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

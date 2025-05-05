@@ -1,0 +1,141 @@
+﻿@model List<VanBanTimKiemsM>
+@using Public.Models
+@using Search.Models
+@{
+    PermissionM per = Session["Permission"] as PermissionM;
+    int VANBANTIMKIEMS_Count = Model.Count;
+}
+@if (VANBANTIMKIEMS_Count > 0) {
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group form-group-sm box-shadow">
+                <div class="input-group">
+                    <a class="btn btn-success d-inline-flex" data-bs-toggle="collapse" href="#ketqua-filter" role="button" aria-expanded="true" aria-controls="ketqua-filter">
+                        <i class="bi bi-funnel"></i>
+                        <span class="d-none d-sm-block">&nbsp;Lọc dữ liệu</span>
+                    </a>
+                    <input type="text" class="form-control bg-white" placeholder="Mã hồ sơ, Tên văn bản ..." id="filter-noidung" onkeyup="s.ketQua.locDuLieu(500)" />
+                    <a class="btn btn-success d-inline-flex" onclick="s.phieuMuon.themDanhSachMuon()">
+                        <i class="bi bi-cart4"></i>
+                        <span class="d-none d-sm-block">&nbsp;Thêm mượn</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12" style="padding: 0rem 1.3rem">
+            <hr />
+            <div class="form-group">
+                <div class="collapse show" id="ketqua-filter">
+                    <div class="d-flex gap-2">
+                        <div class="form-check">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="form-check-input form-check-success checkAll-ketquatimkiem-getList" id="filter-chontatca">
+                                <label class="form-check-label" for="filter-chontatca" style="font-weight: 600">Chọn tất cả</label>
+                            </div>
+                        </div>
+                        <div class="form-check">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="form-check-input form-check-primary" id="filter-congkhai" value="1" onchange="s.ketQua.locDuLieu()">
+                                <label class="form-check-label" for="filter-congkhai">Công khai</label>
+                            </div>
+                        </div>
+                        <div class="form-check">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="form-check-input form-check-primary" id="filter-hanche" value="2" onchange="s.ketQua.locDuLieu()">
+                                <label class="form-check-label" for="filter-hanche">Hạn chế</label>
+                            </div>
+                        </div>
+                        <div class="form-check">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="form-check-input form-check-primary" id="filter-baomat" value="3" onchange="s.ketQua.locDuLieu()">
+                                <label class="form-check-label" for="filter-baomat">Bảo mật</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row max-h-500 overflow-auto pt-3" data-aos="flip-up">
+        @for (int i = 0; i < VANBANTIMKIEMS_Count; i++) {
+            VanBanTimKiemsM vanBan = Model[i];
+            vanBan.TrangSo = string.Join(",", vanBan.TrangSo.Replace(" ", "").Split(',').Distinct().ToList());
+            vanBan.TenVanBan = vanBan.TenVanBan ?? "";
+            string tenVanBan = vanBan.TenVanBan_BanDau != null ? vanBan.TenVanBan_BanDau : vanBan.TenVanBan;
+            string cheDoClassName = "";
+            int trangSo = int.Parse(vanBan.TrangSo.Split(',').ToList()[0]);
+            List<string> quyenTruyCaps = vanBan.QuyenTruyCap.Split(',').ToList();
+            if (vanBan.IdCheDoSuDung == 1) {
+                cheDoClassName = "badge bg-success";
+            } else if (vanBan.IdCheDoSuDung == 2) {
+                cheDoClassName = "badge bg-warning";
+            } else {
+                cheDoClassName = "badge bg-danger";
+            }
+            <div class="col-12 col-md-6 position-relative flex-grow-1 card-ketqua-container">
+                <div class="card card-ketqua">
+                    <div class="card-body" style="padding: .6rem .6rem 2rem .6rem;">
+                        <div class="d-flex justify-content-between card-ketqua-checkbox">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input form-check-success form-check-glow checkRow-ketquatimkiem-getList" data-idvanban="@vanBan.IdVanBan" name="IdVanBan" />
+                            </div>
+                            <span class="@cheDoClassName" name="TenCheDoSuDung">@vanBan.TenCheDoSuDung</span>
+                        </div>
+                        <div class="position-relative card-ketqua-content px-3 py-2">
+                            <div class="d-flex align-items-center">
+                                <img src="~/Assets/images/folder-svgrepo-com.png" class="card-ketqua-bg-img" />
+                                <div class="font-bold fs-6 px-md-3 text-wrap text-justify overflow-hidden">
+                                    <span class="badge" name="MaHoSo" title="@vanBan.MaHoSo">
+                                        @vanBan.MaHoSo
+                                    </span>
+                                    <br />
+                                    <span class="text-danger" name="TieuDeHoSo" title="@vanBan.TieuDeHoSo">
+                                        @Public.Handle.TruncateString(input: vanBan.TieuDeHoSo, maxLength: 60)
+                                    </span>
+                                    <br />
+                                    @if (vanBan.IdVanBan == 0) {
+                                        <span class="fs-5 badge bg-danger" name="TenVanBan" title="@tenVanBan">
+                                            Không có văn bản
+                                        </span>
+                                    } else {
+                                        <span class="fs-5 text-body" name="TenVanBan" title="@string.Format("{0}{1}",tenVanBan, vanBan.Loai)">
+                                            @Public.Handle.TruncateString(input: string.Format("{0}{1}", tenVanBan, vanBan.Loai), maxLength: 60)
+                                        </span>
+                                        <br />
+                                        <span class="text-danger" name="TrangSo" title="@vanBan.TrangSo">
+                                            Trang số: @Public.Handle.TruncateString(input: vanBan.TrangSo, maxLength: 100)
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!--Chỉ cho xem khi ở chế độ công khai hoặc có quyền xem-->
+                        @if (vanBan.IdCheDoSuDung == 1 ||
+                            quyenTruyCaps.Contains(per.NguoiDung.IdNguoiDung.ToString())) {
+                            <div class="d-inline card-ketqua-xemchitiet">
+                                <div class="btn-group btn-group-sm text-nowrap gap-1">
+                                    <a class="btn btn-sm btn-primary c-poiter box-shadow pt-1" onclick="s.vanBan.redirectVanBan(@vanBan.IdHoSo)">
+                                        <i class="bi bi-file-word"></i> Xem hồ sơ
+                                    </a>
+                                    @if (vanBan.IdVanBan != 0) {
+                                        <a class="btn btn-sm btn-primary c-poiter box-shadow pt-1" onclick="s.vanBan.displayModal_Read_VanBan(@vanBan.IdHoSo, @vanBan.IdVanBan, @trangSo)">
+                                            <i class="bi bi-file-earmark-image"></i> Xem văn bản
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+} else {
+    <div class="row" data-aos="flip-up">
+        <div class="col-12 bg-body text-center card-khongtimthay" style="border-radius : .75rem">
+            <img class="img-error" src="/Assets/templates/assets/images/samples/07.png" alt="Not Found">
+            <h3 class="error-title text-danger"><i class="bi bi-search"></i> Không có kết quả 🤔</h3>
+            <p class="fs-5 text-gray-600">Tôi cần nhiều thông tin hơn nữa, làm lại nào !</p>
+        </div>
+    </div>
+}

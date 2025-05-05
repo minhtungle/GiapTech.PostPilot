@@ -1,0 +1,113 @@
+﻿@using DocumentFormation.Models
+@{
+    tbHoSoExtend hoSo = ViewBag.hoSo;
+}
+<div class="card-body">
+    <input id="input-idhoso" value="@hoSo.IdHoSo" hidden />
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-hover table-bordered w-100">
+                <thead>
+                    <tr data-bs-toggle="collapse" href="#thongTinHoSo-container">
+                        <th class="text-center">
+                            Thông tin hồ sơ <span class="text-danger fst-italic">(Nhấn để xem chi tiết)</span>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div class="row collapse" id="thongTinHoSo-container">
+        <div class="col-12">
+            <table class="table table-hover table-bordered w-100">
+                <tbody>
+                    <tr>
+                        <td class="font-bold w-50">Tiêu đề hồ sơ</td>
+                        <td class="w-50">@hoSo.TieuDeHoSo</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold w-50">Mã hồ sơ</td>
+                        <td class="w-50">@hoSo.MaHoSo</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold w-50">Phông lưu trữ</td>
+                        <td class="w-50">@hoSo.PhongLuuTru.TenPhongLuuTru</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold w-50">Vị trí lưu trữ</td>
+                        <td class="w-50">@hoSo.ViTriLuuTru.TenViTriLuuTru</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold w-50">Danh mục hồ sơ</td>
+                        <td class="w-50">@hoSo.DanhMucHoSo.TenDanhMucHoSo</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold w-50">Chế độ sử dụng</td>
+                        <td class="w-50">@hoSo.CheDoSuDung.TenCheDoSuDung</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Mục lục số/Năm hình thành</td>
+                        <td>@hoSo.MucLucSo_NamHinhThanh</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Ghi chú</td>
+                        <td>@hoSo.GhiChu</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <table class="table table-hover table-bordered w-100">
+                <tbody>
+                    <tr>
+                        <td class="font-bold">Số và ký hiệu</td>
+                        <td>@hoSo.So_KyHieu</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Thời hạn bảo quản</td>
+                        <td>@hoSo.ThoiHanBaoQuan</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Thời gian bắt đầu</td>
+                        <td>@(hoSo.ThoiGianBatDau == null ? "" : hoSo.ThoiGianBatDau.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture))</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Thời gian kết thúc</td>
+                        <td>@(hoSo.ThoiGianKetThuc == null ? "" : hoSo.ThoiGianKetThuc.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture))</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Tình trạng vật lý</td>
+                        <td>@hoSo.TinhTrangVatLy</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <table class="table table-hover table-bordered w-100">
+                <tbody>
+                    <tr>
+                        <td class="font-bold">Ngôn ngữ</td>
+                        <td>@hoSo.NgonNgu</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Từ khóa</td>
+                        <td>@hoSo.TuKhoa</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Tổng số văn bản</td>
+                        <td>@hoSo.TongSoVanBan</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Số lượng tờ</td>
+                        <td>@hoSo.SoLuongTo</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold">Số lượng trang</td>
+                        <td>@hoSo.SoLuongTrang</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+﻿@using DocumentFormation.Models
+@using EDM_DB
+@{
+    List<tbBieuMau_TruongDuLieuExtend> truongDuLieus = ViewBag.truongDuLieus;
+    tbBieuMau bieuMau = ViewBag.bieuMau;
+    int truongDuLieus_Count = truongDuLieus.Count;
+    string loai = "read";
+}
+@if (truongDuLieus_Count > 0) {
+    int duLieuSos_Count = truongDuLieus[0].DuLieuSos.Count;
+    if (bieuMau.IdLoaiBieuMau == 1) // Có cấu trúc
+    {
+        <div class="col-12">
+            <table class="table table-hover table-bordered w-100 nowrap" id="table-truongdulieu" data-page-length="10">
+                <thead>
+                    <tr>
+                        @foreach (tbBieuMau_TruongDuLieuExtend tenTruongDuLieu in truongDuLieus) {
+                            <th class="text-center" data-idTruongDuLieu="@tenTruongDuLieu.IdTruongDuLieu">@tenTruongDuLieu.TenTruong</th>
+                        }
+                        <th class="text-center" data-idTruongDuLieu="-1">
+                            Trang số
+                        </th>
+                    </tr>
+                </thead>
+                <tfoot class="show-footer-above">
+                    <tr>
+                        @foreach (tbBieuMau_TruongDuLieuExtend tenTruongDuLieu in truongDuLieus) {
+                            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                        }
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <!--/**
+                    * Tìm dữ liệu số từng trường và sắp xếp theo nhóm
+                    * |---------------------------------------|
+                    * |   TRUONG1   |   TRUONG2  |   TRUONG3  |
+                    * |---------------------------------------|
+                    * |  DULIEUSO1  |  DULIEUSO1 |  DULIEUSO1 |
+                    * |  DULIEUSO2  |  DULIEUSO2 |  DULIEUSO2 |
+                    * |  DULIEUSO3  |  DULIEUSO3 |  DULIEUSO3 |
+                    * |  DULIEUSO4  |  DULIEUSO4 |  DULIEUSO4 |
+                    * |---------------------------------------|
+                    */-->
+                    @if (duLieuSos_Count > 0) {
+                        for (int i = 0; i < duLieuSos_Count; i++) {
+                            int trangSo = 1;
+                            <tr>
+                                @foreach (tbBieuMau_TruongDuLieuExtend truongDuLieu in truongDuLieus) {
+                                    EDM_DB.tbHoSo_VanBan_DuLieuSo duLieuSo = truongDuLieu.DuLieuSos[i];
+                                    trangSo = duLieuSo.TrangSo ?? trangSo;
+                                    <td>
+                                        @duLieuSo.DuLieuSo
+                                    </td>
+                                }
+                                <td class="text-success">@trangSo</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    } else {
+        int trangSo = 1;
+        for (int i = 0; i < truongDuLieus_Count; i++) {
+            List<tbHoSo_VanBan_DuLieuSo> duLieuSos = truongDuLieus[i].DuLieuSos;
+            trangSo = duLieuSos.Count > 0 ? duLieuSos.FirstOrDefault().TrangSo ?? trangSo : trangSo;
+            <div class="col-6 flex-grow-1">
+                <div class="position-relative">
+                    <div class="form-group with-title mb-3">
+                        <label for="input-mahoso">@truongDuLieus[i].TenTruong</label>
+                        <input type="text" class="form-control truongdulieu" placeholder="Nhập thông tin ..."
+                               data-idtruongdulieu="@truongDuLieus[i].IdTruongDuLieu"
+                               data-iddulieuso="@(duLieuSos.Count > 0 ? duLieuSos.FirstOrDefault().IdDuLieuSo : 0)"
+                               value="@(duLieuSos.Count > 0 ? duLieuSos.FirstOrDefault().DuLieuSo : "")"
+                               @(loai == "read" ? "readonly" : "")>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="col-6 flex-grow-1">
+            <div class="position-relative">
+                <div class="form-group with-title mb-3">
+                    <label class="bg-success text-white">Trang số</label>
+                    <input type="number" class="form-control trangso" data-idtruongdulieu="-1" data-iddulieuso="-1" value="@trangSo" />
+                </div>
+            </div>
+        </div>
+    }
+}

@@ -1,0 +1,92 @@
+﻿@using Public.Models
+@{
+    Layout = null;
+    Permission per = Session["Permission"] as Permission;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("~/Views/_Shared/_lib/lib.css.cshtml")
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <div id="system">
+        <div id="admin">
+            <!--admin.sidebar-->
+            @Html.Partial("~/Views/_Shared/Admin/admin.sidebar.cshtml")
+            <div class="p-0 main" id="main">
+                <!--admin.navbar-->
+                @Html.Partial("~/Views/_Shared/Admin/admin.navbar.cshtml")
+                <div class="page-content m-3">
+                    <section class="row">
+                        <!--admin.page.header-->
+                        <div class="page-heading">
+                            <div class="page-title">
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <nav aria-label="breadcrumb" class="breadcrumb-header">
+                                            <ol class="breadcrumb">
+                                                @RenderSection("hBreadcrumb", false)
+                                            </ol>
+                                        </nav>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        @RenderSection("hTitle", false)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input id="input-solandangnhap" value="@per.NguoiDung.SoLanDangNhap" hidden />
+                        <input id="input-machucvu-dangsudung" value="@per.ChucVu.MaChucVu" hidden />
+                        <input id="input-idnguoidung-dangsudung" value="@per.NguoiDung.IdNguoiDung" hidden />
+                        <input id="input-tennguoidung-dangsudung" value="@per.NguoiDung.TenNguoiDung" hidden />
+                        <input id="input-idkieunguoidung-dangsudung" value="@per.NguoiDung.IdKieuNguoiDung" hidden />
+                        <input id="input-idcocautochuc-dangsudung" value="@per.NguoiDung.IdCoCauToChuc" hidden />
+                        <input id="input-madonvisudung-dangsudung" value="@per.DonViSuDung.MaDonViSuDung" hidden />
+                        <!--admin.page.body-->
+                        @RenderBody()
+                        <!--Hướng dẫn-->
+                        @*<a class="c-pointer bg-warning"
+                           id="btn-huongdansudung-tongquat" intro-container="btn-huongdansudung-tongquat"
+                           data-bs-toggle="tooltip" data-bs-placement="left" title="Nhấn xem hướng dẫn" onclick="">
+                            <i class="bi bi-lightbulb fs-4"></i>
+                        </a>*@
+                        <!--Tin nhắn-->
+                        <!--<a class="c-pointer" id="khungchat-active" data-bs-toggle="tooltip" data-bs-placement="left" title="Nhắn tin" onclick="mess.activeChat()">
+                            <i class="bi bi-wechat"></i>
+                            <span class="badge bg-danger" id="khungchat-tinnhanmoi">0</span>
+                        </a>
+                        <div id="khungchat-container">
+                            <div class="card mb-0">
+                                <div class="card-header" id="khungchat-title">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <span class="font-bold long-text">Tin nhắn</span>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <a class="c-pointer" onclick="mess.activeChat()"><i class="bi bi-x-circle-fill text-secondary"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" id="khungchat-content">
+                                    <div class="row" style="height: 100%">
+                                        @Html.Partial("~/Views/Admin/__Home/Messenger/messenger-nhantin.cshtml")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Admin/__Home/TrangChu/muctieudoanhthu-crud.cshtml")
+    @Html.Partial("~/Views/_Shared/_lib/lib.js.cshtml")
+    <script src="~/Content/Admin/admin.js"></script>
+    <script>
+        var admin = new Admin();
+        admin.init();
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

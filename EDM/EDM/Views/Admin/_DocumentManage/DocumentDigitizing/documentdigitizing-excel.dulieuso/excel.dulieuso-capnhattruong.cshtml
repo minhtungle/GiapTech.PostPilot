@@ -1,0 +1,52 @@
+﻿@using DocumentFormation.Models;
+@using EDM_DB
+@{
+    List<tbBieuMauExtend> BIEUMAUs = Session["BIEUMAUs"] as List<tbBieuMauExtend>;
+}
+<div class="modal fade text-left" id="excel-dulieuso-capnhattruong" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content" style="border: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập nhật theo trường dữ liệu</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p class="text-danger">Lưu ý: Tích chọn các bản ghi trước khi cập nhật</p>
+                    <!--Tên biểu mẫu-->
+                    <div class="col-12 col-sm-12 col-md-6">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="" for="select-tenbieumau">Tên biểu mẫu</label>
+                                <select class="form-select" id="select-tenbieumau-0" data-tentruong="TenBieuMau" onchange="dd.excel.chonBieuMau(this, i)">
+                                    <option disabled data-ma="" @(BIEUMAUs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                    @foreach (tbBieuMauExtend bieuMau in BIEUMAUs) {
+                                        <option value="@bieuMau.IdBieuMau" data-ma="@bieuMau.MaDonViSuDung">@bieuMau.TenBieuMau</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Tên trường-->
+                    <div class="col-12 col-sm-12 col-md-6">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="" for="select-tentruong">Tên trường</label>
+                                <select class="form-control" id="select-tentruong">
+                                    <option disabled data-ma="" @(BIEUMAUs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="dd.excel.updateMultipleCell(@BIEUMAUs)">
+                    <span class="">Cập nhật</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <span class="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

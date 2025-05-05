@@ -1,0 +1,107 @@
+﻿@using DocumentFormation.Models;
+@using EDM_DB
+@{
+    List<tbHoSoExtend> EXCEL_TEPVANBANs_UPLOAD = Session["EXCEL_TEPVANBANs_UPLOAD"] as List<tbHoSoExtend>;
+    int EXCEL_TEPVANBANs_UPLOAD_COUNT = EXCEL_TEPVANBANs_UPLOAD.Count;
+}
+<div class="row">
+    <div class="@(EXCEL_TEPVANBANs_UPLOAD_COUNT == 0 ? "col-12": "col-sm-12 col-md-4")">
+        <table class="table table-hover table-bordered w-100 nowrap" id="file-vanban-getList" data-page-length="10" data-order="[[ 1, &quot;asc&quot; ]]">
+            <thead>
+                <tr>
+                    <th class="text-center" data-orderable="false">
+                        <a href="#" class="btn btn-sm btn-success" title="Thêm" onclick="df.fileVanBan.createRow()" hidden><i class="bi bi-plus-square-fill"></i></a>
+                        <a href="#" class="btn btn-sm btn-danger" title="Xóa" onclick="df.fileVanBan.deleteRow()"><i class="bi bi-trash3-fill"></i></a>
+                    </th>
+                    <th class="text-center text-danger" style="min-width: 10rem!important" intro-container="file-vanban-kiemtra">KIỂM TRA</th>
+                    <th class="text-center" style="min-width: 10rem!important">Mã hồ sơ</th>
+                </tr>
+            </thead>
+            <tfoot class="show-footer-above">
+                <tr>
+                    <th class="text-center"><input class="form-check-input checkAll-file-vanban-getList" type="checkbox" title="Chọn tất cả" /></th>
+                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @for (int i = 0; i < EXCEL_TEPVANBANs_UPLOAD_COUNT; i++)
+                {
+                    tbHoSoExtend hoSo = EXCEL_TEPVANBANs_UPLOAD[i];
+                    <tr row="@i" onclick="df.fileVanBan.readRow(this)">
+                        <td class="text-center"><input class="form-check-input checkRow-file-vanban-getList" type="checkbox" /></td>
+                        <td class="text-center">
+                            @{
+                                string className = "";
+                                if (hoSo.KiemTraExcel.TrangThai == 0)
+                                {
+                                    className = "bg-danger";
+                                }
+                                else if (hoSo.KiemTraExcel.TrangThai == 1)
+                                {
+                                    className = "bg-success";
+                                }
+                                else
+                                {
+                                    className = "bg-warning";
+                                }
+                            }
+                            <span class="badge @className" data-tentruong="TrangThaiKiemTra" title="@hoSo.KiemTraExcel.KetQua">@Public.Handle.TruncateString(input: hoSo.KiemTraExcel.KetQua, maxLength: 60)</span>
+                        </td>
+                        <!--Mã hồ sơ-->
+                        <td style="vertical-align: top;">
+                            <span data-tentruong="MaHoSo" hidden>@hoSo.MaHoSo</span>
+                            <input type="text" class="form-control" data-tentruong="MaHoSo" value="@hoSo.MaHoSo" onchange="df.fileVanBan.updateSingleCell(this)" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (EXCEL_TEPVANBANs_UPLOAD_COUNT > 0)
+    {
+        <div class="col-sm-12 col-md-8" id="file-vanban-read-container" style="overflow-y: scroll; border: 1px solid #d3d3d35c;">
+            @for (int i = 0; i < EXCEL_TEPVANBANs_UPLOAD_COUNT; i++)
+            {
+                List<tbHoSo_VanBanExtend> vanBans = EXCEL_TEPVANBANs_UPLOAD[i].VanBans;
+                <div class="row file-vanban-read" row="@i">
+                    <div class="col-12 border-1">
+                        <div class="divider divider-left">
+                            <div class="divider-text text-uppercase">
+                                <i class="bi bi-caret-right-fill"></i> Thông tin chung
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!--Danh sách văn bản-->
+                            <div class="col-12 col-sm-12 col-md-12">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="select-vitriluutru-@i">Danh sách văn bản</label>
+                                        <select class="form-control form-select2"
+                                                id="select-vitriluutru-@i" name="select-vitriluutru-@i"
+                                                onchange="df.fileVanBan.readFile(this)">
+                                            <option disabled @(vanBans.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                            @foreach (tbHoSo_VanBanExtend vanBan in vanBans)
+                                            {
+                                                <option style="white-space: pre!important"
+                                                        value="@string.Format("{0}~{1}",vanBan.DuongDan,vanBan.Loai)">
+                                                    @vanBan.TenVanBan
+                                                </option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--#-->
+                            <div class="col-12 col-sm-12 col-md-12">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3" id="file-@i"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

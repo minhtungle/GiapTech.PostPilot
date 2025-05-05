@@ -1,0 +1,18 @@
+﻿﻿.treeselect .treeselect-list {
+    position: relative !important;
+}
+
+.treeselect-list__item {
+    color: var(--bs-text-color);
+    background-color: var(--bs-body-bg-hover-color);
+    padding: 1.2rem 0rem;
+}
+
+
+    .treeselect-list__item:hover {
+        background-color: var(--bs-body-bg-hover-color);
+    }
+
+.treeselect-list__item-label {
+    font-size: 16px;
+}

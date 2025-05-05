@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Lưu trữ hồ sơ";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Lưu trữ hồ sơ</li>
+}
+@section scripts {
+    <script src="~/Content/Admin/_DocumentManage/DocumentStorage/documentstorage.js"></script>
+    <script>
+        var ds = new DocumentStorage();
+        ds.init();
+        ds.viTriLuuTru.getList();
+        ds.hoSo.getList();
+    </script>
+}
+<section class="section" page-group="page-group-documentmanage" id="page-documentstorage" data-aos="fade-up">
+    <div class="card">
+        <div class="card-content">
+            <div class="card-body">
+                <div class="btn-group btn-group-sm" role="group">
+                    <!--Thao tác-->
+                    <a class="btn btn-danger"><i class="bi bi-send-x"></i></a>
+                    <a class="btn btn-light-secondary" onclick="ds.hoSo.huyNopLuu('multiple')">
+                        Hủy nộp lưu
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-content">
+            <div class="card-body">
+                <div class="col-12">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Tìm kiếm vị trí lưu trữ ..." id="timkiem-vitriluutru" onkeyup="df.viTriLuuTru.timKiem()" />
+                            <a class="btn btn-success d-inline-flex" onclick="df.viTriLuuTru.timKiem()">
+                                <i class="bi bi-search"></i>
+                                <span class="d-none d-sm-block">&nbsp;Tìm kiếm</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div id="vitriluutru-getList" class="" style="overflow-y: auto; max-height: 30vh"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-content">
+            @Html.Partial("~/Views/Admin/_DocumentManage/DocumentStorage/documentstorage-hoso.getList.cshtml")
+        </div>
+    </div>
+</section>
+<!--hoso-detail-->
+<div class="modal fade text-left" id="hoso-detail" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+</div>

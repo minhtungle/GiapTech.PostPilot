@@ -1,0 +1,32 @@
+﻿<div class="modal fade text-left" id="excel-cocau-capnhattruong" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content" style="border: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập nhật theo trường dữ liệu</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p class="text-danger">Lưu ý: Tích chọn các bản ghi trước khi cập nhật</p>
+                    <!--Tên danh mục cha-->
+                    <div class="col-12">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="" for="input-tencocaucha">Tên cơ cấu cha</label>
+                                <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                       id="input-tencocaucha" name="input-tencocaucha">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="org.excelCoCau.updateMultipleCell()">
+                    <span class="">Cập nhật</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <span class="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

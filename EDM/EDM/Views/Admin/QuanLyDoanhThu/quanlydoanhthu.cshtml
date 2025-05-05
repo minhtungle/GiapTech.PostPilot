@@ -1,0 +1,68 @@
+﻿@using Public.Models
+@{
+    ViewBag.Title = "Quản lý doanh thu";
+    List<ThaoTac> thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Quản lý doanh thu</li>
+}
+@section styles {
+    @*<link href="~/Content/Admin/QuanLyDoanhThu/quanlydoanhthu.css" rel="stylesheet" />*@
+}
+@section scripts {
+    <script src="~/Content/Admin/QuanLyDoanhThu/quanlydoanhthu.js"></script>
+    <script>
+        var quanLyDoanhThu = new QuanLyDoanhThu();
+        quanLyDoanhThu.init();
+    </script>
+}
+<!--Hồ sơ-->
+<section class="section" page-group="page-group-quanlydoanhthu" id="page-quanlydoanhthu" data-aos="fade-up">
+    @if (thaoTacs.Count > 0)
+    {
+        <div class="card" intro-container="thanhtacvu">
+            <div class="card-content">
+                <div class="card-body" intro-container="thaotac-coban">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="btn-group btn-group-sm" role="group">
+                                @{
+                                    if (thaoTacs.Exists(x => x.MaThaoTac == "quanlydoanhthu-themmuctieu"))
+                                    {
+                                        <!--Thêm mới-->
+                                        <a class="btn btn-primary"><i class="bi bi-plus-circle-fill"></i></a>
+                                        <a class="btn btn-light-secondary"
+                                           onclick="quanLyDoanhThu.main.displayModal_CRUD()">
+                                            Tạo mục tiêu
+                                        </a>
+                                    }
+                                    if (thaoTacs.Exists(x => x.MaThaoTac == "quanlydoanhthu-xuatfile"))
+                                    {
+                                        <!--Xuất file-->
+                                        <a class="btn btn-primary"><i class="bi bi-file-excel-fill"></i></a>
+                                        <a class="btn btn-light-secondary"
+                                           onclick="">
+                                            Xuất file
+                                        </a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="card">
+        <div class="card-body">
+            @Html.Partial("~/Views/Admin/QuanLyDoanhThu/quanlydoanhthu-thongke/thongke.cshtml")
+        </div>
+    </div>
+</section>
+<!--quanlydoanhthu-crud-->
+<div class="modal fade text-left" id="quanlydoanhthu-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+@*@Html.Partial("~/Views/Admin/QuanLyDoanhThu/quanlydoanhthu-timkiem/timkiem.cshtml")*@

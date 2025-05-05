@@ -1,0 +1,41 @@
+﻿@{
+    string HtmlViTris_THAYTHE = ViewBag.HtmlViTris_THAYTHE;
+    bool deleteChilds = ViewBag.deleteChilds;
+    int idViTri = ViewBag.idViTri;
+}
+<div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <table class="table table-hover table-bordered w-100 nowrap" id="vitriluutru-thaythe-getList" data-page-length="-1">
+                <thead>
+                    <tr>
+                        <th class="text-center" data-orderable="false">Chọn vị trí lưu trữ thay thế cho các văn bản đang sử dụng</th>
+                    </tr>
+                </thead>
+                <tfoot class="show-footer-above">
+                    <tr>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                    </tr>
+                </tfoot>
+                @if (HtmlViTris_THAYTHE != "") {
+                    <tbody>
+                        @MvcHtmlString.Create(HtmlViTris_THAYTHE)
+                    </tbody>
+                }
+            </table>
+        </div>
+        <div class="modal-footer p-2 flex-column">
+            <p class="text-center" id="storagelocation-confirmdialog-content"></p>
+            <div class="w-100 flex-row text-center">
+                <button type="button" class="btn btn-primary ml-1" onclick="sl.viTriLuuTru.delete(@(deleteChilds ? 1: 0), @idViTri)">
+                    <i class="bi bi-check d-flex d-sm-none"></i>
+                    <span class="d-none d-sm-block">Đồng ý</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x d-flex d-sm-none"></i>
+                    <span class="d-none d-sm-block">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

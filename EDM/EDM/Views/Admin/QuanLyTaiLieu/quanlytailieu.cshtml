@@ -1,0 +1,65 @@
+﻿@using Public.Models
+@{
+    ViewBag.Title = "Quản lý tài liệu";
+    var thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Quản lý tài liệu</li>
+}
+@section styles {
+    @*<link href="~/Content/Admin/QuanLyTaiLieu/quanlytailieu.css" rel="stylesheet" />*@
+}
+@section scripts {
+    <script src="~/Content/Admin/QuanLyTaiLieu/quanlytailieu.js"></script>
+    <script>
+        var quanLyTaiLieu = new QuanLyTaiLieu();
+        quanLyTaiLieu.init();
+    </script>
+}
+<!--Hồ sơ-->
+<section class="section" page-group="page-group-quanlytailieu" id="page-quanlytailieu" data-aos="fade-up">
+    <div class="card" intro-container="thanhtacvu">
+        <div class="card-content">
+            <div class="card-body" intro-container="thaotac-coban">
+                <div class="btn-group btn-group-sm" role="group">
+                    @{
+                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlytailieu-themmoi-tailieu"))
+                        {
+                            <!--Thêm mới-->
+                            <a class="btn btn-success"><i class="bi bi-upload"></i></a>
+                            <label class="btn btn-light-secondary" for="input-file-tailieu">
+                                Thêm tài liệu
+                            </label>
+                            <input class="btn btn-success" id="input-file-tailieu"
+                                   type="file"
+                                   accept=".pdf,.png,.jpg,.jpeg,.mp3,.mp4"
+                                   onchange="quanLyTaiLieu.taiLieu.save()" hidden>
+                        }
+                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlytailieu-xoabo-tailieu"))
+                        {
+                            <!--Xóa bỏ-->
+                            <a class="btn btn-primary"><i class="bi bi-trash3-fill"></i></a>
+                            <a class="btn btn-light-secondary"
+                               onclick="quanLyTaiLieu.taiLieu.delete('multiple')">
+                                Xóa bỏ
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card" id="tailieu-getList-container"></div>
+</section>
+<!--tailieu-crud-->
+<div class="modal fade text-left" id="tailieu-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--tailieu-xemchitiet-->
+<div class="modal fade text-left" id="tailieu-xemchitiet" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--nhandan-crud-->
+<div class="modal fade text-left" id="nhandan-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>

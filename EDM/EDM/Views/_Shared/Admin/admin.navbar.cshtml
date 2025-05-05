@@ -1,0 +1,112 @@
+﻿@using Public.Models
+@{
+    string tempPath = "/Assets/templates/assets";
+    Permission per = Session["Permission"] as Permission;
+}
+<header class='header' intro-container="navbar">
+    <nav class="navbar navbar-expand navbar-light navbar-top">
+        <table class="navbar-container table-sticky w-100">
+            <tr>
+                <td class="start">
+                    <a href="#" class="burger-btn d-block" intro-container="navbar-hienthi-sidebar">
+                        <i class="bi bi-justify fs-3"></i>
+                    </a>
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </td>
+                <td class="center w-100">
+                    <div class="scrolling-text">
+                        <div class="scrolling-content w-100" id="thongbao-dong-1">
+                            @*<span class="badge bg-danger font-bold">T09/2024:</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-success font-bold">🥇️: Lê Minh Tùng</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-warning font-bold">🥈️: Hoàng Đức Minh</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-primary font-bold">🥉: Trang Kiều Khúc</span>*@
+                        </div>
+                        <div class="scrolling-content w-100 mt-1" id="thongbao-dong-2">
+                            @*<span class="badge bg-danger font-bold">Tổng kết:</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-success font-bold">🥇️: Lê Minh Tùng</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-warning font-bold">🥈️: Hoàng Đức Minh</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-primary font-bold">🥉: Trang Kiều Khúc</span>*@
+                        </div>
+                    </div>
+                </td>
+                <td class="end" style="background-color: var(--bs-body-bg) !important;">
+                    <a href="#" class="navbar-nav text-gray-600 ms-auto me-3" intro-container="navbar-tinnhan" hidden>
+                        <i class="bi bi-wechat bi-sub fs-4"></i>
+                    </a>
+                    <ul class="navbar-nav mb-lg-0" intro-container="navbar-homthu" hidden>
+                        <li class="nav-item dropdown me-1">
+                            <a class="nav-link active dropdown-toggle text-gray-600" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                <i class='bi bi-envelope-paper bi-sub fs-4'></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                <li>
+                                    <h6 class="dropdown-header">Tin nhắn</h6>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Không có tin nhắn nào</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="dropdown ms-auto p-1" style="white-space: nowrap;">
+                        <a data-bs-toggle="dropdown" aria-expanded="false" intro-container="navbar-menu-nguoidung">
+                            <div class="user-menu d-flex">
+                                <div class="user-name text-end me-3 d-sm-block d-none">
+                                    <h6 class="mb-0 text-gray-600">@per.NguoiDung.TenNguoiDung</h6>
+                                    <p class="mb-0 text-sm text-gray-600">@per.KieuNguoiDung.TenKieuNguoiDung</p>
+                                </div>
+                                <div class="user-img d-flex align-items-center">
+                                    <div class="avatar avatar-md">
+                                        @if (per.NguoiDung.GioiTinh.Value)
+                                        {
+                                            <img src="@tempPath/images/faces/2.jpg">
+                                        }
+                                        else
+                                        {
+                                            <img src="@tempPath/images/faces/5.jpg">
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg" role="listitem" style="min-width: 11rem;">
+                            <li>
+                                <h6 class="dropdown-header">Xin chào, @per.NguoiDung.TenNguoiDung 🥰</h6>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="~/ThongTinCaNhan/Index">
+                                    <i class="icon-mid bi bi-person-circle me-2"></i>
+                                    Thông tin cá nhân
+                                </a>
+                            </li>
+                            <li hidden>
+                                <a class="dropdown-item" href="~/Messenger/Index">
+                                    <i class="icon-mid bi bi-mailbox me-2"></i>
+                                    Tin nhắn
+                                </a>
+                            </li>
+                            <li hidden>
+                                <a class="dropdown-item" href="~/History/Index">
+                                    <i class="icon-mid bi bi-clock me-2"></i>
+                                    Lịch sử truy cập
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="~/Auth/Logout" id="btn-logout">
+                                    <i class="icon-mid bi bi-box-arrow-left me-2"></i> Đăng xuất
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </nav>
+</header>

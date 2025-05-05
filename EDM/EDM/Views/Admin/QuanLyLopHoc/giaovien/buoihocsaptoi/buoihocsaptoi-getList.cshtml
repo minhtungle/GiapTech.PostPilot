@@ -1,0 +1,82 @@
+﻿@using Applications.QuanLyLopHoc.Dtos
+@model List<BuoiHocSapToiOutput_Dto>
+
+<div class="card-body" intro-container="dulieu-container">
+    <table class="table table-hover table-bordered table-sticky w-100" id="buoihocsaptoi-getList" data-page-length="5">
+        <thead class="nowrap" style="white-space: nowrap !important">
+            <tr>
+                <th class="text-center">Tên lớp học</th>
+                <th class="text-center">Thứ tự buổi</th>
+                <th class="text-center">Điểm danh</th>
+
+                <th class="text-center w-5" data-orderable="false">Tác vụ</th>
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var buoiHoc in Model)
+            {
+                <tr>
+                    <td class="text-center">@buoiHoc.LopHoc.TenLopHoc</td>
+                    <td class="text-center">
+                        <span>@string.Format("{0} / {1}", buoiHoc.BuoiHoc.ThuTuBuoiHoc, buoiHoc.LopHoc.SoBuoi)</span> <br />
+                        @if (buoiHoc.SoNgayConLai < 0)
+                        {
+                            <small class="font-bold fst-italic text-danger">
+                                @string.Format("Muộn {0} ngày", buoiHoc.SoNgayConLai * (-1))
+                            </small>
+                        }
+                        else if (buoiHoc.SoNgayConLai == 0)
+                        {
+                            <small class="font-bold fst-italic text-danger">Hôm nay</small>
+                        }
+                        else
+                        {
+                            <small class="font-bold fst-italic text-primary">
+                                @string.Format("{0} - còn {1} ngày",
+                               buoiHoc.BuoiHoc.ThoiGianBatDau.Value.ToString("dd/MM/yyyy"), buoiHoc.SoNgayConLai)
+                            </small>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (buoiHoc.BuoiHoc.DiemDanh == 0)
+                        {
+                            <span class="font-bold text-danger">Chưa điểm danh</span>
+                        }
+                        else if (buoiHoc.BuoiHoc.DiemDanh == 1)
+                        {
+                            <span class="font-bold text-success">Đã điểm danh</span>
+                        }
+                        else if (buoiHoc.BuoiHoc.DiemDanh == 2)
+                        {
+                            <span class="font-bold text-warning">HV nghỉ không phép</span>
+                        }
+                        else
+                        {
+                            <span class="font-bold text-warning">HV nghỉ có phép</span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (buoiHoc.SoNgayConLai == 0 || buoiHoc.SoNgayConLai == -1)
+                        {
+                            <div style="white-space: nowrap">
+                                <a class="btn btn-sm btn-light-secondary" title="Điểm danh"
+                                   onclick="quanLyLopHoc.lopHoc.lichHoc.buoiHoc.displayModal_XemBuoiHoc('diemdanh', @string.Format("'{0}'", buoiHoc.BuoiHoc.IdLopHoc_BuoiHoc))">
+                                    <i class="bi bi-calendar2-check-fill"></i>
+                                </a>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

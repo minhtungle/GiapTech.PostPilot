@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Khai thác hồ sơ</li>
+}
+@section styles {
+    <link href="~/Content/Admin/__Home/Search/search.css" rel="stylesheet" />
+    <link href="~/Content/Admin/_DocumentManage/DocumentDigitizing/documentdigitizing.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/Content/Admin/__Home/Search/search.js"></script>
+    <script>
+        var s = new Search();
+        s.init();
+    </script>
+}
+<section class="section" id="page-home" data-aos="fade-up" intro-container="body">
+    <div class="row">
+        <!--Tìm kiếm hồ sơ-->
+        <div class="col-12" id="search-timkiemhoso">
+            @Html.Partial("~/Views/Admin/__Home/Search/search.timkiemhoso/timkiemhoso.cshtml")
+        </div>
+        <!--Tin nhắn-->
+        <div class="col-sm-12 col-md-7" id="search-tinnhan" hidden>
+            @Html.Partial("~/Views/Admin/__Home/Search/search.tinnhan.cshtml")
+        </div>
+        <!--Thông tin tài khoản-->
+        <div class="col-sm-12 col-md-5" id="search-thongtintaikhoan" hidden>
+            @Html.Partial("~/Views/Admin/__Home/Search/search.thongtintaikhoan.cshtml")
+        </div>
+    </div>
+</section>
+<!--vanban-detail-->
+<div class="modal fade text-left" id="vanban-detail" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+</div>
+<!--phieumuon-create-->
+<div class="modal fade text-left" id="phieumuon-create" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+    @Html.Partial("~/Views/Admin/LoanManage/loanmanage-phieumuon.create.cshtml")
+</div>
+<!--timkiemhoso-timkiemnangcao-->
+@Html.Partial("~/Views/Admin/__Home/Search/search.timkiemhoso/timkiemhoso-nangcao.cshtml")

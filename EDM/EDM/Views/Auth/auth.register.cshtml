@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Đăng ký";
+    Layout = "~/Views/Auth/auth.cshtml";
+}
+<h1 class="auth-title">Đăng ký</h1>
+<p class="auth-subtitle mb-5 text-white-50">Đăng ký tạo tài khoản quản trị viên hệ thống</p>
+<form>
+    <div class="form-group position-relative has-icon-left mb-4">
+        <input type="text" class="form-control form-control-xl " id="username" placeholder="Tên đăng nhập ..." required>
+        <div class="form-control-icon"><i class="bi bi-person"></i></div>
+    </div>
+    <div class="form-group position-relative has-icon-left mb-4">
+        <input type="password" class="form-control form-control-xl " id="input-matkhau" placeholder="Mật khẩu ..." required>
+        <div class="form-control-icon"><i class="bi bi-key"></i></div>
+    </div>
+    <div class="form-group position-relative has-icon-left mb-4">
+        <input type="email" class="form-control form-control-xl " id="email" placeholder="Email ..." required>
+        <div class="form-control-icon"><i class="bi bi-mailbox"></i></div>
+    </div>
+    <div class="form-group position-relative has-icon-left mb-4">
+        <input type="password" class="form-control form-control-xl" id="validcode" placeholder="Mã xác thực ..." required>
+        <div class="form-control-icon"><i class="bi bi-shield-lock"></i></div>
+        <div class="invalid-feedback">
+            <i class="bx bx-radio-circle"></i>
+        </div>
+    </div>
+    <hr class="text-white-50" />
+    <div class="btn-group w-100">
+        <button type="button" class="btn btn-warning btn-block btn-lg shadow-lg font-bold w-100" id="take-validcode">Lấy mã</button>
+        <button type="button" class="btn btn-primary btn-block btn-lg shadow-lg font-bold w-100 btn-submit" id="register" onclick="auth.register()">Đăng ký</button>
+    </div>
+</form>
+<div class="text-center mt-5 text-lg fs-4">
+    <p class="text-white-50">
+        <a href="~/Auth/Index" class="font-bold text-white">Đăng nhập</a> | <a class="font-bold" href="~/Auth/Forgot">Quên mật khẩu</a>.
+    </p>
+</div>

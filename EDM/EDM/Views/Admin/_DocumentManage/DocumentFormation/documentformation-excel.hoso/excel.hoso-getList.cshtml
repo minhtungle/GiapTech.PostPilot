@@ -1,0 +1,322 @@
+﻿@using DocumentFormation.Models;
+@using EDM_DB
+@{
+    List<tbHoSoExtend> EXCEL_HOSOs_UPLOAD = Session["EXCEL_HOSOs_UPLOAD"] as List<tbHoSoExtend>;
+    int EXCEL_HOSOs_UPLOAD_COUNT = EXCEL_HOSOs_UPLOAD.Count;
+    List<tbDonViSuDung_PhongLuuTru> PHONGLUUTRUS = Session["PHONGLUUTRUS"] as List<tbDonViSuDung_PhongLuuTru>;
+    List<default_tbCheDoSuDung> CHEDOSUDUNGS = Session["CHEDOSUDUNGS"] as List<default_tbCheDoSuDung>;
+    List<tbViTriLuuTru> VITRILUUTRUS = Session["VITRILUUTRUS"] as List<tbViTriLuuTru>;
+    List<tbDanhMucHoSo> DANHMUCHOSOS = Session["DANHMUCHOSOS"] as List<tbDanhMucHoSo>;
+}
+<div class="row">
+    <div class="@(EXCEL_HOSOs_UPLOAD_COUNT == 0 ? "col-12": "col-sm-12 col-md-4")">
+        <table class="table table-hover table-bordered w-100 nowrap" id="excel-hoso-getList" data-page-length="10" data-order="[[ 1, &quot;asc&quot; ]]">
+            <thead>
+                <tr>
+                    <th class="text-center" data-orderable="false">
+                        <a href="#" class="btn btn-sm btn-success" title="Thêm" onclick="df.excelHoSo.createRow()" hidden><i class="bi bi-plus-square-fill"></i></a>
+                        <a href="#" class="btn btn-sm btn-danger" title="Xóa" onclick="df.excelHoSo.deleteRow()"><i class="bi bi-trash3-fill"></i></a>
+                    </th>
+                    <th class="text-center text-danger" style="min-width: 10rem!important" intro-container="excel-kiemtra">KIỂM TRA</th>
+                    <th class="text-center w-70" style="min-width: 10rem!important">Mã hồ sơ</th>
+                </tr>
+            </thead>
+            <tfoot class="show-footer-above">
+                <tr>
+                    <th class="text-center"><input class="form-check-input checkAll-excel-hoso-getList" type="checkbox" title="Chọn tất cả" /></th>
+                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @for (int i = 0; i < EXCEL_HOSOs_UPLOAD_COUNT; i++) {
+                    tbHoSoExtend hoSo = EXCEL_HOSOs_UPLOAD[i];
+                    <tr row="@i" onclick="df.excelHoSo.readRow(this)">
+                        <td class="text-center"><input class="form-check-input checkRow-excel-hoso-getList" type="checkbox" /></td>
+                        <td class="text-center">
+                            @{
+                                string className = "";
+                                if (hoSo.KiemTraExcel.TrangThai == 0) {
+                                    className = "bg-danger";
+                                } else if (hoSo.KiemTraExcel.TrangThai == 1) {
+                                    className = "bg-success";
+
+                                } else {
+                                    className = "bg-warning";
+                                }
+                            }
+                            <span class="badge @className" data-tentruong="TrangThaiKiemTra">@hoSo.KiemTraExcel.KetQua</span>
+                        </td>
+                        <!--Mã hồ sơ-->
+                        <td class="w-70" style="vertical-align: top;">
+                            <span data-tentruong="MaHoSo">@hoSo.MaHoSo</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (EXCEL_HOSOs_UPLOAD_COUNT > 0) {
+        <div class="col-sm-12 col-md-8" id="excel-hoso-read-container" style="overflow-y: scroll; border: 1px solid #d3d3d35c;">
+            @for (int i = 0; i < EXCEL_HOSOs_UPLOAD_COUNT; i++) {
+                tbHoSoExtend hoSo = EXCEL_HOSOs_UPLOAD[i];
+                string thoiGianBatDau = hoSo.ThoiGianBatDau == null ? "" : hoSo.ThoiGianBatDau.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                string thoiGianKetThuc = hoSo.ThoiGianKetThuc == null ? "" : hoSo.ThoiGianKetThuc.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                <div class="row excel-hoso-read" row="@i">
+                    <div class="col-12 border-1">
+                        <div class="divider divider-left">
+                            <div class="divider-text text-uppercase">
+                                <i class="bi bi-caret-right-fill"></i> Thông tin chung
+                            </div>
+                        </div>
+                        <div class="row">
+                            <input id="input-quyentruycap-@i" value="@hoSo.QuyenTruyCap" hidden />
+                            <!--Tiêu đề hồ sơ-->
+                            <div class="col-12 col-sm-12 col-md-12">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="input-tieudehoso">Tiêu đề hồ sơ</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-tieudehoso" name="input-tieudehoso"
+                                                   value="@(hoSo.TieuDeHoSo ?? "")" required>
+                                            <button type="button" class="input-group-text" onclick="df.displayModal_ThietLapQuyen('#input-quyentruycap-@i')">
+                                                <i class="bi bi-shield-lock-fill"></i>
+                                                <span class="d-none d-sm-block">&nbsp;Thiết lập quyền</span>
+                                            </button>
+                                        </div>
+                                        <div class="invalid-feedback feedback" for="input-tieudehoso">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Vị trí lưu trữ-->
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="select-vitriluutru-@i">Vị trí lưu trữ</label>
+                                        <select class="form-control form-select2"
+                                                id="select-vitriluutru-@i" name="select-vitriluutru-@i"
+                                                required>
+                                            <option disabled data-ma="" @(VITRILUUTRUS.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                            @foreach (tbViTriLuuTru viTri in VITRILUUTRUS) {
+                                                <option style="white-space: pre!important" value="@viTri.IdViTriLuuTru" @(viTri.TenViTriLuuTru == hoSo.ViTriLuuTru.TenViTriLuuTru ? "selected" : "")>@viTri.TenViTriLuuTru</option>
+                                            }
+                                        </select>
+                                        <div class="invalid-feedback feedback" for="select-vitriluutru-@i">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Danh mục hồ sơ-->
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="select-danhmuchoso-@i">Danh mục hồ sơ</label>
+                                        <select class="form-control form-select2"
+                                                id="select-danhmuchoso-@i" name="select-danhmuchoso-@i"
+                                                required>
+                                            <option disabled data-ma="" @(DANHMUCHOSOS.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                            @foreach (tbDanhMucHoSo danhMuc in DANHMUCHOSOS) {
+                                                <option style="white-space: pre!important" value="@danhMuc.IdDanhMucHoSo" @(danhMuc.TenDanhMucHoSo == hoSo.DanhMucHoSo.TenDanhMucHoSo ? "selected" : "")>@danhMuc.TenDanhMucHoSo</option>
+                                            }
+                                        </select>
+                                        <div class="invalid-feedback feedback" for="select-danhmuchoso-@i">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Phông lưu trữ-->
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="select-phongluutru-@i">Phông lưu trữ</label>
+                                        <select class="form-control form-select2"
+                                                id="select-phongluutru-@i" name="select-phongluutru-@i"
+                                                required>
+                                            <option disabled data-ma="" @(PHONGLUUTRUS.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                            @foreach (tbDonViSuDung_PhongLuuTru phong in PHONGLUUTRUS) {
+                                                <option value="@phong.IdPhongLuuTru" @(phong.TenPhongLuuTru == hoSo.PhongLuuTru.TenPhongLuuTru ? "selected" : "")>@phong.TenPhongLuuTru</option>
+                                            }
+                                        </select>
+                                        <div class="invalid-feedback feedback" for="select-phongluutru-@i">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--##-->
+                    <div class="col-12 border-1">
+                        <div class="divider divider-left">
+                            <div class="divider-text text-uppercase">
+                                <i class="bi bi-caret-right-fill"></i> Mã hồ sơ
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!--Mục lục số hoặc năm hình thành hồ sơ-->
+                            <div class="col-12 col-sm-12 col-md-6">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="input-muclucso">Mục lục số/Năm hình thành</label>
+                                        <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                               id="input-muclucso" name="input-muclucso"
+                                               value="@(hoSo.MucLucSo_NamHinhThanh ?? "")" required>
+                                        <div class="invalid-feedback feedback" for="input-muclucso">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Số và ký hiệu hồ sơ-->
+                            <div class="col-12 col-sm-12 col-md-6">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="input-sokyhieu">Số/Ký hiệu</label>
+                                        <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                               id="input-sokyhieu" name="input-sokyhieu"
+                                               value="@(hoSo.So_KyHieu ?? "")" required>
+                                        <div class="invalid-feedback feedback" for="input-sokyhieu">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Mã hồ sơ-->
+                            <div class="col-12 col-sm-12 col-md-12">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="input-mahoso">Mã hồ sơ</label>
+                                        <input type="text" class="form-control text-primary" placeholder="Nhập thông tin ..."
+                                               id="input-mahoso" name="input-mahoso"
+                                               value="@(hoSo.MaHoSo ?? "")" onkeyup="df.excelHoSo.updateSingleCell(this)"
+                                               onchange="df.hoSo.createMaHoSo(this), df.excelHoSo.updateSingleCell(this)" required>
+                                        <div class="invalid-feedback feedback" for="input-mahoso">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 border-1">
+                        <div class="divider divider-left">
+                            <div class="divider-text text-uppercase">
+                                <i class="bi bi-caret-right-fill"></i> Thông tin khác
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!--Thời hạn bảo quản-->
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-thoihanbaoquan">Thời hạn bảo quản</label>
+                                        <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-thoihanbaoquan" value="@(hoSo.ThoiHanBaoQuan ?? "")" @(hoSo.ThoiHanBaoQuan == "Vĩnh viễn" ? "disabled" : "")>
+                                        <input type="checkbox" class="form-check-input" id="checkbox-thoihanbaoquan" style="position: absolute; z-index: 1; right: .6rem; top: 2rem;" @(hoSo.ThoiHanBaoQuan == "Vĩnh viễn" ? "checked" : "") onchange="df.chonThoiHanBaoQuan(this, $('#input-thoihanbaoquan'))" />
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Thời gian bắt đầu-->
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-thoigianbatdau">Thời gian bắt đầu</label>
+                                        <input type="date" class="form-control" placeholder="Nhập thông tin ..." id="input-thoigianbatdau" value="@thoiGianBatDau">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Thời gian kết thúc-->
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-thoigianketthuc">Thời gian kết thúc</label>
+                                        <input type="date" class="form-control" placeholder="Nhập thông tin ..." id="input-thoigianketthuc" value="@thoiGianKetThuc">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Chế độ sử dụng-->
+                            <div class="col-12 col-sm-12 col-md-6">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="select-chedosudung">Chế độ sử dụng</label>
+                                        <select class="form-control"
+                                                id="select-chedosudung" name="select-chedosudung"
+                                                required>
+                                            <option disabled @(CHEDOSUDUNGS.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                            @foreach (default_tbCheDoSuDung cheDo in CHEDOSUDUNGS) {
+                                                <option value="@cheDo.IdCheDoSuDung" @(cheDo.TenCheDoSuDung == hoSo.CheDoSuDung.TenCheDoSuDung ? "selected" : "")>@cheDo.TenCheDoSuDung</option>
+                                            }
+                                        </select>
+                                        <div class="invalid-feedback feedback" for="select-chedosudung">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Tình trạng vật lý-->
+                            <div class="col-12 col-sm-12 col-md-6">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-tinhtrangvatly">Tình trạng vật lý</label>
+                                        <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-tinhtrangvatly" value="@(hoSo.TinhTrangVatLy ?? "")">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Ngôn ngữ-->
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-ngonngu">Ngôn ngữ</label>
+                                        <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-ngonngu" value="@(hoSo.NgonNgu ?? "")">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Từ khóa-->
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-tukhoa">Từ khóa</label>
+                                        <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-tukhoa" value="@(hoSo.TuKhoa ?? "")">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Ký hiệu thông tin-->
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-kyhieuthongtin">Ký hiệu thông tin</label>
+                                        <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-kyhieuthongtin" value="@(hoSo.KyHieuThongTin ?? "")">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Tổng số văn bản trong hồ sơ-->
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-tongsovanban">Tổng số văn bản trong hồ sơ</label>
+                                        <input type="number" class="form-control" placeholder="Nhập thông tin ..." id="input-tongsovanban" value="@(hoSo.TongSoVanBan ?? 0)">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Số lượng tờ-->
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-soluongtu">Số lượng tờ</label>
+                                        <input type="number" class="form-control" placeholder="Nhập thông tin ..." id="input-soluongto" value="@(hoSo.SoLuongTo ?? 0)">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Số lượng trang-->
+                            <div class="col-12 col-sm-12 col-md-4">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-soluongtrang">Số lượng trang</label>
+                                        <input type="number" class="form-control" placeholder="Nhập thông tin ..." id="input-soluongtrang" value="@(hoSo.SoLuongTrang ?? 0)">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Ghi chú-->
+                            <div class="col-12 col-sm-12 col-md-12">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-ghichu">Ghi chú</label>
+                                        <textarea class="form-control min-h-100 max-h-200" id="input-ghichu" rows="3">@(hoSo.GhiChu ?? "")</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

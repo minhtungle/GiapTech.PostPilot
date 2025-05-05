@@ -1,0 +1,73 @@
+﻿@{
+    string ngayLenMucTieu = DateTime.Now.ToString("MM/yyyy");
+}
+<!--Cá nhân-->
+<div class="modal fade text-left" id="muctieudoanhthu-canhan-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-md-12 col-sm-12 my-2 text-center">
+                    Thiết lập mục tiêu doanh thu T@(ngayLenMucTieu) ️🎯
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="row" intro-container="thongtin-chung">
+                    <div class="col-12 col-sm-12 col-md-12" intro-container="thongtin-batbuoc">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="required" for="input-doanhthumuctieu">Doanh thu mục tiêu</label>
+                                <input type="money" class="form-control" placeholder="Đặt tạm 100tr mai tính tiếp 🛀 ..."
+                                       id="input-doanhthumuctieu" name="input-doanhthumuctieu"
+                                       value="" required>
+                                <div class="invalid-feedback feedback" for="input-doanhthumuctieu">Không được để trống</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary ml-1" id="btn-thietLapMucTieuDoanhThu_CaNhan" onclick="admin.doanhThu.thietLapMucTieuDoanhThu_CaNhan()">
+                    <span class="">Chốt 👊</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <span class="">Để sau</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Cơ cấu-->
+<div class="modal fade text-left" id="muctieudoanhthu-cocau-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-md-12 col-sm-12 my-2 text-center">
+                    Thiết lập mục tiêu doanh thu T@(ngayLenMucTieu) ️🎯
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="row" intro-container="thongtin-chung">
+                    <div class="col-12 col-sm-12 col-md-12" intro-container="thongtin-batbuoc">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="required" for="input-doanhthumuctieu">Doanh thu mục tiêu</label>
+                                <input type="money" class="form-control" placeholder="Thưa chúa công, mời ngài đặt mục tiêu cho tháng này 🛀 ..."
+                                       id="input-doanhthumuctieu" name="input-doanhthumuctieu"
+                                       value="" required>
+                                <div class="invalid-feedback feedback" for="input-doanhthumuctieu">Không được để trống</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary ml-1" id="btn-thietLapMucTieuDoanhThu_CoCau" onclick="admin.doanhThu.thietLapMucTieuDoanhThu_CoCau()">
+                    <span class="">Chốt 👊</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <span class="">Để sau</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

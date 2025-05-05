@@ -1,0 +1,322 @@
+﻿@using EDM_DB
+@using QuanLyKhachHang.Models
+@using UserType.Models
+@using Public.Models
+@{
+    tbKhachHangExtend khachHang = ViewBag.khachHang;
+
+    List<tbKhachHang_DonHangExtend> khachHang_DonHangs = khachHang.DonHangs;
+
+    // Nếu chưa có thì tạo bản ghi mẫu
+    khachHang_DonHangs = khachHang_DonHangs.Count > 0 ? khachHang_DonHangs : new List<tbKhachHang_DonHangExtend>();
+
+    List<default_tbQuocGia> quocGias = Session["QUOCGIAs"] as List<default_tbQuocGia>;
+    List<tbKhachHang_LoaiKhachHang> loaiKhachHangs = Session["LOAIKHACHHANGs"] as List<tbKhachHang_LoaiKhachHang>;
+    List<tbGoiChamSoc> goiChamSocs = Session["GOICHAMSOCs"] as List<tbGoiChamSoc>;
+    List<tbPhuongThucThanhToan> phuongThucThanhToans = Session["PHUONGTHUCTHANHTOANs"] as List<tbPhuongThucThanhToan>;
+    List<tbDonViTien> donViTiens = Session["DONVITIENs"] as List<tbDonViTien>;
+    List<tbSanPham> sanPhams = Session["SANPHAMs"] as List<tbSanPham>;
+    List<tbSanPham_LoaiSanPham_TrinhDo> trinhDos = Session["TRINHDOs"] as List<tbSanPham_LoaiSanPham_TrinhDo>;
+    List<tbSanPham_LoaiSanPham_TrinhDo> trinhDos_DauVao = trinhDos.Where(x => x.LoaiTrinhDo == "dauvao").ToList();
+    List<tbSanPham_LoaiSanPham_TrinhDo> trinhDos_DauRa = trinhDos.Where(x => x.LoaiTrinhDo == "daura").ToList();
+}
+<div class="modal-dialog modal-dialog-scrollable modal-full" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title col-md-6 col-sm-12 my-2">
+                Xem chi tiết
+                <a class="text-warning c-pointer p-1" data-bs-toggle="tooltip" data-bs-placement="right" title="Nhấn xem hướng dẫn"
+                   data-hint="Nhấn xem hướng dẫn" data-hint-position="top-left"
+                   onclick="huongDanSuDung.kichHoat('hoso-themmoi')"><i class="bi bi-lightbulb fs-6"></i></a>
+            </h5>
+            <div class="list-group list-group-horizontal mb-1 text-center col-md-6 col-sm-12 justify-content-sm-end justify-content-center" id="" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="thongtin-list"
+                   data-bs-toggle="list" href="#thongtin" role="tab">Thông tin khách hàng</a>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="tab-content text-justify">
+                <div class="tab-pane fade show active" id="thongtin" role="tabpanel"
+                     aria-labelledby="thongtin-list">
+                    <div class="row" intro-container="thongtin-chung">
+                        <!--Id-->
+                        <input id="input-idkhachhang" value="@khachHang.IdKhachHang" hidden />
+                        <div class="col-12 col-md-6 border-1">
+                            <div class="divider divider-left">
+                                <div class="divider-text text-uppercase">
+                                    <i class="bi bi-caret-right-fill"></i> Thông tin chung
+                                </div>
+                            </div>
+                            <div class="row">
+                                <!--Tên khách hàng-->
+                                <div class="col-12 col-sm-12 col-md-12" intro-container="thongtin-batbuoc">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="input-tenkhachhang">Tên khách hàng</label>
+                                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-tenkhachhang" name="input-tenkhachhang"
+                                                   value="@(khachHang.TenKhachHang ?? "")" disabled required>
+                                            @* <input type="checkbox" class="form-check-input" id="checkbox-tenkhachhang" style="position: absolute; z-index: 1; right: .6rem; top: 2rem;" onchange="quanLyKhachHang.choPhepTrungTenKhachHang(this, $('#input-tenkhachhang'))" disabled />*@
+                                            <div class="invalid-feedback feedback" for="input-tenkhachhang">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Email-->
+                                <div class="col-12 col-sm-12 col-md-6" hidden>
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="input-email">Email</label>
+                                            <input type="email" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-email" name="input-email"
+                                                   value="@(khachHang.Email ?? "")" disabled required>
+                                            <div class="invalid-feedback feedback" for="input-email">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--Nguồn khách hàng-->
+                                <div class="col-12 col-sm-12 col-md-4" hidden>
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="" for="input-nguonkhachhang">Nguồn KH</label>
+                                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-nguonkhachhang" name="input-nguonkhachhang"
+                                                   value="@(khachHang.NguonKhachHang ?? "")" disabled>
+                                            <div class="invalid-feedback feedback" for="input-nguonkhachhang">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Liên kết-->
+                                <div class="col-12 col-sm-12 col-md-4" hidden>
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="" for="input-lienket">Liên kết MXH</label>
+                                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-lienket" name="input-lienket"
+                                                   value="@(khachHang.LienKet ?? "")" disabled>
+                                            <div class="invalid-feedback feedback" for="input-lienket">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Fb sale-->
+                                <div class="col-12 col-sm-12 col-md-12">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="input-lienketsale">Facebook sale</label>
+                                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-lienketsale" name="input-lienketsale"
+                                                   value="@(khachHang.LienKetSale ?? "")" disabled required>
+                                            <div class="invalid-feedback feedback" for="input-lienketsale">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Nghề nghiệp-->
+                                <div class="col-12 col-sm-12 col-md-4" hidden>
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="" for="input-nghenghiep">Nghề nghiệp</label>
+                                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-nghenghiep" name="input-nghenghiep"
+                                                   value="@(khachHang.NgheNghiep ?? "")" disabled>
+                                            <div class="invalid-feedback feedback" for="input-nghenghiep">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Số điện thoại-->
+                                <div class="col-12 col-sm-12 col-md-4" hidden>
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="" for="input-sodienthoai">Số điện thoại</label>
+                                            <input type="tel" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-sodienthoai" name="input-sodienthoai"
+                                                   value="@(khachHang.SoDienThoai ?? "")" disabled>
+                                            <div class="invalid-feedback feedback" for="input-sodienthoai">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Độ tuổi-->
+                                <div class="col-12 col-sm-12 col-md-4" hidden>
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="" for="input-dotuoi">Độ tuổi</label>
+                                            <input type="number" class="form-control" placeholder="Nhập thông tin ..."
+                                                   id="input-dotuoi" name="input-dotuoi"
+                                                   value="@(khachHang.DoTuoi)" disabled>
+                                            <div class="invalid-feedback feedback" for="input-dotuoi">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Quốc gia sinh sống-->
+                                <div class="col-12 col-sm-12 col-md-6">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="select-quocgiasinhsong">Quốc gia sinh sống</label>
+                                            <select class="form-control form-select2"
+                                                    id="select-quocgiasinhsong" name="select-quocgiasinhsong"
+                                                    disabled required>
+                                                <option disabled @(quocGias.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                                @foreach (default_tbQuocGia quocGia in quocGias)
+                                                {
+                                                    <option value="@quocGia.IdQuocGia" @(quocGia.IdQuocGia == khachHang.IdQuocGiaSinhSong ? "selected" : "")>@quocGia.TenQuocGia</option>
+                                                }
+                                            </select>
+                                            <div class="invalid-feedback feedback" for="select-quocgiasinhsong">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Loại khách hàng-->
+                                <div class="col-12 col-sm-12 col-md-6">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="select-loaikhachhang">Phân loại khách hàng</label>
+                                            <select class="form-control form-select2"
+                                                    id="select-loaikhachhang" name="select-loaikhachhang"
+                                                    disabled required>
+                                                <option disabled @(loaiKhachHangs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                                @foreach (tbKhachHang_LoaiKhachHang loaiKhachHang in loaiKhachHangs)
+                                                {
+                                                    <option value="@loaiKhachHang.IdLoaiKhachHang" data-stt="@loaiKhachHang.Stt"
+                                                            @(loaiKhachHang.IdLoaiKhachHang == khachHang.IdLoaiKhachHang ? "selected" : "")>
+                                                        @loaiKhachHang.TenLoaiKhachHang
+                                                    </option>
+                                                }
+                                            </select>
+                                            <div class="invalid-feedback feedback" for="select-loaikhachhang">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Gói chăm sóc-->
+                                <div class="col-12 col-sm-12 col-md-6">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="select-goichamsoc">Gói chăm sóc</label>
+                                            <select class="form-control form-select2"
+                                                    id="select-goichamsoc" name="select-goichamsoc"
+                                                    disabled required>
+                                                <option disabled @(goiChamSocs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                                @foreach (tbGoiChamSoc goiChamSoc in goiChamSocs)
+                                                {
+                                                    <option value="@goiChamSoc.IdGoiChamSoc" @(goiChamSoc.IdGoiChamSoc == khachHang.IdGoiChamSoc ? "selected" : "")>@goiChamSoc.TenGoiChamSoc</option>
+                                                }
+                                            </select>
+                                            <div class="invalid-feedback feedback" for="select-goichamsoc">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Phương thức thanh toán-->
+                                <div class="col-12 col-sm-12 col-md-6">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label class="required" for="select-phuongthucthanhtoan">Phương thức thanh toán</label>
+                                            <select class="form-control form-select2"
+                                                    id="select-phuongthucthanhtoan" name="select-phuongthucthanhtoan"
+                                                    disabled required>
+                                                <option disabled @(phuongThucThanhToans.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                                @foreach (tbPhuongThucThanhToan phuongThucThanhToan in phuongThucThanhToans)
+                                                {
+                                                    <option value="@phuongThucThanhToan.IdPhuongThucThanhToan" @(phuongThucThanhToan.IdPhuongThucThanhToan == khachHang.IdPhuongThucThanhToan ? "selected" : "")>@phuongThucThanhToan.TenPhuongThucThanhToan</option>
+                                                }
+                                            </select>
+                                            <div class="invalid-feedback feedback" for="select-phuongthucthanhtoan">Không được để trống</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Địa chỉ-->
+                                <div class="col-12 col-sm-12 col-md-12">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label for="input-diachi">Địa chỉ</label>
+                                            <textarea class="form-control min-h-50 max-h-200" id="input-diachi" rows="2" disabled
+                                                      placeholder="Nhập thông tin ...">@(khachHang.DiaChi ?? "")</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Ghi chú-->
+                                <div class="col-12 col-sm-12 col-md-12">
+                                    <div class="position-relative">
+                                        <div class="form-group mb-3">
+                                            <label for="input-ghichu">Ghi chú</label>
+                                            <textarea class="form-control min-h-50 max-h-200" id="input-ghichu" rows="2" disabled
+                                                      placeholder="Các bạn nhập đây đủ thông tin cần thiết của hvien, lưu ý phân loại khách hàng chính xác">@(khachHang.GhiChu ?? "")</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--##-->
+                        <div class="col-sm-12 col-md-6 border-1">
+                            <div class="divider divider-left">
+                                <div class="divider-text text-uppercase">
+                                    <i class="bi bi-caret-right-fill"></i> Danh sách khóa học
+                                </div>
+                            </div>
+                            <div class="row" style="overflow-y: scroll; height: 500px">
+                                <div class="col-12 col-sm-12 col-md-12" id="danhsach-donhang">
+                                    @for (int i = (khachHang_DonHangs.Count - 1); i >= 0; i--)
+                                    {
+                                        tbKhachHang_DonHangExtend khachHang_DonHang = khachHang_DonHangs[i];
+                                        Guid idSanPham = khachHang_DonHang.SanPham.IdSanPham;
+                                        List<tbKhachHang_DonHang_ThanhToan>
+                                            khachHang_DonHang_ThanhToans = khachHang_DonHang.ThanhToans;
+
+                                        tbSanPham sanPham_DangChon = sanPhams.FirstOrDefault(x => x.IdSanPham == idSanPham);
+                                        tbSanPham_LoaiSanPham_TrinhDo trinhDoDauVao_DangChon = trinhDos_DauVao.FirstOrDefault(x => x.IdTrinhDo == khachHang_DonHang.IdTrinhDoDauVao);
+                                        tbSanPham_LoaiSanPham_TrinhDo trinhDoDauRa_DangChon = trinhDos_DauRa.FirstOrDefault(x => x.IdTrinhDo == khachHang_DonHang.IdTrinhDoDauRa);
+                                        <table class="table table-bordered table-hover w-100 table-donhang" data-iddonhang="@khachHang_DonHang.IdDonHang">
+                                            <thead>
+                                                <tr>
+                                                    <td class="w-40 font-bold text-center text-danger stt-donhang">
+                                                        Khóa học @(i+1)
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" value="@sanPham_DangChon.TenSanPham" disabled />
+                                                    </td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="donhang">
+                                                    <td>
+                                                        <input class="form-control" value="@trinhDoDauVao_DangChon.TenTrinhDo" disabled />
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" value="@trinhDoDauRa_DangChon.TenTrinhDo" disabled />
+                                                    </td>
+                                                </tr>
+                                                <!--Các đơn mới sẽ thêm tại đây-->
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <!--Ghi chú-->
+                                                        <div class="col-12 col-sm-12 col-md-12">
+                                                            <div class="position-relative">
+                                                                <div class="form-group mb-3">
+                                                                    <label for="input-ghichu">Ghi chú</label>
+                                                                    <textarea class="form-control min-h-50 max-h-200 input-ghichu" rows="2"
+                                                                              placeholder="Note đủ theo form sau:
+- Lớp 1-1/1-2/1-3 ...,
+- Khoảng ngày, giờ học của hvien
+- Số buổi học
+- Mọi yêu cầu khác của hvien về khóa học này thật chi tiết, ngắn gọn, dễ hiểu"
+                                                                              disabled>@(khachHang_DonHang.GhiChu ?? "")</textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

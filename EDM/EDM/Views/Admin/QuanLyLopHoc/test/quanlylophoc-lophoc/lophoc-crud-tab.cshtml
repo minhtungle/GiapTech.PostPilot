@@ -1,0 +1,316 @@
+﻿@using Public.Extensions
+@using Public.Enums
+@model Applications.QuanLyLopHoc.Dtos.DisplayModal_XemLichHoc_Output_Dto
+@{
+    string loai = Model.Loai;
+    var lopHoc = Model.LopHoc;
+    List<string> loaiThaoTac_Disabled = new List<string> { "read", "diemdanh" };
+    List<string> loaiThaoTac_Disabled_2 = new List<string> { "create" };
+
+    int soLuongBuoi_ChuaDiemDanh = lopHoc.BuoiHocs.Where(x => x.BuoiHoc.DiemDanh == 0).Count();
+    int soLuongBuoi_DaDiemDanh = lopHoc.BuoiHocs.Where(x => x.BuoiHoc.DiemDanh == 1).Count();
+    int soLuongBuoi_HVNghiKhongPhep = lopHoc.BuoiHocs.Where(x => x.BuoiHoc.DiemDanh == 2).Count();
+    int soLuongBuoi_HVNghiCoPhep = lopHoc.BuoiHocs.Where(x => x.BuoiHoc.DiemDanh == 3).Count();
+    int soLuongChuaHoc = lopHoc.BuoiHocs.Where(x => x.BuoiHoc.TrangThai == 1).Count();
+
+    string chuaDiemDanh = EnumExtensions.GetDescription<TrangThaiDiemDanhEnum>(tenTrangThai: "ChuaDiemDanh");
+    string daDiemDanh = EnumExtensions.GetDescription<TrangThaiDiemDanhEnum>(tenTrangThai: "DaDiemDanh");
+    string hocVienNghiKhongPhep = EnumExtensions.GetDescription<TrangThaiDiemDanhEnum>(tenTrangThai: "HocVienNghiKhongPhep");
+    string hocVienNghiCoPhep = EnumExtensions.GetDescription<TrangThaiDiemDanhEnum>(tenTrangThai: "HocVienNghiCoPhep");
+}
+<div class="list-group list-group-horizontal mb-1 text-center col-md-6 col-sm-12 justify-content-sm-end justify-content-center w-100"
+     id="tab_danhsachlophoc" role="tablist">
+    <a class="list-group-item list-group-item-action active" id="tailieu-container-list"
+       data-bs-toggle="list" href="#tailieu-container" role="tab">Tài liệu</a>
+    <a class="list-group-item list-group-item-action" id="giaovien-container-list"
+       data-bs-toggle="list" href="#giaovien-container" role="tab" @(loaiThaoTac_Disabled_2.Contains(loai) ? "hidden" : "")>Giáo viên</a> 
+    <a class="list-group-item list-group-item-action" id="donhang-container-list"
+       data-bs-toggle="list" href="#donhang-container" role="tab" @(loaiThaoTac_Disabled_2.Contains(loai) ? "hidden" : "")>Đơn hàng</a>
+</div>
+<div class="tab-content text-justify">
+    <!--Tài liệu-->
+    <div class="tab-pane fade show active" id="tailieu-container" role="tabpanel"
+         aria-labelledby="tailieu-container-list">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12">
+                <div class="position-relative">
+                    <div class="form-group mb-3">
+                        <table class="table table-hover table-bordered w-100 nowrap" id="table-tailieu" data-page-length="2">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Tên tài liệu</th>
+                                    <th class="text-center">Đường dẫn</th>
+                                    <th class="text-center" data-orderable="false">
+                                        <a class="btn btn-light-secondary c-pointer"
+                                           @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")
+                                           onclick="quanLyLopHoc.lopHoc.taiLieu.create()"><i class="bi bi-plus-square"></i></a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tfoot class="show-footer-above">
+                                <tr>
+                                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @if (lopHoc.TaiLieus.Count == 0)
+                                {
+                                    <tr class="tr-tailieu"
+                                        data-idtailieu="@Guid.Empty"
+                                        data-duongdantailieu=""
+                                        data-tentailieu="">
+                                        <td>
+                                            <input type="text" class="form-control input-tentailieu"
+                                                   @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")
+                                                   placeholder="Tên tài liệu" />
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input-duongdantailieu"
+                                                   @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")
+                                                   placeholder="Đường dẫn (Drive, Onedrive, ...)" />
+                                        </td>
+                                        <td class="text-center">
+                                            <a class="btn btn-light-secondary c-pointer"
+                                               @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")
+                                               onclick="quanLyLopHoc.lopHoc.taiLieu.delete(this)">
+                                                <i class="bi bi-trash3-fill"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+
+                                    foreach (var taiLieu in lopHoc.TaiLieus)
+                                    {
+                                        <tr class="tr-tailieu"
+                                            data-idtailieu="@taiLieu.IdTaiLieu"
+                                            data-duongdantailieu="@taiLieu.DuongDanTaiLieu"
+                                            data-tentailieu="@taiLieu.TenTaiLieu">
+                                            <td>
+                                                <input type="text" class="form-control input-tentailieu" value="@taiLieu.TenTaiLieu"
+                                                       @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")
+                                                       placeholder="Tên tài liệu" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control input-duongdantailieu" value="@taiLieu.DuongDanTaiLieu"
+                                                       @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")
+                                                       placeholder="Đường dẫn (Drive, Onedrive, ...)" />
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="#" class="btn btn-sm btn-danger" title="Xóa bỏ"
+                                                   @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")
+                                                   onclick="quanLyLopHoc.lopHoc.taiLieu.delete(this)"><i class="bi bi-trash3-fill"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Giáo viên-->
+    <div class="tab-pane fade" id="giaovien-container" role="tabpanel"
+         aria-labelledby="giaovien-container-list" @(loaiThaoTac_Disabled_2.Contains(loai) ? "hidden" : "")>
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12">
+                <div class="position-relative">
+                    <div class="form-group mb-3">
+                        <table class="table table-hover table-bordered table-sticky w-100" id="table-lophoc_giaovien" data-page-length="2">
+                            <thead class="nowrap" style="white-space: nowrap !important">
+                                <tr>
+                                    <th class="text-center">Tên giáo viên</th>
+                                    <th class="text-center">Thông tin</th>
+
+                                    @*     <th class="text-center" data-orderable="false">Tác vụ</th>*@
+                                </tr>
+                            </thead>
+                            <tfoot class="show-footer-above">
+                                <tr>
+                                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                                    @*     <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>*@
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @foreach (var giaoVien in lopHoc.GiaoViens)
+                                {
+                                    var buoiHocs_ThamGia = lopHoc.BuoiHocs
+                                        .Where(x => x.BuoiHoc.IdGiaoVien.Contains(string.Format(",{0}", giaoVien.IdNguoiDung)))
+                                        .ToList();
+                                    int _soLuongBuoi_ChuaDiemDanh = buoiHocs_ThamGia.Where(x => x.BuoiHoc.DiemDanh == 0).Count();
+                                    int _soLuongBuoi_DaDiemDanh = buoiHocs_ThamGia.Where(x => x.BuoiHoc.DiemDanh == 1).Count();
+                                    int _soLuongBuoi_HVNghiKhongPhep = buoiHocs_ThamGia.Where(x => x.BuoiHoc.DiemDanh == 2).Count();
+                                    int _soLuongBuoi_HVNghiCoPhep = buoiHocs_ThamGia.Where(x => x.BuoiHoc.DiemDanh == 3).Count();
+
+                                    int luongTheoBuoi = buoiHocs_ThamGia.Count == 0 ? 0 : buoiHocs_ThamGia.Select(x => x.BuoiHoc.LuongTheoBuoi.Value).Sum() / buoiHocs_ThamGia.Count;
+
+                                    <tr id="@giaoVien.IdNguoiDung">
+                                        <td class="text-center">
+                                            @giaoVien.TenNguoiDung <br />
+                                            <small class="fst-italic text-primary">(~ @luongTheoBuoi / buổi) (1)</small>
+                                        </td>
+                                        <td class="text-left">
+                                            <table class="table table-bordered table-responsive w-100">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="" rowspan="2">Buổi đã học</td>
+                                                        <td class="text-danger">
+                                                            @chuaDiemDanh
+                                                        </td>
+                                                        <td class="text-center">@_soLuongBuoi_ChuaDiemDanh</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-success">
+                                                            @daDiemDanh
+                                                            <small class="text-primary">(2)</small>
+                                                        </td>
+                                                        <td class="text-center">@_soLuongBuoi_DaDiemDanh</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="" colspan="2">
+                                                            @hocVienNghiKhongPhep
+                                                            <small class="text-primary">(3)</small>
+                                                        </td>
+                                                        <td class="text-center">@_soLuongBuoi_HVNghiKhongPhep</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="" colspan="2">
+                                                            @hocVienNghiCoPhep
+                                                            <small class="text-primary">(4)</small>
+                                                        </td>
+                                                        <td class="text-center">@_soLuongBuoi_HVNghiCoPhep</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="" colspan="2">Tổng số buổi</td>
+                                                        <td class="text-center font-bold">@(lopHoc.LopHoc.SoBuoi ?? 0)</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-bold" colspan="2">
+                                                            Tổng lương <br />
+                                                            <small class="fst-italic text-primary">T = ( [1] * [2] ) +  ( [1] * 0.5 * ( [3] + [4] ))</small>
+                                                        </td>
+                                                        @{
+                                                            decimal tongLuong = 0;
+                                                            foreach (var buoiHoc in buoiHocs_ThamGia)
+                                                            {
+                                                                if (buoiHoc.BuoiHoc.DiemDanh == 1)
+                                                                {
+                                                                    tongLuong += (decimal)buoiHoc.BuoiHoc.LuongTheoBuoi;
+                                                                }
+                                                                else if (buoiHoc.BuoiHoc.DiemDanh == 2 || buoiHoc.BuoiHoc.DiemDanh == 3)
+                                                                {
+                                                                    tongLuong += (decimal)(buoiHoc.BuoiHoc.LuongTheoBuoi * 0.5);
+                                                                };
+                                                            };
+                                                            <td class="font-bold text-danger text-center">@Public.Handle.FormatCurrency(amount: (long)tongLuong) </td>
+                                                        }
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Đơn hàng-->
+    <div class="tab-pane fade" id="donhang-container" role="tabpanel"
+         aria-labelledby="donhang-container-list" @(loaiThaoTac_Disabled_2.Contains(loai) ? "hidden" : "")>
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12" >
+                <div class="position-relative">
+                    <div class="form-group mb-3">
+                        <table class="table table-hover table-bordered table-sticky w-100" id="table-lophoc_donhang" data-page-length="2">
+                            <thead class="nowrap" style="white-space: nowrap !important">
+                                <tr>
+                                    <th class="text-center">Tên nhân viên</th>
+                                    <th class="text-center w-50">Thông tin đơn hàng</th>
+                                    <th class="text-center w-50">Ghi chú</th>
+
+                                    <th class="text-center" data-orderable="false">Tác vụ</th>
+                                </tr>
+                            </thead>
+                            <tfoot class="show-footer-above">
+                                <tr>
+                                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @foreach (var donHang in lopHoc.DonHangs)
+                                {
+                                    string ngayTao = donHang.DonHang.NgayTao == null ? "" : donHang.DonHang.NgayTao.Value.ToString("dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                                    <tr id="@donHang.DonHang.IdDonHang"
+                                        data-iddonhang="@donHang.DonHang.IdDonHang"
+                                        data-idkhachhang="@donHang.DonHang.IdKhachHang"
+                                        data-tenkhachhang="@donHang.KhachHang.TenKhachHang"
+                                        data-sobuoi="@donHang.SanPham.SoBuoi">
+
+                                        <td class="text-center">@donHang.ThongTinNguoiTao.TenNguoiDung</td>
+                                        <td class="text-left">
+                                            <table class="table table-bordered table-responsive w-100">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="">Khóa học</td>
+                                                        <td class="">
+                                                            <span class="font-bold text-primary">@donHang.SanPham.TenSanPham</span> <br />
+                                                            <small class="fst-italic">(@donHang.SanPham.ThoiGianBuoiHoc phút/buổi - tổng @donHang.SanPham.SoBuoi buổi)</small>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="">Khách hàng</td>
+                                                        <td class="">
+                                                            <span class="font-bold text-danger">@donHang.KhachHang.TenKhachHang</span> <br />
+                                                            <small class="fst-italic">(đăng ký lần @donHang.DonHang.ThuTuDonHang)</small>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="">Trình độ đầu vào</td>
+                                                        <td class="">@donHang.TrinhDoDauVao.TenTrinhDo</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="">Trình độ đầu ra</td>
+                                                        <td class="">@donHang.TrinhDoDauRa.TenTrinhDo</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="">Ngày đóng học phí</td>
+                                                        <td class="">@ngayTao</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td class="text-left nowrap">@Html.Raw(donHang.DonHang.GhiChu.Replace("\n", "<br />"))</td>
+
+                                        <td class="text-center">
+                                            <div style="white-space: nowrap">
+                                                <a class="btn btn-sm btn-light-secondary" title="Xem chi tiết"
+                                                   onclick="quanLyLopHoc.khachHang.displayModal_KhachHang_XemChiTiet(@string.Format("'{0}'", donHang.KhachHang.IdKhachHang))">
+                                                    <i class="bi bi-eye-fill"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

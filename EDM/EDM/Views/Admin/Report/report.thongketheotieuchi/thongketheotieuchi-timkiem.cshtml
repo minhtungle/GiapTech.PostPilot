@@ -1,0 +1,258 @@
+﻿@using EDM_DB
+@{
+    List<tbDonViSuDung_PhongLuuTru> PHONGLUUTRUS = ViewBag.PHONGLUUTRUS;
+
+    string HtmlDanhMucHoSos = ViewBag.HtmlDanhMucHoSos ?? "";
+    string HtmlViTriLuuTrus = ViewBag.HtmlViTriLuuTrus ?? "";
+    string HtmlCoCauToChucs = ViewBag.HtmlCoCauToChucs ?? "";
+}
+<div class="modal-dialog modal-dialog-scrollable modal-full" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                Tiêu chí lập báo cáo
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="row" hidden>
+                <!--Lưu ý-->
+                <div class="col-12">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <p class="fst-italic">
+                                <span class="font-bold">[LƯU Ý]:</span>
+                                <br />
+                                • Bỏ trống những thông tin không sử dụng.
+                                <br />
+                                • Hệ thống sẽ hỗ trợ tìm kiếm <span class="font-bold text-danger">tương đối</span> với những trường thông tin đánh dấu <span class="text-danger">(*)</span> và sẽ tìm kiếm <span class="font-bold text-danger">chính xác</span> đối với những trường thông tin còn lại.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-12">
+                    <div class="row">
+                        <!--Mã hồ sơ-->
+                        <div class="col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="input-mahoso">Mã hồ sơ</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                           id="input-mahoso" name="input-mahoso" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Tiêu đề hồ sơ-->
+                        <div class="col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="input-tieudehoso">Tiêu đề hồ sơ</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                           id="input-tieudehoso" name="input-tieudehoso" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Số và ký hiệu hồ sơ-->
+                        <div class="col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="input-sokyhieu">Số/Ký hiệu hồ sơ</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                           id="input-sokyhieu" name="input-sokyhieu" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Phông lưu trữ-->
+                        <div class="col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="select-phongluutru">Phông lưu trữ</label>
+                                    <select class="form-control"
+                                            id="select-phongluutru" name="select-phongluutru">
+                                        <option value="0" @(PHONGLUUTRUS.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                        @foreach (tbDonViSuDung_PhongLuuTru phong in PHONGLUUTRUS)
+                                        {
+                                            <option value="@phong.IdPhongLuuTru">@phong.TenPhongLuuTru</option>
+                                        }
+                                    </select>
+                                    <div class="invalid-feedback feedback" for="select-phongluutru">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Thời gian bắt đầu-->
+                        <div class="col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label for="input-thoigianbatdau">Thời gian bắt đầu</label>
+                                    <input type="date" class="form-control" placeholder="Nhập thông tin ..." id="input-thoigianbatdau" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Thời gian kết thúc-->
+                        <div class="col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label for="input-thoigianketthuc">Thời gian kết thúc</label>
+                                    <input type="date" class="form-control" placeholder="Nhập thông tin ..." id="input-thoigianketthuc" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Số lượng tờ-->
+                        <div class="col-12 col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label for="input-soluongtu">Số lượng tờ</label>
+                                    <input type="number" class="form-control" placeholder="Nhập thông tin ..." id="input-soluongto" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Số lượng trang-->
+                        <div class="col-12 col-sm-12 col-md-6">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label for="input-soluongtrang">Số lượng trang</label>
+                                    <input type="number" class="form-control" placeholder="Nhập thông tin ..." id="input-soluongtrang" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Thời hạn bảo quản-->
+                        <div class="col-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label for="input-thoihanbaoquan">Thời hạn bảo quản</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-thoihanbaoquan">
+                                    <input type="checkbox" class="form-check-input" id="checkbox-thoihanbaoquan" style="position: absolute; z-index: 1; right: .6rem; top: 2rem;" onchange="thongKe.danhMucHoSo.chonThoiHanBaoQuan(this, $('#input-thoihanbaoquan'))" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Người lập-->
+                        <div class="col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="input-nguoitao">Người lập</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                           id="input-nguoitao" name="input-nguoitao" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Đơn vị ban hành-->
+                        <div class="col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="input-donvisudung">Đơn vị ban hành</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                           id="input-donvisudung" name="input-donvisudung" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Ghi chú-->
+                        <div class="col-sm-12 col-md-12">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="input-ghichu">Ghi chú</label>
+                                    <textarea class="form-control min-h-100 max-h-200" id="input-ghichu" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-6">
+                    <!--Danh mục hồ sơ-->
+                    <table class="table table-hover table-bordered table-treeview w-100 nowrap" id="danhmuchoso-getList" data-page-length="-1">
+                        <thead>
+                            <tr>
+                                <th class="text-center" data-orderable="false">Tên danh mục hồ sơ</th>
+                            </tr>
+                        </thead>
+                        <tfoot class="show-footer-above">
+                            <tr>
+                                <th>
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <input class="form-check-input" data-id="0" type="checkbox" title="Chọn tất cả" />
+                                        </div>
+                                        <input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." />
+                                    </div>
+                                </th>
+                            </tr>
+                        </tfoot>
+                        @if (HtmlDanhMucHoSos != "")
+                        {
+                            <tbody>
+                                @MvcHtmlString.Create(HtmlDanhMucHoSos)
+                            </tbody>
+                        }
+                    </table>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-6">
+                    <!--Vị trí lưu trữ-->
+                    <table class="table table-hover table-bordered table-treeview w-100 nowrap" id="vitriluutru-getList" data-page-length="-1">
+                        <thead>
+                            <tr>
+                                <th class="text-center" data-orderable="false">Tên vị trí lưu trữ</th>
+                            </tr>
+                        </thead>
+                        <tfoot class="show-footer-above">
+                            <tr>
+                                <th>
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <input class="form-check-input" data-id="0" type="checkbox" title="Chọn tất cả" />
+                                        </div>
+                                        <input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." />
+                                    </div>
+                                </th>
+                            </tr>
+                        </tfoot>
+                        @if (HtmlViTriLuuTrus != "")
+                        {
+                            <tbody>
+                                @MvcHtmlString.Create(HtmlViTriLuuTrus)
+                            </tbody>
+                        }
+                    </table>
+                </div>
+
+                <!--<div class="col-12 col-md-6 col-lg-4">-->
+                    <!--Cơ cấu tổ chức-->
+                    <!--<table class="table table-hover table-bordered table-treeview w-100 nowrap" id="cocautochuc-getList" data-page-length="-1">
+                        <thead>
+                            <tr>
+                                <th class="text-center" data-orderable="false">Tên cơ cấu tổ chức</th>
+                            </tr>
+                        </thead>
+                        <tfoot class="show-footer-above">
+                            <tr>
+                                <th>
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <input class="form-check-input" data-id="0" type="checkbox" title="Chọn tất cả" />
+                                        </div>
+                                        <input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." />
+                                    </div>
+                                </th>
+                            </tr>
+                        </tfoot>
+                        @if (HtmlCoCauToChucs != "")
+                        {
+                            <tbody>
+                                @MvcHtmlString.Create(HtmlCoCauToChucs)
+                            </tbody>
+                        }
+                    </table>
+                </div>-->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary ml-1" id="btn-timkiem-theotieuchi" onclick="thongKe.timKiemThongTin()">
+                <span class="">Tìm kiếm</span>
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

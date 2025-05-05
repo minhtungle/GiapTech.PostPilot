@@ -1,0 +1,123 @@
+﻿@using Public.Models
+@{
+    PermissionM per = Session["Permission"] as PermissionM;
+}
+<a hidden intro-container="next-step"></a>
+<div class="card">
+    <div class="card-header text-center gradient-background" style="background: @per.DonViSuDung.GiaoDien">
+        <div class="row">
+            <div class="col-12" id="timkiem-container">
+                <div class="form-group" id="timkem-noidung-container" intro-container="timkiem-noidung-container">
+                    <div class="input-group input-group-lg box-shadow">
+                        <a class="input-group-text c-poiter text-white" intro-container="timkiem-nangcao"
+                           style="background: #283872 !important; border: 0"
+                           onclick="s.chonLoaiTimKiem()">
+                            <i class="bi bi-sliders2-vertical"></i>
+                            <span class="d-none d-sm-block">&nbsp;Nâng cao</span>
+                        </a>
+                        <input type="text" class="form-control bg-white" id="timkiem-noidung" placeholder="Nhập thông tin ..." intro-container="timkiem-noidung">
+                        <a class="input-group-text c-poiter text-white" intro-container="timkiem-coban"
+                           style="background: #283872 !important; border: 0"
+                           onclick="s.timKiem('coban')">
+                            <i class="bi bi-search"></i>
+                            <span class="d-none d-sm-block">&nbsp;Tìm kiếm</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group d-flex justify-content-center" id="timkiem-chontieuchi-container">
+                    <p class="badge box-shadow p-2" style="background: #283872 !important;"><i class="bi bi-tags"></i> Tìm kiếm theo</p>
+                    <div id="timkiem-chontieuchi" intro-container="timkiem-chontieuchi">
+                        <span title="Nhấn chọn tiêu chí" class="tag badge bg-danger p-2" data-trangthai="false" data-ten="MaHoSo"><i class="bi bi-tag"></i> Mã hồ sơ</span>
+                        <span title="Nhấn chọn tiêu chí" class="tag badge bg-danger p-2" data-trangthai="false" data-ten="TieuDeHoSo"><i class="bi bi-tag"></i> Tiêu đề hồ sơ</span>
+                        <span title="Nhấn chọn tiêu chí" class="tag badge bg-danger p-2" data-trangthai="false" data-ten="TenVanBan"><i class="bi bi-tag"></i> Tên văn bản</span>
+                        <span title="Nhấn chọn tiêu chí" class="tag badge bg-danger p-2" data-trangthai="true" data-ten="DuLieuSo"><i class="bi bi-tag"></i> Nội dung văn bản</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group" intro-container="timkiem-ketqua-solieu">
+                    <p class="badge box-shadow p-2" style="background: #283872 !important;"><i class="bi bi-list-ol"></i> Tổng kết quả: <span class="text-danger ketqua-soluong">0</span></p>
+                    <p class="badge box-shadow p-2" style="background: #283872 !important;">
+                        <i class="bi bi-bar-chart"></i> Công khai: <span class="text-danger ketqua-congkhai-soluong">0</span> | Hạn chế: <span class="text-danger ketqua-hanche-soluong">0</span> | Bảo mật: <span class="text-danger ketqua-baomat-soluong">0</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body position-relative pt-5" id="search-timkiemhoso-ketquatimkiem">
+        <div class="row" style="position: absolute; top: -1.5rem; left: 0; right: 0; padding: 0rem 1.5rem">
+            <div class="col-12 d-flex justify-content-center align-items-center">
+                <div class="list-group list-group-horizontal text-center box-shadow" intro-container="search-timkiemhoso-ketquatimkiem"
+                     style="width: fit-content !important" role="tablist">
+                    <a class="list-group-item list-group-item-primary list-group-item-action active d-flex text-nowrap" id="ketqua-tab"
+                       data-bs-toggle="list" href="#ketqua" role="tab">
+                        <i class="bi bi-folder-check d-none d-sm-block me-1"></i>
+                        <span class="">Kết quả&nbsp;</span>
+                        <span class="badge bg-danger ketqua-soluong">0</span>
+                    </a>
+                    <a class="list-group-item list-group-item-primary list-group-item-action d-flex text-nowrap" id="phieumuon-tab"
+                       data-bs-toggle="list" href="#phieumuon" role="tab">
+                        <i class="bi bi-cart4 d-none d-sm-block me-1"></i>
+                        <span class="">Phiếu mượn&nbsp;</span>
+                        <span class="badge bg-danger phieumuon-soluong">0</span>
+                    </a>
+                </div>
+            </div>
+            @*<div class="col-sm-12 col-md-6 d-none d-lg-block">
+                    <div class="form-group float-end">
+                        <p class="badge box-shadow p-2" style="background: #283872 !important;"><i class="bi bi-list-ol"></i> Tổng kết quả: <span class="text-danger ketqua-soluong">0</span></p>
+                        <p class="badge box-shadow p-2" style="background: #283872 !important;">
+                            <i class="bi bi-bar-chart"></i> Công khai: <span class="text-danger ketqua-congkhai-soluong">0</span> | Hạn chế: <span class="text-danger ketqua-hanche-soluong">0</span> | Bảo mật: <span class="text-danger ketqua-baomat-soluong">0</span>
+                        </p>
+                    </div>
+                </div>*@
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="tab-content text-justify">
+                    <div class="tab-pane fade show active" id="ketqua" role="tabpanel"
+                         aria-labelledby="ketqua-tab">
+                        <div class="row">
+                            <div class="col-12" id="ketquatimkiem-getList">
+                                <div class="row" data-aos="flip-up">
+                                    <div class="col-12 bg-body text-center card-khongtimthay" style="border-radius : .75rem">
+                                        <img class="img-error" src="/Assets/templates/assets/images/samples/07.png" alt="Not Found">
+                                        <h3 class="error-title text-success"><i class="bi bi-search-heart"></i> Xin chào 😍</h3>
+                                        <p class="fs-5 text-gray-600">Hãy cung cấp thông tin để tôi tìm tài liệu giúp bạn nhé !</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="phieumuon" role="tabpanel"
+                         aria-labelledby="phieumuon-tab">
+                        <table class="table table-hover table-bordered w-100 nowrap" id="danhsachmuon-getList" data-page-length="10">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" data-orderable="false"></th>
+                                    <th class="text-center w-60">Thông tin hồ sơ</th>
+                                    <th class="text-center" data-orderable="false">Số trang <br /><span class="text-danger fst-italic">(từ trang đến trang)</span></th>
+                                    <th class="text-center" data-orderable="false">
+                                        <button class="btn btn-success" type="button" onclick="s.phieuMuon.displayModal_CRUD()">
+                                            <i class="bi bi-plus-square"></i> Tạo phiếu
+                                        </button>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tfoot class="show-footer-above">
+                                <tr>
+                                    <th class="text-center"><input class="form-check-input checkAll-danhsachmuon-getList" type="checkbox" title="Chọn tất cả" /></th>
+                                    <th class="text-center w-60"><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                    <th class="text-center"><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+                                    <th class="text-center"><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+﻿@using EDM_DB
+@{
+    List<tbDonViSuDung_PhongLuuTru> PHONGLUUTRUS = Session["PHONGLUUTRUS"] as List<tbDonViSuDung_PhongLuuTru>;
+}
+<div class="modal fade text-left" id="excel-danhmuc-capnhattruong" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content" style="border: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập nhật theo trường dữ liệu</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p class="text-danger">Lưu ý: Tích chọn các bản ghi trước khi cập nhật</p>
+                    <!--Phông lưu trữ-->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="required" for="select-phongluutru">Phông lưu trữ</label>
+                                <select class="form-control"
+                                        id="select-phongluutru" name="select-phongluutru" required>
+                                    @foreach (var phong in PHONGLUUTRUS) {
+                                        <option value="@phong.IdPhongLuuTru">@phong.TenPhongLuuTru</option>
+                                    }
+                                </select>
+                                <div class="invalid-feedback feedback" for="select-phongluutru">Không được để trống</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Tên danh mục cha-->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="" for="input-tendanhmuccha">Tên danh mục cha</label>
+                                <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                       id="input-tendanhmuccha" name="input-tendanhmuccha">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="dd.excelDanhMuc.updateMultipleCell()">
+                    <span class="">Cập nhật</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <span class="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

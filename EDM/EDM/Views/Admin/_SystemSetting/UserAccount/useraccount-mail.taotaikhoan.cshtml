@@ -1,0 +1,81 @@
+﻿
+@using UserAccount.Models
+@model UserAccount.Models.CapNhatTaiKhoanMailM<tbNguoiDungExtend>
+@{
+    tbNguoiDungExtend nguoiDung_NEW = Model.NguoiDung_NEW;
+    string ngaySinh = nguoiDung_NEW.NgaySinh == null ? "" : nguoiDung_NEW.NgaySinh.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+}
+<div class="row">
+    <div class="col-12 mb-3">
+        <p class="font-bold" style="font-weight: 700 !important;">
+            Sau khi nhận thông tin về tài khoản, vui lòng tiến hành đăng nhập vào hệ thống theo đường dẫn:
+            <a href="https://vietgenedu.com">https://vietgenedu.com</a>
+        </p>
+    </div>
+    <div class="col-12">
+        <p class="font-bold" style="font-weight: 700 !important;">Thông tin người dùng:</p>
+        <table class="table table-bordered" style="border: 1px solid black; width: 100%;">
+            <thead>
+                <tr>
+                    <th class="text-center" style="text-align: center !important; border: 1px solid black; padding: .5rem; background-color: #0b0c51; color: white;">#</th>
+                    <th class="text-center" style="text-align: center !important; border: 1px solid black; padding: .5rem; background-color: #0b0c51; color: white;">Thông tin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Tên người dùng</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@nguoiDung_NEW.TenNguoiDung</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Tên đăng nhập</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@nguoiDung_NEW.TenDangNhap</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Mật khẩu</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@nguoiDung_NEW.MatKhau</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Giới tính</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@(nguoiDung_NEW.GioiTinh.Value ? "Nam" : "Nữ")</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Kích hoạt</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@(nguoiDung_NEW.KichHoat.Value ? "✔️" : "✖️")</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Email</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@nguoiDung_NEW.Email</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Số điện thoại</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@nguoiDung_NEW.SoDienThoai</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Ngày sinh</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@ngaySinh</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Kiểu người dùng</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@nguoiDung_NEW.KieuNguoiDung.TenKieuNguoiDung</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Cơ cấu tổ chức</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@nguoiDung_NEW.CoCauToChuc.TenCoCauToChuc</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Chức vụ</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@nguoiDung_NEW.ChucVu.TenChucVu</td>
+                </tr>
+                @if (nguoiDung_NEW.ChucVu.TenChucVu == "NVKD")
+                {
+                    <tr>
+                        <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Cấp độ doanh thu</td>
+                        <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@nguoiDung_NEW.CapDo_DoanhThu.TenCapDo_DoanhThu</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <hr />
+    @Html.Partial("~/Views/_Shared/Mail/mail-footer.cshtml")
+</div>

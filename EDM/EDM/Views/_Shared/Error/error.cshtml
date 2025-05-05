@@ -1,0 +1,21 @@
+﻿@{
+    Layout = null;
+    string tempPath = "/Assets/templates/assets";
+}
+<link rel="stylesheet" href="@tempPath/css/main/app.css">
+<link rel="stylesheet" href="@tempPath/css/pages/error.css">
+<link rel="shortcut icon" href="@tempPath/images/logo/favicon.svg" type="image/x-icon">
+<link rel="shortcut icon" href="@tempPath/images/logo/favicon.png" type="image/png">
+
+<div id="error">
+    <div class="error-page container">
+        <div class="col-md-8 col-12 offset-md-2">
+            <div class="text-center">
+                <img class="img-error" src="@tempPath/images/samples/error-404.svg" alt="Not Found">
+                <h3 class="error-title"><i class="bi bi-wrench"></i> NOT FOUND !</h3>
+                <p class='fs-5 text-gray-600'>Rất tiếc đã xảy ra sự cố không mong muốn, chúng tôi sẽ khắc phục sớm nhất.</p>
+                <a href="~/Auth/Login" class="btn btn-lg btn-outline-primary mt-3">Trở lại</a>
+            </div>
+        </div>
+    </div>
+</div>

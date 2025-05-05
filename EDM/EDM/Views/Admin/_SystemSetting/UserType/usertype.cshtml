@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Kiểu người dùng";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Kiểu người dùng</li>
+}
+@section scripts {
+    <script src="~/Content/Admin/_SystemSetting/UserType/usertype.js"></script>
+    <script>
+        var ut = new UserType();
+        ut.init();
+    </script>
+}
+<section class="section" page-group="page-group-systemsetting" id="page-usertype" data-aos="fade-up">
+    <div class="card">
+        <div class="card-content">
+            <div class="card-body">
+                <div class="btn-group btn-group-sm" role="group">
+                    <a class="btn btn-success"><i class="bi bi-plus-square"></i></a>
+                    <a class="btn btn-light-secondary" onclick="ut.kieuNguoiDung.displayModal_CRUD('create')">
+                        Thêm mới
+                    </a>
+                    <!--Thao tác-->
+                    <a class="btn btn-danger"><i class="bi bi-trash3-fill"></i></a>
+                    <a class="btn btn-light-secondary" onclick="ut.kieuNguoiDung.displayModal_Delete('multiple')">
+                        Xóa bỏ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-content">
+            @Html.Partial("~/Views/Admin/_SystemSetting/UserType/usertype-getList.cshtml")
+        </div>
+    </div>
+</section>
+<!--usertype-crud-->
+<div class="modal fade text-left" id="usertype-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--usertype-delete-->
+<div class="modal fade text-left" id="usertype-delete" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>

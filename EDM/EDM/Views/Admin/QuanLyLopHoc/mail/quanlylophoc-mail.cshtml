@@ -1,0 +1,215 @@
+﻿@using EDM_DB
+@using Applications.QuanLyLopHoc.Models
+@model tbLopHocExtend
+@{
+    tbLopHocExtend lopHoc = Model;
+}
+<div class="row">
+    <!--Thông tin lớp-->
+    <div class="col-12" style="flex: 0 0 auto; width: 100%;">
+        <table class="table table-bordered" style="border: 1px solid black; width: 100%;">
+            <!--Thông tin lớp-->
+            <tbody>
+                <tr>
+                    <th colspan="2" class="text-center"
+                        style="text-align: center !important; border: 1px solid black; font-weight: 700 !important; padding: .5rem; background-color: #0b0c51; color: white;">
+                        Thông tin lớp
+                    </th>
+                </tr>
+            </tbody>
+            <tbody>
+                <!--Tên lớp-->
+                <tr>
+                    <td style="text-align: left !important; border: 1px solid black; font-weight: bold; padding: .5rem;">
+                        Tên lớp
+                    </td>
+                    <td style="text-align: left !important; border: 1px solid black;">
+                        @lopHoc.LopHoc.TenLopHoc
+                    </td>
+                </tr>
+                <!--Nền tảng-->
+                <tr>
+                    <td style="text-align: left !important; border: 1px solid black; font-weight: bold; padding: .5rem;">
+                        Nền tảng học
+                    </td>
+                    <td style="text-align: left !important; border: 1px solid black;">
+                        @lopHoc.LopHoc.NenTangHoc
+                    </td>
+                </tr>
+            </tbody>
+            <!--Giáo viên-->
+            <tbody>
+                <tr>
+                    <th colspan="2" class="text-center"
+                        style="text-align: center !important; border: 1px solid black; font-weight: 700 !important; padding: .5rem; background-color: #0b0c51; color: white; ">
+                        Giáo viên
+                    </th>
+                </tr>
+            </tbody>
+            <tbody>
+                @foreach (tbNguoiDung giaoVien in lopHoc.GiaoViens)
+                {
+                    <tr>
+                        <td colspan="2" style="text-align: left !important; border: 1px solid black; font-weight: bold; padding: .5rem;">
+                            @giaoVien.TenNguoiDung
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <!--Học viên-->
+            <tbody>
+                <tr>
+                    <th colspan="2" class="text-center"
+                        style="text-align: center !important; border: 1px solid black; font-weight: 700 !important; padding: .5rem; background-color: #0b0c51; color: white; ">
+                        Học viên
+                    </th>
+                </tr>
+            </tbody>
+            <tbody>
+                @foreach (tbKhachHang khachHang in lopHoc.KhachHangs)
+                {
+                    var donHangs = lopHoc.DonHangs.Where(x => x.DonHang.IdKhachHang == khachHang.IdKhachHang).ToList() ?? new List<tbDonHangExtend>();
+                    <tr>
+                        <td style="text-align: left !important; border: 1px solid black; font-weight: bold; padding: .5rem;">
+                            @khachHang.TenKhachHang
+                        </td>
+                        <td style="text-align: left !important; border: 1px solid black; padding: .5rem;">
+                            @foreach (var donHang in donHangs)
+                            {
+                                <span>@donHang.SanPham.TenSanPham</span> <br />
+                                <span>@donHang.TrinhDoDauVao.TenTrinhDo - @donHang.TrinhDoDauRa.TenTrinhDo</span> <br />
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!--Lịch học-->
+    <div class="col-12" style="flex: 0 0 auto; width: 100%; margin: 1.5rem 0;">
+        <table class="table table-bordered" style="border: 1px solid black; width: 100%;">
+            <tbody>
+                <tr>
+                    <th colspan="2" class="text-center"
+                        style="text-align: center !important; border: 1px solid black; font-weight: 700 !important; padding: .5rem; background-color: #0b0c51; color: white; ">
+                        Lịch học
+                    </th>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr>
+                    <td style="text-align: left !important; border: 1px solid black; font-weight: bold; padding: .5rem;">
+                        Số buổi
+                    </td>
+                    <td style="text-align: left !important; border: 1px solid black; padding: .5rem;">
+                        @lopHoc.LopHoc.SoBuoi
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left !important; border: 1px solid black; font-weight: bold; padding: .5rem;">
+                        Lịch học
+                    </td>
+                    <td style="text-align: left !important; border: 1px solid black; padding: .5rem;">
+                        @{
+                            string layVongLap()
+                            {
+                                // Lấy danh sách các ngày trong tuần, sắp xếp theo ThuTuBuoiHoc và lấy tối đa 7 buổi
+                                var weekdaysWithTime = lopHoc.BuoiHocs
+                                    .Where(bh => bh.BuoiHoc.ThoiGianBatDau.HasValue)  // Lọc buổi có ThoiGianBatDau
+                                    .OrderBy(bh => bh.BuoiHoc.ThuTuBuoiHoc)           // Sắp xếp theo ThuTuBuoiHoc
+                                    .Take(7)                                  // Chỉ lấy 7 buổi đầu
+                                    .Select(bh => new
+                                    {
+                                        DayOfWeek = bh.BuoiHoc.ThoiGianBatDau.Value.DayOfWeek,   // Lấy ngày trong tuần
+                                        Time = bh.BuoiHoc.ThoiGianBatDau.Value.ToString("h:mm tt") // Lấy giờ (12-hour format)
+                                    })
+                                    .Distinct()                               // Loại bỏ giá trị trùng lặp (nếu có)
+                                    .OrderBy(d => d.DayOfWeek)                // Sắp xếp thứ tự trong tuần
+                                    .ToList();
+
+
+                                var time = weekdaysWithTime
+                                .Select(wd => wd.Time)
+                                .Distinct()
+                                .FirstOrDefault();  // Giả sử tất cả buổi học diễn ra vào cùng một giờ trong tuần
+
+
+                                // Bản đồ các ngày trong tuần sang số thứ
+                                var weekdayMap = new Dictionary<DayOfWeek, string>
+                                                                                                                                                                {
+                                    { DayOfWeek.Sunday, "CN" },
+                                    { DayOfWeek.Monday, "T2" },
+                                    { DayOfWeek.Tuesday, "T3" },
+                                    { DayOfWeek.Wednesday, "T4" },
+                                    { DayOfWeek.Thursday, "T5" },
+                                    { DayOfWeek.Friday, "T6" },
+                                    { DayOfWeek.Saturday, "T7" }
+                                };
+                                // Chuyển từ DayOfWeek sang dạng 2-4-6
+                                var ngayTrongTuan = string.Join(" - ", weekdaysWithTime.Select(d => weekdayMap[d.DayOfWeek]));
+
+                                // In ra kết quả
+                                return $"Các ngày {ngayTrongTuan} hàng tuần, lúc {time}";
+                            }
+                            <span>@layVongLap()</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left !important; border: 1px solid black; font-weight: bold; padding: .5rem;">
+                        Ngày bắt đầu
+                    </td>
+                    <td style="text-align: left !important; border: 1px solid black; padding: .5rem;">
+                        @{
+                            string ngayBatDau = lopHoc.BuoiHocs.FirstOrDefault().BuoiHoc.ThoiGianBatDau == null ? "" : lopHoc.BuoiHocs.FirstOrDefault().BuoiHoc.ThoiGianBatDau.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                            <span>@ngayBatDau</span>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left !important; border: 1px solid black; font-weight: bold; padding: .5rem;">
+                        Dự kiến kêt thúc
+                    </td>
+                    <td style="text-align: left !important; border: 1px solid black; padding: .5rem;">
+                        @{
+                            string ngayKetThuc = lopHoc.BuoiHocs.Last().BuoiHoc.ThoiGianBatDau == null ? "" : lopHoc.BuoiHocs.Last().BuoiHoc.ThoiGianBatDau.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                            <span>@ngayKetThuc</span>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--Tài liệu-->
+    <div class="col-12" style="flex: 0 0 auto; width: 100%;">
+        <table class="table table-bordered" style="border: 1px solid black; width: 100%;">
+            <tbody>
+                <tr>
+                    <th colspan="2" class="text-center"
+                        style="text-align: center !important; border: 1px solid black; font-weight: 700 !important; padding: .5rem; background-color: #0b0c51; color: white; ">
+                        Tài liệu học <br />
+                        <small class="fst-italic">(Nhấn vào tên tài liệu để mở)</small>
+                    </th>
+                </tr>
+            </tbody>
+            <tbody>
+                @{
+                    int i = 0;
+                    foreach (tbLopHoc_TaiLieu taiLieu in lopHoc.TaiLieus)
+                    {
+                        <tr>
+                            <td style="text-align: center !important; border: 1px solid black; padding: .5rem; font-weight: bold; width: 5%;">
+                                @(++i)
+                            </td>
+                            <td style="text-align: left !important; border: 1px solid black; padding: .5rem;">
+                                <a href="@taiLieu.DuongDanTaiLieu">@taiLieu.TenTaiLieu</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <hr />
+    @Html.Partial("~/Views/_Shared/Mail/mail-footer.cshtml")
+</div>

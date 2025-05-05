@@ -1,0 +1,48 @@
+﻿<div class="list-group list-group-horizontal mb-1 text-center col-md-6 col-sm-12 justify-content-sm-start justify-content-center"
+     id="tab_danhsachlophoc" role="tablist">
+    <a class="list-group-item list-group-item-action active" id="choxeplop-container-tab"
+       data-bs-toggle="list" href="#choxeplop-container" role="tab">Chờ xếp lớp</a>
+    <a class="list-group-item list-group-item-action" id="daxeplop-container-tab"
+       data-bs-toggle="list" href="#daxeplop-container" role="tab">Đã xếp lớp</a>
+</div>
+<div class="tab-content text-justify">
+    <div class="tab-pane fade show active py-2" id="choxeplop-container" role="tabpanel"
+         aria-labelledby="choxeplop-container-tab">
+        <div class="row">
+            <div class="col-12">
+                <div class="divider divider-right" data-bs-toggle="collapse" href="#choxeplop-collapse">
+                    <div class="divider-text font-bold">
+                        <div class="badges">
+                            <span class="badge bg-primary c-pointer">Nhấn xem bộ lọc</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse" id="choxeplop-collapse">
+                    @Html.Partial("~/Views/Admin/QuanLyLopHoc/test/quanlylophoc-lophoc/lophoc-getList/choxeplop/choxeplop-timkiem.cshtml")
+                    <hr />
+                </div>
+            </div>
+        </div>
+        <div class="row" id="choxeplop-getlist-container"></div>
+    </div>
+    <div class="tab-pane fade py-2" id="daxeplop-container" role="tabpanel"
+         aria-labelledby="daxeplop-container-tab">
+        <div class="row">
+            <div class="col-12">
+                <div class="divider divider-right
+                     " data-bs-toggle="collapse" href="#daxeplop-collapse">
+                    <div class="divider-text font-bold">
+                        <div class="badges">
+                            <span class="badge bg-primary c-pointer">Nhấn xem bộ lọc</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse" id="daxeplop-collapse">
+                    @Html.Partial("~/Views/Admin/QuanLyLopHoc/test/quanlylophoc-lophoc/lophoc-getList/daxeplop/daxeplop-timkiem.cshtml")
+                    <hr />
+                </div>
+            </div>
+        </div>
+        <div class="row" id="daxeplop-getlist-container"></div>
+    </div>
+</div>

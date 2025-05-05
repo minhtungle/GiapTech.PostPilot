@@ -1,0 +1,40 @@
+﻿@using EDM_DB
+@{
+    List<default_tbLoaiBieuMau> LOAIBIEUMAUs = Session["LOAIBIEUMAUs"] as List<default_tbLoaiBieuMau>;
+}
+<div class="modal fade text-left" id="excel-bieumau-capnhattruong" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content" style="border: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập nhật theo trường dữ liệu</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p class="text-danger">Lưu ý: Tích chọn các bản ghi trước khi cập nhật</p>
+                    <!--Loại biểu mẫu-->
+                    <div class="col-12 col-sm-12 col-md-12">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="" for="select-loaibieumau">Vị trí lưu trữ</label>
+                                <select class="form-control" id="select-loaibieumau">
+                                    <option disabled data-ma="" @(LOAIBIEUMAUs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                    @foreach (var loaiBieuMau in LOAIBIEUMAUs) {
+                                        <option value="@loaiBieuMau.IdLoaiBieuMau">@loaiBieuMau.TenLoaiBieuMau</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="ds.excelBieuMau.updateMultipleCell()">
+                    <span class="">Cập nhật</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <span class="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

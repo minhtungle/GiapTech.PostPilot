@@ -1,0 +1,102 @@
+﻿@using EDM_DB
+@{
+    List<tbDonViSuDung_PhongLuuTru> PHONGLUUTRUS = Session["PHONGLUUTRUS"] as List<tbDonViSuDung_PhongLuuTru>;
+    List<default_tbCheDoSuDung> CHEDOSUDUNGS = Session["CHEDOSUDUNGS"] as List<default_tbCheDoSuDung>;
+    List<tbViTriLuuTru> VITRILUUTRUS = Session["VITRILUUTRUS"] as List<tbViTriLuuTru>;
+    List<tbDanhMucHoSo> DANHMUCHOSOS = Session["DANHMUCHOSOS"] as List<tbDanhMucHoSo>;
+}
+<div class="modal fade text-left" id="timkiemhoso-nangcao" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Tìm kiếm nâng cao
+                    <a class="text-warning c-poiter p-1" data-bs-toggle="tooltip" data-bs-placement="right" title="Nhấn xem hướng dẫn" 
+                       data-hint="Nhấn xem hướng dẫn" data-hint-position="top-left"
+                       onclick="huongDanSuDung.kichHoat('timkiem-nangcao')"><i class="bi bi-lightbulb fs-6"></i></a>
+                </h5>
+                <a class="btn btn-primary timkiem-reset" onclick="s.reset('nangcao')" intro-container="timkiem-reset">
+                    <i class="bi bi-repeat"></i> Làm mới
+                </a>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12" hidden>
+                        <div class="p-2" style="border: 1px dashed">
+                            <span class="font-bold text-danger text-uppercase"><i class="bi bi-bell-fill"></i></span> Để thiết lập tính năng tìm kiếm nâng cao cần có thông tin về trường dữ liệu.
+                            <br />
+                            <span class="fst-italic">
+                                <a href="~/StorageLocation/Index">➡️ Nhấn vào đây để tạo <span class="font-bold text-danger">[Vị trí lưu trữ]</span></a>
+                            </span>
+                            <br />
+                            <span class="fst-italic">
+                                <a href="~/DigitizingSetting/Index">➡️ Nhấn vào đây để tạo <span class="font-bold text-danger">[Trường dữ liệu]</span></a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-sm-12 col-md-4" intro-container="timkiem-vitriluutru">
+                        <div class="form-group">
+                            <select class="form-select form-select2" id="timkiem-vitriluutru" onchange="">
+                                <option value="0" data-ma="0">Chọn vị trí lưu trữ</option>
+                                @foreach (tbViTriLuuTru viTri in VITRILUUTRUS)
+                                {
+                                    <option style="white-space: pre!important" value="@viTri.IdViTriLuuTru">@viTri.TenViTriLuuTru</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <select class="form-select form-select2" id="timkiem-danhmuchoso" onchange="">
+                                <option value="0" data-ma="0">Chọn danh mục hồ sơ</option>
+                                @foreach (tbDanhMucHoSo danhMuc in DANHMUCHOSOS)
+                                {
+                                    <option style="white-space: pre!important" value="@danhMuc.IdDanhMucHoSo">@danhMuc.TenDanhMucHoSo</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <select class="form-select form-select2" id="timkiem-phongluutru" onchange="">
+                                <option value="0" data-ma="0">Chọn phông lưu trữ</option>
+                                @foreach (tbDonViSuDung_PhongLuuTru phong in PHONGLUUTRUS)
+                                {
+                                    <option style="white-space: pre!important" value="@phong.IdPhongLuuTru">@phong.TenPhongLuuTru</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 timkiem-nangcao-container" intro-container="timkiem-nangcao-container">
+                        <div class="form-group">
+                            <table class="table table-hover table-bordered w-100 nowrap" id="timkiem-truongdulieu-getList" data-page-length="10" data-order="[[ 1, &quot;asc&quot; ]]">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-45" style="position: sticky; top: 0">Tên trường dữ liệu</th>
+                                        <th class="text-center" style="position: sticky; top: 0">Nội dung tìm kiếm</th>
+                                    </tr>
+                                </thead>
+                                <tfoot class="show-footer-above">
+                                    <tr>
+                                        <th style="position: sticky; top: 2.6rem"><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                        <th style="position: sticky; top: 2.6rem "><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary ml-1" onclick="s.timKiem('nangcao')">
+                    <span class="">Tìm kiếm</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <span class="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,112 @@
+﻿@{
+    string loai = ViewBag.loai;
+    EDM_DB.tbBieuMau bieuMau = ViewBag.bieuMau;
+    List<EDM_DB.tbBieuMau_TruongDuLieu> bieuMau_TruongDuLieus = ViewBag.bieuMau_TruongDuLieus;
+    List<EDM_DB.default_tbLoaiBieuMau> loaiBieuMaus = ViewBag.loaiBieuMaus;
+}
+<div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                @(loai == "create" ? "Thêm mới" : loai == "update" ? "Cập nhật" : "Xem chi tiết")
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <!--Id-->
+                <input id="input-idbieumau" value="@bieuMau.IdBieuMau" hidden />
+                <!--Tên biểu mẫu-->
+                <div class="col-12 col-sm-12 col-md-6">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label class="required" for="input-tenbieumau">Tên biểu mẫu</label>
+                            <input type="text" class="form-control" placeholder="Nhập thông tin ..." 
+                                   id="input-tenbieumau" name="input-tenbieumau"
+                                   value="@(bieuMau.TenBieuMau ?? "")" @(loai == "read" ? "disabled" : "") required>
+                            <div class="invalid-feedback feedback" for="input-tenbieumau">Không được để trống</div>
+                        </div>
+                    </div>
+                </div>
+                <!--Loại biểu mẫu-->
+                <div class="col-12 col-sm-12 col-md-6">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label for="select-loaibieumau">Loại biểu mẫu</label>
+                            <select class="form-control" 
+                                    id="select-loaibieumau" name="select-loaibieumau"
+                                    @(loai == "read" ? "disabled" : "") required>
+                                <option disabled @(loaiBieuMaus.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                @foreach (var lbm in loaiBieuMaus) {
+                                    <option value="@lbm.IdLoaiBieuMau" @(lbm.IdLoaiBieuMau == bieuMau.IdLoaiBieuMau ? "selected" : "")>@lbm.TenLoaiBieuMau</option>
+                                }
+                            </select>
+                            <div class="invalid-feedback feedback" for="select-loaibieumau">Không được để trống</div>
+                        </div>
+                    </div>
+                </div>
+                <!--##-->
+                <div class="col-12 border-1">
+                    <div class="divider divider-left">
+                        <div class="divider-text text-uppercase">
+                            <i class="bi bi-caret-right-fill"></i> Danh sách trường dữ liệu
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <table class="table table-hover table-bordered w-100 nowrap" id="table-truongdulieu" data-page-length="5">
+                                <thead>
+                                    <tr>
+                                        @*<th class="text-center">Mã trường</th>*@
+                                        <th class="text-center">Tên trường</th>
+                                        <th class="text-center" data-orderable="false">
+                                            <a href="#" class="btn btn-sm btn-success" title="Thêm" onclick="ds.truongDuLieu.create()"><i class="bi bi-plus-square"></i></a>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (bieuMau_TruongDuLieus.Count == 0)
+                                    {
+                                        <tr class="r" data-id="0">
+                                            @*<td><input type="text" class="form-control input-matruong" /></td>*@
+                                            <td><input type="text" class="form-control input-tentruong" /></td>
+                                            <td class="text-center">
+                                                <a href="#" class="btn btn-sm btn-danger" title="Xóa bỏ" onclick="ds.truongDuLieu.delete(this)"><i class="bi bi-trash3-fill"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+
+                                        foreach (EDM_DB.tbBieuMau_TruongDuLieu bieuMau_TruongDuLieu in bieuMau_TruongDuLieus)
+                                        {
+                                            <tr class="r" data-id="@bieuMau_TruongDuLieu.IdTruongDuLieu">
+                                                @*<td><input type="text" class="form-control input-matruong" value="@bieuMau_TruongDuLieu.MaTruong" /></td>*@
+                                                <td><input type="text" class="form-control input-tentruong" value="@bieuMau_TruongDuLieu.TenTruong" /></td>
+                                                <td class="text-center">
+                                                    <a href="#" class="btn btn-sm btn-danger" title="Xóa bỏ" onclick="ds.truongDuLieu.delete(this)"><i class="bi bi-trash3-fill"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            @if (loai != "read")
+            {
+                <button type="button" class="btn btn-primary ml-1" onclick="ds.bieuMau.save(@("'" + loai + "'"))">
+                    <i class="bi bi-check d-flex d-sm-none"></i>
+                    <span class="">Lưu</span>
+                </button>
+            }
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <i class="bi bi-x d-flex d-sm-none"></i>
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,192 @@
+﻿@using LoanManage.Models
+@using EDM_DB
+@{
+    tbPhieuMuonExtend phieuMuon = ViewBag.phieuMuon;
+    string hostName = ViewBag.hostName;
+}
+<div class="modal-dialog modal-dialog-scrollable modal-full" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                Xử lý phiếu
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <!--Id-->
+                <input id="input-idphieumuon" value="@phieuMuon.IdPhieuMuon" hidden />
+                <div class="col-12">
+                    <table class="table table-hover table-bordered w-100" id="thongtinphieumuon">
+                        <tbody class="bg-body">
+                            <tr>
+                                <td colspan="2" class="font-bold text-center text-uppercase">Thông tin phiếu mượn</td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold w-50">Hình thức mượn</td>
+                                <td class="w-50 text-justify">@phieuMuon.HinhThucMuon.TenHinhThucMuon</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold w-50">Họ tên</td>
+                                <td class="text-justify w-50">@phieuMuon.NguoiMuon_HoTen</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold w-50">CCCD/CMND</td>
+                                <td class="text-justify w-50">@phieuMuon.NguoiMuon_CCCD</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold w-50">Vị trí lưu trữ</td>
+                                <td class="text-justify w-50">@phieuMuon.NguoiMuon_SoDienThoai</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold w-50">Email</td>
+                                <td class="text-justify w-50">@phieuMuon.NguoiMuon_Email</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold w-50">Đơn vị công tác</td>
+                                <td class="text-justify w-50">@phieuMuon.NguoiMuon_DonViCongTac</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Lý do mượn</td>
+                                <td class="text-justify">@phieuMuon.NguoiMuon_LyDoMuon</td>
+                            </tr>
+                        </tbody>
+                        <tbody class="bg-body">
+                            <tr>
+                                <td class="font-bold">Thời hạn mượn</td>
+                                <td class="text-justify">
+                                    Từ
+                                    <span class="text-success">
+                                        @(phieuMuon.NgayYeuCau == null ? "" : phieuMuon.NgayYeuCau.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture))
+                                    </span>
+                                    tới
+                                    <span class="text-success">
+                                        @(phieuMuon.NgayHenTra == null ? "" : phieuMuon.NgayHenTra.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture))
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-12">
+                    <table class="table table-hover table-bordered w-100" id="vanBanMuon-getList" data-page-length="5">
+                        <thead class="nowrap" style="white-space: nowrap !important">
+                            <tr>
+                                <th class="text-center" data-orderable="false"></th>
+                                <th class="text-center">Tiêu đề hồ sơ</th>
+                                <th class="text-center">Tên văn bản</th>
+                                <th class="text-center" data-orderable="false">Số trang <br /><span class="text-danger fst-italic">(từ trang đến trang)</span></th>
+                                <th class="text-center" data-orderable="false">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tfoot class="show-footer-above">
+                            <tr>
+                                <th class="text-center"><input class="form-check-input checkAll-vanBanMuon-getList" type="checkbox" title="Chọn tất cả" /></th>
+                                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @foreach (tbPhieuMuon_VanBanExtend phieuMuon_VanBan in phieuMuon.PhieuMuon_VanBans)
+                            {
+                                string duongDan = phieuMuon_VanBan.VanBan.DuongDan;
+                                string tenVanBan = phieuMuon_VanBan.VanBan.TenVanBan != null ? phieuMuon_VanBan.VanBan.TenVanBan_BanDau : phieuMuon_VanBan.VanBan.TenVanBan;
+                                <tr>
+                                    <td class="text-center"><input class="form-check-input checkRow-vanBanMuon-getList" type="checkbox" /></td>
+                                    <td>
+                                        <span class="text-justify" title="@phieuMuon_VanBan.HoSo.TieuDeHoSo">
+                                            @Public.Handle.TruncateString(input: phieuMuon_VanBan.HoSo.TieuDeHoSo, maxLength: 60)
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-justify" title="@string.Format("{0}{1}", tenVanBan, phieuMuon_VanBan.VanBan.Loai)">
+                                            @Public.Handle.TruncateString(input: string.Format("{0}{1}", tenVanBan, phieuMuon_VanBan.VanBan.Loai), maxLength: 60)
+                                        </span>
+                                    </td>
+                                    <td class="text-center">Từ trang <span class="text-danger">[@phieuMuon_VanBan.TuTrang]</span> tới <span class="text-danger">[@phieuMuon_VanBan.DenTrang]</span></td>
+                                    <td class="text-center">
+                                        <a class="btn btn-sm btn-warning" title="Xem"
+                                           onclick="loan.phieuMuon.hienThiFile(@("'" + duongDan + "'")), loan.vanBanMuon.readRow(this)"><i class="bi bi-eye-fill"></i></a>
+                                        @if (!phieuMuon_VanBan.VanBan.Loai.Contains("mp4") && // Không phải video
+                                            phieuMuon.TrangThai == 1 && // Đang chờ xử lý
+                                            phieuMuon.HinhThucMuon.IdHinhThucMuon != 1 // Khác mượn đọc
+                                            )
+                                        {
+                                            <a class="btn btn-sm btn-primary" title="Ký số"
+                                               onclick="loan.kySo.exc_sign_approved(@("'" + phieuMuon_VanBan.DuongDanFile_DaXuLy + "'")), loan.vanBanMuon.readRow(this)"><i class="bi bi-shield-fill-check"></i></a>
+                                            <div class="btn-group btn-group-sm dropdown">
+                                                <button type="button" title="Thêm mới" class="btn btn-light-secondary dropdown-toggle dropdown-toggle-split"
+                                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                        data-reference="parent">
+                                                    Gán mẫu chứng thực
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" onclick="loan.chungThuc.displayModal_ChungThuc('motphan', @phieuMuon.IdPhieuMuon, @phieuMuon_VanBan.VanBan.IdVanBan), loan.vanBanMuon.readRow(this)">
+                                                        <i class="bi bi-plus-square"></i> Một phần
+                                                    </a>
+                                                    <a class="dropdown-item" onclick="loan.chungThuc.displayModal_ChungThuc('toanphan', @phieuMuon.IdPhieuMuon, @phieuMuon_VanBan.VanBan.IdVanBan), loan.vanBanMuon.readRow(this)">
+                                                        <i class="bi bi-file-excel"></i> Toàn phần
+                                                    </a>
+                                                    <a class="dropdown-item" onclick="loan.chungThuc.displayModal_ChungThuc('bansao', @phieuMuon.IdPhieuMuon, @phieuMuon_VanBan.VanBan.IdVanBan), loan.vanBanMuon.readRow(this)">
+                                                        <i class="bi bi-file-excel"></i> Bản sao
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <iframe class="col-12 mt-2" id="vanBanMuon-xemtep" src="" title="Chi tiết" style="height: 50vh;"></iframe>
+                <div class="col-12 mt-2" id="vanBanMuon-xemtep-chungthuc" style="display: none; border: 1px solid var(--bs-gray);">
+                    <div class="row" style="display: flex; justify-content: center; background: rgb(230 230 230); ">
+                        <div class="col-12 p-2" style="display: flex; justify-content: center; background-color: #f7f7f7; border-bottom: 1px solid rgb(190 190 190);">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a class="btn btn-primary" id="btn-xacnhan-chungthuc">
+                                    <i class="bi bi-check"></i> Đồng ý
+                                </a>
+                                <a class="btn btn-light-secondary" id="btn-huy-chungthuc">
+                                    <i class="bi bi-x"></i> Hủy bỏ
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12 p-2" id="chinhSuaTepChungThuc" style="display: block; overflow-y: scroll; max-height: 50vh;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+            @if (phieuMuon.TrangThai != 3 && phieuMuon.TrangThai != 4)
+            { // Chỉ hủy khi đang khác hủy và khác hết hạn
+                if (phieuMuon.TrangThai == 1 && // Đang chờ xử lý
+                phieuMuon.HinhThucMuon.IdHinhThucMuon != 1 // Khác mượn đọc
+                )
+                {
+                    <button class="btn btn-primary btn-kysohangloat" title="Ký số hàng loạt" onclick="loan.kySo.exc_sign_files()">
+                        <i class="bi bi-shield-fill-check d-flex d-sm-none"></i> <span class="d-none d-sm-block">Ký số hàng loạt</span>
+                    </button>
+                }
+                if (phieuMuon.TrangThai != 2)
+                { // Chỉ duyệt khi đang xử lý
+                    <button class="btn btn-success btn-thaotac" title="Duyệt" onclick="loan.phieuMuon.update('single', 'duyet', @phieuMuon.IdPhieuMuon)">
+                        <i class="bi bi-check-circle d-flex d-sm-none"></i> <span class="d-none d-sm-block">Duyệt</span>
+                    </button>
+                }
+                <button class="btn btn-warning btn-thaotac" title="Hủy duyệt" onclick="loan.phieuMuon.lyDoHuyDuyet('single',@phieuMuon.IdPhieuMuon)">
+                    <i class="bi bi-x-circle d-flex d-sm-none"></i> <span class="d-none d-sm-block">Hủy duyệt</span>
+                </button>
+            }
+            <button class="btn btn-danger btn-thaotac" title="Xóa bỏ" onclick="loan.phieuMuon.update('single', 'xoa', @phieuMuon.IdPhieuMuon)">
+                <i class="bi bi-trash3-fill d-flex d-sm-none"></i> <span class="d-none d-sm-block">Xóa bỏ</span>
+            </button>
+            <button class="btn btn-secondary" title="Đóng" data-bs-dismiss="modal">
+                <i class="bi bi-x d-flex d-sm-none"></i> <span class="d-none d-sm-block">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

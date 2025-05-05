@@ -1,0 +1,60 @@
+﻿@using Public.Models
+@{
+    Layout = "~/Views/_Shared/User/user.cshtml";
+    Permission per = Session["Permission"] as Permission;
+    string tempPath = "/Assets/templates/assets";
+}
+@section styles {
+    <link href="~/Content/Admin/__Home/Search/search.css" rel="stylesheet" />
+    <link href="~/Content/Admin/_DocumentManage/DocumentDigitizing/documentdigitizing.css" rel="stylesheet" />
+}
+@section scripts {
+    <script src="~/Content/Admin/__Home/Search/search.js"></script>
+    <script>
+        var s = new Search();
+        s.init();
+    </script>
+}
+<section class="section banner gradient-background d-flex align-items-center w-100" style="min-height: calc(100vh - 77px); background: @per.DonViSuDung.GiaoDien">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1" data-aos="fade-up" data-aos-delay="200">
+                <h1 class="text-uppercase">@per.DonViSuDung.TenDonViSuDung</h1>
+                <h2>@per.DonViSuDung.TieuDeTrangChu</h2>
+                <div class="d-flex justify-content-center justify-content-lg-start">
+                    <a class="btn-animate-1" href="~/Auth/Login">
+                        Đăng nhập
+                        <div class="icon">
+                            <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path>
+                            </svg>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
+                <img src="@per.DonViSuDung.Banner" class="img-fluid animated">
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="page-content m-3">
+    <section class="section" id="page-home" data-aos="fade-up">
+        <div class="row">
+            <div class="col-12 px-4 py-3">
+                @Html.Partial("~/Views/Admin/__Home/Search/search.timkiemhoso/timkiemhoso.cshtml")
+            </div>
+        </div>
+    </section>
+    <!--vanban-detail-->
+    <div class="modal fade text-left" id="vanban-detail" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+    </div>
+    <!--phieumuon-create-->
+    <div class="modal fade text-left" id="phieumuon-create" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+        @Html.Partial("~/Views/Admin/LoanManage/loanmanage-phieumuon.create.cshtml")
+    </div>
+    <!--timkiemhoso-timkiemnangcao-->
+    @Html.Partial("~/Views/Admin/__Home/Search/search.timkiemhoso/timkiemhoso-nangcao.cshtml")
+</div>

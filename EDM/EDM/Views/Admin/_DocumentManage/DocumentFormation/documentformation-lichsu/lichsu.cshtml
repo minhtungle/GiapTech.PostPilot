@@ -1,0 +1,169 @@
+﻿@using DocumentFormation.Models;
+@using EDM_DB
+@{
+    List<tbHoSo_LichSuExtend> hoSo_LichSus = ViewBag.hoSo_LichSus;
+    int hoSo_LichSus_Count = hoSo_LichSus.Count;
+}
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document" style="align-items: normal !important">
+    <div class="modal-content">
+        <div class="modal-body table-responsive" id="lichsu-getList-container">
+            <div class="row">
+                <div class="@(hoSo_LichSus_Count == 0 ? "col-12": "col-sm-12 col-md-6")">
+                    <table class="table table-hover table-bordered w-100 nowrap" id="lichsu-getList" data-page-length="10">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="min-width: 10rem!important">Nội dung</th>
+                                <th class="text-center" style="min-width: 10rem!important">Người thao tác</th>
+                                <th class="text-center" style="min-width: 10rem!important">Ngày thao tác</th>
+                            </tr>
+                        </thead>
+                        <tfoot class="show-footer-above">
+                            <tr>
+                                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @for (int i = 0; i < hoSo_LichSus_Count; i++)
+                            {
+                                tbHoSo_LichSuExtend hoSo_LichSu = hoSo_LichSus[i];
+                                string ngayTao = hoSo_LichSu.NgayTao == null ? "" : hoSo_LichSu.NgayTao.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                                <tr row="@i" onclick="df.hoSo_lichSu.readRow(this)">
+                                    <!--Nội dung-->
+                                    <td class="" style="vertical-align: top;">
+                                        <span data-tentruong="NoiDung">@hoSo_LichSu.NoiDung</span>
+                                    </td>
+                                    <!--Người thao tác-->
+                                    <td class="" style="vertical-align: top;">
+                                        <span data-tentruong="NguoiThaoTac">@hoSo_LichSu.ThongTinNguoiTao.TenNguoiDung</span>
+                                    </td>
+                                    <!--Ngày thao tác-->
+                                    <td class="" style="vertical-align: top;">
+                                        <span data-tentruong="NgayThaoTac">@ngayTao</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @if (hoSo_LichSus_Count > 0)
+                {
+                    <div class="col-sm-12 col-md-6" id="lichsu-read-container" style="overflow-y: scroll; border: 1px solid #d3d3d35c;">
+                        @for (int i = 0; i < hoSo_LichSus_Count; i++)
+                        {
+                            <div class="row lichsu-read" row="@i">
+                                <div class="col-12 border-1">
+                                    <div class="divider divider-left">
+                                        <div class="divider-text text-uppercase">
+                                            <i class="bi bi-caret-right-fill"></i> Thông tin thay đổi
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        @{
+                                            tbHoSo_LichSuExtend hoSo_LichSu = hoSo_LichSus[i];
+                                            if (hoSo_LichSu.ChiTiet == "" || hoSo_LichSu.ChiTiet == null)
+                                            {
+                                                <div class="col-12 col-sm-12 col-md-12">
+                                                    <p class="">Không có thay đổi trước đó</p>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                List<HoSo_LichSu_ChiTiet> chiTiets = Newtonsoft.Json.JsonConvert.DeserializeObject<List<HoSo_LichSu_ChiTiet>>(hoSo_LichSu.ChiTiet);
+                                                //string thoiGianBatDau = hoSo_LichSu.ThoiGianBatDau == null ? "" : hoSo_LichSu.ThoiGianBatDau.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                                                //string thoiGianKetThuc = hoSo_LichSu.ThoiGianKetThuc == null ? "" : hoSo_LichSu.ThoiGianKetThuc.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                                                <div class="col-12 col-sm-12 col-md-12">
+                                                    <table class="table table-bordered" style="border: 1px solid black;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center" style="text-align: center !important; border: 1px solid black;">Trường dữ liệu</th>
+                                                                <th class="text-center" style="text-align: center !important; border: 1px solid black;">Thông tin cũ</th>
+                                                                <th class="text-center" style="text-align: center !important; border: 1px solid black;">Thông tin mới</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (HoSo_LichSu_ChiTiet chiTiet in chiTiets)
+                                                            {
+                                                                if (chiTiet.TenTruongDuLieu == "TieuDeHoSo")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Tiêu đề hồ sơ";
+                                                                }
+                                                                else if (chiTiet.TenTruongDuLieu == "MaHoSo")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Mã hồ sơ";
+                                                                }
+                                                                else if (chiTiet.TenTruongDuLieu == "ThoiHanBaoQuan")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Thời hạn bảo quản";
+                                                                }
+                                                                else if (chiTiet.TenTruongDuLieu == "ThoiGianBatDau")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Thời gian bắt đầu";
+                                                                    chiTiet.GiaTri_Cu = chiTiet.GiaTri_Cu == "" ? "" : chiTiet.GiaTri_Cu.AsDateTime().ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                                                                    chiTiet.GiaTri_Moi = chiTiet.GiaTri_Moi == "" ? "" : chiTiet.GiaTri_Moi.AsDateTime().ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                                                                }
+                                                                else if (chiTiet.TenTruongDuLieu == "ThoiGianKetThuc")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Thời gian kết thúc";
+                                                                    chiTiet.GiaTri_Cu = chiTiet.GiaTri_Cu == "" ? "" : chiTiet.GiaTri_Cu.AsDateTime().ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                                                                    chiTiet.GiaTri_Moi = chiTiet.GiaTri_Moi == "" ? "" : chiTiet.GiaTri_Moi.AsDateTime().ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                                                                }
+                                                                else if (chiTiet.TenTruongDuLieu == "TinhTrangVatLy")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Tình trạng vật lý";
+                                                                }
+                                                                else if (chiTiet.TenTruongDuLieu == "NgonNgu")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Ngôn ngữ";
+                                                                }
+                                                                else if (chiTiet.TenTruongDuLieu == "TuKhoa")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Từ khóa";
+                                                                }
+                                                                else if (chiTiet.TenTruongDuLieu == "KyHieuThongTin")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Ký hiệu thông tin";
+                                                                }
+                                                                else if (chiTiet.TenTruongDuLieu == "TongSoVanBan")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Tổng số văn bản";
+                                                                }
+                                                                else if (chiTiet.TenTruongDuLieu == "SoLuongTo")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Số lượng tờ";
+                                                                }
+                                                                else if (chiTiet.TenTruongDuLieu == "SoLuongTrang")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Số lượng trang";
+                                                                }
+                                                                else if (chiTiet.TenTruongDuLieu == "GhiChu")
+                                                                {
+                                                                    chiTiet.TenTruongDuLieu = "Ghi chú";
+                                                                }
+                                                                <tr>
+                                                                    <td style="text-align: center !important; border: 1px solid black;">@chiTiet.TenTruongDuLieu</td>
+                                                                    <td style="text-align: center !important; border: 1px solid black;">@chiTiet.GiaTri_Cu</td>
+                                                                    <td style="text-align: center !important; border: 1px solid black;">@chiTiet.GiaTri_Moi</td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

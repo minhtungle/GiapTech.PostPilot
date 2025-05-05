@@ -1,0 +1,36 @@
+﻿@{
+    string HtmlDanhMucs = ViewBag.HtmlDanhMucs;
+}
+<div class="card-body">
+    <table class="table table-hover table-bordered table-treeview w-100 nowrap" id="documentdirectory-getList" data-page-length="-1">
+        <thead>
+            <tr>
+                <th class="text-center" data-orderable="false">Tên danh mục hồ sơ</th>
+                <th class="text-center w-30" data-orderable="false">
+                    <a href="#" class="btn btn-sm btn-success" title="Thêm mới" onclick="dd.danhMucHoSo.displayModal_CRUD('create',0, 0)"><i class="bi bi-plus-square"></i></a>
+                    <a href="#" class="btn btn-sm btn-primary" title="Thêm tệp" onclick="dd.displayModal_Excel_DanhMuc()"><i class="bi bi-filetype-xlsx"></i></a>
+                </th>
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th>
+                    <div class="input-group">
+                        <div class="input-group-text">
+                            <input class="form-check-input" data-id="0" type="checkbox" title="Chọn tất cả" />
+                        </div>
+                        <input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." />
+                    </div>
+                </th>
+                <th>
+                    <input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled />
+                </th>
+            </tr>
+        </tfoot>
+        @if (HtmlDanhMucs != "") {
+            <tbody>
+                @MvcHtmlString.Create(HtmlDanhMucs)
+            </tbody>
+        }
+    </table>
+</div>

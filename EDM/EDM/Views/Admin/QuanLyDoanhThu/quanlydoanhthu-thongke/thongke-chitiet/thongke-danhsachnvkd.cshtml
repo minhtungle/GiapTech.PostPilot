@@ -1,0 +1,62 @@
+﻿@using Applications.QuanLyDoanhThu.Dtos
+@{
+    LocThongTinChiTietDto locThongTin = ViewBag.locThongTin;
+    IEnumerable<DanhMucThongKeTheoNVKD> danhSachDoanhThuTheoNVKD = ViewBag.DanhSachDoanhThuTheoNVKD;
+}
+
+<table class="table table-hover table-bordered table-sticky w-100" id="thongtin-getList" data-page-length="10">
+    <thead class="nowrap" style="white-space: nowrap !important">
+        <tr>
+            <th class="text-center">@(locThongTin.LoaiThongKe == "NVKD" ? "Nhân viên KD": "Sản phẩm")</th>
+            <th class="text-center">Doanh thu</th>
+        </tr>
+    </thead>
+    <tfoot class="show-footer-above">
+        <tr>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+        </tr>
+    </tfoot>
+    <tbody>
+        @foreach (var thongTin in danhSachDoanhThuTheoNVKD)
+        {
+            string _doanhThuMucTieu = Public.Handle.FormatCurrency(amount: (long)thongTin.DoanhThu.DoanhThuMucTieu);
+            string _doanhThuThucTe = Public.Handle.FormatCurrency(amount: (long)thongTin.DoanhThu.DoanhThuThucTe);
+            string _doanhThuConLai = Public.Handle.FormatCurrency(amount: (long)(thongTin.DoanhThu.DoanhThuMucTieu - thongTin.DoanhThu.DoanhThuThucTe));
+            string trangThai = "";
+            if (thongTin.DoanhThu.PhanTramHoanThien == 0)
+            {
+                trangThai = "danger";
+            }
+            else if (thongTin.DoanhThu.PhanTramHoanThien < 30)
+            {
+                trangThai = "primary";
+            }
+            else if (thongTin.DoanhThu.PhanTramHoanThien < 50)
+            {
+                trangThai = "warning";
+            }
+            else
+            {
+                trangThai = "success";
+            };
+            decimal? ariaValuemax = thongTin.DoanhThu.PhanTramHoanThien > 100 ? thongTin.DoanhThu.PhanTramHoanThien : 100;
+            <tr id="@thongTin.NguoiDung.IdNguoiDung" onclick="quanLyDoanhThu.thongKe.chiTiet.hienThiXemThongKeChiTiet(@string.Format("'{0}'", thongTin.NguoiDung.IdNguoiDung))">
+                <td>@thongTin.NguoiDung.TenNguoiDung</td>
+                <td class="text-center">
+                    <div class="progress progress-sm progress-@trangThai mx-5 mt-4 mb-2">
+                        <div class="progress-bar progress-label" role="progressbar"
+                             style="width: @string.Format("{0}%", thongTin.DoanhThu.PhanTramHoanThien)"
+                             aria-valuenow="@thongTin.DoanhThu.PhanTramHoanThien"
+                             aria-valuemin="0" aria-valuemax="@ariaValuemax">
+                        </div>
+                    </div>
+                    <div>
+                        <span class="">@_doanhThuThucTe / <span class="font-bold">@_doanhThuMucTieu</span></span>
+                        <span class="">@(thongTin.DoanhThu.PhanTramHoanThien == 100 ? "" : $"- còn {_doanhThuConLai}")</span>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

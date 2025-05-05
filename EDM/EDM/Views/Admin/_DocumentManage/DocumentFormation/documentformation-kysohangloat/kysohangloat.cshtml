@@ -1,0 +1,142 @@
+﻿@using DocumentFormation.Models;
+@using EDM_DB
+@{
+    List<tbHoSoExtend> hoSos = ViewBag.hoSos;
+    int soLuongHoSo = hoSos.Count;
+}
+
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document" style="align-items: normal !important">
+    <div class="modal-content">
+        <div class="modal-header justify-content-start gap-1">
+            <h5 class="modal-title">Ký số hàng loạt</h5>
+        </div>
+        <div class="modal-body table-responsive" id="hoso-getList-container">
+            <div class="row">
+                <div class="@(soLuongHoSo == 0 ? "col-12": "col-sm-12 col-md-6")">
+                    <table class="table table-hover table-bordered w-100 nowrap" id="hoso-getList" data-page-length="10" data-order="[[ 1, &quot;asc&quot; ]]">
+                        <thead>
+                            <tr>
+                                <th class="text-center" data-orderable="false">
+                                    <a href="#" class="btn btn-sm btn-success" title="Thêm" onclick="df.kySoHangLoat.createRow()" hidden><i class="bi bi-plus-square-fill"></i></a>
+                                    <a href="#" class="btn btn-sm btn-danger" title="Xóa" onclick="df.kySoHangLoat.deleteRow()"><i class="bi bi-trash3-fill"></i></a>
+                                </th>
+                                @*<th class="text-center text-danger" style="min-width: 10rem!important">KIỂM TRA</th>*@
+                                <th class="text-center w-50" style="min-width: 10rem!important">Mã hồ sơ</th>
+                                <th class="text-center w-50" style="min-width: 10rem!important">Tiêu đề hồ sơ</th>
+                            </tr>
+                        </thead>
+                        <tfoot class="show-footer-above">
+                            <tr>
+                                <th class="text-center"><input class="form-check-input checkAll-hoso-getList" type="checkbox" title="Chọn tất cả" /></th>
+                                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @for (int i = 0; i < soLuongHoSo; i++)
+                            {
+                                tbHoSoExtend hoSo = hoSos[i];
+                                <tr row="@i" onclick="df.kySoHangLoat.readRow(this)">
+                                    <td class="text-center"><input class="form-check-input checkRow-hoso-getList" type="checkbox" /></td>
+                                    <!--Mã hồ sơ-->
+                                    <td class="w-50" style="vertical-align: top;">
+                                        <span data-tentruong="MaHoSo">@hoSo.MaHoSo</span>
+                                    </td>
+                                    <!--Tiêu đề hồ sơ-->
+                                    <td class="w-50" style="vertical-align: top;">
+                                        <span data-tentruong="TieuDeHoSo" title="@hoSo.TieuDeHoSo">@Public.Handle.TruncateString(input: hoSo.TieuDeHoSo, maxLength: 60)</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @if (soLuongHoSo > 0)
+                {
+                    <div class="col-sm-12 col-md-6" id="vanban-read-container" style="overflow-y: scroll; border: 1px solid #d3d3d35c;">
+                        @for (int i = 0; i < soLuongHoSo; i++)
+                        {
+                            tbHoSoExtend hoSo = hoSos[i];
+                            List<tbHoSo_VanBanExtend> vanBans = hoSo.VanBans;
+                            int soLuongVanBan = vanBans.Count;
+                            <div class="row vanban-read" row="@i">
+                                <div class="col-12 border-1">
+                                    <div class="divider divider-left">
+                                        <div class="divider-text text-uppercase">
+                                            <i class="bi bi-caret-right-fill"></i> Danh sách văn bản <span class="text-danger fst-italic">(Chỉ hiển thị các văn bản đủ điều kiện ký số)</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <table class="table table-hover table-bordered w-100 nowrap vanban-getList" id="vanban-getList-@i" data-page-length="10" data-order="[[ 1, &quot;asc&quot; ]]">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center" data-orderable="false"></th>
+                                                        <th class="text-center w-50" style="min-width: 10rem!important">Mã hồ sơ</th>
+                                                        <th class="text-center w-50" style="min-width: 10rem!important">Tiêu đề hồ sơ</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot class="show-footer-above">
+                                                    <tr>
+                                                        <th class="text-center"><input class="form-check-input checkAll-vanban-getList-@i" type="checkbox" title="Chọn tất cả" checked /></th>
+                                                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody>
+                                                    @if (soLuongVanBan > 0)
+                                                    {
+                                                        for (int j = 0; j < soLuongVanBan; j++)
+                                                        {
+                                                            tbHoSo_VanBanExtend vanBan = vanBans[j];
+                                                            string tenVanBan = vanBan.TenVanBan != null ? vanBan.TenVanBan_BanDau : vanBan.TenVanBan;
+                                                            string extention = Path.GetExtension(vanBan.DuongDan);
+                                                            if(extention == ".pdf")
+                                                            {
+                                                                <tr row="@j" onclick="df.kySoHangLoat.readRow(this)" data-duongdanvanban="@vanBan.DuongDan">
+                                                                    <td class="text-center">
+                                                                        <input class="form-check-input checkRow-vanban-getList-@i" type="checkbox" checked />
+                                                                    </td>
+                                                                    <!--Tên văn bản-->
+                                                                    <td class="w-50" style="vertical-align: top;">
+                                                                        <span data-tentruong="TenVanBan">@string.Format("{0}{1}", tenVanBan, vanBan.Loai)</span>
+                                                                    </td>
+                                                                    <!--Tên biểu mẫu-->
+                                                                    <td class="w-50" style="vertical-align: top;">
+                                                                        <span data-tentruong="TenBieuMau" title="@hoSo.TieuDeHoSo">
+                                                                            @{
+                                                                                string tenBieuMau = vanBan.BieuMau.TenBieuMau != null ? vanBan.BieuMau.TenBieuMau : string.Empty;
+                                                                                <span class="badge @(tenBieuMau != string.Empty ? "bg-success" : "bg-danger")">
+                                                                                    @(tenBieuMau != string.Empty ? tenBieuMau : "Chưa có")
+                                                                                    @vanBan.BieuMau.TenBieuMau
+                                                                                </span>
+                                                                            }
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="df.kySoHangLoat.exc_sign_files()">
+                @*<i class="bi bi-check d-flex d-sm-none"></i>*@
+                <span class="">Ký số</span>
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                @*<i class="bi bi-x d-flex d-sm-none"></i>*@
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

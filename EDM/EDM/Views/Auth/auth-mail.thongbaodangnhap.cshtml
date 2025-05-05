@@ -1,0 +1,48 @@
+﻿
+@using Auth.Models
+@model Auth.Models.ThongBaoThietBiDangNhapM
+@{
+    ThongTinThietBi thongTinThietBi = Model.ThongTinThietBi;
+}
+<div class="row">
+    <div class="col-12 mb-3">
+        <p class="font-bold" style="font-weight: 700 !important;">
+            Phát hiện thiết bị mới đăng nhập vào tài khoản của bạn lúc
+            <span style="--bs-text-opacity: 1; color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important;">@DateTime.Now</span>
+        </p>
+    </div>
+    <div class="col-12">
+        <p class="font-bold" style="font-weight: 700 !important;">Thông tin thiết bị:</p>
+        <table class="table table-bordered w-100" style="border: 1px solid black; width: 100%;">
+            <thead>
+                <tr>
+                    <th class="text-center" style="text-align: center !important; border: 1px solid black; padding: .5rem; background-color: #0b0c51; color: white;">#</th>
+                    <th class="text-center" style="text-align: center !important; border: 1px solid black; padding: .5rem; background-color: #0b0c51; color: white;">Thông tin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Tài khoản</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">
+                        @Model.NguoiDung.TenDangNhap <br />
+                        <small class="text-danger font-bold">@Model.NguoiDung.TenNguoiDung</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Trình duyệt</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@thongTinThietBi.TenTrinhDuyet</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">Phiên bản</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@thongTinThietBi.PhienBan</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">User Agent</td>
+                    <td style="text-align: center !important; border: 1px solid black; padding: .5rem;">@thongTinThietBi.UserAgent</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr />
+    @Html.Partial("~/Views/_Shared/Mail/mail-footer.cshtml")
+</div>

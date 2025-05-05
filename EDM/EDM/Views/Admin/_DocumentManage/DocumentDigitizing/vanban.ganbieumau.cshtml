@@ -1,0 +1,38 @@
+﻿@using DocumentFormation.Models;
+@{
+    List<tbBieuMauExtend> BIEUMAUs = Session["BIEUMAUs"] as List<tbBieuMauExtend>;
+}
+<div class="modal fade text-left" id="vanban-ganbieumau" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Gán biểu mẫu</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="position-relative">
+                            <div class="form-group with-title mb-0">
+                                <label class="required" for="select-ganbieumau">Biểu mẫu</label>
+                                <select class="form-control" id="select-ganbieumau">
+                                    <option disabled>Chọn thông tin</option>
+                                    @foreach (var bm in BIEUMAUs) {
+                                        <option value="@bm.IdBieuMau" data-idloaibieumau="@bm.IdLoaiBieuMau">@bm.TenBieuMau</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary ml-1" onclick="dd.vanBan.ganBieuMau()">
+                    <span class="">Lưu</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <span class="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

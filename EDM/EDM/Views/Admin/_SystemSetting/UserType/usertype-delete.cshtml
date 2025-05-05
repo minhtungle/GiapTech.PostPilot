@@ -1,0 +1,55 @@
+﻿@using EDM_DB
+@{
+    List<tbKieuNguoiDung> kieuNguoiDungs = ViewBag.kieuNguoiDungs;
+    List<Guid> idKieuNguoiDungs_XOA = ViewBag.idKieuNguoiDungs_XOA;
+}
+<div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <table class="table table-hover table-bordered w-100 nowrap" id="usertype-thaythe-getList" data-page-length="-1">
+                <thead>
+                    <tr>
+                        <th class="text-center" data-orderable="false"></th>
+                        <th class="text-center">Chọn kiểu người dùng thay thế cho các người dùng hiện tại</th>
+                    </tr>
+                </thead>
+                <tfoot class="show-footer-above">
+                    <tr>
+                        <th></th>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                    </tr>
+                </tfoot>
+                @foreach (tbKieuNguoiDung kieuNguoiDung in kieuNguoiDungs)
+                {
+                    if (idKieuNguoiDungs_XOA.Contains(kieuNguoiDung.IdKieuNguoiDung))
+                    {
+                        <tr id="@kieuNguoiDung.IdKieuNguoiDung">
+                            <td></td>
+                            <td class="text-decoration-line-through">@kieuNguoiDung.TenKieuNguoiDung</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr id="@kieuNguoiDung.IdKieuNguoiDung">
+                            <td class="text-center"><input class="form-check-input checkRow-usertype-thaythe-getList" type="checkbox" data-id="@kieuNguoiDung.IdKieuNguoiDung" /></td>
+                            <td>@kieuNguoiDung.TenKieuNguoiDung</td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+        <div class="modal-footer p-2 flex-column">
+            <p class="text-center" id="organization-confirmdialog-content"></p>
+            <div class="w-100 flex-row text-center">
+                <button type="button" class="btn btn-primary ml-1" onclick="ut.kieuNguoiDung.delete()">
+                    <i class="bi bi-check d-flex d-sm-none"></i>
+                    <span class="d-none d-sm-block">Đồng ý</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x d-flex d-sm-none"></i>
+                    <span class="d-none d-sm-block">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

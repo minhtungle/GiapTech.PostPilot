@@ -1,0 +1,127 @@
+﻿@using EDM_DB
+@using LoanManage.Models
+@using Public.Models
+@{
+    PermissionM per = Session["Permission"] as PermissionM;
+    tbPhieuMuon_VanBanExtend phieuMuon_VanBan = ViewBag.phieuMuon_VanBan;
+    tbHoSo hoSo = phieuMuon_VanBan.HoSo;
+    tbDonViSuDung_PhongLuuTru phongLuuTru = ViewBag.phongLuuTru;
+    string loai = ViewBag.loai;
+}
+<div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                Thông tin chứng thực
+            </h5>
+            <input hidden type="text" id="duongdanvanbanmuon-dangchungthuc" value="@phieuMuon_VanBan.DuongDanFile_DaXuLy" />
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="modal-body pb-0">
+                    <div class="row">
+                        <!--Vị trí trang chứng thực-->
+                        <div class="col-12 col-sm-12 col-md-12">
+                            <div class="position-relative">
+                                <div class="form-group">
+                                    <label class="required" for="input-vitritrangchungthuc">Vị trí trang chứng thực</label>
+                                    <input type="number" class="form-control" placeholder="Nhập thông tin ..."
+                                           id="input-vitritrangchungthuc" name="input-vitritrangchungthuc"
+                                           value="1" min="1" required>
+                                    <div class="invalid-feedback feedback" for="input-vitritrangchungthuc">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Ảnh hướng dẫn-->
+                        <div class="col-12 col-sm-12 col-md-12">
+                            <img src="~/Assets/images/huong-dan-dang-ky-muon.png" style="width: 100%" />
+                            <p class="text-danger fst-italic font-bold text-justify mt-1">LƯU Ý: Vị trí lấy theo số thứ tự trang hiển thị trên đầu PDF.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="modal-body">
+                    <div class="row gap-2">
+                        <!--Mẫu 1-->
+                        <div class="col-12 font-bold" id="mauchungthuc-1-container" style="width: fit-content;">
+                            <div class="col-12 p-2" style="width: fit-content; border: 1px solid var(--bs-red);">
+                                <span class="text-uppercase text-danger">Bản sao</span>
+                            </div>
+                        </div>
+                        <!--Mẫu 2-->
+                        <div class="col-12 font-bold" id="mauchungthuc-2-container">
+                            <div class="col-12 p-2 mb-2" style="border: 1px solid var(--bs-red);">
+                                <!--Tiêu đề-->
+                                <div class="col-12 text-center">
+                                    <span class="text-uppercase text-danger">
+                                        @(loai == "motphan" ?
+                             "Chứng thực bản sao đúng với một phần của văn bản, tài liệu trong hồ sơ lưu trữ"
+                             : loai == "toanphan" ?
+                                 "Chứng thực bản sao đúng với toàn phần của văn bản, tài liệu trong hồ sơ lưu trữ"
+                             : string.Format("{0} bản sao lưu tài liệu", per.DonViSuDung.TenDonViSuDung))
+                                    </span>
+                                </div>
+                                <table class="table w-100 text-danger" style="border-color: transparent;">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2">Tài liệu được sao lưu từ</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Phông:</td>
+                                            <td>@(phongLuuTru.TenPhongLuuTru ?? "")</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Mục lục số:</td>
+                                            <td>@(hoSo.MucLucSo_NamHinhThanh ?? "")</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Trang số:</td>
+                                            <td>@string.Format("{0} - {1}", phieuMuon_VanBan.TuTrang, phieuMuon_VanBan.DenTrang)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@(loai == "bansao" ? "Bản sao số" : "Số chứng thực:")</td>
+                                            <td>
+                                                <input type="text" class="form-control input-span text-danger font-bold" placeholder="🖍 Nhấn để nhập ..." />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            @if (loai != "bansao")
+                            {
+                                <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: end;">
+                                    <div style="text-align: center; width: fit-content;">
+                                        <div class="d-flex flex-row">
+                                            <input type="text" class="form-control input-span text-end font-bold" placeholder="Hà Nội" value="Hà Nội" style="width: 60px;" />
+                                            @string.Format(", ngày {0} tháng {1} năm {2}", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year)
+                                        </div>
+                                        <div class="input-span-container" id="input-chucvu">
+                                            <textarea type="text" class="form-control text-center input-span font-bold" placeholder="🖍 Nhập chức vụ" style="margin:.5rem 0rem !important; max-height: 100px; white-space:pre-wrap;" onchange="loan.chungThuc.thayDoiTextArea('#input-chucvu')"></textarea>
+                                            <span style="display: none;"></span>
+                                        </div>
+
+                                        <span class="fst-italic" style="font-size: small;">(Ký, đóng dấu)</span>
+                                        <div style="height: 100px;"></div>
+                                        <input type="text" class="form-control text-center input-span font-bold" placeholder="🖍 Nhập người ký" style="" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary ml-1" id="btn-lay-mauchungthuc" onclick="loan.chungThuc.luuMauChungThuc(@phieuMuon_VanBan.IdPhieuMuon, @phieuMuon_VanBan.VanBan.IdVanBan)">
+                <span class="">Lưu</span>
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

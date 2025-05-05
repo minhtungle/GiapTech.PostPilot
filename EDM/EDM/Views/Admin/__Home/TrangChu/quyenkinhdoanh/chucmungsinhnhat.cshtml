@@ -1,0 +1,40 @@
+﻿@using EDM_DB
+@model List<tbNguoiDung>
+@{
+    List<tbNguoiDung> nguoiDungs = Model;
+}
+<div class="card-content">
+    <div class="card">
+        <div class="card-body firework-container position-relative" style="height: 500px;">
+            <canvas id="firework"></canvas>
+            <div class="row" style=" position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <div class="col-12 text-center">
+                    <h4 class="font-bold color-word-animation color-word-animation-1">
+                        Mừng sinh nhật
+                        @foreach (tbNguoiDung nguoiDung in nguoiDungs)
+                        {
+                            int tuoi = Public.Handle.CalculateAge(birthDate: nguoiDung.NgaySinh.Value);
+                            <span>
+                                <span class="text-danger font-bold" style="font-size: 1.5rem">@nguoiDung.TenNguoiDung</span> tròn <span class="text-danger font-bold" style="font-size: 1.5rem">@tuoi tuổi</span>
+                            </span> <br />
+                        }
+                    </h4>
+                    @*<h1 class="font-bold" style="font-size: 7rem">🎂🍰🥂</h1>*@
+                    <iframe src="https://giphy.com/embed/yoJC2GnSClbPOkV0eA" width="150" height="150" style="" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+                    @*<h4 class="font-bold">Bao giờ lấy vợ ?</h4>*@<br />
+                    <audio controls="controls" autoplay id="audio-chucmungsinhnhat" hidden>
+                        <source src="~/Assets/files/Kh%c3%bac%20h%c3%a1t%20m%e1%bb%abng%20sinh%20nh%e1%ba%adt%20%20Phan%20%c4%90%c3%acnh%20T%c3%b9ng.mp3" type="audio/mpeg" />
+                    </audio>
+                    <a class="btn btn-sm btn-success c-pointer" onclick="trangChu.sinhNhat.chucMungSinhNhat()">Nhấn nghe hát ️🎧</a>
+                    <hr />
+                    <small class="font-bold fst-italic text-success ">
+                        <span class="color-word-animation color-word-animation-1">"Ngày hôm nay ta cùng hợp hoan nơi đây 🎤 </span><br />
+                        <span class="color-word-animation color-word-animation-2">Mọi người bên nhau ta hát mừng sinh nhật 🎈 </span><br />
+                        <span class="color-word-animation color-word-animation-3">Một, hai, ba ta cùng thổi tắt nến 🕯️ </span><br />
+                        <span class="color-word-animation color-word-animation-4">Happy birthday, happy birthday to you ️🥁" </span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+﻿<div class="card-body" intro-container="dulieu-container">
+    <div class="row">
+        <!--Chưa tính lương-->
+        <div class="col-sm-12 col-md-6">
+            <div class="divider divider-left">
+                <div class="divider-text text-uppercase">
+                    <h4 class="font-bold text-danger">✖️ Chưa tính lương</h4>
+                </div>
+            </div>
+            <div class="mb-2 toggle-vis-bar" intro-container="dulieu-hienthicot">
+                Hiển thị:
+                <a href="#" class="toggle-vis" data-table="nguoidung-chuatinhluong-getList" data-column="2">Chức vụ</a> |
+                <a href="#" class="toggle-vis" data-table="nguoidung-chuatinhluong-getList" data-column="3">Tổng lương</a> |
+                <a href="#" class="toggle-vis" data-table="nguoidung-chuatinhluong-getList" data-column="4">Gửi mail</a> |
+                <a href="#" class="toggle-vis" data-table="nguoidung-chuatinhluong-getList" data-column="5">Tác vụ</a>
+            </div>
+            <table class="table table-hover table-bordered table-sticky w-100" id="nguoidung-chuatinhluong-getList" data-page-length="10">
+                <thead class="nowrap" style="white-space: nowrap !important">
+                    <tr>
+                        <th class="text-center" data-orderable="false"></th>
+
+                        <th class="text-center">Tên nhân viên</th>
+                        <th class="text-center">Chức vụ</th>
+                        <th class="text-center">Tổng lương</th>
+                        <th class="text-center">Gửi mail</th>
+
+                        @*<th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>*@
+                    </tr>
+                </thead>
+                <tfoot class="show-footer-above">
+                    <tr>
+                        <th class="text-center"><input class="form-check-input checkAll-nguoidung-chuatinhluong-getList" type="checkbox" title="Chọn tất cả" /></th>
+
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                        @*<th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>*@
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <!--Đã tính lương-->
+        <div class="col-sm-12 col-md-6">
+            <div class="divider divider-left">
+                <div class="divider-text text-uppercase">
+                    <h4 class="font-bold text-success">✔️ Đã tính lương</h4>
+                </div>
+            </div>
+            <div class="mb-2 toggle-vis-bar" intro-container="dulieu-hienthicot">
+                Hiển thị:
+                <a href="#" class="toggle-vis" data-table="nguoidung-datinhluong-getList" data-column="2">Chức vụ</a> |
+                <a href="#" class="toggle-vis" data-table="nguoidung-datinhluong-getList" data-column="3">Tổng lương</a> |
+                <a href="#" class="toggle-vis" data-table="nguoidung-datinhluong-getList" data-column="4">Gửi mail</a> |
+                <a href="#" class="toggle-vis" data-table="nguoidung-datinhluong-getList" data-column="5">Tác vụ</a>
+            </div>
+            <table class="table table-hover table-bordered table-sticky w-100" id="nguoidung-datinhluong-getList" data-page-length="10">
+                <thead class="nowrap" style="white-space: nowrap !important">
+                    <tr>
+                        <th class="text-center" data-orderable="false"></th>
+
+                        <th class="text-center">Tên nhân viên</th>
+                        <th class="text-center">Chức vụ</th>
+                        <th class="text-center">Tổng lương</th>
+                        <th class="text-center">Gửi mail</th>
+
+                        @*<th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>*@
+                    </tr>
+                </thead>
+                <tfoot class="show-footer-above">
+                    <tr>
+                        <th class="text-center"><input class="form-check-input checkAll-nguoidung-datinhluong-getList" type="checkbox" title="Chọn tất cả" /></th>
+
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                        <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                        @*<th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>*@
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

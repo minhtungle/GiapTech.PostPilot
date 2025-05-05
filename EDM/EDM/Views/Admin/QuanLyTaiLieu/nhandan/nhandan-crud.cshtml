@@ -1,0 +1,169 @@
+﻿@using EDM_DB
+@model Applications.QuanLySanPham.Dtos.DisplayModel_CRUD_SanPham_Output_Dto
+@{
+    string loai = Model.Loai;
+    var sanPham = Model.SanPham.SanPham;
+    var loaiSanPhams = Session["LOAISANPHAMs"] as List<tbSanPham_LoaiSanPham>;
+    var loaiKhoaHocs = Session["LOAIKHOAHOCs"] as List<tbLoaiKhoaHoc>;
+}
+<div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title col-md-6 col-sm-12 my-2">
+                @(loai == "create" ? "Thêm mới" : loai == "update" ? "Cập nhật" : "Xem chi tiết")
+                <a class="text-warning c-pointer p-1" data-bs-toggle="tooltip" data-bs-placement="right" title="Nhấn xem hướng dẫn"
+                   data-hint="Nhấn xem hướng dẫn" data-hint-position="top-left"
+                   onclick="huongDanSuDung.kichHoat('sanpham-themmoi')"><i class="bi bi-lightbulb fs-6"></i></a>
+            </h5>
+            <div class="list-group list-group-horizontal mb-1 text-center col-md-6 col-sm-12 justify-content-sm-end justify-content-center" id="" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="thongtin-list"
+                   data-bs-toggle="list" href="#thongtin" role="tab">Thông tin sản phẩm</a>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="tab-content text-justify">
+                <div class="tab-pane fade show active" id="thongtin" role="tabpanel"
+                     aria-labelledby="thongtin-list">
+                    <div class="row" intro-container="thongtin-chung">
+                        <!--Id-->
+                        <input id="input-idsanpham" value="@sanPham.IdSanPham" hidden />
+                        <!--Tên sản phẩm-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="required" for="input-tensanpham">Tên sản phẩm</label>
+                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                           id="input-tensanpham" name="input-tensanpham"
+                                           value="@(sanPham.TenSanPham ?? "")" @(loai == "read" ? "disabled" : "") required>
+                                    @* <input type="checkbox" class="form-check-input" id="checkbox-tensanpham" style="position: absolute; z-index: 1; right: .6rem; top: 2rem;" onchange="quanLySanPham.choPhepTrungTenSanPham(this, $('#input-tensanpham'))" @(loai == "read" ? "disabled" : "") />*@
+                                    <div class="invalid-feedback feedback" for="input-tensanpham">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Loại sản phẩm-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="required" for="select-loaisanpham">Loại sản phẩm</label>
+                                    <select class="form-control form-select2"
+                                            id="select-loaisanpham" name="select-loaisanpham"
+                                            @(loai == "read" ? "disabled" : "") required>
+                                        <option disabled @(loaiSanPhams.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                        @foreach (var loaiSanPham in loaiSanPhams)
+                                        {
+                                            <option value="@loaiSanPham.IdLoaiSanPham"
+                                                    @(loaiSanPham.IdLoaiSanPham == sanPham.IdLoaiSanPham ? "selected" : "")>
+                                                @loaiSanPham.TenLoaiSanPham
+                                            </option>
+                                        }
+                                    </select>
+                                    <div class="invalid-feedback feedback" for="select-loaisanpham">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Loại khóa học-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="required" for="select-loaikhoahoc">Loại khóa học</label>
+                                    <select class="form-control form-select2"
+                                            id="select-loaikhoahoc" name="select-loaikhoahoc"
+                                            @(loai == "read" ? "disabled" : "") required>
+                                        <option disabled @(loaiKhoaHocs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                        @foreach (var loaiKhoaHoc in loaiKhoaHocs)
+                                        {
+                                            <option value="@loaiKhoaHoc.IdLoaiKhoaHoc"
+                                                    @(loaiKhoaHoc.IdLoaiKhoaHoc == sanPham.IdLoaiKhoaHoc ? "selected" : "")>
+                                                @loaiKhoaHoc.TenLoaiKhoaHoc
+                                            </option>
+                                        }
+                                    </select>
+                                    <div class="invalid-feedback feedback" for="select-loaikhoahoc">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Giá tiền từng buổi-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="required" for="input-giatientungbuoi">Giá từng ca</label>
+                                    <div class="input-group">
+                                        <input type="money" class="form-control" placeholder="Nhập thông tin ..."
+                                               id="input-giatientungbuoi" name="input-giatientungbuoi" onkeyup="quanLySanPham.sanPham.tinhGiaTien()"
+                                               value="@(sanPham.GiaTienTungBuoi)" @(loai == "read" ? "disabled" : "") required>
+                                        <span class="input-group-text">VND</span>
+                                    </div>
+                                    <div class="invalid-feedback feedback" for="input-giatientungbuoi">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Số buổi-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="required" for="input-sobuoi">Số buổi</label>
+                                    <input type="number" class="form-control" placeholder="Nhập thông tin ..."
+                                           id="input-sobuoi" name="input-sobuoi" onkeyup="quanLySanPham.sanPham.tinhGiaTien()"
+                                           value="@(sanPham.SoBuoi)" @(loai == "read" ? "disabled" : "") required>
+                                    <div class="invalid-feedback feedback" for="input-sobuoi">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Giá tiền-->
+                        <div class="col-12 col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="input-giatien">Tổng giá tiền</label>
+                                    <div class="input-group">
+                                        <input type="money" class="form-control" placeholder="Nhập thông tin ..."
+                                               id="input-giatien" name="input-giatien"
+                                               value="@(sanPham.GiaTien ?? 0)" disabled>
+                                        <span class="input-group-text">VND</span>
+                                    </div>
+                                    <div class="invalid-feedback feedback" for="input-giatien">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Thời gian buổi học-->
+                        <div class="col-12 col-sm-12 col-md-12">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="required" for="input-thoigianbuoihoc">Thời gian buổi học</label>
+                                    <div class="input-group mb-3">
+                                        <input type="number" class="form-control" placeholder="Nhập thông tin ..."
+                                               id="input-thoigianbuoihoc" name="input-thoigianbuoihoc"
+                                               value="@(sanPham.ThoiGianBuoiHoc)" @(loai == "read" ? "disabled" : "") required>
+                                        <span class="input-group-text">phút</span>
+                                    </div>
+                                    <div class="invalid-feedback feedback" for="input-thoigianbuoihoc">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Ghi chú-->
+                        <div class="col-12 col-sm-12 col-md-12">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label for="input-ghichu">Ghi chú</label>
+                                    <textarea class="form-control min-h-50 max-h-200" id="input-ghichu" rows="2">@(sanPham.GhiChu ?? "")</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            @if (loai != "read")
+            {
+                <button type="button" class="btn btn-primary ml-1" onclick="quanLySanPham.sanPham.save(@string.Format("'{0}'", loai))">
+                    <span class="">Lưu</span>
+                </button>
+            }
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Cơ cấu tổ chức";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Cơ cấu tổ chức</li>
+}
+@section scripts {
+    <script src="~/Content/Admin/_SystemSetting/Organization/organization.js"></script>
+    <script>
+        var org = new Organization();
+        org.init();
+    </script>
+}
+<section class="section" page-group="page-group-systemsetting" id="page-organization" data-aos="fade-up">
+    <div class="card">
+        <div class="card-content" id="organization-getList-container">
+            @Html.Partial("~/Views/Admin/_SystemSetting/Organization/organization-getList.cshtml")
+        </div>
+    </div>
+</section>
+<!--organization-crud-->
+<div class="modal fade text-left" id="organization-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--organization-delete-->
+<div class="modal fade" id="organization-delete" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--organization-excel.cocau-->
+@Html.Partial("~/Views/Admin/_SystemSetting/Organization/organization-excel.cocau/excel.cocau.cshtml")
+<!--organization-excel.cocau-capnhattruong-->
+@Html.Partial("~/Views/Admin/_SystemSetting/Organization/organization-excel.cocau/excel.cocau-capnhattruong.cshtml")

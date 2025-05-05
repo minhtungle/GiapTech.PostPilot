@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "Báo cáo";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item"><a href="~/Report">Báo cáo</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Thống kê theo tiêu chí</li>
+}
+@section scripts {
+    <script src="~/Content/Admin/Report/report.js"></script>
+    <script>
+        var thongKe = new ThongKeTheoTieuChi();
+        thongKe.init();
+    </script>
+}
+<section class="section" id="page-report" data-aos="fade-up">
+    <div class="card">
+        <div class="card-body">
+            <div class="btn-group btn-group-sm" role="group">
+                <a class="btn btn-primary"><i class="bi bi-search"></i></a>
+                <a class="btn btn-light-secondary" onclick="thongKe.displayModal_TimKiem_TheoTieuChi()">
+                    Tìm kiếm
+                </a>
+                <a class="btn btn-primary"><i class="bi bi-filetype-xlsx"></i></a>
+                <div class="btn-group btn-group-sm dropdown">
+                    <button type="button" title="Tải xuống" class="btn btn-light-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                        Xuất tệp
+                    </button>
+                    <div class="dropdown-menu">
+                        @*<a class="dropdown-item" href="#" onclick="thongKe.xuatTep('.buttons-copy')"><i class="bi bi-files"></i> Sao chép</a>*@
+                        <a class="dropdown-item" href="#" onclick="thongKe.xuatTep('.buttons-excel')"><i class="bi bi-file-earmark-spreadsheet"></i> Excel</a>
+                        @*<a class="dropdown-item" href="#" onclick="thongKe.xuatTep('.buttons-pdf')"><i class="bi bi-filetype-pdf"></i> PDF</a>*@
+                        @*<a class="dropdown-item" href="#" onclick="thongKe.xuatTep('.buttons-print')"><i class="bi bi-printer"></i> In</a>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="list-group list-group-horizontal mb-1 text-center" id="tieuchitimkiem" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="danhmuchoso-list"
+                   data-bs-toggle="list" href="#danhmuchoso" role="tab">Danh mục hồ sơ</a>
+                <a class="list-group-item list-group-item-action" id="vitriluutru-list"
+                   data-bs-toggle="list" href="#vitriluutru" role="tab">Vị trí lưu trữ</a>
+                @*<a class="list-group-item list-group-item-action" id="phongluutru-list"
+                   data-bs-toggle="list" href="#phongluutru" role="tab">Phông lưu trữ</a>*@
+                @*<a class="list-group-item list-group-item-action" id="cocautochuc-list"
+                   data-bs-toggle="list" href="#cocautochuc" role="tab">Cơ cấu tổ chức</a>*@
+            </div>
+            <div class="tab-content text-justify">
+                <div class="tab-pane fade show active p-3" id="danhmuchoso" role="tabpanel"
+                     aria-labelledby="danhmuchoso-list">
+                    <div class="row" id="danhmuchoso-getList-container"></div>
+                </div>
+                <div class="tab-pane fade p-3" id="vitriluutru" role="tabpanel"
+                     aria-labelledby="vitriluutru-list">
+                    <div class="row" id="vitriluutru-getList-container"></div>
+                </div>     
+                @*<div class="tab-pane fade p-3" id="phongluutru" role="tabpanel"
+                     aria-labelledby="phongluutru-list">
+                    <div class="row" id="phongluutru-getList-container"></div>
+                </div>*@
+                @*<div class="tab-pane fade p-3" id="cocautochuc" role="tabpanel"
+                     aria-labelledby="cocautochuc-list">
+                    <div class="row" id="cocautochuc-getList-container"></div>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</section>
+<!--thongketheotieuchi-timkiem-->
+<div class="modal fade text-left" id="thongketheotieuchi-timkiem" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>

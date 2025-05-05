@@ -1,0 +1,125 @@
+﻿@using EDM_DB
+@{
+    List<default_tbHinhThucMuon> HINHTHUCMUONs = Session["HINHTHUCMUONs"] as List<default_tbHinhThucMuon>;
+}
+<div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                Tạo phiếu mượn
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <!--Họ tên-->
+                <div class="col-sm-12 col-md-6">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label class="required" for="input-nguoimuon_hoten">Họ và tên</label>
+                            <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                   id="input-nguoimuon_hoten" name="input-nguoimuon_hoten" required>
+                            <div class="invalid-feedback feedback" for="input-nguoimuon_hoten">Không được để trống</div>
+                        </div>
+                    </div>
+                </div>
+                <!--Căn cước công dân-->
+                <div class="col-sm-12 col-md-6">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label class="required" for="input-nguoimuon_cccd">Căn cước công dân</label>
+                            <input type="number" class="form-control" placeholder="Nhập thông tin ..."
+                                   id="input-nguoimuon_cccd" name="input-nguoimuon_cccd" required>
+                            <div class="invalid-feedback feedback" for="input-nguoimuon_cccd">Không được để trống</div>
+                        </div>
+                    </div>
+                </div>
+                <!--Số điện thoại-->
+                <div class="col-sm-12 col-md-6">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label class="required" for="input-nguoimuon_sodienthoai">Số điện thoại</label>
+                            <input type="tel" class="form-control" placeholder="Nhập thông tin ..."
+                                   id="input-nguoimuon_sodienthoai" name="input-nguoimuon_sodienthoai" required>
+                            <div class="invalid-feedback feedback" for="input-nguoimuon_sodienthoai">Không được để trống</div>
+                        </div>
+                    </div>
+                </div>
+                <!--Email-->
+                <div class="col-sm-12 col-md-6">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label class="required" for="input-nguoimuon_email">Email</label>
+                            <input type="email" class="form-control" placeholder="Nhập thông tin ..."
+                                   id="input-nguoimuon_email" name="input-nguoimuon_email" required>
+                            <div class="invalid-feedback feedback" for="input-nguoimuon_email">Không được để trống</div>
+                        </div>
+                    </div>
+                </div>
+                <!--Đơn vị công tác-->
+                <div class="col-12">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label class="" for="input-nguoimuon_donvicongtac">Đơn vị công tác</label>
+                            <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-nguoimuon_donvicongtac">
+                        </div>
+                    </div>
+                </div>
+                <!--Ngày yêu cầu-->
+                <div class="col-sm-12 col-md-6">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label class="required" for="input-ngayyeucau">Ngày yêu cầu</label>
+                            <input type="date" class="form-control" placeholder="Nhập thông tin ..."
+                                   id="input-ngayyeucau" name="input-ngayyeucau" required>
+                            <div class="invalid-feedback feedback" for="input-ngayyeucau">Không được để trống</div>
+                        </div>
+                    </div>
+                </div>
+                <!--Ngày hẹn trả-->
+                <div class="col-sm-12 col-md-6">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label class="required" for="input-ngayhentra">Ngày hẹn trả</label>
+                            <input type="date" class="form-control" placeholder="Nhập thông tin ..."
+                                   id="input-ngayhentra" name="input-ngayhentra" required>
+                            <div class="invalid-feedback feedback" for="input-ngayhentra">Không được để trống</div>
+                        </div>
+                    </div>
+                </div>
+                <!--Hình thức mượn-->
+                <div class="col-12">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label class="required" for="select-hinhthucmuon">Hình thức mượn</label>
+                            <select class="form-control"
+                                    id="select-hinhthucmuon" name="select-hinhthucmuon" required>
+                                <option disabled @(HINHTHUCMUONs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                @foreach (default_tbHinhThucMuon hinhThucMuon in HINHTHUCMUONs) {
+                                    <option value="@hinhThucMuon.IdHinhThucMuon">@hinhThucMuon.TenHinhThucMuon</option>
+                                }
+                            </select>
+                            <div class="invalid-feedback feedback" for="select-hinhthucmuon">Không được để trống</div>
+                        </div>
+                    </div>
+                </div>
+                <!--Lý do mượn-->
+                <div class="col-12 col-sm-12 col-md-12">
+                    <div class="position-relative">
+                        <div class="form-group mb-3">
+                            <label for="input-nguoimuon_lydomuon">Lý do mượn</label>
+                            <textarea class="form-control min-h-100 max-h-200" id="input-nguoimuon_lydomuon" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary ml-1" onclick="s.phieuMuon.save()">
+                <span class="">Lưu</span>
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

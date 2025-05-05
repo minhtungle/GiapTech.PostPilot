@@ -1,0 +1,53 @@
+﻿@using Applications.QuanLyDoanhThu.Dtos
+@{
+    List<MucTieuDoanhThuCoCauOutput_Dto> mucTieuDoanhThu = ViewBag.MucTieuDoanhThu;
+}
+<div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title col-md-6 col-sm-12 my-2">
+                Tạo mục tiêu doanh thu năm @DateTime.Now.Year
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <!--Ghi chú-->
+                <div class="col-12 col-sm-12 col-md-12">
+                    <div class="position-relative">
+                        <table class="table table-bordered table-hover w-100" id="muctieu-container">
+                            <thead>
+                                <tr>
+                                    <th class="text-center font-bold">Tháng</th>
+                                    <th class="text-center font-bold">Mục tiêu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var mucTieu in mucTieuDoanhThu)
+                                {
+                                    int thangHienTai = DateTime.Now.Month;
+                                    <tr class="thang_@mucTieu.Thang" data-thang="@mucTieu.Thang" data-id="@mucTieu.DoanhThu.IdCoCauToChuc_DoanhThu">
+                                        <td class="text-center @(mucTieu.Thang == thangHienTai ? "text-danger font-bold" : "")">@mucTieu.Thang</td>
+                                        <td>
+                                            <input type="money" class="form-control" placeholder="Nhập thông tin ..."
+                                                   data-bs-toggle="tooltip" data-bs-placement="left" title="Mục tiêu doanh thu"
+                                                   value="@mucTieu.DoanhThu.DoanhThuMucTieu"
+                                                   @(mucTieu.Thang < thangHienTai ? "disabled" : "")>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary ml-1" onclick="quanLyDoanhThu.main.save()">
+                <span class="">Lưu</span>
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

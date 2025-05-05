@@ -1,0 +1,152 @@
+﻿@using DocumentFormation.Models
+@using EDM_DB
+@using Public.Models
+@model Report.Models.KetQuaTimKiemM
+@{
+    EDM_DBEntities db = new EDM_DBEntities();
+    PermissionM per = Session["Permission"] as PermissionM;
+
+    List<tbHoSoExtend> hoSos = Model.HoSos;
+    List<tbCoCauToChuc> CoCauToChucs = Model.CoCauToChucs;
+}
+<div class="col-12">
+    <div class="mb-2 toggle-vis-bar">
+        Hiển thị:
+        @*<a href="#" class="toggle-vis" data-table="report-cocautochuc-getList" data-column="0">Mã hồ sơ</a> |*@
+        <a href="#" class="toggle-vis" data-table="report-cocautochuc-getList" data-column="1">Số/Ký hiệu</a> |
+        @*<a href="#" class="toggle-vis" data-table="report-cocautochuc-getList" data-column="2">Tiêu đề hồ sơ</a> |*@
+        <a href="#" class="toggle-vis" data-table="report-cocautochuc-getList" data-column="3">Phông lưu trữ</a> |
+        <a href="#" class="toggle-vis" data-table="report-cocautochuc-getList" data-column="4">Thời gian bắt đầu/kết thúc</a> |
+        <a href="#" class="toggle-vis" data-table="report-cocautochuc-getList" data-column="5">Số tờ/Số trang</a> |
+        <a href="#" class="toggle-vis" data-table="report-cocautochuc-getList" data-column="6">Thời hạn bảo quản</a> |
+        <a href="#" class="toggle-vis" data-table="report-cocautochuc-getList" data-column="7">Người lập</a> |
+        <a href="#" class="toggle-vis" data-table="report-cocautochuc-getList" data-column="8">Đơn vị ban hành</a> |
+        <a href="#" class="toggle-vis" data-table="report-cocautochuc-getList" data-column="9">Ghi chú</a>
+    </div>
+    <a id="xuatTep" hidden></a>
+    <table class="table table-bordered table-hover w-100" id="report-cocautochuc-getList" data-page-length="-1">
+        <thead>
+            <tr>
+                <td colspan="5" style="border: 0;">
+                    <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: start; padding: 3rem">
+                        <div style="text-align: center; width: fit-content; float: left;">
+                            @*<span>TÊN CQ, TC CHỦ QUẢN</span><br />
+                                <span style="font-weight: bold;">TÊN CƠ QUAN, TỔ CHỨC</span><br />*@
+                            <span>@per.DonViSuDung.TenDonViSuDung</span><br />
+                            <span style="font-weight: bold;">@per.CoCauToChuc.TenCoCauToChuc</span><br />
+                            <span style="font-weight: bold;">__________</span>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="5" style="border: 0;">
+                    <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: end; padding: 3rem">
+                        <div style="text-align: center; width: fit-content;">
+                            <span style="font-weight:bold;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</span><br />
+                            <span style="font-weight:bold;">Độc lập - Tự do - Hạnh phúc</span><br />
+                            <span style="font-weight: bold;">_______________</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="10" style="border: 0;">
+                    <div style="display: flex; flex-direction: row; flex-wrap: wrap; padding: 3rem">
+                        <div style="width: 100%; text-align: center;">
+                            <span style="font-weight: bold; font-size: x-large;">THỐNG KÊ HỒ SƠ THEO DANH MỤC HỒ SƠ</span><br />
+                            <span style="font-weight: bold;">Năm ......</span><br />
+                            <span style="font-style: italic;">(Kèm theo Quyết định số ...... ngày ...... tháng ..... năm ...... của ......)</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="10" style="border: 0;"></td>
+            </tr>
+            <tr class="" style="white-space: nowrap">
+                <th class="align-top text-center font-bold">Mã hồ sơ <br /><span class="text-danger">{1}</span></th>
+                <th class="align-top text-center font-bold">Số/Ký hiệu <br /><span class="text-danger">{2}</span></th>
+                <th class="align-top text-center font-bold">Nhóm cơ cấu và tiêu đề hồ sơ <br /><span class="text-danger">{3}</span></th>
+                <th class="align-top text-center font-bold">Phông lưu trữ <br /><span class="text-danger">{4}</span></th>
+                <th class="align-top text-center font-bold">Thời gian bắt đầu/kết thúc <br /><span class="text-danger">{5}</span></th>
+                <th class="align-top text-center font-bold">Số tờ/Số trang <br /><span class="text-danger">{6}</span></th>
+                <th class="align-top text-center font-bold">Thời hạn bảo quản <br /><span class="text-danger">{7}</span></th>
+                <th class="align-top text-center font-bold">Người lập <br /><span class="text-danger">{8}</span></th>
+                <th class="align-top text-center font-bold">Đơn vị ban hành <br /><span class="text-danger">{9}</span></th>
+                <th class="align-top text-center font-bold">Ghi chú <br /><span class="text-danger">{10}</span></th>
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (tbCoCauToChuc coCau in CoCauToChucs)
+            {
+                <tr style="background-color: var(--bs-table-hover-bg);">
+                    <td></td>
+                    <td></td>
+                    <td class="fw-bold text-uppercase">@coCau.TenCoCauToChuc</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                // Tìm hồ sơ thuộc danh mục
+                List<tbHoSoExtend> hoSo_CoCaus = hoSos.Where(x => x.IdDanhMucHoSo == coCau.IdCoCauToChuc).ToList() ?? new List<tbHoSoExtend>();
+                if (hoSo_CoCaus.Count == 0)
+                {
+                    <tr>
+                        <td colspan="10" class="text-center fst-italic">Chưa có hồ sơ</td>
+                        <td hidden></td>
+                        <td hidden></td>
+                        <td hidden></td>
+                        <td hidden></td>
+                        <td hidden></td>
+                        <td hidden></td>
+                        <td hidden></td>
+                        <td hidden></td>
+                        <td hidden></td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (tbHoSoExtend hoSo in hoSo_CoCaus)
+                    {
+                        tbNguoiDung nguoiTao = db.tbNguoiDungs.Find(hoSo.NguoiTao) ?? new tbNguoiDung();
+                        tbDonViSuDung donViSuDung = db.tbDonViSuDungs.Find(hoSo.MaDonViSuDung) ?? new tbDonViSuDung();
+                        string[] thoiHans = {
+                            hoSo.ThoiGianBatDau == null ? "" : hoSo.ThoiGianBatDau.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture),
+                            hoSo.ThoiGianKetThuc == null ? "" : hoSo.ThoiGianKetThuc.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)
+                            };
+                        string thoiHan = string.Join("-", thoiHans.Where(x => x != ""));
+                        <tr>
+                            <td>@hoSo.MaHoSo</td>
+                            <td>@hoSo.So_KyHieu</td>
+                            <td>@hoSo.TieuDeHoSo</td>
+                            <td>@hoSo.PhongLuuTru.TenPhongLuuTru</td>
+                            <td>@thoiHan</td>
+                            <td>@hoSo.SoLuongTo tờ/@hoSo.SoLuongTrang trang</td>
+                            <td>@hoSo.ThoiHanBaoQuan</td>
+                            <td>@nguoiTao.TenNguoiDung</td>
+                            <td>@donViSuDung.TenDonViSuDung</td>
+                            <td>@hoSo.GhiChu</td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>

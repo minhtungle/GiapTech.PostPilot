@@ -1,0 +1,107 @@
+﻿@using Public.Models
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+    Permission per = Session["Permission"] as Permission;
+    List<string> quyenKinhDoanh = new List<string>
+{
+        "GD", "PDG",
+        "QLKD", "NVKD",
+    };
+    List<string> quyenLopHoc = new List<string>
+{
+        "GD", "PDG",
+        "QLLH", "GV",
+    };
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+}
+
+@section styles {
+    <link href="~/Assets/templates/Other/firework-animation/firework.css" rel="stylesheet" />
+}
+<section class="section" id="page-home" data-aos="fade-up">
+    <div class="row">
+        @if (quyenKinhDoanh.Contains(per.ChucVu.MaChucVu))
+        {
+            string ngayLenMucTieu = DateTime.Now.ToString("MM/yyyy");
+
+            @section scripts {
+                <script src="~/Content/Admin/__Home/TrangChu/trangchu.js"></script>
+                <script src="~/Assets/templates/Other/firework-animation/firework.js"></script>
+                <script>
+                    var trangChu = new TrangChu();
+                    trangChu.init();
+                    trangChu.funcs_DanhCho_QuyenKinhDoanh();
+                    trangChu.sinhNhat.layNguoiDungSinhNhat();
+                </script>
+            }
+
+            <div class="col-sm-12 col-md-12">
+                <div class="row">
+                    <!--Chúc mừng sinh nhật-->
+                    <div class="col-sm-12 col-md-12" id="chucmungsinhnhat-container">
+                    </div>
+                    <!--Doanh thu mới-->
+                    <div class="col-12 col-lg-6">
+                        <div class="card-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="font-bold">
+                                        💰 Doanh thu mới
+                                        <small class="fst-italic text-danger">(7 ngày gần nhất)</small>
+                                    </h4>
+                                </div>
+                                <div class="card-body" id="doanhthumoinhat-getList-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Bảng xếp hàng-->
+                    <div class="col-12 col-lg-6">
+                        <div class="card-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="font-bold">
+                                        ️🏆 Bảng xếp hạng
+                                        <small class="fst-italic text-danger">(@ngayLenMucTieu)</small>
+                                    </h4>
+                                </div>
+                                <div class="card-body" id="bangxephang-getList-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Tin tức-->
+                    <div class="col-sm-12 col-md-12">
+                        <div class="card-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="font-bold">
+                                        <i class="bi bi-newspaper"></i> Tin tức
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (quyenLopHoc.Contains(per.ChucVu.MaChucVu))
+        {
+            <div class="col-sm-12 col-md-4 animate-hover-container">
+                <a class="card text-center animate-hover" href="~/QuanLyLopHoc/Index">
+                    <div class="card-body">
+                        <img src="~/Assets/images/reading.png" style="width: 10rem;" />
+                    </div>
+                    <div class="card-footer">
+                        <h4 class="card-title"><i class="bi bi-house-heart"></i> Quản lý lớp học</h4>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</section>

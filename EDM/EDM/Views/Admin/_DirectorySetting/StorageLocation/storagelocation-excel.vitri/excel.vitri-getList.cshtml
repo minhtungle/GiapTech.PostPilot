@@ -1,0 +1,132 @@
+﻿@using StorageLocation.Models;
+@using EDM_DB
+@{
+    List<tbViTriLuuTruExtend> EXCEL_VITRIs_UPLOAD = Session["EXCEL_VITRIs_UPLOAD"] as List<tbViTriLuuTruExtend>;
+    int EXCEL_VITRIs_UPLOAD_COUNT = EXCEL_VITRIs_UPLOAD.Count;
+    List<tbDonViSuDung_PhongLuuTru> PHONGLUUTRUS = Session["PHONGLUUTRUS"] as List<tbDonViSuDung_PhongLuuTru>;
+}
+<div class="row">
+    <div class="@(EXCEL_VITRIs_UPLOAD_COUNT == 0 ? "col-12": "col-sm-12 col-md-5 col-lg-6")">
+        <table class="table table-hover table-bordered w-100 nowrap" id="excel-vitri-getList" data-page-length="10" data-order="[[ 1, &quot;desc&quot; ]]">
+            <thead>
+                <tr>
+                    <th class="text-center" data-orderable="false">
+                        <a href="#" class="btn btn-sm btn-success" title="Thêm" onclick="sl.excelViTri.createRow()" hidden><i class="bi bi-plus-square-fill"></i></a>
+                        <a href="#" class="btn btn-sm btn-danger" title="Xóa" onclick="sl.excelViTri.deleteRow()"><i class="bi bi-trash3-fill"></i></a>
+                    </th>
+                    <th class="text-center text-danger" style="min-width: 10rem!important">KIỂM TRA</th>
+                    <th class="text-center" style="min-width: 10rem!important">Tên vị trí</th>
+                    <th class="text-center" style="min-width: 10rem!important">Tên vị trí cha</th>
+                </tr>
+            </thead>
+            <tfoot class="show-footer-above">
+                <tr>
+                    <th class="text-center"><input class="form-check-input checkAll-excel-vitri-getList" type="checkbox" title="Chọn tất cả" /></th>
+                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                    <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @for (int i = 0; i < EXCEL_VITRIs_UPLOAD_COUNT; i++) {
+                    tbViTriLuuTruExtend viTri = EXCEL_VITRIs_UPLOAD[i];
+                    <tr row="@i" onclick="sl.excelViTri.readRow(this)">
+                        <td class="text-center"><input class="form-check-input checkRow-excel-vitri-getList" type="checkbox" /></td>
+                        <td class="text-center">
+                            @{
+                                string className = "";
+                                if (viTri.KiemTraExcel.TrangThai == 0) {
+                                    className = "bg-danger";
+                                } else if (viTri.KiemTraExcel.TrangThai == 1) {
+                                    className = "bg-success";
+                                } else {
+                                    className = "bg-warning";
+                                }
+                            }
+                            <span class="badge @className" data-tentruong="TrangThaiKiemTra">@viTri.KiemTraExcel.KetQua</span>
+                        </td>
+                        <!--Tên vị trí-->
+                        <td class="" style="vertical-align: top;">
+                            <span data-tentruong="TenViTri" for="input-tenvitri">@viTri.TenViTriLuuTru</span>
+                        </td>
+                        <!--Tên vị trí cha-->
+                        <td class="" style="vertical-align: top;">
+                            <span data-tentruong="TenViTriCha" for="input-tenvitricha">@viTri.ViTriCha.TenViTriLuuTru</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (EXCEL_VITRIs_UPLOAD_COUNT > 0) {
+        <div class="col-sm-12 col-md-7 col-lg-6" id="excel-vitri-read-container" style="overflow-y: scroll; border: 1px solid #d3d3d35c;">
+            @for (int i = 0; i < EXCEL_VITRIs_UPLOAD_COUNT; i++) {
+                tbViTriLuuTruExtend viTri = EXCEL_VITRIs_UPLOAD[i];
+                <div class="row excel-vitri-read" row="@i">
+                    <div class="col-12 border-1">
+                        <div class="divider divider-left">
+                            <div class="divider-text text-uppercase">
+                                <i class="bi bi-caret-right-fill"></i> Thông tin chung
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <span class="font-bold text-danger text-uppercase">Lưu ý:</span> Người dùng chủ động xóa bỏ đầu mục số thứ tự của vị trí cha
+                                    <span class="fst-italic font-bold">[1. Vị trí => Vị trí]</span>
+                                </div>
+                            </div>
+                            <!--Tên vị trí cha-->
+                            <div class="col-12">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="" for="input-tenvitricha">Tên vị trí cha</label>
+                                        <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                               id="input-tenvitricha" name="input-tenvitricha"
+                                               value="@(viTri.ViTriCha.TenViTriLuuTru ?? "")" onkeyup="sl.excelViTri.updateSingleCell(this)">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Tên vị trí-->
+                            <div class="col-12 col-sm-12 col-md-6">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="input-tenvitri">Tên vị trí</label>
+                                        <input type="text" class="form-control" placeholder="Nhập thông tin ..."
+                                               id="input-tenvitri" name="input-tenvitri"
+                                               value="@(viTri.TenViTriLuuTru ?? "")" onkeyup="sl.excelViTri.updateSingleCell(this)" required>
+                                        <div class="invalid-feedback feedback" for="input-tenvitri">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Phông lưu trữ-->
+                            <div class="col-12 col-sm-12 col-md-6">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label class="required" for="select-phongluutru">Phông lưu trữ</label>
+                                        <select class="form-control"
+                                                id="select-phongluutru" name="select-phongluutru" required>
+                                            @foreach (var phong in PHONGLUUTRUS) {
+                                                <option value="@phong.IdPhongLuuTru" @(phong.IdPhongLuuTru == viTri.IdPhongLuuTru ? "selected" : "")>@phong.TenPhongLuuTru</option>
+                                            }
+                                        </select>
+                                        <div class="invalid-feedback feedback" for="select-phongluutru">Không được để trống</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Ghi chú-->
+                            <div class="col-12">
+                                <div class="position-relative">
+                                    <div class="form-group mb-3">
+                                        <label for="input-ghichu">Ghi chú</label>
+                                        <textarea class="form-control min-h-100 max-h-200" id="input-ghichu" rows="3">@(viTri.GhiChu ?? "")</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

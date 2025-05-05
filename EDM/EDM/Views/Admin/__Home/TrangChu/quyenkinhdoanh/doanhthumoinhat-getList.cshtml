@@ -1,0 +1,39 @@
+﻿@using Applications.QuanLyDoanhThu.Dtos
+@model List<DoanhThuMoiNhatDto>
+
+<table class="table table-hover table-bordered table-sticky w-100" id="doanhthumoinhat-getList" data-page-length="3">
+    <thead class="nowrap" style="white-space: nowrap !important">
+        <tr>
+            <th class="text-center">Tên nhân viên</th>
+            <th class="text-center w-60">Thông tin</th>
+            <th class="text-center">Ngày tạo</th>
+        </tr>
+    </thead>
+    <tfoot class="show-footer-above">
+        <tr>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+        </tr>
+    </tfoot>
+    <tbody>
+        @foreach (var doanhThuMoiNhat in Model)
+        {
+            string ngayTao = doanhThuMoiNhat.ThanhToan.NgayTao == null ? "" : doanhThuMoiNhat.ThanhToan.NgayTao.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+            <tr>
+                <td>@doanhThuMoiNhat.TenNguoiDung</td>
+                <td>
+                    <span class="">Khóa học:</span> <span class="font-bold text-primary">@doanhThuMoiNhat.TenSanPham</span><br />
+                    <span class="">Khách hàng:</span> <span class="">@doanhThuMoiNhat.TenKhachHang</span> <br />
+                    <span class="">
+                        Thanh toán: <span class="font-bold text-success">
+                            @Public.Handle.FormatCurrency((long)doanhThuMoiNhat.ThanhToan.SoTienDaDong)
+                        </span>
+                        <small class="font-bold text-danger">@string.Format("(lần {0} - {1}%)", doanhThuMoiNhat.ThanhToan.ThuTuThanhToan, doanhThuMoiNhat.ThanhToan.PhanTramDaDong)</small>
+                    </span>
+                </td>
+                <td>@ngayTao</td>
+            </tr>
+        }
+    </tbody>
+</table>
