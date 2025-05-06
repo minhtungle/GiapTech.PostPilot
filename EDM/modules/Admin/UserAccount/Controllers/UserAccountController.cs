@@ -64,17 +64,6 @@ namespace UserAccount.Controllers
                 Session["CHUCVUs"] = value;
             }
         }
-        private List<tbCapDo_DoanhThu> CAPDO_DOANHTHUs
-        {
-            get
-            {
-                return Session["CAPDO_DOANHTHUs"] as List<tbCapDo_DoanhThu> ?? new List<tbCapDo_DoanhThu>();
-            }
-            set
-            {
-                Session["CAPDO_DOANHTHUs"] = value;
-            }
-        }
         private List<Tree<tbCoCauToChuc>> COCAUTOCHUCs_TREE
         {
             get
@@ -150,10 +139,6 @@ namespace UserAccount.Controllers
             List<default_tbChucVu> chucVus = db.default_tbChucVu.Where(x => x.TrangThai != 0).ToList() ?? new List<default_tbChucVu>();
             #endregion
 
-            #region Cấp độ doanh thu
-            List<tbCapDo_DoanhThu> capDo_DoanhThus = db.tbCapDo_DoanhThu.Where(x => x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung).OrderBy(x => x.CapDo).ToList() ?? new List<tbCapDo_DoanhThu>();
-            #endregion
-
             #region Thao tác
             List<ChucNangs> kieuNguoiDung_IdChucNang = JsonConvert.DeserializeObject<List<ChucNangs>>(per.KieuNguoiDung.IdChucNang);
             List<ThaoTac> thaoTacs = kieuNguoiDung_IdChucNang.FirstOrDefault(x => x.ChucNang.MaChucNang == "UserAccount").ThaoTacs;
@@ -164,7 +149,6 @@ namespace UserAccount.Controllers
             KIEUNGUOIDUNGs = kieuNguoiDungs;
             COCAUTOCHUCs = coCauToChucs; COCAUTOCHUCs_TREE = coCauToChucs_Tree;
             CHUCVUs = chucVus;
-            CAPDO_DOANHTHUs = capDo_DoanhThus;
             return View($"{VIEW_PATH}/useraccount.cshtml");
         }
         [HttpGet]
@@ -315,7 +299,6 @@ namespace UserAccount.Controllers
                                 NgayTao = DateTime.Now,
                                 MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
                             };
-                            if (CHUCVUs.FirstOrDefault(x => x.IdChucVu == nguoiDung_NEW.IdChucVu).TenChucVu == "NVKD") nguoiDung.IdCapDo_DoanhThu = CAPDO_DOANHTHUs.First().IdCapDo_DoanhThu;
                             db.tbNguoiDungs.Add(nguoiDung);
 
                             db.SaveChanges();
@@ -383,11 +366,6 @@ namespace UserAccount.Controllers
                             {
                                 nguoiDung_NEW.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung_NEW.IdChucVu) ?? new default_tbChucVu();
                                 nguoiDung_OLD.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung_OLD.IdChucVu) ?? new default_tbChucVu();
-                            };
-                            if (nguoiDung_NEW.IdCapDo_DoanhThu != null || nguoiDung_NEW.IdCapDo_DoanhThu != Guid.Empty)
-                            {
-                                nguoiDung_NEW.CapDo_DoanhThu = db.tbCapDo_DoanhThu.FirstOrDefault(x => x.IdCapDo_DoanhThu == nguoiDung_NEW.IdCapDo_DoanhThu) ?? new tbCapDo_DoanhThu();
-                                nguoiDung_OLD.CapDo_DoanhThu = db.tbCapDo_DoanhThu.FirstOrDefault(x => x.IdCapDo_DoanhThu == nguoiDung_OLD.IdCapDo_DoanhThu) ?? new tbCapDo_DoanhThu();
                             };
                             string sql_capNhatNguoiDung = $@"
                             update tbNguoiDung set
@@ -1055,7 +1033,6 @@ namespace UserAccount.Controllers
                         KieuNguoiDung = KIEUNGUOIDUNGs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung_NEW.IdKieuNguoiDung) ?? new tbKieuNguoiDung(),
                         CoCauToChuc = COCAUTOCHUCs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung_NEW.IdCoCauToChuc) ?? new tbCoCauToChuc(),
                         ChucVu = CHUCVUs.FirstOrDefault(x => x.IdChucVu == nguoiDung_NEW.IdChucVu) ?? new default_tbChucVu(),
-                        CapDo_DoanhThu = CAPDO_DOANHTHUs.FirstOrDefault(x => x.IdCapDo_DoanhThu == nguoiDung_NEW.IdCapDo_DoanhThu) ?? new tbCapDo_DoanhThu(),
                     },
                     DonViSuDung = per.DonViSuDung
                 };

@@ -129,7 +129,6 @@ namespace Auth.Controllers
                             {
                                 NguoiDung = nguoiDung,
                                 ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung.IdChucVu) ?? new default_tbChucVu(),
-                                CapDo_DoanhThu = db.tbCapDo_DoanhThu.FirstOrDefault(x => x.IdCapDo_DoanhThu == nguoiDung.IdCapDo_DoanhThu) ?? new tbCapDo_DoanhThu(),
                                 DonViSuDung = donViSuDung,
                                 KieuNguoiDung = db.tbKieuNguoiDungs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung.IdKieuNguoiDung) ?? new tbKieuNguoiDung(),
                                 CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung.IdCoCauToChuc) ?? new tbCoCauToChuc()
@@ -420,7 +419,7 @@ namespace Auth.Controllers
         public tbDonViSuDung layDonViSuDung()
         {
             string currentDomain = Request.Url.Host.ToLower();
-            //currentDomain = "vietgenedu.com"; // Dùng để test
+            currentDomain = "vietstarter.com"; // Dùng để test
             var donViSuDung = db.Database.SqlQuery<tbDonViSuDung>($@"
             select * from tbDonViSuDung
                 where TrangThai = 1

@@ -15,16 +15,14 @@ namespace EDM_DB
 using System;
     using System.Collections.Generic;
     
-public partial class tbSanPham_LoaiSanPham
+public partial class tbBaiDangNenTang
 {
 
     public int Stt { get; set; }
 
-    public System.Guid IdLoaiSanPham { get; set; }
+    public System.Guid IdBaiDang { get; set; }
 
-    public string TenLoaiSanPham { get; set; }
-
-    public string GhiChu { get; set; }
+    public Nullable<System.Guid> IdNenTang { get; set; }
 
     public Nullable<int> TrangThai { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿@using Public.Models
 @{
-    Layout = "~/Views/_Shared/User/user.cshtml";
+    Layout = "~/Views/_Shared/User/TrangKhoaHoc/user.cshtml";
     Permission per = Session["Permission"] as Permission;
     string tempPath = "/Assets/templates/assets";
 }
@@ -44,17 +44,10 @@
     <section class="section" id="page-home" data-aos="fade-up">
         <div class="row">
             <div class="col-12 px-4 py-3">
-                @Html.Partial("~/Views/Admin/__Home/Search/search.timkiemhoso/timkiemhoso.cshtml")
             </div>
         </div>
     </section>
     <!--vanban-detail-->
     <div class="modal fade text-left" id="vanban-detail" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
     </div>
-    <!--phieumuon-create-->
-    <div class="modal fade text-left" id="phieumuon-create" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
-        @Html.Partial("~/Views/Admin/LoanManage/loanmanage-phieumuon.create.cshtml")
-    </div>
-    <!--timkiemhoso-timkiemnangcao-->
-    @Html.Partial("~/Views/Admin/__Home/Search/search.timkiemhoso/timkiemhoso-nangcao.cshtml")
 </div>

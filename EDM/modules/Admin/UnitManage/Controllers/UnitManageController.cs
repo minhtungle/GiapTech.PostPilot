@@ -12,14 +12,6 @@ namespace UnitManage.Controllers {
     public class UnitManageController : RouteConfigController {
         private readonly string VIEW_PATH = "~/Views/Admin/UnitManage/";
 
-        private List<tbDonViSuDung_DonViLienKet> DONVILIENKETs {
-            get {
-                return Session["DONVILIENKETs"] as List<tbDonViSuDung_DonViLienKet> ?? new List<tbDonViSuDung_DonViLienKet>();
-            }
-            set {
-                Session["DONVILIENKETs"] = value;
-            }
-        }
         public ActionResult Index() {
             tbDonViSuDung donViSuDung = per.DonViSuDung;
             ViewBag.donViSuDung = donViSuDung;

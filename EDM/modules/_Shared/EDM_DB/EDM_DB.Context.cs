@@ -43,73 +43,27 @@ public partial class EDM_DBEntities : DbContext
 
     public virtual DbSet<default_tbQuocGia> default_tbQuocGia { get; set; }
 
-    public virtual DbSet<tbCapDo_DoanhThu> tbCapDo_DoanhThu { get; set; }
+    public virtual DbSet<tbAnhMoTa> tbAnhMoTas { get; set; }
+
+    public virtual DbSet<tbBaiDang> tbBaiDangs { get; set; }
+
+    public virtual DbSet<tbBaiDangAnhMoTa> tbBaiDangAnhMoTas { get; set; }
+
+    public virtual DbSet<tbBaiDangNenTang> tbBaiDangNenTangs { get; set; }
 
     public virtual DbSet<tbCoCauToChuc> tbCoCauToChucs { get; set; }
 
-    public virtual DbSet<tbCoCauToChuc_DoanhThu> tbCoCauToChuc_DoanhThu { get; set; }
-
     public virtual DbSet<tbDonViSuDung> tbDonViSuDungs { get; set; }
-
-    public virtual DbSet<tbDonViSuDung_DonViLienKet> tbDonViSuDung_DonViLienKet { get; set; }
 
     public virtual DbSet<tbDonViTien> tbDonViTiens { get; set; }
 
-    public virtual DbSet<tbGoiChamSoc> tbGoiChamSocs { get; set; }
-
-    public virtual DbSet<tbKhachHang> tbKhachHangs { get; set; }
-
-    public virtual DbSet<tbKhachHang_DonHang> tbKhachHang_DonHang { get; set; }
-
-    public virtual DbSet<tbKhachHang_DonHang_ThanhToan> tbKhachHang_DonHang_ThanhToan { get; set; }
-
-    public virtual DbSet<tbKhachHang_DonHang_TrangThaiHoc> tbKhachHang_DonHang_TrangThaiHoc { get; set; }
-
-    public virtual DbSet<tbKhachHang_LichSu> tbKhachHang_LichSu { get; set; }
-
-    public virtual DbSet<tbKhachHang_LoaiKhachHang> tbKhachHang_LoaiKhachHang { get; set; }
-
-    public virtual DbSet<tbKhachHang_TrangThaiHoc> tbKhachHang_TrangThaiHoc { get; set; }
-
     public virtual DbSet<tbKieuNguoiDung> tbKieuNguoiDungs { get; set; }
 
-    public virtual DbSet<tbLichSuTruyCap> tbLichSuTruyCaps { get; set; }
+    public virtual DbSet<tbLichDangBai> tbLichDangBais { get; set; }
 
-    public virtual DbSet<tbLoaiKhoaHoc> tbLoaiKhoaHocs { get; set; }
-
-    public virtual DbSet<tbLopHoc> tbLopHocs { get; set; }
-
-    public virtual DbSet<tbLopHoc_BuoiHoc> tbLopHoc_BuoiHoc { get; set; }
-
-    public virtual DbSet<tbLopHoc_BuoiHoc_HinhAnh> tbLopHoc_BuoiHoc_HinhAnh { get; set; }
-
-    public virtual DbSet<tbLopHoc_TaiLieu> tbLopHoc_TaiLieu { get; set; }
-
-    public virtual DbSet<tbLopHoc_TrangThaiHoc> tbLopHoc_TrangThaiHoc { get; set; }
+    public virtual DbSet<tbNenTang> tbNenTangs { get; set; }
 
     public virtual DbSet<tbNguoiDung> tbNguoiDungs { get; set; }
-
-    public virtual DbSet<tbNguoiDung_DoanhThu> tbNguoiDung_DoanhThu { get; set; }
-
-    public virtual DbSet<tbNguoiDung_TienLuong> tbNguoiDung_TienLuong { get; set; }
-
-    public virtual DbSet<tbNguoiDung_TienLuong_CongThuc> tbNguoiDung_TienLuong_CongThuc { get; set; }
-
-    public virtual DbSet<tbPhuongThucThanhToan> tbPhuongThucThanhToans { get; set; }
-
-    public virtual DbSet<tbSanPham> tbSanPhams { get; set; }
-
-    public virtual DbSet<tbSanPham_LichSu> tbSanPham_LichSu { get; set; }
-
-    public virtual DbSet<tbSanPham_LoaiSanPham> tbSanPham_LoaiSanPham { get; set; }
-
-    public virtual DbSet<tbSanPham_LoaiSanPham_TrinhDo> tbSanPham_LoaiSanPham_TrinhDo { get; set; }
-
-    public virtual DbSet<tbTinNhan> tbTinNhans { get; set; }
-
-    public virtual DbSet<tbTinNhan_FileDinhKem> tbTinNhan_FileDinhKem { get; set; }
-
-    public virtual DbSet<tbTinNhan_NguoiDung> tbTinNhan_NguoiDung { get; set; }
 
 
     public virtual ObjectResult<Lay_TruongDuLieus_Result> Lay_TruongDuLieus(Nullable<int> maDonViSuDung)

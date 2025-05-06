@@ -121,106 +121,37 @@
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="tbCapDo_DoanhThu.cs">
+    <Compile Include="tbAnhMoTa.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tbBaiDang.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tbBaiDangAnhMoTa.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tbBaiDangNenTang.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
     <Compile Include="tbCoCauToChuc.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
-    <Compile Include="tbCoCauToChuc_DoanhThu.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
     <Compile Include="tbDonViSuDung.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbDonViSuDung_DonViLienKet.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
     <Compile Include="tbDonViTien.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
-    <Compile Include="tbGoiChamSoc.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbKhachHang.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbKhachHang_DonHang.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbKhachHang_DonHang_ThanhToan.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbKhachHang_DonHang_TrangThaiHoc.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbKhachHang_LichSu.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbKhachHang_LoaiKhachHang.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbKhachHang_TrangThaiHoc.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
     <Compile Include="tbKieuNguoiDung.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
-    <Compile Include="tbLichSuTruyCap.cs">
+    <Compile Include="tbLichDangBai.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
-    <Compile Include="tbLoaiKhoaHoc.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbLopHoc.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbLopHoc_BuoiHoc.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbLopHoc_BuoiHoc_HinhAnh.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbLopHoc_TaiLieu.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbLopHoc_TrangThaiHoc.cs">
+    <Compile Include="tbNenTang.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
     <Compile Include="tbNguoiDung.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbNguoiDung_DoanhThu.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbNguoiDung_TienLuong.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbNguoiDung_TienLuong_CongThuc.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbPhuongThucThanhToan.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbSanPham.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbSanPham_LichSu.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbSanPham_LoaiSanPham.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbSanPham_LoaiSanPham_TrinhDo.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbTinNhan.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbTinNhan_FileDinhKem.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tbTinNhan_NguoiDung.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
   </ItemGroup>

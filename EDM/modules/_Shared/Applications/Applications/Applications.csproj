@@ -78,34 +78,10 @@
   <ItemGroup>
     <Compile Include="Organization\OrganizationAppService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuanLyDoanhThu\Dtos\BangXepHangDto.cs" />
-    <Compile Include="QuanLyDoanhThu\Dtos\DoanhThuMoiNhatDto.cs" />
-    <Compile Include="QuanLyDoanhThu\Dtos\MucTieuDoanhThuCoCauOutput_Dto.cs" />
-    <Compile Include="QuanLyDoanhThu\Dtos\ThongKeChiTietOutput_Dto.cs" />
-    <Compile Include="QuanLyDoanhThu\Dtos\ThongKeTongQuanOutput_Dto.cs" />
-    <Compile Include="QuanLyDoanhThu\Dtos\ThongKeChiTietTheoThongTinDto.cs" />
-    <Compile Include="QuanLyDoanhThu\Dtos\LocThongTinTongQuanDto.cs" />
-    <Compile Include="QuanLyKhachHang\Dtos\LocThongTinDto.cs" />
-    <Compile Include="QuanLyLopHoc\Dtos\BuoiHocSapToiOutput_Dto.cs" />
-    <Compile Include="QuanLyLopHoc\Dtos\DisplayModal_TaoLichHoc_Output_Dto.cs" />
-    <Compile Include="QuanLyLopHoc\Dtos\DisplayModal_XemBuoiHoc_Output_Dto.cs" />
-    <Compile Include="QuanLyLopHoc\Dtos\DisplayModal_XemLichHoc_Output_Dto.cs" />
-    <Compile Include="QuanLyLopHoc\Dtos\DuongDanAnhBuoiHocDto.cs" />
-    <Compile Include="QuanLyLopHoc\Dtos\LocThongTin_ChoXepLop_Dto.cs" />
-    <Compile Include="QuanLyLopHoc\Dtos\LocThongTin_DaXepLop_Dto.cs" />
-    <Compile Include="QuanLyLopHoc\Models\tbBuoiHocExtend.cs" />
-    <Compile Include="QuanLyLopHoc\Models\tbDonHangExtend.cs" />
-    <Compile Include="QuanLyLopHoc\Models\tbLopHocExtend.cs" />
-    <Compile Include="QuanLyLuong\Dtos\LocThongTinDto.cs" />
-    <Compile Include="QuanLyLuong\IQuanLyLuong.cs" />
-    <Compile Include="QuanLyLuong\QuanLyLuongAppService.cs" />
-    <Compile Include="QuanLySanPham\Dtos\DisplayModel_CRUD_SanPham_Output_Dto.cs" />
-    <Compile Include="QuanLySanPham\Dtos\LocThongTinDto.cs" />
-    <Compile Include="QuanLySanPham\Models\tbSanPhamExtend.cs" />
-    <Compile Include="QuanLySanPham\Models\tbSanPham_LichSuExtend.cs" />
-    <Compile Include="QuanLyTaiLieu\Dtos\LocThongTinDto.cs" />
-    <Compile Include="QuanLyTaiLieu\Models\tbNhanDanExtend.cs" />
-    <Compile Include="QuanLyTaiLieu\Models\tbTaiLieuExtend.cs" />
+    <Compile Include="QuanLyDangBai\Dtos\DisplayModel_CRUD_BaiDang_Input_Dto.cs" />
+    <Compile Include="QuanLyDangBai\Dtos\DisplayModel_CRUD_BaiDang_Output_Dto.cs" />
+    <Compile Include="QuanLyDangBai\Dtos\LocThongTinDto.cs" />
+    <Compile Include="QuanLyDangBai\Models\tbBaiDangExtend.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -125,17 +101,9 @@
       <Project>{6f03ef6a-8234-4d31-9570-3b2c0187c0a2}</Project>
       <Name>Public</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\TaiLieu_DB\TaiLieu_DB.csproj">
-      <Project>{56490889-b333-4146-808a-75e6c22fcf82}</Project>
-      <Name>TaiLieu_DB</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Organization\Validator\" />
-    <Folder Include="QuanLyDoanhThu\Models\" />
-    <Folder Include="QuanLyKhoaHoc\Dtos\" />
-    <Folder Include="QuanLyKhoaHoc\Models\" />
-    <Folder Include="QuanLyLuong\Validators\" />
     <Folder Include="UnitManage\" />
     <Folder Include="UserAccount\" />
     <Folder Include="UserType\" />

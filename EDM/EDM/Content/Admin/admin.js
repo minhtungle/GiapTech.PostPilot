@@ -168,8 +168,8 @@ class Admin {
                 };
             },
         };
-        admin.doanhThu.hienThiThongBaoNoiBat();
-        admin.doanhThu.get_MucTieuDoanhThu_CaNhan();
-        admin.doanhThu.get_MucTieuDoanhThu_CoCau();
+        //admin.doanhThu.hienThiThongBaoNoiBat();
+        //admin.doanhThu.get_MucTieuDoanhThu_CaNhan();
+        //admin.doanhThu.get_MucTieuDoanhThu_CoCau();
     }
 }

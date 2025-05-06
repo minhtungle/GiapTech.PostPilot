@@ -22,57 +22,6 @@ namespace UserAccount.Controllers
         }
 
         #region Lấy các danh sách dữ liệu
-        [HttpGet]
-        public JsonResult getMucTieuDoanhThu_CaNhan(string ngayLenMucTieu = "")
-        {
-            // Chỉ lấy nhân viên kinh doanh (thiết lập mục tiêu doanh thu)
-            // Sắp xếp theo doanh thu
-            tbNguoiDung_DoanhThu doanhThu = db.tbNguoiDung_DoanhThu.FirstOrDefault(x =>
-            x.IdNguoiTao == per.NguoiDung.IdNguoiDung &&
-            x.NgayLenMucTieu == ngayLenMucTieu &&
-            x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung && x.TrangThai != 0);
-            return Json(new
-            {
-                doanhThu
-            }, JsonRequestBehavior.AllowGet);
-        }
-        tbCapDo_DoanhThu chonCapDo_DoanhThu_TiepTheo(long doanhThuCanSoSanh, tbCapDo_DoanhThu capDo_DoanhThu_HienTai)
-        {
-            // Tìm cấp tiếp theo
-            tbCapDo_DoanhThu capDo_DoanhThu_TiepTheo = db.tbCapDo_DoanhThu.FirstOrDefault(x =>
-            x.CapDo == (capDo_DoanhThu_HienTai.CapDo + 1)
-            && x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung);
-            if (capDo_DoanhThu_TiepTheo == null) return capDo_DoanhThu_HienTai;
-            if (doanhThuCanSoSanh < capDo_DoanhThu_TiepTheo.DoanhThuYeuCau) return capDo_DoanhThu_TiepTheo;
-            return chonCapDo_DoanhThu_TiepTheo(doanhThuCanSoSanh: doanhThuCanSoSanh, capDo_DoanhThu_HienTai: capDo_DoanhThu_TiepTheo);
-        }
-        [HttpGet]
-        public JsonResult getTongDoanhThu_CaNhan()
-        {
-            #region Kiểm tra cấp độ doanh thu
-            long? TongDoanhThu = db.tbNguoiDung_DoanhThu.Where(x =>
-            x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung &&
-            x.IdNguoiTao == per.NguoiDung.IdNguoiDung).Sum(x => x.DoanhThuThucTe) ?? 0;
-            tbCapDo_DoanhThu capDo_DoanhThu_TiepTheo = chonCapDo_DoanhThu_TiepTheo(doanhThuCanSoSanh: TongDoanhThu.Value, capDo_DoanhThu_HienTai: per.CapDo_DoanhThu);
-            #endregion
-            return Json(new
-            {
-                tongDoanhThu = TongDoanhThu,
-                capDo_DoanhThu_HienTai = per.CapDo_DoanhThu,
-                capDo_DoanhThu_TiepTheo = capDo_DoanhThu_TiepTheo
-            }, JsonRequestBehavior.AllowGet);
-        }
-        [HttpGet]
-        public ActionResult getList_DoanhThu()
-        {
-            List<tbNguoiDung_DoanhThu> doanhThus = db.tbNguoiDung_DoanhThu.Where(x =>
-            x.IdNguoiTao == per.NguoiDung.IdNguoiDung &&
-            x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung).OrderByDescending(x => x.NgayTao).ToList();
-            return Json(new
-            {
-                data = doanhThus
-            }, JsonRequestBehavior.AllowGet);
-        }
         [HttpPost]
         public ActionResult getThongTinCaNhan(Guid idNguoiDung)
         {
@@ -161,11 +110,7 @@ namespace UserAccount.Controllers
                                 nguoiDung_NEW.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung_NEW.IdChucVu) ?? new default_tbChucVu();
                                 nguoiDung_OLD.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung_OLD.IdChucVu) ?? new default_tbChucVu();
                             };
-                            if (nguoiDung_NEW.IdCapDo_DoanhThu != null || nguoiDung_NEW.IdCapDo_DoanhThu != Guid.Empty)
-                            {
-                                nguoiDung_NEW.CapDo_DoanhThu = db.tbCapDo_DoanhThu.FirstOrDefault(x => x.IdCapDo_DoanhThu == nguoiDung_NEW.IdCapDo_DoanhThu) ?? new tbCapDo_DoanhThu();
-                                nguoiDung_OLD.CapDo_DoanhThu = db.tbCapDo_DoanhThu.FirstOrDefault(x => x.IdCapDo_DoanhThu == nguoiDung_OLD.IdCapDo_DoanhThu) ?? new tbCapDo_DoanhThu();
-                            };
+                        
                             string sql_capNhatNguoiDung = $@"
                             update tbNguoiDung set
                                 TenNguoiDung = N'{nguoiDung_NEW.TenNguoiDung}',
@@ -313,97 +258,6 @@ namespace UserAccount.Controllers
                 status,
                 mess
             }, JsonRequestBehavior.AllowGet);
-        }
-        #endregion
-
-        #region Thiết lập mục tiêu doanh thu
-        public bool get_MucTieuDoanhThu_CaNhan()
-        {
-            // Chỉ yêu cầu với nhân viên kinh doanh
-            //string ngayLenMucTieu = string.Format("{0}/{1}", DateTime.Now.Month.ToString("MM"), DateTime.Now.Year.ToString("YYYY"));
-            string ngayLenMucTieu = DateTime.Now.ToString("MM/yyyy");
-            tbNguoiDung_DoanhThu nguoiDung_DoanhThu = db.tbNguoiDung_DoanhThu.FirstOrDefault(x =>
-            x.IdNguoiTao == per.NguoiDung.IdNguoiDung &&
-            x.NgayLenMucTieu == ngayLenMucTieu &&
-            x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung);
-            if (nguoiDung_DoanhThu == null) return false;
-            return true;
-        }
-        public JsonResult thietLapMucTieuDoanhThu_CaNhan(string str_nguoiDung_DoanhThu)
-        {
-            string status = "success";
-            string mess = "Thêm mới bản ghi thành công";
-            using (var scope = db.Database.BeginTransaction())
-            {
-                try
-                {
-                    tbNguoiDung_DoanhThu nguoiDung_DoanhThu_NEW = JsonConvert.DeserializeObject<tbNguoiDung_DoanhThu>(str_nguoiDung_DoanhThu);
-                    if (nguoiDung_DoanhThu_NEW == null)
-                    {
-                        status = "error";
-                        mess = "Chưa có bản ghi nào";
-                    }
-                    else
-                    {
-                        string ngayLenMucTieu = DateTime.Now.ToString("MM/yyyy");
-
-                        bool kiemTraTonTai = get_MucTieuDoanhThu_CaNhan();
-                        if (kiemTraTonTai)
-                        {
-                            status = "warning";
-                            mess = "Nhấn 1 lần thôi 🤧, sai thì phải vào thông tin cá nhân sửa đấy";
-                        }
-                        else
-                        {
-                            tbNguoiDung_DoanhThu nguoiDung_DoanhThu = new tbNguoiDung_DoanhThu
-                            {
-                                IdNguoiDung_DoanhThu = Guid.NewGuid(),
-                                DoanhThuMucTieu = nguoiDung_DoanhThu_NEW.DoanhThuMucTieu,
-                                DoanhThuThucTe = 0,
-                                PhanTramHoanThien = 0,
-                                NgayLenMucTieu = ngayLenMucTieu,
-
-                                TrangThai = 1,
-                                IdNguoiTao = per.NguoiDung.IdNguoiDung,
-                                NgayTao = DateTime.Now,
-                                MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
-                            };
-
-                            if (nguoiDung_DoanhThu_NEW.DoanhThuMucTieu >= (10 ^ 8))
-                            {
-                                mess = "Rực rỡ luôn ấy chứ, gọi anh em khác là mụn vì cần bạn làm gương 🍾";
-                            }
-                            else if (nguoiDung_DoanhThu_NEW.DoanhThuMucTieu >= (5 * (10 ^ 7)))
-                            {
-                                mess = "Cứ nét đều thế này chả mấy mua vf3 🍾";
-                            }
-                            else if (nguoiDung_DoanhThu_NEW.DoanhThuMucTieu >= (3 * (10 ^ 7)))
-                            {
-                                mess = "Tuổi 17 bẻ gẫy sừng nyc, tháng sau phải cứng đấy 🍾";
-                            }
-                            else
-                            {
-                                mess = "Có công mài sắt có ngày bỏng tay, của ít lòng nhiều. Tháng sau mạnh hơn nhé 🍾";
-                            };
-                            db.tbNguoiDung_DoanhThu.Add(nguoiDung_DoanhThu);
-                            db.SaveChanges();
-                            scope.Commit();
-                        };
-                    };
-                }
-                catch (Exception ex)
-                {
-                    status = "error";
-                    mess = ex.Message;
-                    scope.Rollback();
-                }
-
-                return Json(new
-                {
-                    status,
-                    mess
-                }, JsonRequestBehavior.AllowGet);
-            }
         }
         #endregion
     }

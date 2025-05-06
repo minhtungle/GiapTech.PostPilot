@@ -9,12 +9,10 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using TaiLieu_DB;
 
 namespace Public.Controllers {
     public class StaticArgController : Controller {
         protected EDM_DBEntities db;
-        protected tailieu_dbEntities tailieu_db;
         protected Permission per {
             get {
                 return Session["Permission"] as Permission ?? new Permission();
@@ -25,7 +23,6 @@ namespace Public.Controllers {
         }
         public StaticArgController() {
             db = new EDM_DBEntities();
-            tailieu_db = new tailieu_dbEntities();
         }
         public DuongDanVanBan LayDuongDanTep(string duongDanThuMucGoc = "", string tenTep_BANDAU = "", string maXacThuc = "") {
             /**

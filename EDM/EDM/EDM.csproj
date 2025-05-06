@@ -7812,12 +7812,6 @@
     <Content Include="ViewerJS\text_layer_builder.js" />
     <Content Include="ViewerJS\ui_utils.js" />
     <Content Include="ViewerJS\webodf.js" />
-    <Content Include="Views\Admin\QuanLyTaiLieu\tailieu\tailieu-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyTaiLieu\tailieu\tailieu-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLyTaiLieu\nhandan\nhandan-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyTaiLieu\quanlytailieu.cshtml" />
-    <Content Include="Views\Admin\QuanLyTaiLieu\nhandan\nhandan-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLyTaiLieu\tailieu\tailieu-xemchitiet.cshtml" />
     <None Include="Views\User\TrangTaiLieu\404.cshtml" />
     <None Include="Views\User\TrangTaiLieu\about.cshtml" />
     <None Include="Views\User\TrangTaiLieu\checkout.cshtml" />
@@ -8324,24 +8318,10 @@
     <Content Include="Views\Auth\auth.forgot-mail.cshtml" />
     <Content Include="Views\_Shared\_lib\pdf_viewer.cshtml" />
     <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-delete.cshtml" />
-    <Content Include="Views\Admin\QuanLyKhachHang\quanlykhachhang.cshtml" />
-    <Content Include="Views\Admin\QuanLyKhachHang\quanlykhachhang-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyKhachHang\quanlykhachhang-crud.cshtml" />
     <Content Include="Views\Admin\__Home\TrangChu\trangchu.cshtml" />
-    <Content Include="Views\Admin\QuanLyKhachHang\quanlykhachhang-donhang\donhang-themdonhang.cshtml" />
     <Content Include="Views\Admin\__Home\Messenger\messenger-homthu.cshtml" />
     <Content Include="Views\Admin\__Home\Messenger\messenger-nhantin.cshtml" />
     <Content Include="Views\Admin\__Home\Messenger\messenger.cshtml" />
-    <Content Include="Views\Admin\QuanLySanPham\quanlysanpham-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLySanPham\quanlysanpham-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLySanPham\quanlysanpham.cshtml" />
-    <Content Include="Views\Admin\QuanLyKhachHang\quanlykhachhang-donhang\donhang.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-getList\choxeplop\choxeplop-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\quanlylophoc.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-getList\daxepLop\daxeplop-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu.cshtml" />
     <Content Include="Views\Admin\__Home\TrangChu\muctieudoanhthu-crud.cshtml" />
     <Content Include="Views\Admin\_SystemSetting\UserAccount\thongtincanhan\thongtincanhan.cshtml" />
     <Content Include="Views\Admin\_SystemSetting\UserAccount\thongtincanhan\thongtincanhan-crud.cshtml" />
@@ -8351,36 +8331,11 @@
     <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-mail.taotaikhoan.cshtml" />
     <Content Include="Views\Auth\auth-mail.thongbaodangnhap.cshtml" />
     <Content Include="Views\_Shared\Admin\admin.navbar.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\khachhang\khachhang-xemchitiet.cshtml" />
     <Content Include="Views\Admin\__Home\TrangChu\quyenkinhdoanh\chucmungsinhnhat.cshtml" />
-    <Content Include="Views\Admin\QuanLyKhachHang\quanlykhachhang-timkiem\timkiem.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\mail\quanlylophoc-mail.cshtml" />
     <Content Include="Views\Admin\__Home\TrangChu\quyenlophoc\lophocthamgia-getList.cshtml" />
     <Content Include="Views\Admin\__Home\TrangChu\quyenlophoc\buoihocsaptoi-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\giaovien\buoihocsaptoi\buoihocsaptoi-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\giaovien\lophocthamgia\lophocthamgia-getList.cshtml" />
     <Content Include="Views\_Shared\Mail\mail-footer.cshtml" />
-    <Content Include="Views\Admin\QuanLyLuong\quanlyluong-nguoidung.getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLuong\quanlyluong-timkiem\timkiem.cshtml" />
-    <Content Include="Views\Admin\QuanLyLuong\quanlyluong.cshtml" />
-    <Content Include="Views\Admin\QuanLyLuong\quanlyluong-tinhtongluong.cshtml" />
     <Content Include="Views\Auth\auth.changepassword.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-tongquan\thongke.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-chitiet\thongke.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-sosanh\thongke.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-chitiet\thongke-thongtin.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-chitiet\thongke-danhsachnvkd.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lichhoc\lichhoc-taolichhoc.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-buoihoc\buoihoc-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lichhoc\lichhoc-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lichhoc\donhang-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lichhoc\lichhoc-xemlichhoc.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-crud-tab.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-getList\getList-tab.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-getList\choxeplop\choxeplop-timkiem.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-getList\daxepLop\daxeplop-timkiem.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\giaovien\getList-tab.cshtml" />
     <Content Include="Views\_Shared\User\TrangTaiLieu\assets\css\main.css.map" />
     <Content Include="Views\_Shared\User\TrangTaiLieu\assets\fonts\icomoon.eot" />
     <Content Include="Views\_Shared\User\TrangTaiLieu\assets\fonts\icomoon.ttf" />
@@ -8435,8 +8390,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Assets\uploads\1\" />
-    <Folder Include="Views\Admin\QuanLyLuong\giaovien\" />
-    <Folder Include="Views\Admin\QuanLyLuong\nhanvienkinhdoanh\" />
     <Folder Include="Views\TrangChuTaiLieu\" />
   </ItemGroup>
   <ItemGroup>
@@ -8462,38 +8415,6 @@
     <ProjectReference Include="..\modules\Admin\Organization\Organization.csproj">
       <Project>{4cc2c0b9-fb34-429c-a18e-7994e3dcc7b9}</Project>
       <Name>Organization</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\modules\Admin\QuanLyDoanhThu\QuanLyDoanhThu.csproj">
-      <Project>{ea261a77-4f5d-4cd6-a28c-04a8f16cdf58}</Project>
-      <Name>QuanLyDoanhThu</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\modules\Admin\QuanLyKhachHang\QuanLyKhachHang.csproj">
-      <Project>{aaea4b54-b783-43f8-8e64-6f6fb4a0a99f}</Project>
-      <Name>QuanLyKhachHang</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\modules\Admin\QuanLyKhoaHoc\QuanLyKhoaHoc.csproj">
-      <Project>{0ab4ae9b-3387-4896-9ed0-d8d7868e9f2d}</Project>
-      <Name>QuanLyKhoaHoc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\modules\Admin\QuanLyLopHoc\QuanLyLopHoc.csproj">
-      <Project>{c388401c-4ad0-4a47-9d55-1c4198116521}</Project>
-      <Name>QuanLyLopHoc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\modules\Admin\QuanLyLuong\QuanLyLuong.csproj">
-      <Project>{c8689d38-488d-48fc-87d2-fe9fcc54b466}</Project>
-      <Name>QuanLyLuong</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\modules\Admin\QuanLyMucTieu\QuanLyMucTieu.csproj">
-      <Project>{9d576020-66e4-4b37-94c5-5d5c8c42f4e3}</Project>
-      <Name>QuanLyMucTieu</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\modules\Admin\QuanLySanPham\QuanLySanPham.csproj">
-      <Project>{f01c2a23-e494-402b-869e-22de8c5bdd50}</Project>
-      <Name>QuanLySanPham</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\modules\Admin\QuanLyTaiLieu\QuanLyTaiLieu.csproj">
-      <Project>{7fc8f9a7-c204-4f09-955f-ed85ed17f3b6}</Project>
-      <Name>QuanLyTaiLieu</Name>
     </ProjectReference>
     <ProjectReference Include="..\modules\Admin\UnitManage\UnitManage.csproj">
       <Project>{2946ed6e-1ef8-405d-b7f9-8d14f0ecd06b}</Project>
@@ -8526,10 +8447,6 @@
     <ProjectReference Include="..\modules\_Shared\Public\Public.csproj">
       <Project>{6f03ef6a-8234-4d31-9570-3b2c0187c0a2}</Project>
       <Name>Public</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\modules\_Shared\TaiLieu_DB\TaiLieu_DB.csproj">
-      <Project>{56490889-b333-4146-808a-75e6c22fcf82}</Project>
-      <Name>TaiLieu_DB</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

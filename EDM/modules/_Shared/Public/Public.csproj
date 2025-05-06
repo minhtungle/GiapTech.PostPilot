@@ -213,10 +213,6 @@
       <Project>{4a2aa8b2-7faf-4400-964e-b45818002093}</Project>
       <Name>EDM_DB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TaiLieu_DB\TaiLieu_DB.csproj">
-      <Project>{56490889-B333-4146-808A-75E6C22FCF82}</Project>
-      <Name>TaiLieu_DB</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\..\EDM\packages\Microsoft.CodeAnalysis.Analyzers.3.3.4\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
