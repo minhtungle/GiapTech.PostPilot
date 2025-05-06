@@ -10,7 +10,8 @@ namespace Applications.QuanLyDangBai.Models
     public class tbBaiDangExtend
     {
         public tbBaiDang BaiDang { get; set; } = new tbBaiDang();
-        public List<tbAnhMoTa> AnhMoTas { get; set; } = new List<tbAnhMoTa>();
+        public int TuTaoAnh { get; set; } = 0;
+        public List<tbTepDinhKem> TepDinhKems { get; set; } = new List<tbTepDinhKem>();
         public KiemTraExcel KiemTraExcel { get; set; } = new KiemTraExcel();
     }
 }

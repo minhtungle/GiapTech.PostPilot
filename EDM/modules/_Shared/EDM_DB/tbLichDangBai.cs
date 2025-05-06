@@ -22,9 +22,9 @@ public partial class tbLichDangBai
 
     public System.Guid IdLichDangBai { get; set; }
 
-    public Nullable<System.Guid> IdBaiDang { get; set; }
+    public Nullable<System.Guid> TenLichDangBai { get; set; }
 
-    public Nullable<System.DateTime> ThoiGian { get; set; }
+    public string GhiChu { get; set; }
 
     public Nullable<int> TrangThai { get; set; }
 

@@ -43,13 +43,11 @@ public partial class EDM_DBEntities : DbContext
 
     public virtual DbSet<default_tbQuocGia> default_tbQuocGia { get; set; }
 
-    public virtual DbSet<tbAnhMoTa> tbAnhMoTas { get; set; }
-
     public virtual DbSet<tbBaiDang> tbBaiDangs { get; set; }
 
-    public virtual DbSet<tbBaiDangAnhMoTa> tbBaiDangAnhMoTas { get; set; }
-
     public virtual DbSet<tbBaiDangNenTang> tbBaiDangNenTangs { get; set; }
+
+    public virtual DbSet<tbBaiDangTepDinhKem> tbBaiDangTepDinhKems { get; set; }
 
     public virtual DbSet<tbCoCauToChuc> tbCoCauToChucs { get; set; }
 
@@ -61,9 +59,19 @@ public partial class EDM_DBEntities : DbContext
 
     public virtual DbSet<tbLichDangBai> tbLichDangBais { get; set; }
 
+    public virtual DbSet<tbLichDangBaiChiTiet> tbLichDangBaiChiTiets { get; set; }
+
+    public virtual DbSet<tbLichSuDangBai> tbLichSuDangBais { get; set; }
+
     public virtual DbSet<tbNenTang> tbNenTangs { get; set; }
 
     public virtual DbSet<tbNguoiDung> tbNguoiDungs { get; set; }
+
+    public virtual DbSet<tbNoiDung> tbNoiDungs { get; set; }
+
+    public virtual DbSet<tbTepDinhKem> tbTepDinhKems { get; set; }
+
+    public virtual DbSet<tbChienDich> tbChienDiches { get; set; }
 
 
     public virtual ObjectResult<Lay_TruongDuLieus_Result> Lay_TruongDuLieus(Nullable<int> maDonViSuDung)

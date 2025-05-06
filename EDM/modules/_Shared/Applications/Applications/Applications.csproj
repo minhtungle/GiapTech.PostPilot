@@ -81,7 +81,9 @@
     <Compile Include="QuanLyDangBai\Dtos\DisplayModel_CRUD_BaiDang_Input_Dto.cs" />
     <Compile Include="QuanLyDangBai\Dtos\DisplayModel_CRUD_BaiDang_Output_Dto.cs" />
     <Compile Include="QuanLyDangBai\Dtos\LocThongTinDto.cs" />
+    <Compile Include="QuanLyDangBai\Interfaces\IQuanLyDangBai.cs" />
     <Compile Include="QuanLyDangBai\Models\tbBaiDangExtend.cs" />
+    <Compile Include="QuanLyDangBai\QuanLyDangBaiService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -103,6 +105,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="NewFolder1\" />
     <Folder Include="Organization\Validator\" />
     <Folder Include="UnitManage\" />
     <Folder Include="UserAccount\" />

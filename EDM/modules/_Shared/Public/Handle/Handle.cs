@@ -273,7 +273,8 @@ namespace Public
                 if (formattedAmount.EndsWith($"{decimalSeparator}00"))
                 {
                     formattedAmount = formattedAmount.Substring(0, formattedAmount.Length - 3);
-                };
+                }
+                ;
 
                 return showCurrencySymbol ? $"{formattedAmount} {currencySymbol}" : formattedAmount;
             }
@@ -407,7 +408,8 @@ namespace Public
             else
             {
                 return String.Format("{0} {1}", input.Substring(0, maxLength - ellipsis.Length), ellipsis);
-            };
+            }
+            ;
         }
         public static int CalculateAge(DateTime birthDate)
         {
@@ -424,7 +426,7 @@ namespace Public
 
             return age;
         }
-        public static string ConvertImageToBase64(string imagePath)
+        public static string GetImgSrcByPath(string imagePath)
         {
             // Đảm bảo đường dẫn đầy đủ
             //string fullPath = Request.MapPath(imagePath.Replace("~", ""));
@@ -447,7 +449,8 @@ namespace Public
             else
             {
                 throw new NotSupportedException("Unsupported image format");
-            };
+            }
+            ;
 
             if (File.Exists(fullPath))
             {
@@ -461,6 +464,12 @@ namespace Public
                 return $"data:{mimeType};base64,{base64String}";
             }
             return fullPath;
+        }
+        public static string GetImgSrcByByte(byte[] data)
+        {
+            var base64 = Convert.ToBase64String(data); // ImgData là byte[]
+            var imgSrc = $"data:image/png;base64,{base64}";     // hoặc image/jpeg nếu ảnh là jpg
+            return imgSrc;
         }
     }
 }

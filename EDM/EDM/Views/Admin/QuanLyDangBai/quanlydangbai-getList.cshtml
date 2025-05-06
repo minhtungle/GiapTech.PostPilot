@@ -1,0 +1,34 @@
+﻿@using Applications.QuanLyDangBai.Models
+@model List<tbBaiDangExtend>
+
+<div class="card-body" intro-container="dulieu-container">
+    <table class="table table-hover table-bordered table-sticky w-100" id="baidang-getList" data-page-length="10">
+        <thead class="nowrap" style="white-space: nowrap !important">
+            <tr>
+                <th class="text-center" data-orderable="false"></th>
+
+                <th class="text-center">Id bài đăng</th>
+
+                @*<th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>*@
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th class="text-center"><input class="form-check-input checkAll-baidang-getList" type="checkbox" title="Chọn tất cả" /></th>
+
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                @*<th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>*@
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var baidang in Model)
+            {
+                <tr id="@baidang.BaiDang.IdBaiDang">
+                    <td class="text-center"><input class="form-check-input checkRow-baidang-getList" type="checkbox" /></td>
+                    <td class="text-center">@baidang.BaiDang.IdBaiDang</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

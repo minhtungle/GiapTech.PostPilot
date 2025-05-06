@@ -26,7 +26,7 @@ public partial class tbNenTang
 
     public string TenPhu { get; set; }
 
-    public byte[] LogoData { get; set; }
+    public byte[] LogoByteData { get; set; }
 
     public Nullable<int> TrangThai { get; set; }
 

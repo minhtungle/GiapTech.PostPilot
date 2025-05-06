@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -46,6 +46,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=8.2.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>packages\Autofac.8.2.1\lib\netstandard2.0\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=6.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>packages\Autofac.Mvc5.6.1.0\lib\net472\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.WebApi, Version=6.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>packages\Autofac.WebApi2.6.1.1\lib\net472\Autofac.Integration.WebApi.dll</HintPath>
+    </Reference>
     <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
       <HintPath>packages\BouncyCastle.Cryptography.2.4.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
     </Reference>
@@ -56,10 +65,12 @@
       <HintPath>packages\DocumentFormat.OpenXml.2.20.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
       <HintPath>packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
@@ -69,6 +80,9 @@
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.3\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -86,19 +100,41 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Diagnostics.DiagnosticSource.8.0.1\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.AspNet.WebApi.Client.5.2.9\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Client.6.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Security" />
-    <Reference Include="System.Web.Cors, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.AspNet.Cors.5.2.9\lib\net45\System.Web.Cors.dll</HintPath>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Cors, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.Cors.5.3.0\lib\net45\System.Web.Cors.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -106,11 +142,14 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Web.Http, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.AspNet.WebApi.Core.5.2.9\lib\net45\System.Web.Http.dll</HintPath>
+    <Reference Include="System.Web.Http, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Core.5.3.0\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http.Cors, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.AspNet.WebApi.Cors.5.2.9\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    <Reference Include="System.Web.Http.Cors, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Cors.5.3.0\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.WebHost.5.3.0\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
@@ -1907,13 +1946,7 @@
     <Content Include="Assets\TrangTaiLieu\assets\js\wow.min.js" />
     <Content Include="Assets\TrangTaiLieu\assets\webfonts\icomoon.svg" />
     <Content Include="Content\Admin\admin.js" />
-    <Content Include="Content\Admin\QuanLyDoanhThu\quanlydoanhthu.css" />
-    <Content Include="Content\Admin\QuanLyLopHoc\_quanlylophoc.js" />
-    <Content Include="Content\Admin\QuanLyDoanhThu\quanlydoanhthu.js" />
-    <Content Include="Content\Admin\QuanLyLuong\quanlyluong.js" />
-    <Content Include="Content\Admin\QuanLyTaiLieu\quanlytailieu.js" />
-    <Content Include="Content\Admin\QuanLySanPham\quanlysanpham.js" />
-    <Content Include="Content\Admin\QuanLyKhachHang\quanlykhachhang.js" />
+    <Content Include="Content\Admin\QuanLyDangBai\quanlydangbai.js" />
     <Content Include="Content\Admin\UnitManage\unitmanage.js" />
     <Content Include="Content\Admin\_SystemSetting\Organization\organization.js" />
     <Content Include="Content\Admin\_SystemSetting\UserAccount\thongtincanhan.js" />
@@ -1952,6 +1985,7 @@
     <Content Include="Assets\plugins\main\scripts\bootstrap.min.js.map" />
     <Content Include="Assets\files\[Mẫu thư mục văn bản].rar" />
     <Content Include="Assets\files\[Mẫu danh sách lương].xlsx" />
+    <Content Include="App_Data\meta-buckeye-458819-m8-2044fdff02b5.json" />
     <None Include="Assets\plugins\main\scripts\jquery-3.6.3.intellisense.js" />
     <Content Include="Assets\plugins\main\scripts\jquery-3.6.3.js" />
     <Content Include="Assets\plugins\main\scripts\jquery-3.6.3.min.js" />
@@ -7812,11 +7846,69 @@
     <Content Include="ViewerJS\text_layer_builder.js" />
     <Content Include="ViewerJS\ui_utils.js" />
     <Content Include="ViewerJS\webodf.js" />
+    <Content Include="Views\Admin\QuanLyTaiLieu\nhandan\nhandan-crud.cshtml" />
+    <Content Include="Views\Admin\QuanLyTaiLieu\nhandan\nhandan-getList.cshtml" />
+    <Content Include="Views\Admin\QuanLyTaiLieu\quanlytailieu.cshtml" />
+    <Content Include="Views\Admin\QuanLyTaiLieu\tailieu\tailieu-crud.cshtml" />
+    <Content Include="Views\Admin\QuanLyTaiLieu\tailieu\tailieu-getList.cshtml" />
+    <Content Include="Views\Admin\QuanLyTaiLieu\tailieu\tailieu-xemchitiet.cshtml" />
+    <Content Include="Views\Admin\__Home\AccountInfo\accountinfo-getList.cshtml" />
+    <Content Include="Views\Admin\__Home\AccountInfo\accountinfo.cshtml" />
+    <Content Include="Views\Admin\__Home\Search\search.cshtml" />
+    <Content Include="Views\Admin\__Home\Search\search.thongtintaikhoan.cshtml" />
+    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\timkiemhoso-ketqua.cshtml" />
+    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\timkiemhoso-nangcao.cshtml" />
+    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\timkiemhoso.cshtml" />
+    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.cshtml" />
+    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.detail.cshtml" />
+    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.detail.truongdulieu.cshtml" />
+    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.getList.cshtml" />
+    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.thongtinhoso.cshtml" />
+    <Content Include="Views\Admin\__Home\Search\search.tinnhan.cshtml" />
+    <Content Include="Views\Admin\QuanLyDangBai\quanlydangbai-crud.cshtml" />
+    <Content Include="Views\Admin\QuanLyDangBai\quanlydangbai-getList.cshtml" />
+    <Content Include="Views\Admin\QuanLyDangBai\quanlydangbai.cshtml" />
     <None Include="Views\User\TrangTaiLieu\404.cshtml" />
     <None Include="Views\User\TrangTaiLieu\about.cshtml" />
     <None Include="Views\User\TrangTaiLieu\checkout.cshtml" />
     <None Include="Views\User\TrangTaiLieu\contact.cshtml" />
     <None Include="Views\User\TrangTaiLieu\faq.cshtml" />
+    <Content Include="Views\Admin\UnitManage\unitmanage-donvisudung.getList.cshtml" />
+    <Content Include="Views\Admin\UnitManage\unitmanage.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\Organization\organization-crud.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\Organization\organization-delete.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\Organization\organization-excel.cocau\excel.cocau-capnhattruong.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\Organization\organization-excel.cocau\excel.cocau-getList.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\Organization\organization-excel.cocau\excel.cocau.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\Organization\organization-getList.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\Organization\organization.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserAccount\thongtincanhan\thongtincanhan-crud.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserAccount\thongtincanhan\thongtincanhan-getList.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserAccount\thongtincanhan\thongtincanhan.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-crud.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-delete.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-excel.nguoidung\excel.nguoidung-capnhattruong.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-excel.nguoidung\excel.nguoidung-getList.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-excel.nguoidung\excel.nguoidung.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-getList.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-mail.capnhattaikhoan.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-mail.taotaikhoan.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserType\usertype-crud.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserType\usertype-delete.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserType\usertype-getList.cshtml" />
+    <Content Include="Views\Admin\_SystemSetting\UserType\usertype.cshtml" />
+    <Content Include="Views\Admin\_ViewStart.cshtml" />
+    <Content Include="Views\Admin\__Home\Messenger\messenger-homthu.cshtml" />
+    <Content Include="Views\Admin\__Home\Messenger\messenger-nhantin.cshtml" />
+    <Content Include="Views\Admin\__Home\Messenger\messenger.cshtml" />
+    <Content Include="Views\Admin\__Home\TrangChu\muctieudoanhthu-crud.cshtml" />
+    <Content Include="Views\Admin\__Home\TrangChu\quyenkinhdoanh\bangxephang-getList.cshtml" />
+    <Content Include="Views\Admin\__Home\TrangChu\quyenkinhdoanh\chucmungsinhnhat.cshtml" />
+    <Content Include="Views\Admin\__Home\TrangChu\quyenkinhdoanh\doanhthumoinhat-getList.cshtml" />
+    <Content Include="Views\Admin\__Home\TrangChu\quyenlophoc\buoihocsaptoi-getList.cshtml" />
+    <Content Include="Views\Admin\__Home\TrangChu\quyenlophoc\lophocthamgia-getList.cshtml" />
+    <Content Include="Views\Admin\__Home\TrangChu\trangchu.cshtml" />
     <Content Include="Views\_Shared\User\TrangTaiLieu\user_2.html" />
     <None Include="Views\User\TrangTaiLieu\news-details.cshtml" />
     <None Include="Views\User\TrangTaiLieu\news-grid.cshtml" />
@@ -8028,7 +8120,6 @@
     <Content Include="Views\_Shared\User\TrangTaiLieu\assets\js\wow.min.js" />
     <Content Include="Views\_Shared\User\TrangTaiLieu\assets\webfonts\icomoon.svg" />
     <Content Include="Views\User\TrangTaiLieu\__Home\home.cshtml" />
-    <Content Include="Views\Admin\_ViewStart.cshtml" />
     <Content Include="Views\User\_ViewStart.cshtml" />
     <None Include="Views\_Shared\User\TrangTaiLieu\lib\lib.js.cshtml" />
     <None Include="Views\_Shared\User\TrangTaiLieu\lib\lib.css.cshtml" />
@@ -8278,18 +8369,8 @@
     <Content Include="Assets\templates\assets\mix-manifest.json" />
     <Content Include="Views\Auth\auth.cshtml" />
     <Content Include="Views\Auth\auth.register.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\Organization\organization.cshtml" />
-    <Content Include="Views\Admin\UnitManage\unitmanage.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserType\usertype.cshtml" />
     <Content Include="Views\User\TrangKhoaHoc\__Home\home.cshtml" />
     <Content Include="Views\User\TrangKhoaHoc\Search\search.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\Organization\organization-crud.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\Organization\organization-getList.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserType\usertype-crud.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserType\usertype-getList.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-crud.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-getList.cshtml" />
     <Content Include="README.md" />
     <Content Include="Views\_Shared\Admin\admin.sidebar.cshtml" />
     <Content Include="Views\_Shared\User\TrangKhoaHoc\user.navbar.cshtml" />
@@ -8297,16 +8378,6 @@
     <Content Include="Views\_Shared\User\TrangKhoaHoc\user.footer.cshtml" />
     <Content Include="Views\_Shared\_lib\lib.js.cshtml" />
     <Content Include="Views\_Shared\_lib\lib.css.cshtml" />
-    <Content Include="Views\Admin\UnitManage\unitmanage-donvisudung.getList.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-mail.capnhattaikhoan.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\Organization\organization-delete.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserType\usertype-delete.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-excel.nguoidung\excel.nguoidung-capnhattruong.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-excel.nguoidung\excel.nguoidung-getList.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-excel.nguoidung\excel.nguoidung.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\Organization\organization-excel.cocau\excel.cocau-capnhattruong.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\Organization\organization-excel.cocau\excel.cocau-getList.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\Organization\organization-excel.cocau\excel.cocau.cshtml" />
     <Content Include="Scripts\bootstrap.min.js.map" />
     <Content Include="Scripts\bootstrap.js.map" />
     <Content Include="Scripts\bootstrap.esm.min.js.map" />
@@ -8317,23 +8388,8 @@
     <Content Include="Scripts\jquery-3.7.0.min.map" />
     <Content Include="Views\Auth\auth.forgot-mail.cshtml" />
     <Content Include="Views\_Shared\_lib\pdf_viewer.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-delete.cshtml" />
-    <Content Include="Views\Admin\__Home\TrangChu\trangchu.cshtml" />
-    <Content Include="Views\Admin\__Home\Messenger\messenger-homthu.cshtml" />
-    <Content Include="Views\Admin\__Home\Messenger\messenger-nhantin.cshtml" />
-    <Content Include="Views\Admin\__Home\Messenger\messenger.cshtml" />
-    <Content Include="Views\Admin\__Home\TrangChu\muctieudoanhthu-crud.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserAccount\thongtincanhan\thongtincanhan.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserAccount\thongtincanhan\thongtincanhan-crud.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserAccount\thongtincanhan\thongtincanhan-getList.cshtml" />
-    <Content Include="Views\Admin\__Home\TrangChu\quyenkinhdoanh\doanhthumoinhat-getList.cshtml" />
-    <Content Include="Views\Admin\__Home\TrangChu\quyenkinhdoanh\bangxephang-getList.cshtml" />
-    <Content Include="Views\Admin\_SystemSetting\UserAccount\useraccount-mail.taotaikhoan.cshtml" />
     <Content Include="Views\Auth\auth-mail.thongbaodangnhap.cshtml" />
     <Content Include="Views\_Shared\Admin\admin.navbar.cshtml" />
-    <Content Include="Views\Admin\__Home\TrangChu\quyenkinhdoanh\chucmungsinhnhat.cshtml" />
-    <Content Include="Views\Admin\__Home\TrangChu\quyenlophoc\lophocthamgia-getList.cshtml" />
-    <Content Include="Views\Admin\__Home\TrangChu\quyenlophoc\buoihocsaptoi-getList.cshtml" />
     <Content Include="Views\_Shared\Mail\mail-footer.cshtml" />
     <Content Include="Views\Auth\auth.changepassword.cshtml" />
     <Content Include="Views\_Shared\User\TrangTaiLieu\assets\css\main.css.map" />
@@ -8388,7 +8444,6 @@
     <Content Include="Views\_Shared\Auth\auth.navbar.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Assets\uploads\1\" />
     <Folder Include="Views\TrangChuTaiLieu\" />
   </ItemGroup>
@@ -8447,6 +8502,10 @@
     <ProjectReference Include="..\modules\_Shared\Public\Public.csproj">
       <Project>{6f03ef6a-8234-4d31-9570-3b2c0187c0a2}</Project>
       <Name>Public</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QuanLyDangBai\QuanLyDangBai.csproj">
+      <Project>{2ac0bfef-26db-4459-abea-e6d404a7f6df}</Project>
+      <Name>QuanLyDangBai</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -8627,12 +8686,12 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
-    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
     <Error Condition="!Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
   </Target>
-  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
+  <Import Project="packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

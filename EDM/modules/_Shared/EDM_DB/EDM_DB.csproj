@@ -117,20 +117,22 @@
       <DependentUpon>EDM_DB.edmx</DependentUpon>
     </Compile>
     <Compile Include="EDM_DBContext.cs" />
+    <Compile Include="Interfaces\EfRepository.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Lay_TruongDuLieus_Result.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="tbAnhMoTa.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
     <Compile Include="tbBaiDang.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
-    <Compile Include="tbBaiDangAnhMoTa.cs">
+    <Compile Include="tbBaiDangNenTang.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
-    <Compile Include="tbBaiDangNenTang.cs">
+    <Compile Include="tbBaiDangTepDinhKem.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tbChienDich.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
     <Compile Include="tbCoCauToChuc.cs">
@@ -148,10 +150,22 @@
     <Compile Include="tbLichDangBai.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
+    <Compile Include="tbLichDangBaiChiTiet.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tbLichSuDangBai.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
     <Compile Include="tbNenTang.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
     <Compile Include="tbNguoiDung.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tbNoiDung.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tbTepDinhKem.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
   </ItemGroup>
