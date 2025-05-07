@@ -1,5 +1,4 @@
 ﻿using Applications.QuanLyDangBai.Dtos;
-using Applications.QuanLyDangBai.Interfaces;
 using Applications.QuanLyDangBai.Models;
 using EDM_DB;
 using Google.Apis.Auth.OAuth2;
@@ -47,14 +46,6 @@ namespace QuanLyDangBai.Controllers
                 Session["THAOTACs"] = value;
             }
         }
-
-        private List<tbBaiDang> baiDangRepo = new List<tbBaiDang>();
-        private List<tbTepDinhKem> anhMoTaRepo = new List<tbTepDinhKem>();
-        private List<tbNenTang> nenTangRepo = new List<tbNenTang>();
-        private List<tbLichDangBai> lichDangBaiRepo = new List<tbLichDangBai>();
-
-        private readonly IQuanLyDangBai _quanLyDangBaiAppService;
-
         // GET: Default
         static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
         static readonly string ApplicationName = "n8n test";
@@ -86,53 +77,59 @@ namespace QuanLyDangBai.Controllers
             //var a = _quanLyDangBaiAppService.GetListAsync();
             return View($"{VIEW_PATH}/quanlydangbai.cshtml");
         }
-        //[HttpGet]
-        //public ActionResult getList_BaiDang()
-        //{
-        //    List<tbBaiDangExtend> baiDangs = getBaiDangs(loai: "all") ?? new List<tbBaiDangExtend>();
-        //    return PartialView($"{VIEW_PATH}/tailieu/tailieu-getList.cshtml", baiDangs);
-        //}
-        //public List<tbBaiDangExtend> getBaiDangs(string loai = "all", List<Guid> idLichDangBais = null, LocThongTinDto locThongTin = null)
-        //{
-        //    var lichDangBais = lichDangBaiRepo
-        //        .Where(lich => loai != "single" || idLichDangBais.Contains(lich.IdLichDangBai))
-        //        .Join(baiDangRepo,
-        //              lich => lich.IdLichDangBai,
-        //              bai => bai.IdBaiDang,
-        //              (lich, bai) => new
-        //              {
-        //                  LichDangBai = lich,
-        //                  BaiDang = bai
-        //              })
-        //        .Join(anhMoTaRepo,
-        //              input => input.BaiDang.IdBaiDang,
-        //              a => a.IdBaiDang,
-        //              (tl, a) => new
-        //              {
-        //                  Output = tl,
-        //                  Anh = a
-        //              })
-        //        .GroupBy(x => x.Output.BaiDang.IdBaiDang)
-        //        .Select(g => new tbBaiDangExtend
-        //        {
-        //            BaiDang = g.First().Output.BaiDang,
-        //            DonViTien = g.First().Output.DonViTien,
-        //            AnhMoTas = g.Select(x => x.Anh).ToList()
-        //        })
-        //        .ToList() ?? new List<tbBaiDangExtend>();
+        [HttpGet]
+        public ActionResult getList_BaiDang()
+        {
+            List<tbBaiDangExtend> baiDangs = getBaiDangs(loai: "all") ?? new List<tbBaiDangExtend>();
+            return PartialView($"{VIEW_PATH}/quanlydangbai-getList.cshtml", baiDangs);
+        }
+        public List<tbBaiDangExtend> getBaiDangs(string loai = "all", List<Guid> idLichDangBais = null, LocThongTinDto locThongTin = null)
+        {
+            var baiDangRepo = db.tbBaiDangs.Where(x => x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung).ToList()
+                ?? new List<tbBaiDang>();
+            var tepDinhKemRepo = db.tbTepDinhKems.Where(x => x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung).ToList()
+               ?? new List<tbTepDinhKem>();
+            //var lichDangBais = lichDangBaiRepo
+            //    .Where(lich => loai != "single" || idLichDangBais.Contains(lich.IdLichDangBai))
+            //    .Join(baiDangRepo,
+            //          lich => lich.IdLichDangBai,
+            //          bai => bai.IdBaiDang,
+            //          (lich, bai) => new
+            //          {
+            //              LichDangBai = lich,
+            //              BaiDang = bai
+            //          })
+            //    .Join(tepDinhKemRepo,
+            //          input => input.BaiDang.IdBaiDang,
+            //          a => a.IdTep,
+            //          (tl, a) => new
+            //          {
+            //              Output = tl,
+            //              Anh = a
+            //          })
+            //    .GroupBy(x => x.Output.BaiDang.IdBaiDang)
+            //    .Select(g => new tbBaiDangExtend
+            //    {
+            //        BaiDang = g.First().Output.BaiDang,
+            //        DonViTien = g.First().Output.DonViTien,
+            //        AnhMoTas = g.Select(x => x.Anh).ToList()
+            //    })
+            //    .ToList() ?? new List<tbBaiDangExtend>();
 
-        //    return lichDangBais;
-        //}
+            return new List<tbBaiDangExtend>();
+        }
         [HttpPost]
         public ActionResult displayModal_CRUD(DisplayModel_CRUD_BaiDang_Input_Dto input)
         {
-            //var baiDang = getBaiDangs(loai: "single", idLichDangBais: new List<Guid> { input.IdBaiDang })?.FirstOrDefault() ?? new tbBaiDangExtend();
-
-            return PartialView($"{VIEW_PATH}/quanlydangbai-crud.cshtml", new DisplayModel_CRUD_BaiDang_Output_Dto
+            var baiDang = getBaiDangs(loai: "single", idLichDangBais: new List<Guid> { input.IdBaiDang })?.FirstOrDefault() ?? new tbBaiDangExtend();
+            var output = new DisplayModel_CRUD_BaiDang_Output_Dto
             {
                 Loai = input.Loai,
-                BaiDang = new tbBaiDangExtend(),
-            });
+                BaiDang = baiDang,
+            };
+            ViewBag.BaiDang = baiDang;
+            ViewBag.Loai = input.Loai;
+            return PartialView($"{VIEW_PATH}/quanlydangbai-getList - Copy.cshtml", output);
         }
 
         [HttpPost]

@@ -17,7 +17,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
-using System.Web.Http.Results;
 using System.Web.Mvc;
 using UserAccount.Models;
 using UserType.Models;

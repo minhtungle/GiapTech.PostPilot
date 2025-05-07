@@ -117,8 +117,6 @@
       <DependentUpon>EDM_DB.edmx</DependentUpon>
     </Compile>
     <Compile Include="EDM_DBContext.cs" />
-    <Compile Include="Interfaces\EfRepository.cs" />
-    <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Lay_TruongDuLieus_Result.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
