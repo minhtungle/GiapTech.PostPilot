@@ -1,12 +1,14 @@
 ﻿@model Applications.QuanLyDangBai.Dtos.DisplayModel_CRUD_BaiDang_Output_Dto
 @{
-
+    string loai = Model.Loai;
+    var a = Model.BaiDang is null;
+    var baiDang = new Applications.QuanLyDangBai.Models.tbBaiDangExtend();
 }
 <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title col-md-6 col-sm-12 my-2">
-                @*       @(loai == "create" ? "Thêm mới" : loai == "update" ? "Cập nhật" : "Xem chi tiết")*@
+         @*       @(loai == "create" ? "Thêm mới" : loai == "update" ? "Cập nhật" : "Xem chi tiết")*@
                 Thêm mới
                 <a class="text-warning c-pointer p-1" data-bs-toggle="tooltip" data-bs-placement="right" title="Nhấn xem hướng dẫn"
                    data-hint="Nhấn xem hướng dẫn" data-hint-position="top-left"
@@ -23,40 +25,43 @@
                      aria-labelledby="thongtin-list">
                     <div class="row" intro-container="thongtin-chung">
                         <!--Id-->
-                        <input id="input-idbaidang" value="@Guid.Empty" hidden />
+                        <input id="input-idbaidang" value="@baiDang.BaiDang.IdBaiDang" hidden />
                         <!--Nội dung-->
                         <div class="col-12 col-sm-12 col-md-4">
                             <div class="position-relative">
                                 <div class="form-group mb-3">
                                     <label class="required" for="input-noidung">Nội dung</label>
                                     <input type="text" class="form-control" placeholder="Nhập thông tin ..."
-                                           id="input-noidung" name="input-noidung" required>
+                                           id="input-noidung" name="input-noidung"
+                                           value="@(baiDang.BaiDang.NoiDung ?? "")" required>
                                     @* <input type="checkbox" class="form-check-input" id="checkbox-tenbaidang" style="position: absolute; z-index: 1; right: .6rem; top: 2rem;" onchange="quanLySanPham.choPhepTrungTenSanPham(this, $('#input-tenbaidang'))" @(loai == "read" ? "disabled" : "") />*@
                                     <div class="invalid-feedback feedback" for="input-noidung">Không được để trống</div>
                                 </div>
                             </div>
                         </div>
                         <!--Tự tạo ảnh-->
-                        <div class="col-12 col-sm-12 col-md-4">
+                        @*<div class="col-12 col-sm-12 col-md-4">
                             <div class="position-relative">
                                 <div class="form-group mb-3">
                                     <label class="required" for="select-tutaoanh">Tự tạo ảnh</label>
                                     <select class="form-control form-select2"
-                                            id="select-tutaoanh" name="select-tutaoanh" required>
+                                            id="select-tutaoanh" name="select-tutaoanh"
+                                            @(loai == "read" ? "disabled" : "") required>
                                         <option value="1">Có</option>
                                         <option value="0" selected>Không</option>
                                     </select>
                                     <div class="invalid-feedback feedback" for="select-tutaoanh">Không được để trống</div>
                                 </div>
                             </div>
-                        </div>
+                        </div>*@
                         <!--Thời gian-->
                         <div class="col-12 col-sm-12 col-md-4">
                             <div class="position-relative">
                                 <div class="form-group mb-3">
                                     <label class="required" for="input-thoigian">Thời gian</label>
-                                    <input type="datetime-local" class="form-control" placeholder="Nhập thông tin ..."
-                                           id="input-thoigian" name="input-thoigian" required>
+                                    <input type="datetime" class="form-control" placeholder="Nhập thông tin ..."
+                                           id="input-thoigian" name="input-thoigian"
+                                           value="@(baiDang.BaiDang.ThoiGian.Value.ToString() ?? "")" @(loai == "read" ? "disabled" : "") required>
                                     @* <input type="checkbox" class="form-check-input" id="checkbox-tenbaidang" style="position: absolute; z-index: 1; right: .6rem; top: 2rem;" onchange="quanLySanPham.choPhepTrungTenSanPham(this, $('#input-tenbaidang'))" @(loai == "read" ? "disabled" : "") />*@
                                     <div class="invalid-feedback feedback" for="input-thoigian">Không được để trống</div>
                                 </div>
@@ -80,26 +85,25 @@
                                                 </label>
                                                 <input type="file" id="image-anhmota" class="form-control"
                                                        multiple accept="image/*"
-                                                       onchange="quanLyDangBai.baiDang.handleAnhMoTa.add('anhmota')" 
-                                                       hidden />
+                                                       onchange="quanLyBaiDang.baiDang.handleAnhMoTa.add('anhmota')" hidden />
                                             </td>
                                         </tr>
                                     </thead>
                                     <tbody id="anhmota-container">
-                                        @*@for (int i = 0; i < baiDang.TepDinhKems.Count; i++)
-                                            {
-                                                var tep = baiDang.TepDinhKems[i];
-                                                <tr data-id="@tep .IdTep" data-idtamthoi="0">
-                                                    <td class="text-center">@(i+1)</td>
-                                                    <td class="w-90">@tep.FileName</td>
-                                                    <td class="text-center">
-                                                        <a class="btn c-pointer"
-                                                           onclick="quanLyDangBai.baiDang.handleAnhMoTa.delete('anhmota', this)">
-                                                            <i class="bi bi-trash3-fill"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            }*@
+                                        @for (int i = 0; i < baiDang.TepDinhKems.Count; i++)
+                                        {
+                                            var tep = baiDang.TepDinhKems[i];
+                                            <tr data-id="@tep .IdTep" data-idtamthoi="0">
+                                                <td class="text-center">@(i+1)</td>
+                                                <td class="w-90">@tep.FileName</td>
+                                                <td class="text-center">
+                                                    <a class="btn c-pointer"
+                                                       onclick="quanLyBaiDang.baiDang.handleAnhMoTa.delete('anhmota', this)">
+                                                        <i class="bi bi-trash3-fill"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -110,9 +114,12 @@
 
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary ml-1" onclick="quanLyDangBai.baiDang.save(@string.Format("'{0}'", "create"))">
-                <span class="">Lưu</span>
-            </button>
+            @if (loai != "read")
+            {
+                <button type="button" class="btn btn-primary ml-1" onclick="quanLyBaiDang.baiDang.save(@string.Format("'{0}'", loai))">
+                    <span class="">Lưu</span>
+                </button>
+            }
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                 <span class="">Đóng</span>
             </button>

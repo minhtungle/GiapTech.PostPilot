@@ -156,7 +156,7 @@ namespace Auth.Controllers
                                 // Trả về chuỗi đã được tạo ra từ view
                                 return viewAsString;
                             }
-                            string tieuDeMail = "[📣 GIAPTECH] - CẢNH BÁO THIẾT BỊ LẠ ĐĂNG NHẬP❗";
+                            string tieuDeMail = "[📣 VIETGEN] - CẢNH BÁO THIẾT BỊ LẠ ĐĂNG NHẬP❗";
                             string mailBody = mail();
 
                             if (nguoiDung.ThongTinThietBi_TruyCap != null) // Kiểm tra thiết bị mới hay cũ
@@ -287,7 +287,7 @@ namespace Auth.Controllers
             {
                 NGUOIDUNG = nguoiDung;
                 #region Gửi mail
-                string tieuDeMail = "[📣 GIAPTECH] - LẤY LẠI THÔNG TIN TÀI KHOẢN 🔑";
+                string tieuDeMail = "[📣 VIETGEN] - LẤY LẠI THÔNG TIN TÀI KHOẢN 🔑";
                 void guiMail()
                 {
                     Uri uri = new Uri(HttpContext.Request.Url.AbsoluteUri);
@@ -385,7 +385,7 @@ namespace Auth.Controllers
             if (nguoiDung != null)
             {
                 #region Gửi mail
-                string tieuDeMail = "[📣 GIAPTECH] - LẤY LẠI THÔNG TIN TÀI KHOẢN 🔑";
+                string tieuDeMail = "[📣 VIETGEN] - LẤY LẠI THÔNG TIN TÀI KHOẢN 🔑";
                 void guiMail()
                 {
                     Uri uri = new Uri(HttpContext.Request.Url.AbsoluteUri);
