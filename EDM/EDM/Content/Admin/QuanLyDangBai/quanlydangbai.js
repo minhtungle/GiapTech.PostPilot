@@ -203,6 +203,7 @@ class QuanLyDangBai {
                     }
                 })
             },
+
             save: function (loai) {
                 var modalValidtion = htmlEl.activeValidationStates("#baidang-crud");
                 if (modalValidtion) {
@@ -226,19 +227,24 @@ class QuanLyDangBai {
                     sys.confirmDialog({
                         mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
                         callback: function () {
-                            var f = new FormData();
-                            f.append("baiDang", JSON.stringify(baiDang));
-                            f.append("loai", loai);
+                            var formData = new FormData();
+                            formData.append("baiDang", JSON.stringify(baiDang));
+                            formData.append("loai", loai);
 
                             $.each(quanLyDangBai.baiDang.handleAnhMoTa.arrAnh, function (idx, anh) {
-                                f.append("tepdinhkem", anh.file);
+                                formData.append("files", anh.file);
                             });
+
+                            //let $fileInput = $("#image-anhmota").get(0);
+                            //$.each($fileInput.files, function (idx, f) {
+                            //    formData.append("files", f);
+                            //});
 
                             $.ajax({
                                 ...ajaxDefaultProps({
                                     url: loai == "create" ? "/QuanLyDangBai/create_BaiDang" : "/QuanLyDangBai/update_BaiDang",
                                     type: "POST",
-                                    data: f,
+                                    data: formData,
                                 }),
                                 //contentType: "application/json; charset=utf-8",  // Chỉ định kiểu nội dung là JSON
                                 contentType: false,

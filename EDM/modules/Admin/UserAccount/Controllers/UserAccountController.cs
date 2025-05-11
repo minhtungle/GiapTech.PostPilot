@@ -411,7 +411,7 @@ namespace UserAccount.Controllers
                                 // Trả về chuỗi đã được tạo ra từ view
                                 return viewAsString;
                             }
-                            string tieuDeMail = "[📣 VIETGEN] - CẬP NHẬT THÔNG TIN TÀI KHOẢN❗";
+                            string tieuDeMail = "[📣 GIAPTECH] - CẬP NHẬT THÔNG TIN TÀI KHOẢN❗";
                             string mailBody = mail();
                             // Gửi mail
                             Public.Handle.SendEmail(sendTo: nguoiDung_OLD.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
@@ -501,7 +501,7 @@ namespace UserAccount.Controllers
                                 // Trả về chuỗi đã được tạo ra từ view
                                 return viewAsString;
                             }
-                            string tieuDeMail = "[📣 VIETGEN] - CẬP NHẬT THÔNG TIN TÀI KHOẢN❗";
+                            string tieuDeMail = "[📣 GIAPTECH] - CẬP NHẬT THÔNG TIN TÀI KHOẢN❗";
                             string mailBody = mail();
                             // Gửi mail
                             Public.Handle.SendEmail(sendTo: nguoiDung_OLD.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
@@ -1041,7 +1041,7 @@ namespace UserAccount.Controllers
                 // Trả về chuỗi đã được tạo ra từ view
                 return viewAsString;
             }
-            string tieuDeMail = "[📣 VIETGEN] - THÔNG TIN TÀI KHOẢN CRM❗";
+            string tieuDeMail = "[📣 GIAPTECH] - THÔNG TIN TÀI KHOẢN CRM❗";
             string mailBody = mail();
             // Gửi mail
             Public.Handle.SendEmail(sendTo: nguoiDung.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
