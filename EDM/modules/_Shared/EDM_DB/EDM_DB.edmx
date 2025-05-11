@@ -76,6 +76,7 @@
           </Key>
           <Property Name="Stt" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdBaiDang" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IdChienDich" Type="uniqueidentifier" />
           <Property Name="NoiDung" Type="nvarchar(max)" />
           <Property Name="ThoiGian" Type="datetime" />
           <Property Name="SoLuongLike" Type="int" />
@@ -478,6 +479,7 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
           </Key>
           <Property Name="Stt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdBaiDang" Type="Guid" Nullable="false" />
+          <Property Name="IdChienDich" Type="Guid" />
           <Property Name="NoiDung" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ThoiGian" Type="DateTime" Precision="3" />
           <Property Name="SoLuongLike" Type="Int32" />
@@ -826,6 +828,7 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
                 <ScalarProperty Name="SoLuongLike" ColumnName="SoLuongLike" />
                 <ScalarProperty Name="ThoiGian" ColumnName="ThoiGian" />
                 <ScalarProperty Name="NoiDung" ColumnName="NoiDung" />
+                <ScalarProperty Name="IdChienDich" ColumnName="IdChienDich" />
                 <ScalarProperty Name="IdBaiDang" ColumnName="IdBaiDang" />
                 <ScalarProperty Name="Stt" ColumnName="Stt" />
               </MappingFragment>

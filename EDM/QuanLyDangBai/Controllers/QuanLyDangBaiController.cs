@@ -1,4 +1,5 @@
-﻿using Applications.QuanLyDangBai.Dtos;
+﻿using Applications.QuanLyDangBai.AppServices;
+using Applications.QuanLyDangBai.Dtos;
 using Applications.QuanLyDangBai.Models;
 using EDM_DB;
 using Google.Apis.Auth.OAuth2;
@@ -14,8 +15,11 @@ using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
+using System.Web.Razor.Tokenizer.Symbols;
 using static Google.Apis.Sheets.v4.SheetsService;
 
 namespace QuanLyDangBai.Controllers
@@ -56,10 +60,11 @@ namespace QuanLyDangBai.Controllers
         // Tên sheet/tab (mặc định thường là "Sheet1")
         static readonly string sheetName = "Sheet1";
 
-
         public QuanLyDangBaiController()
         {
+            _openAIApiService = new OpenAIApiService(); // Hoặc inject bằng DI nếu bạn dùng Autofac
         }
+        private readonly OpenAIApiService _openAIApiService;
         #endregion
 
         public ActionResult Index()
@@ -78,155 +83,64 @@ namespace QuanLyDangBai.Controllers
             return View($"{VIEW_PATH}/quanlydangbai.cshtml");
         }
         [HttpGet]
+        public ActionResult getList_ChienDich()
+        {
+            List<tbChienDichExtend> chienDichs = getChienDichs(loai: "all");
+            return PartialView($"{VIEW_PATH}/chiendich/chiendich-getList.cshtml", chienDichs);
+        }
+        [HttpGet]
         public ActionResult getList_BaiDang()
         {
-            List<tbBaiDangExtend> baiDangs = getBaiDangs(loai: "all") ?? new List<tbBaiDangExtend>();
-            return PartialView($"{VIEW_PATH}/quanlydangbai-getList.cshtml", baiDangs);
+            List<tbBaiDangExtend> baiDangs = getBaiDangs(loai: "all");
+            return PartialView($"{VIEW_PATH}/baidang/baidang-getList.cshtml", baiDangs);
         }
-        public List<tbBaiDangExtend> getBaiDangs(string loai = "all", List<Guid> idLichDangBais = null, LocThongTinDto locThongTin = null)
+        public List<tbChienDichExtend> getChienDichs(string loai = "all", List<Guid> idChienDichs = null, LocThongTinDto locThongTin = null)
+        {
+            var chienDichRepo = db.tbChienDiches.Where(x => x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung).ToList()
+                ?? new List<tbChienDich>();
+
+            var chienDichs = chienDichRepo
+                .Where(x => loai != "single" || idChienDichs.Contains(x.IdChienDich))
+                .Select(g => new tbChienDichExtend
+                {
+                    ChienDich = g,
+                })
+                .OrderByDescending(x => x.ChienDich.NgayTao)
+                .ToList() ?? new List<tbChienDichExtend>();
+
+            return chienDichs;
+        }
+        public List<tbBaiDangExtend> getBaiDangs(string loai = "all", List<Guid> idBaiDangs = null, LocThongTinDto locThongTin = null)
         {
             var baiDangRepo = db.tbBaiDangs.Where(x => x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung).ToList()
                 ?? new List<tbBaiDang>();
-            var tepDinhKemRepo = db.tbTepDinhKems.Where(x => x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung).ToList()
-               ?? new List<tbTepDinhKem>();
-            //var lichDangBais = lichDangBaiRepo
-            //    .Where(lich => loai != "single" || idLichDangBais.Contains(lich.IdLichDangBai))
-            //    .Join(baiDangRepo,
-            //          lich => lich.IdLichDangBai,
-            //          bai => bai.IdBaiDang,
-            //          (lich, bai) => new
-            //          {
-            //              LichDangBai = lich,
-            //              BaiDang = bai
-            //          })
-            //    .Join(tepDinhKemRepo,
-            //          input => input.BaiDang.IdBaiDang,
-            //          a => a.IdTep,
-            //          (tl, a) => new
-            //          {
-            //              Output = tl,
-            //              Anh = a
-            //          })
-            //    .GroupBy(x => x.Output.BaiDang.IdBaiDang)
-            //    .Select(g => new tbBaiDangExtend
-            //    {
-            //        BaiDang = g.First().Output.BaiDang,
-            //        DonViTien = g.First().Output.DonViTien,
-            //        AnhMoTas = g.Select(x => x.Anh).ToList()
-            //    })
-            //    .ToList() ?? new List<tbBaiDangExtend>();
 
-            return new List<tbBaiDangExtend>();
+            var baiDangs = baiDangRepo
+                .Where(x => loai != "single" || idBaiDangs.Contains(x.IdBaiDang))
+                .Select(g => new tbBaiDangExtend
+                {
+                    BaiDang = g,
+                })
+                .OrderByDescending(x => x.BaiDang.ThoiGian)
+                .ToList() ?? new List<tbBaiDangExtend>();
+
+            return baiDangs;
         }
         [HttpPost]
-        public ActionResult displayModal_CRUD(DisplayModel_CRUD_BaiDang_Input_Dto input)
+        public ActionResult displayModal_CRUD_BaiDang(DisplayModel_CRUD_BaiDang_Input_Dto input)
         {
-            var baiDang = getBaiDangs(loai: "single", idLichDangBais: new List<Guid> { input.IdBaiDang })?.FirstOrDefault() ?? new tbBaiDangExtend();
+            //var baiDang = getChienDichs(loai: "single", idChienDichs: new List<Guid> { input.IdBaiDang })?.FirstOrDefault() ?? new tbBaiDangExtend();
+            var baiDang = new tbBaiDangExtend();
             var output = new DisplayModel_CRUD_BaiDang_Output_Dto
             {
                 Loai = input.Loai,
                 BaiDang = baiDang,
             };
-            ViewBag.BaiDang = baiDang;
-            ViewBag.Loai = input.Loai;
-            return PartialView($"{VIEW_PATH}/quanlydangbai-getList - Copy.cshtml", output);
+            return PartialView($"{VIEW_PATH}/baidang/baidang-crud.cshtml", output);
         }
 
         [HttpPost]
-        public ActionResult create_TaiLieu()
-        {
-            string status = "success";
-            string mess = "Thêm mới bản ghi thành công";
-            try
-            {
-                var baiDang_NEW = JsonConvert.DeserializeObject<tbBaiDangExtend>(Request.Form["baiDang"]);
-                var files = Request.Files;
-
-                // Đường dẫn thực tế của file JSON đã upload
-                string jsonPath = Server.MapPath("~/App_Data/meta-buckeye-458819-m8-2044fdff02b5.json");
-
-                // Khởi tạo credential
-                GoogleCredential credential;
-                using (var stream = new FileStream(jsonPath, FileMode.Open, FileAccess.Read))
-                {
-                    credential = GoogleCredential.FromStream(stream).CreateScoped(Scopes);
-                }
-
-                // Khởi tạo Sheets API service
-                var service = new SheetsService(new BaseClientService.Initializer()
-                {
-                    HttpClientInitializer = credential,
-                    ApplicationName = ApplicationName,
-                });
-
-                string duongDanAnhs = string.Empty;
-                for (int i = 0; i < files.Count; i++)
-                {
-                    var f = Request.Files[i];
-                    var key = Request.Files.GetKey(i);
-
-                    byte[] imgData = null;
-                    using (var binaryReader = new BinaryReader(f.InputStream))
-                    {
-                        imgData = binaryReader.ReadBytes(f.ContentLength);
-                    }
-                    ;
-                    duongDanAnhs += Public.Handle.GetImgSrcByByte(data: imgData) + ",";
-                }
-                ;
-
-                // Tạo dữ liệu mẫu
-                var values = new List<IList<object>>();
-                for (int i = 1; i <= 10; i++)
-                {
-                    values.Add(new List<object>
-                {
-                    $"{i}",
-                    baiDang_NEW.BaiDang.ThoiGian.Value.ToString("yyyy-MM-dd"),
-                    baiDang_NEW.BaiDang.NoiDung,
-                    baiDang_NEW.TuTaoAnh == 1 ? "TRUE" : "FALSE",
-                    duongDanAnhs
-                });
-                }
-
-                // Tạo yêu cầu ghi dữ liệu
-                var valueRange = new ValueRange
-                {
-                    Values = values
-                };
-
-                var appendRequest = service.Spreadsheets.Values.Append(valueRange, spreadsheetId, $"{sheetName}!A:E");
-                appendRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
-
-                var appendResponse = appendRequest.Execute();
-
-            }
-            catch (DbEntityValidationException ex)
-            {
-                status = "error";
-                mess = ex.Message;
-
-                foreach (var eve in ex.EntityValidationErrors)
-                {
-                    Console.WriteLine($"Entity: {eve.Entry.Entity.GetType().Name} - State: {eve.Entry.State}");
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        Console.WriteLine($"- Property: {ve.PropertyName}, Error: {ve.ErrorMessage}");
-                    }
-                }
-
-                throw; // hoặc return lỗi ra view
-            }
-
-            return Json(new
-            {
-                status,
-                mess
-            }, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult _create_TaiLieu()
+        public ActionResult create_BaiDang(HttpPostedFileBase[] files)
         {
             string status = "success";
             string mess = "Thêm mới bản ghi thành công";
@@ -234,101 +148,177 @@ namespace QuanLyDangBai.Controllers
             {
                 try
                 {
-                    var baiDang_NEW = JsonConvert.DeserializeObject<tbBaiDangExtend>(Request.Form["baiDang"]);
-                    var files = Request.Files;
+                    var baiDang_NEWs = JsonConvert.DeserializeObject<List<tbBaiDangExtend>>(Request.Form["baiDangs"]);
 
-                    if (baiDang_NEW == null)
+                    if (baiDang_NEWs == null)
                     {
                         status = "error";
                         mess = "Chưa có bản ghi nào";
                     }
                     else
                     {
-                        //// Thêm mới
-                        //var baiDang = new tbBaiDang
-                        //{
-                        //   IdBaiDang = Guid.NewGuid(),
-                        //   NoiDung = baiDang_NEW.BaiDang.NoiDung,
-                        //   ThoiGian = baiDang_NEW.BaiDang.ThoiGian,
-                        //   TrangThaiDangBai = 1,
+                        foreach (var baiDang_NEW in baiDang_NEWs)
+                        {
+                            List<string> _linkTeps = new List<string>();
 
-                        //    TrangThai = 1,
-                        //    IdNguoiTao = per.NguoiDung.IdNguoiDung,
-                        //    NgayTao = DateTime.Now,
-                        //    MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
-                        //};
-                        //db.tbBaiDangs.Add(baiDang);
+                            #region Lưu db
+                            // Thêm mới chiến dịch
+                            var chienDich = new tbChienDich
+                            {
+                                IdChienDich = Guid.NewGuid(),
+                                TenChienDich = "",
+                                TrangThaiHoatDong = 1,
 
-                        //for (int i = 0; i < files.Count; i++)
-                        //{
-                        //    var f = Request.Files[i];
-                        //    var key = Request.Files.GetKey(i);
+                                TrangThai = 1,
+                                IdNguoiTao = per.NguoiDung.IdNguoiDung,
+                                NgayTao = DateTime.Now,
+                                MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
+                            };
+                            db.tbChienDiches.Add(chienDich);
 
-                        //    string duongDanThuMucGoc = string.Format("/Assets/uploads/{0}/TAILIEU/{1}",
-                        //        per.DonViSuDung.MaDonViSuDung, baiDang.IdTaiLieu);
-                        //    string tenTaiLieu_BANDAU = Path.GetFileName(f.FileName);
-                        //    var duongDanTep = LayDuongDanTep(duongDanThuMucGoc: duongDanThuMucGoc, tenTep_BANDAU: tenTaiLieu_BANDAU);
+                            // Thêm mới
+                            var baiDang = new tbBaiDang
+                            {
+                                IdBaiDang = Guid.NewGuid(),
+                                IdChienDich = chienDich.IdChienDich,
+                                NoiDung = baiDang_NEW.BaiDang.NoiDung,
+                                ThoiGian = baiDang_NEW.BaiDang.ThoiGian,
+                                TrangThaiDangBai = 1,
 
-                        //    byte[] imgData = null;
-                        //    using (var binaryReader = new BinaryReader(f.InputStream))
-                        //    {
-                        //        imgData = binaryReader.ReadBytes(f.ContentLength);
-                        //    }
-                        //    ;
+                                TrangThai = 1,
+                                IdNguoiTao = per.NguoiDung.IdNguoiDung,
+                                NgayTao = DateTime.Now,
+                                MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
+                            };
+                            db.tbBaiDangs.Add(baiDang);
 
-                        //    var anhMoTa = new tbAnhMoTa
-                        //    {
-                        //        IdAnhMoTa = Guid.NewGuid(),
-                        //        IdTaiLieu = baiDang.IdTaiLieu,
-                        //        LaAnhDaiDien = key == "anhdaidien" ? true : false,
-                        //        ImgData = imgData,
-                        //        TenTepGoc = Path.GetFileNameWithoutExtension(f.FileName),
-                        //        TenTepMoi = duongDanTep.TenTep_CHUYENDOI,
-                        //        LoaiTep = duongDanTep.LoaiTep,
+                            foreach (var f in files)
+                            {
+                                var tepDinhKem = new tbTepDinhKem
+                                {
+                                    IdTep = Guid.NewGuid(),
+                                    FileName = Path.GetFileNameWithoutExtension(f.FileName),
+                                    //FileNameUpdate = duongDanTep.TenTep_CHUYENDOI,
+                                    //FileExtension = duongDanTep.LoaiTep,
+                                    //DuongDanTepVatLy = duongDanTep.DuongDanTep_BANDAU,
+                                    //ByteData = imgData,
 
-                        //        DuongDanTepVatLy = duongDanTep.DuongDanTep_BANDAU,
-                        //        TrangThai = 1,
-                        //        IdNguoiTao = per.NguoiDung.IdNguoiDung,
-                        //        NgayTao = DateTime.Now,
-                        //        MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
-                        //    };
-                        //    db.tbAnhMoTas.Add(anhMoTa);
+                                    TrangThai = 1,
+                                    IdNguoiTao = per.NguoiDung.IdNguoiDung,
+                                    NgayTao = DateTime.Now,
+                                    MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
+                                };
 
-                        //    #region Tạo và lưu
-                        //    // Tạo thư mục
-                        //    if (!System.IO.Directory.Exists(duongDanTep.DuongDanThuMuc_BANDAU_SERVER))
-                        //        System.IO.Directory.CreateDirectory(duongDanTep.DuongDanThuMuc_BANDAU_SERVER);
-                        //    // (Nếu có rồi thì xóa)
-                        //    if (System.IO.File.Exists(duongDanTep.DuongDanTep_BANDAU_SERVER))
-                        //        System.IO.File.Delete(duongDanTep.DuongDanTep_BANDAU_SERVER);
-                        //    f.SaveAs(duongDanTep.DuongDanTep_BANDAU_SERVER);
-                        //    #endregion
-                        //};
-                        //db.SaveChanges();
-                        //scope.Commit();
+                                #region Lưu file trong server
+                                byte[] imgData = null;
+                                using (var binaryReader = new BinaryReader(f.InputStream))
+                                {
+                                    imgData = binaryReader.ReadBytes(f.ContentLength);
+                                }
+                                ;
+
+                                // Kiểm tra max dung lượng
+                                // Lưu
+                                string duongDanThuMucGoc = string.Format("/Assets/uploads/{0}/THUVIEN_TEPDINHKEM/{1}",
+                               per.DonViSuDung.MaDonViSuDung, tepDinhKem.IdTep);
+                                string tenTaiLieu_BANDAU = Path.GetFileName(f.FileName);
+                                var duongDanTep = LayDuongDanTep(duongDanThuMucGoc: duongDanThuMucGoc, tenTep_BANDAU: tenTaiLieu_BANDAU);
+
+                                string inputFileName = Public.Handle.ConvertToUnSign(s: Path.GetFileName(f.FileName), khoangCach: "-");
+                                string filePath = string.Format("/{0}/{1}",
+                                    duongDanThuMucGoc, inputFileName);
+                                string folderPath_SERVER = Request.MapPath(duongDanThuMucGoc);
+                                string inputFilePath_SERVER = Request.MapPath(filePath);
+                                try
+                                {
+                                    // Tạo thư mục
+                                    if (!System.IO.Directory.Exists(folderPath_SERVER))
+                                        System.IO.Directory.CreateDirectory(folderPath_SERVER);
+                                    // (Nếu có rồi thì xóa)
+                                    if (System.IO.File.Exists(inputFilePath_SERVER))
+                                        System.IO.File.Delete(inputFilePath_SERVER);
+                                    f.SaveAs(inputFilePath_SERVER);
+                                    string currentDomain = Request.Url.Host.ToLower();
+                                    string link = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, filePath);
+                                    _linkTeps.Add(link);
+                                }
+                                catch (Exception ex)
+                                {
+                                    // Xóa toàn bộ thư mục
+                                    if (!System.IO.Directory.Exists(folderPath_SERVER)) System.IO.Directory.Delete(folderPath_SERVER, true);
+                                }
+                                #endregion
+
+                                #region Lưu file trong server
+                                tepDinhKem.FileNameUpdate = duongDanTep.TenTep_CHUYENDOI;
+                                tepDinhKem.FileExtension = duongDanTep.LoaiTep;
+                                tepDinhKem.DuongDanTepVatLy = duongDanTep.DuongDanTep_BANDAU;
+                                tepDinhKem.ByteData = imgData;
+
+                                db.tbTepDinhKems.Add(tepDinhKem);
+
+                                var baiDangTepDinhKem = new tbBaiDangTepDinhKem
+                                {
+                                    IdBaiDang = baiDang.IdBaiDang,
+                                    IdTepDinhKem = tepDinhKem.IdTep,
+                                };
+
+                                db.tbBaiDangTepDinhKems.Add(baiDangTepDinhKem);
+                                #endregion
+                            }
+                ;
+
+                            #endregion
+
+                            #region Chuyển vào sheet
+                            // Đường dẫn thực tế của file JSON đã upload
+                            string jsonPath = Server.MapPath("~/App_Data/meta-buckeye-458819-m8-b926e8aa307c.json");
+
+                            // Khởi tạo credential
+                            GoogleCredential credential;
+                            using (var stream = new FileStream(jsonPath, FileMode.Open, FileAccess.Read))
+                            {
+                                credential = GoogleCredential.FromStream(stream).CreateScoped(Scopes);
+                            }
+
+                            // Khởi tạo Sheets API service
+                            var service = new SheetsService(new BaseClientService.Initializer()
+                            {
+                                HttpClientInitializer = credential,
+                                ApplicationName = ApplicationName,
+                            });
+
+                            // Tạo dữ liệu mẫu
+                            var values = new List<IList<object>>();
+                            values.Add(new List<object> {
+                                baiDang_NEW.BaiDang.IdBaiDang,
+                                baiDang_NEW.BaiDang.ThoiGian.Value.ToString(),
+                                baiDang_NEW.BaiDang.NoiDung,
+                                baiDang_NEW.TuTaoAnh == 1 ? "TRUE" : "FALSE",
+                                string.Join(",", _linkTeps)
+                            });
+                            // Tạo yêu cầu ghi dữ liệu
+                            var valueRange = new ValueRange
+                            {
+                                Values = values
+                            };
+
+                            var appendRequest = service.Spreadsheets.Values.Append(valueRange, spreadsheetId, $"{sheetName}!A:E");
+                            appendRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
+
+                            var appendResponse = appendRequest.Execute();
+                            #endregion
+                        };
+
+                        db.SaveChanges();
+                        scope.Commit();
                     }
                     ;
                 }
-                //catch (Exception ex)
-                //{
-
-                //}
-                catch (DbEntityValidationException ex)
+                catch (Exception ex)
                 {
                     status = "error";
                     mess = ex.Message;
-                    scope.Rollback();
-
-                    foreach (var eve in ex.EntityValidationErrors)
-                    {
-                        Console.WriteLine($"Entity: {eve.Entry.Entity.GetType().Name} - State: {eve.Entry.State}");
-                        foreach (var ve in eve.ValidationErrors)
-                        {
-                            Console.WriteLine($"- Property: {ve.PropertyName}, Error: {ve.ErrorMessage}");
-                        }
-                    }
-
-                    throw; // hoặc return lỗi ra view
                 }
             }
             return Json(new
@@ -336,6 +326,56 @@ namespace QuanLyDangBai.Controllers
                 status,
                 mess
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> taoNoiDungAI(string input)
+        {
+            string status = "success";
+            string mess = "Đã tạo nội dung AI";
+            string noiDung = "";
+            try
+            {
+                var email = "email@gmail.com";
+                var website = "https://giaptech.com";
+                var diaChi = "Hà Nội, Việt Nam";
+                var chuDe = input;
+                var prompt = $@"
+Viết một bài đăng fanpage chất lượng cao theo phong cách sau:
+
+1. **Tiêu đề ngắn gọn, mạnh mẽ và thu hút**, có thể dùng biểu tượng cảm xúc (emoji) phù hợp.
+2. **Feedback thực tế hoặc câu chuyện truyền cảm hứng** từ khách hàng hoặc học viên (dạng lời kể, dẫn chứng).
+3. **Danh sách gạch đầu dòng** các lợi ích, kết quả cụ thể mà người dùng đạt được.
+4. **Lý do tại sao người khác cũng nên lựa chọn dịch vụ/sản phẩm này** (USP – điểm mạnh, cam kết...).
+5. **Kêu gọi hành động rõ ràng**: inbox, bình luận, hoặc để lại thông tin để được tư vấn.
+6. **Thông tin liên hệ**, bao gồm:
+7. **Hashtag liên quan ở cuối bài viết** (4–6 hashtag)
+   - Email: {email}
+   - Website: {website}
+   - Địa chỉ: {diaChi}
+
+Nội dung bài viết nói về: ""{chuDe}""
+
+Yêu cầu:
+- Viết bằng tiếng Việt
+- Văn phong thuyết phục, tự nhiên, gần gũi, hướng đến hành động, dành cho fanpage
+- Có thể sử dụng emoji để làm nổi bật
+- Toàn bộ nội dung không quá 500 từ
+";
+                noiDung = await _openAIApiService.GetCompletionAsync(prompt);
+            }
+            catch (Exception ex)
+            {
+                status = "error";
+                mess = ex.ToString();
+            }
+            ;
+            return Json(new
+            {
+                NoiDung = noiDung,
+                status,
+                mess
+            });
         }
     }
 }

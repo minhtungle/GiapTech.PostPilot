@@ -22,6 +22,8 @@ public partial class tbBaiDang
 
     public System.Guid IdBaiDang { get; set; }
 
+    public Nullable<System.Guid> IdChienDich { get; set; }
+
     public string NoiDung { get; set; }
 
     public Nullable<System.DateTime> ThoiGian { get; set; }

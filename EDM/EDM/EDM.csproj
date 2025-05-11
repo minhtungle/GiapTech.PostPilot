@@ -7846,10 +7846,10 @@
     <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.getList.cshtml" />
     <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.thongtinhoso.cshtml" />
     <Content Include="Views\Admin\__Home\Search\search.tinnhan.cshtml" />
-    <Content Include="Views\Admin\QuanLyDangBai\quanlydangbai-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLyDangBai\quanlydangbai-getList.cshtml" />
+    <Content Include="Views\Admin\QuanLyDangBai\baidang\baidang-crud.cshtml" />
+    <Content Include="Views\Admin\QuanLyDangBai\baidang\baidang-getList.cshtml" />
     <Content Include="Views\Admin\QuanLyDangBai\quanlydangbai.cshtml" />
-    <Content Include="Views\Admin\QuanLyDangBai\quanlydangbai-getList - Copy.cshtml" />
+    <Content Include="Views\Admin\QuanLyDangBai\chiendich\chiendich-getList.cshtml" />
     <None Include="Views\User\TrangTaiLieu\404.cshtml" />
     <None Include="Views\User\TrangTaiLieu\about.cshtml" />
     <None Include="Views\User\TrangTaiLieu\checkout.cshtml" />

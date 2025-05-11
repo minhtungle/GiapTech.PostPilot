@@ -13,6 +13,39 @@ class QuanLyDangBai {
         var idNguoiDung_DangSuDung = $("#input-idnguoidung-dangsudung").val();
         quanLyDangBai.page = $("#page-quanlydangbai");
 
+        quanLyDangBai.chienDich = {
+            ...quanLyDangBai.chienDich,
+            dataTable: null,
+            getList: function () {
+                $.ajax({
+                    ...ajaxDefaultProps({
+                        url: "/QuanLyDangBai/getList_ChienDich",
+                        type: "GET", // Phải là POST để gửi JSON
+                        //contentType: "application/json; charset=utf-8",  // Định dạng JSON
+                        //data: { locThongTin: quanLyDangBai.baiDang.locThongTin.data }
+                        //dataType: "json",
+                    }),
+                    //contentType: false,
+                    //processData: false,
+                    success: function (res) {
+                        $("#chiendich-getList-container").html(res);
+                        quanLyDangBai.chienDich.dataTable = new DataTableCustom({
+                            name: "chiendich-getList",
+                            table: $("#chiendich-getList"),
+                            props: {
+                                dom: `
+                                <'row'<'col-sm-12'rt>>
+                                <'row'<'col-sm-12 col-md-6 text-left'i><'col-sm-12 col-md-6 pt-2'p>>`, 
+                                lengthMenu: [
+                                    [5, 10],
+                                    [5, 10],
+                                ],
+                            }
+                        }).dataTable;
+                    }
+                });
+            },
+        };
         quanLyDangBai.baiDang = {
             ...quanLyDangBai.baiDang,
             dataTable: null,
@@ -135,6 +168,28 @@ class QuanLyDangBai {
                         });
                 }
             },
+            handleAI: {
+                taoNoiDungAI: function () {
+                    var noiDung = $("#input-noidung").val().trim();
+
+                    noiDung && $.ajax({
+                        ...ajaxDefaultProps({
+                            url: "/QuanLyDangBai/taoNoiDungAI",
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            data: {
+                                input: $("#input-noidung").val().trim()
+                            },
+                        }),
+                        success: function (res) {
+                            if (res.status == "success") {
+                                $("#input-noidung-ai").val(res.NoiDung);
+                            };
+                            sys.alert({ mess: res.mess, status: res.status, timeout: 1500 });
+                        }
+                    })
+                },
+            },
             getList: function () {
                 $.ajax({
                     ...ajaxDefaultProps({
@@ -152,6 +207,9 @@ class QuanLyDangBai {
                             name: "baidang-getList",
                             table: $("#baidang-getList"),
                             props: {
+                                dom: `
+                                <'row'<'col-sm-12'rt>>
+                                <'row'<'col-sm-12 col-md-6 text-left'i><'col-sm-12 col-md-6 pt-2'p>>`, 
                                 lengthMenu: [
                                     [5, 10],
                                     [5, 10],
@@ -185,7 +243,7 @@ class QuanLyDangBai {
                 };
                 $.ajax({
                     ...ajaxDefaultProps({
-                        url: "/QuanLyDangBai/displayModal_CRUD",
+                        url: "/QuanLyDangBai/displayModal_CRUD_BaiDang",
                         type: "POST",
                         contentType: "application/json; charset=utf-8",
                         data: {
@@ -203,9 +261,11 @@ class QuanLyDangBai {
                     }
                 })
             },
+
             save: function (loai) {
                 var modalValidtion = htmlEl.activeValidationStates("#baidang-crud");
                 if (modalValidtion) {
+                    var baiDangs = [];
                     var baiDang = {
                         BaiDang: {
                             IdBaiDang: $("#input-idbaidang").val(),
@@ -222,23 +282,23 @@ class QuanLyDangBai {
                             IdTep: idTep,
                         });
                     });
-
+                    baiDangs.push(baiDang);
                     sys.confirmDialog({
                         mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
                         callback: function () {
-                            var f = new FormData();
-                            f.append("baiDang", JSON.stringify(baiDang));
-                            f.append("loai", loai);
+                            var formData = new FormData();
+                            formData.append("baiDangs", JSON.stringify(baiDangs));
+                            formData.append("loai", loai);
 
                             $.each(quanLyDangBai.baiDang.handleAnhMoTa.arrAnh, function (idx, anh) {
-                                f.append("tepdinhkem", anh.file);
+                                formData.append("files", anh.file);
                             });
 
                             $.ajax({
                                 ...ajaxDefaultProps({
                                     url: loai == "create" ? "/QuanLyDangBai/create_BaiDang" : "/QuanLyDangBai/update_BaiDang",
                                     type: "POST",
-                                    data: f,
+                                    data: formData,
                                 }),
                                 //contentType: "application/json; charset=utf-8",  // Chỉ định kiểu nội dung là JSON
                                 contentType: false,
@@ -313,7 +373,8 @@ class QuanLyDangBai {
                 }
             },
         };
-        //quanLyDangBai.baiDang.getList();
+        quanLyDangBai.chienDich.getList();
+        quanLyDangBai.baiDang.getList();
         sys.activePage({
             page: quanLyDangBai.page.attr("id"),
             pageGroup: quanLyDangBai.pageGroup
