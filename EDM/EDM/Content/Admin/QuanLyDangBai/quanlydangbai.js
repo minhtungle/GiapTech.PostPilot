@@ -45,6 +45,27 @@ class QuanLyDangBai {
                     }
                 });
             },
+            xemChiTiet: function (idChienDich = '00000000-0000-0000-0000-000000000000') {
+                $.ajax({
+                    ...ajaxDefaultProps({
+                        url: "/QuanLyDangBai/displayModal_CRUD_BaiDang",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            input
+                        },
+                    }),
+                    success: function (res) {
+                        $("#baidang-crud").html(res);
+                        /**
+                          * Gán các thuộc tính
+                          */
+                        sys.displayModal({
+                            name: '#baidang-crud'
+                        });
+                    }
+                })
+            }
         };
         quanLyDangBai.baiDang = {
             ...quanLyDangBai.baiDang,

@@ -137,8 +137,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\DefaultController.cs" />
-    <Compile Include="Controllers\QuanLyDangBaiController.cs" />
+    <Compile Include="Controllers\BaiDangController.cs" />
+    <Compile Include="Controllers\ChienDichController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -155,7 +155,10 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\BaiDang\" />
+    <Folder Include="Views\ChienDich\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
