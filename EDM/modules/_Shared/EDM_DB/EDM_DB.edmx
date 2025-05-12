@@ -78,25 +78,12 @@
           <Property Name="Stt" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdBaiDang" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IdChienDich" Type="uniqueidentifier" />
+          <Property Name="IdNenTang" Type="uniqueidentifier" />
           <Property Name="NoiDung" Type="nvarchar(max)" />
           <Property Name="ThoiGian" Type="datetime" />
           <Property Name="SoLuongLike" Type="int" />
           <Property Name="SoLuongComment" Type="int" />
           <Property Name="TrangThaiDangBai" Type="int" />
-          <Property Name="TrangThai" Type="int" />
-          <Property Name="MaDonViSuDung" Type="uniqueidentifier" />
-          <Property Name="NgayTao" Type="datetime" />
-          <Property Name="IdNguoiTao" Type="uniqueidentifier" />
-          <Property Name="NgaySua" Type="datetime" />
-          <Property Name="IdNguoiSua" Type="uniqueidentifier" />
-        </EntityType>
-        <EntityType Name="tbBaiDangNenTang">
-          <Key>
-            <PropertyRef Name="IdBaiDang" />
-          </Key>
-          <Property Name="Stt" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdBaiDang" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="IdNenTang" Type="uniqueidentifier" />
           <Property Name="TrangThai" Type="int" />
           <Property Name="MaDonViSuDung" Type="uniqueidentifier" />
           <Property Name="NgayTao" Type="datetime" />
@@ -118,14 +105,11 @@
           <Property Name="NgaySua" Type="datetime" />
           <Property Name="IdNguoiSua" Type="uniqueidentifier" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="tbChienDich">
           <Key>
-            <PropertyRef Name="Stt" />
             <PropertyRef Name="IdChienDich" />
           </Key>
-          <Property Name="Stt" Type="int" Nullable="false" />
+          <Property Name="Stt" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdChienDich" Type="uniqueidentifier" Nullable="false" />
           <Property Name="TenChienDich" Type="nvarchar(max)" />
           <Property Name="GhiChu" Type="nvarchar(max)" />
@@ -345,8 +329,8 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
           <EntitySet Name="default_tbChucVu" EntityType="Self.default_tbChucVu" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="default_tbQuocGia" EntityType="Self.default_tbQuocGia" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbBaiDang" EntityType="Self.tbBaiDang" Schema="vietstarter_admin" store:Type="Tables" />
-          <EntitySet Name="tbBaiDangNenTang" EntityType="Self.tbBaiDangNenTang" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbBaiDangTepDinhKem" EntityType="Self.tbBaiDangTepDinhKem" Schema="vietstarter_admin" store:Type="Tables" />
+          <EntitySet Name="tbChienDich" EntityType="Self.tbChienDich" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbCoCauToChuc" EntityType="Self.tbCoCauToChuc" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbDonViSuDung" EntityType="Self.tbDonViSuDung" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbDonViTien" EntityType="Self.tbDonViTien" Schema="vietstarter_admin" store:Type="Tables" />
@@ -358,21 +342,6 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
           <EntitySet Name="tbNguoiDung" EntityType="Self.tbNguoiDung" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbNoiDung" EntityType="Self.tbNoiDung" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbTepDinhKem" EntityType="Self.tbTepDinhKem" Schema="vietstarter_admin" store:Type="Tables" />
-          <EntitySet Name="tbChienDich" EntityType="Self.tbChienDich" store:Type="Tables" store:Schema="vietstarter_admin">
-            <DefiningQuery>SELECT 
-    [tbChienDich].[Stt] AS [Stt], 
-    [tbChienDich].[IdChienDich] AS [IdChienDich], 
-    [tbChienDich].[TenChienDich] AS [TenChienDich], 
-    [tbChienDich].[GhiChu] AS [GhiChu], 
-    [tbChienDich].[TrangThaiHoatDong] AS [TrangThaiHoatDong], 
-    [tbChienDich].[TrangThai] AS [TrangThai], 
-    [tbChienDich].[MaDonViSuDung] AS [MaDonViSuDung], 
-    [tbChienDich].[NgayTao] AS [NgayTao], 
-    [tbChienDich].[IdNguoiTao] AS [IdNguoiTao], 
-    [tbChienDich].[NgaySua] AS [NgaySua], 
-    [tbChienDich].[IdNguoiSua] AS [IdNguoiSua]
-    FROM [vietstarter_admin].[tbChienDich] AS [tbChienDich]</DefiningQuery>
-          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -390,8 +359,8 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
           <EntitySet Name="default_tbChucVu" EntityType="EDM_DBModel.default_tbChucVu" />
           <EntitySet Name="default_tbQuocGia" EntityType="EDM_DBModel.default_tbQuocGia" />
           <EntitySet Name="tbBaiDangs" EntityType="EDM_DBModel.tbBaiDang" />
-          <EntitySet Name="tbBaiDangNenTangs" EntityType="EDM_DBModel.tbBaiDangNenTang" />
           <EntitySet Name="tbBaiDangTepDinhKems" EntityType="EDM_DBModel.tbBaiDangTepDinhKem" />
+          <EntitySet Name="tbChienDiches" EntityType="EDM_DBModel.tbChienDich" />
           <EntitySet Name="tbCoCauToChucs" EntityType="EDM_DBModel.tbCoCauToChuc" />
           <EntitySet Name="tbDonViSuDungs" EntityType="EDM_DBModel.tbDonViSuDung" />
           <EntitySet Name="tbDonViTiens" EntityType="EDM_DBModel.tbDonViTien" />
@@ -403,7 +372,6 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
           <EntitySet Name="tbNguoiDungs" EntityType="EDM_DBModel.tbNguoiDung" />
           <EntitySet Name="tbNoiDungs" EntityType="EDM_DBModel.tbNoiDung" />
           <EntitySet Name="tbTepDinhKems" EntityType="EDM_DBModel.tbTepDinhKem" />
-          <EntitySet Name="tbChienDiches" EntityType="EDM_DBModel.tbChienDich" />
           </EntityContainer>
         <ComplexType Name="Lay_TruongDuLieus_Result">
           <Property Type="String" Name="TenTruong" Nullable="true" />
@@ -482,25 +450,12 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
           <Property Name="Stt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdBaiDang" Type="Guid" Nullable="false" />
           <Property Name="IdChienDich" Type="Guid" />
+          <Property Name="IdNenTang" Type="Guid" />
           <Property Name="NoiDung" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ThoiGian" Type="DateTime" Precision="3" />
           <Property Name="SoLuongLike" Type="Int32" />
           <Property Name="SoLuongComment" Type="Int32" />
           <Property Name="TrangThaiDangBai" Type="Int32" />
-          <Property Name="TrangThai" Type="Int32" />
-          <Property Name="MaDonViSuDung" Type="Guid" />
-          <Property Name="NgayTao" Type="DateTime" Precision="3" />
-          <Property Name="IdNguoiTao" Type="Guid" />
-          <Property Name="NgaySua" Type="DateTime" Precision="3" />
-          <Property Name="IdNguoiSua" Type="Guid" />
-        </EntityType>
-        <EntityType Name="tbBaiDangNenTang">
-          <Key>
-            <PropertyRef Name="IdBaiDang" />
-          </Key>
-          <Property Name="Stt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdBaiDang" Type="Guid" Nullable="false" />
-          <Property Name="IdNenTang" Type="Guid" />
           <Property Name="TrangThai" Type="Int32" />
           <Property Name="MaDonViSuDung" Type="Guid" />
           <Property Name="NgayTao" Type="DateTime" Precision="3" />
@@ -515,6 +470,22 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
           <Property Name="Stt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdBaiDang" Type="Guid" Nullable="false" />
           <Property Name="IdTepDinhKem" Type="Guid" />
+          <Property Name="TrangThai" Type="Int32" />
+          <Property Name="MaDonViSuDung" Type="Guid" />
+          <Property Name="NgayTao" Type="DateTime" Precision="3" />
+          <Property Name="IdNguoiTao" Type="Guid" />
+          <Property Name="NgaySua" Type="DateTime" Precision="3" />
+          <Property Name="IdNguoiSua" Type="Guid" />
+        </EntityType>
+        <EntityType Name="tbChienDich">
+          <Key>
+            <PropertyRef Name="IdChienDich" />
+          </Key>
+          <Property Name="Stt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdChienDich" Type="Guid" Nullable="false" />
+          <Property Name="TenChienDich" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GhiChu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TrangThaiHoatDong" Type="Int32" />
           <Property Name="TrangThai" Type="Int32" />
           <Property Name="MaDonViSuDung" Type="Guid" />
           <Property Name="NgayTao" Type="DateTime" Precision="3" />
@@ -724,23 +695,6 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
           <Property Name="NgaySua" Type="DateTime" Precision="3" />
           <Property Name="IdNguoiSua" Type="Guid" />
         </EntityType>
-        <EntityType Name="tbChienDich">
-          <Key>
-            <PropertyRef Name="Stt" />
-            <PropertyRef Name="IdChienDich" />
-          </Key>
-          <Property Name="Stt" Type="Int32" Nullable="false" />
-          <Property Name="IdChienDich" Type="Guid" Nullable="false" />
-          <Property Name="TenChienDich" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="GhiChu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="TrangThaiHoatDong" Type="Int32" />
-          <Property Name="TrangThai" Type="Int32" />
-          <Property Name="MaDonViSuDung" Type="Guid" />
-          <Property Name="NgayTao" Type="DateTime" Precision="3" />
-          <Property Name="IdNguoiTao" Type="Guid" />
-          <Property Name="NgaySua" Type="DateTime" Precision="3" />
-          <Property Name="IdNguoiSua" Type="Guid" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -831,22 +785,8 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
                 <ScalarProperty Name="SoLuongLike" ColumnName="SoLuongLike" />
                 <ScalarProperty Name="ThoiGian" ColumnName="ThoiGian" />
                 <ScalarProperty Name="NoiDung" ColumnName="NoiDung" />
-                <ScalarProperty Name="IdChienDich" ColumnName="IdChienDich" />
-                <ScalarProperty Name="IdBaiDang" ColumnName="IdBaiDang" />
-                <ScalarProperty Name="Stt" ColumnName="Stt" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tbBaiDangNenTangs">
-            <EntityTypeMapping TypeName="EDM_DBModel.tbBaiDangNenTang">
-              <MappingFragment StoreEntitySet="tbBaiDangNenTang">
-                <ScalarProperty Name="IdNguoiSua" ColumnName="IdNguoiSua" />
-                <ScalarProperty Name="NgaySua" ColumnName="NgaySua" />
-                <ScalarProperty Name="IdNguoiTao" ColumnName="IdNguoiTao" />
-                <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
-                <ScalarProperty Name="MaDonViSuDung" ColumnName="MaDonViSuDung" />
-                <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
                 <ScalarProperty Name="IdNenTang" ColumnName="IdNenTang" />
+                <ScalarProperty Name="IdChienDich" ColumnName="IdChienDich" />
                 <ScalarProperty Name="IdBaiDang" ColumnName="IdBaiDang" />
                 <ScalarProperty Name="Stt" ColumnName="Stt" />
               </MappingFragment>
@@ -863,6 +803,23 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
                 <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
                 <ScalarProperty Name="IdTepDinhKem" ColumnName="IdTepDinhKem" />
                 <ScalarProperty Name="IdBaiDang" ColumnName="IdBaiDang" />
+                <ScalarProperty Name="Stt" ColumnName="Stt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbChienDiches">
+            <EntityTypeMapping TypeName="EDM_DBModel.tbChienDich">
+              <MappingFragment StoreEntitySet="tbChienDich">
+                <ScalarProperty Name="IdNguoiSua" ColumnName="IdNguoiSua" />
+                <ScalarProperty Name="NgaySua" ColumnName="NgaySua" />
+                <ScalarProperty Name="IdNguoiTao" ColumnName="IdNguoiTao" />
+                <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
+                <ScalarProperty Name="MaDonViSuDung" ColumnName="MaDonViSuDung" />
+                <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
+                <ScalarProperty Name="TrangThaiHoatDong" ColumnName="TrangThaiHoatDong" />
+                <ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
+                <ScalarProperty Name="TenChienDich" ColumnName="TenChienDich" />
+                <ScalarProperty Name="IdChienDich" ColumnName="IdChienDich" />
                 <ScalarProperty Name="Stt" ColumnName="Stt" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1076,23 +1033,6 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
                 <ScalarProperty Name="FileNameUpdate" ColumnName="FileNameUpdate" />
                 <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="IdTep" ColumnName="IdTep" />
-                <ScalarProperty Name="Stt" ColumnName="Stt" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tbChienDiches">
-            <EntityTypeMapping TypeName="EDM_DBModel.tbChienDich">
-              <MappingFragment StoreEntitySet="tbChienDich">
-                <ScalarProperty Name="IdNguoiSua" ColumnName="IdNguoiSua" />
-                <ScalarProperty Name="NgaySua" ColumnName="NgaySua" />
-                <ScalarProperty Name="IdNguoiTao" ColumnName="IdNguoiTao" />
-                <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
-                <ScalarProperty Name="MaDonViSuDung" ColumnName="MaDonViSuDung" />
-                <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
-                <ScalarProperty Name="TrangThaiHoatDong" ColumnName="TrangThaiHoatDong" />
-                <ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
-                <ScalarProperty Name="TenChienDich" ColumnName="TenChienDich" />
-                <ScalarProperty Name="IdChienDich" ColumnName="IdChienDich" />
                 <ScalarProperty Name="Stt" ColumnName="Stt" />
               </MappingFragment>
             </EntityTypeMapping>

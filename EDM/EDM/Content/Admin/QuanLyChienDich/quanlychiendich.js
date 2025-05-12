@@ -22,7 +22,7 @@ class QuanLyChienDich {
                         url: "/QuanLyChienDich/getList_ChienDich",
                         type: "GET", // Phải là POST để gửi JSON
                         //contentType: "application/json; charset=utf-8",  // Định dạng JSON
-                        //data: { locThongTin: quanLyChienDich.baiDang.locThongTin.data }
+                        //data: { locThongTin: quanLyChienDich.chienDich.locThongTin.data }
                         //dataType: "json",
                     }),
                     //contentType: false,
@@ -45,31 +45,28 @@ class QuanLyChienDich {
                     }
                 });
             },
-            displayModal_CRUD: function (loai = "", idBaiDang = '00000000-0000-0000-0000-000000000000') {
-                // Reset lại các thuộc tính
-                quanLyBaiDang.baiDang.handleAnhMoTa.arrAnh = [];
-
+            displayModal_CRUD: function (loai = "", idChienDich = '00000000-0000-0000-0000-000000000000') {
                 if (loai == "update") {
-                    var idBaiDangs = [];
-                    quanLyBaiDang.baiDang.dataTable.rows().iterator('row', function (context, index) {
+                    var idChienDichs = [];
+                    quanLyChienDich.chienDich.dataTable.rows().iterator('row', function (context, index) {
                         var $row = $(this.row(index).node());
-                        if ($row.has("input.checkRow-baidang-getList:checked").length > 0) {
-                            idBaiDangs.push($row.attr('id'));
+                        if ($row.has("input.checkRow-chiendich-getList:checked").length > 0) {
+                            idChienDichs.push($row.attr('id'));
                         };
                     });
-                    if (idBaiDangs.length != 1) {
+                    if (idChienDichs.length != 1) {
                         sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
                         return;
                     }
-                    else idBaiDang = idBaiDangs[0];
+                    else idChienDich = idChienDichs[0];
                 };
                 var input = {
                     Loai: loai,
-                    IdBaiDang: idBaiDang,
+                    IdChienDich: idChienDich,
                 };
                 $.ajax({
                     ...ajaxDefaultProps({
-                        url: "/QuanLyBaiDang/displayModal_CRUD_BaiDang",
+                        url: "/QuanLyChienDich/displayModal_CRUD_ChienDich",
                         type: "POST",
                         contentType: "application/json; charset=utf-8",
                         data: {
@@ -77,51 +74,35 @@ class QuanLyChienDich {
                         },
                     }),
                     success: function (res) {
-                        $("#baidang-crud").html(res);
+                        $("#chiendich-crud").html(res);
                         /**
                           * Gán các thuộc tính
                           */
                         sys.displayModal({
-                            name: '#baidang-crud'
+                            name: '#chiendich-crud'
                         });
                     }
                 })
             },
             save: function (loai) {
-                var modalValidtion = htmlEl.activeValidationStates("#baidang-crud");
+                var modalValidtion = htmlEl.activeValidationStates("#chiendich-crud");
                 if (modalValidtion) {
-                    var baiDangs = [];
-                    var baiDang = {
-                        BaiDang: {
-                            IdBaiDang: $("#input-idbaidang").val(),
-                            NoiDung: $("#input-noidung").val().trim(),
-                            ThoiGian: $("#input-thoigian").val().trim(),
-                            IdDonViTien: $("#select-donvitien").val(),
+                    var chienDich = {
+                        ChienDich: {
+                            IdChienDich: $("#input-idchiendich").val(),
+                            TenChienDich: $("#input-tenchiendich").val().trim(),
                         },
-                        TuTaoAnh: $("#select-tutaoanh").val(),
-                        TepDinhKems: []
                     }
-                    $.each($(`#anhmota-container tr`), function () {
-                        let idTep = $(this).data("id");
-                        baiDang.TepDinhKems.push({
-                            IdTep: idTep,
-                        });
-                    });
-                    baiDangs.push(baiDang);
                     sys.confirmDialog({
                         mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
                         callback: function () {
                             var formData = new FormData();
-                            formData.append("baiDangs", JSON.stringify(baiDangs));
+                            formData.append("chienDich", JSON.stringify(chienDich));
                             formData.append("loai", loai);
-
-                            $.each(quanLyBaiDang.baiDang.handleAnhMoTa.arrAnh, function (idx, anh) {
-                                formData.append("files", anh.file);
-                            });
 
                             $.ajax({
                                 ...ajaxDefaultProps({
-                                    url: loai == "create" ? "/QuanLyBaiDang/create_BaiDang" : "/QuanLyBaiDang/update_BaiDang",
+                                    url: loai == "create" ? "/QuanLyChienDich/create_ChienDich" : "/QuanLyChienDich/update_ChienDich",
                                     type: "POST",
                                     data: formData,
                                 }),
@@ -130,18 +111,18 @@ class QuanLyChienDich {
                                 processData: false,
                                 success: function (res) {
                                     if (res.status == "success") {
-                                        quanLyBaiDang.baiDang.getList();
+                                        quanLyChienDich.chienDich.getList();
 
                                         sys.displayModal({
-                                            name: '#baidang-crud',
+                                            name: '#chiendich-crud',
                                             displayStatus: "hide"
                                         });
                                         sys.alert({ status: res.status, mess: res.mess });
                                     } else {
                                         if (res.status == "warning") {
                                             htmlEl.inputValidationStates(
-                                                $("#input-tenbaidang"),
-                                                "#baidang-crud",
+                                                $("#input-tenchiendich"),
+                                                "#chiendich-crud",
                                                 res.mess,
                                                 {
                                                     status: true,
@@ -158,29 +139,29 @@ class QuanLyChienDich {
                     });
                 };
             },
-            delete: function (loai, id) {
-                var idBaiDangs = [];
+            delete: function (loai, idChienDich) {
+                var idChienDichs = [];
                 // Lấy id
                 if (loai == "single") {
-                    idBaiDangs.push(id)
+                    idChienDichs.push(idChienDich)
                 } else {
-                    quanLyBaiDang.baiDang.dataTable.rows().iterator('row', function (context, index) {
+                    quanLyChienDich.chienDich.dataTable.rows().iterator('row', function (context, index) {
                         var $row = $(this.row(index).node());
-                        if ($row.has("input.checkRow-vanban-getList:checked").length > 0) {
-                            idBaiDangs.push($row.attr('id'));
+                        if ($row.has("input.checkRow-chiendich-getList:checked").length > 0) {
+                            idChienDichs.push($row.attr('id'));
                         };
                     });
                 };
                 // Kiểm tra id
-                if (idBaiDangs.length > 0) {
+                if (idChienDichs.length > 0) {
                     var f = new FormData();
-                    f.append("idBaiDangs", idBaiDangs.toString());
+                    f.append("idChienDichs", JSON.stringify(idChienDichs));
                     sys.confirmDialog({
                         mess: `Bạn có thực sự muốn xóa bản ghi này hay không ?`,
                         callback: function () {
                             $.ajax({
                                 ...ajaxDefaultProps({
-                                    url: "/QuanLyBaiDang/delete_BaiDang",
+                                    url: "/QuanLyChienDich/delete_ChienDich",
                                     type: "POST",
                                     data: f,
                                 }),
@@ -188,7 +169,7 @@ class QuanLyChienDich {
                                 processData: false,
                                 success: function (res) {
                                     sys.alert({ status: res.status, mess: res.mess })
-                                    quanLyBaiDang.baiDang.getList();
+                                    quanLyChienDich.chienDich.getList();
                                 }
                             })
                         }
@@ -200,7 +181,7 @@ class QuanLyChienDich {
             xemChiTiet: function (idChienDich = '00000000-0000-0000-0000-000000000000') {
                 $.ajax({
                     ...ajaxDefaultProps({
-                        url: "/QuanLyChienDich/displayModal_CRUD_BaiDang",
+                        url: "/QuanLyChienDich/displayModal_CRUD_ChienDich",
                         type: "POST",
                         contentType: "application/json; charset=utf-8",
                         data: {

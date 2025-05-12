@@ -112,7 +112,7 @@ namespace QuanLyChienDich.Controllers
             {
                 try
                 {
-                    var chienDich_NEW = JsonConvert.DeserializeObject<tbChienDichExtend>(Request.Form["chienDichs"]);
+                    var chienDich_NEW = JsonConvert.DeserializeObject<tbChienDichExtend>(Request.Form["chienDich"]);
                     if (chienDich_NEW == null)
                     {
                         status = "error";
@@ -134,6 +134,7 @@ namespace QuanLyChienDich.Controllers
                                 TenChienDich = chienDich_NEW.ChienDich.TenChienDich,
                                 GhiChu = chienDich_NEW.ChienDich.GhiChu,
 
+                                TrangThaiHoatDong = 1,
                                 TrangThai = 1,
                                 IdNguoiTao = per.NguoiDung.IdNguoiDung,
                                 NgayTao = DateTime.Now,

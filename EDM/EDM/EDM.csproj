@@ -1969,6 +1969,7 @@
     <Content Include="Assets\files\[Mẫu thư mục văn bản].rar" />
     <Content Include="Assets\files\[Mẫu danh sách lương].xlsx" />
     <Content Include="App_Data\meta-buckeye-458819-m8-2044fdff02b5.json" />
+    <Content Include="App_Data.zip" />
     <None Include="App_Data\appsettings.Private.json" />
     <None Include="Assets\plugins\main\scripts\jquery-3.6.3.intellisense.js" />
     <Content Include="Assets\plugins\main\scripts\jquery-3.6.3.js" />
@@ -7848,6 +7849,7 @@
     <Content Include="Views\Admin\QuanLyBaiDang\baidang.cshtml" />
     <Content Include="Views\Admin\QuanLyChienDich\chiendich-getList.cshtml" />
     <Content Include="Views\Admin\QuanLyChienDich\chiendich.cshtml" />
+    <Content Include="Views\Admin\QuanLyChienDich\chiendich-crud.cshtml" />
     <None Include="Views\User\TrangTaiLieu\404.cshtml" />
     <None Include="Views\User\TrangTaiLieu\about.cshtml" />
     <None Include="Views\User\TrangTaiLieu\checkout.cshtml" />

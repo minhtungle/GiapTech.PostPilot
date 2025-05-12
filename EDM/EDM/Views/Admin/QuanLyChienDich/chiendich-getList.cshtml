@@ -34,9 +34,28 @@
                     <td class="text-center"><input class="form-check-input checkRow-chiendich-getList" type="checkbox" /></td>
 
                     <td class="text-left">@chienDich.ChienDich.IdChienDich</td>
-                    <td class="text-left"><a href="~/QuanLyBaiDang/Index?idChienDich=@chienDich.ChienDich.IdChienDich"></a> @chienDich.ChienDich.TenChienDich</td>
+                    <td class="text-left">
+                        <a class="c-pointer" href="~/QuanLyBaiDang/Index?idChienDich=@chienDich.ChienDich.IdChienDich">
+                            <i class="bi bi-eye-fill"></i> @chienDich.ChienDich.TenChienDich
+                        </a>
+                    </td>
                     <td class="text-left">@chienDich.ChienDich.NgayTao</td>
-                    <td class="text-center">@chienDich.ChienDich.TrangThaiHoatDong</td>
+                    <td class="text-center">
+                        @{
+                            if (chienDich.ChienDich.TrangThaiHoatDong == -1)
+                            {
+                                <span class="text-danger"><i class="bi bi-flag-fill"></i> Đã kết thúc</span>
+                            }
+                            else if (chienDich.ChienDich.TrangThaiHoatDong == 1)
+                            {
+                                <span class="text-success"><i class="bi bi-arrow-clockwise"></i> Đang tiến hành</span>@*<span class="text-success"><i class="bi bi-check-circle-fill"></i> Đã kết thúc</span>*@
+                            }
+                            else
+                            {
+                                @*<span class="text-success"><i class="bi bi-check-circle-fill"></i> Đã kết thúc</span>*@
+                            }
+                        }
+                    </td>
                     @*<td class="text-center">
                             <div style="white-space: nowrap">
                                 <a class="btn btn-sm btn-light-secondary" title="Xem chi tiết"

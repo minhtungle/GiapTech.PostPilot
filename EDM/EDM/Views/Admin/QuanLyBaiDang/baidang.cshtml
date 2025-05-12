@@ -8,7 +8,8 @@
 @section hTitle {}
 @section hBreadcrumb {
     <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Quản lý bài đăng</li>
+    <li class="breadcrumb-item">Quản lý bài đăng</li>
+    <li class="breadcrumb-item active" aria-current="page">@string.Format("{0}", Model.ChienDich.TenChienDich)</li>
 }
 @section styles {
     @*<link href="~/Content/Admin/QuanLyBaiDang/quanlybaidang.css" rel="stylesheet" />*@
@@ -21,7 +22,7 @@
     </script>
 }
 <section class="section" page-group="page-group-quanlybaidang" id="page-quanlybaidang" data-aos="fade-up">
-    <input id="input-idchiendich" value="@Model.IdChienDich" />
+    <input id="input-idchiendich" value="@Model.ChienDich.IdChienDich" hidden />
     <div class="card" intro-container="thanhtacvu">
         <div class="card-content">
             <div class="card-body" intro-container="thaotac-coban">

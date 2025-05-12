@@ -1,52 +1,54 @@
 ﻿@using Applications.QuanLyBaiDang.Models
 @model List<tbBaiDangExtend>
 
-<table class="table table-hover table-bordered table-sticky w-100" id="baidang-getList" data-page-length="10">
-    <thead class="nowrap" style="white-space: nowrap !important">
-        <tr>
-            <th class="text-center" data-orderable="false"></th>
+<div class="card-body">
+    <table class="table table-hover table-bordered table-sticky w-100" id="baidang-getList" data-page-length="10">
+        <thead class="nowrap" style="white-space: nowrap !important">
+            <tr>
+                <th class="text-center" data-orderable="false"></th>
 
-            <th class="text-center">Id bài đăng</th>
-            <th class="text-center">Nội dung</th>
-            <th class="text-center">Thời gian</th>
-            <th class="text-center">Trạng thái</th>
+                <th class="text-center">Id bài đăng</th>
+                <th class="text-center">Nội dung</th>
+                <th class="text-center">Thời gian</th>
+                <th class="text-center">Trạng thái</th>
 
-            @*<th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>*@
-        </tr>
-    </thead>
-    <tfoot class="show-footer-above">
-        <tr>
-            <th class="text-center"><input class="form-check-input checkAll-baidang-getList" type="checkbox" title="Chọn tất cả" /></th>
-
-            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
-            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
-            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
-            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
-
-            @*<th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>*@
-        </tr>
-    </tfoot>
-    <tbody>
-        @foreach (var baidang in Model)
-        {
-            <tr id="@baidang.BaiDang.IdBaiDang">
-                <td class="text-center"><input class="form-check-input checkRow-baidang-getList" type="checkbox" /></td>
-                <td class="text-left">@baidang.BaiDang.IdBaiDang</td>
-                <td class="text-left" title="@baidang.BaiDang.NoiDung">@Public.Handle.TruncateString(maxLength: 40, input: baidang.BaiDang.NoiDung)</td>
-                <td class="text-left">@baidang.BaiDang.ThoiGian.Value</td>
-                <td class="text-center">
-                    @{
-                        if (baidang.BaiDang.TrangThaiDangBai == 0)
-                        {
-                            <span class="text-success"><i class="bi bi-check-circle-fill"></i> Đã đăng</span>
-                        }
-                        else
-                        {
-                            <span class="text-warning"><i class="bi bi-clock-fill"></i> Chờ xử lý</span>
-                        }
-                    }
-                </td>
+                @*<th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>*@
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th class="text-center"><input class="form-check-input checkAll-baidang-getList" type="checkbox" title="Chọn tất cả" /></th>
+
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                @*<th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>*@
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var baidang in Model)
+            {
+                <tr id="@baidang.BaiDang.IdBaiDang">
+                    <td class="text-center"><input class="form-check-input checkRow-baidang-getList" type="checkbox" /></td>
+                    <td class="text-left">@baidang.BaiDang.IdBaiDang</td>
+                    <td class="text-left" title="@baidang.BaiDang.NoiDung">@Public.Handle.TruncateString(maxLength: 40, input: baidang.BaiDang.NoiDung)</td>
+                    <td class="text-left">@baidang.BaiDang.ThoiGian.Value</td>
+                    <td class="text-center">
+                        @{
+                            if (baidang.BaiDang.TrangThaiDangBai == 0)
+                            {
+                                <span class="text-success"><i class="bi bi-check-circle-fill"></i> Đã đăng</span>
+                            }
+                            else
+                            {
+                                <span class="text-warning"><i class="bi bi-clock-fill"></i> Chờ xử lý</span>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,6 +1,7 @@
 ﻿using Applications.OpenAIApi.AppServices;
 using Applications.QuanLyBaiDang.Dtos;
 using Applications.QuanLyBaiDang.Models;
+using Applications.QuanLyChienDich.Models;
 using EDM_DB;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
@@ -72,16 +73,24 @@ namespace QuanLyBaiDang.Controllers
             List<ThaoTac> thaoTacs = kieuNguoiDung_IdChucNang.FirstOrDefault(x => x.ChucNang.MaChucNang == "QuanLyBaiDang").ThaoTacs ?? new List<ThaoTac>();
             #endregion
 
+            #region Chiến dịch
+            var chienDichRepo = db.tbChienDiches.Where(x => x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung).ToList()
+                ?? new List<tbChienDich>();
+
+            var chienDich = chienDichRepo
+                .FirstOrDefault(x => x.IdChienDich == idChienDich) ?? new tbChienDich();
+            #endregion
+
             #endregion
 
             THAOTACs = thaoTacs;
             var output = new IndexOutPut_Dto
             {
                 ThaoTacs = thaoTacs,
-                IdChienDich = idChienDich,
+                ChienDich = chienDich,
             };
             //var a = _quanLyDangBaiAppService.GetListAsync();
-            return View($"{VIEW_PATH}/quanlybaidang.cshtml", output);
+            return View($"{VIEW_PATH}/baidang.cshtml", output);
         }
 
         [HttpGet]

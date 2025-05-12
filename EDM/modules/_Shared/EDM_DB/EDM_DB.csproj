@@ -124,9 +124,6 @@
     <Compile Include="tbBaiDang.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
-    <Compile Include="tbBaiDangNenTang.cs">
-      <DependentUpon>EDM_DB.tt</DependentUpon>
-    </Compile>
     <Compile Include="tbBaiDangTepDinhKem.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>

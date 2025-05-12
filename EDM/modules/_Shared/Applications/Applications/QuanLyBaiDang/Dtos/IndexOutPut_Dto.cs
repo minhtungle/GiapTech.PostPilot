@@ -1,4 +1,5 @@
-﻿using Public.Models;
+﻿using EDM_DB;
+using Public.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Applications.QuanLyBaiDang.Dtos
     public class IndexOutPut_Dto
     {
         public List<ThaoTac> ThaoTacs { get; set; }
-        public Guid IdChienDich { get; set; }
+        public tbChienDich ChienDich { get; set; }
     }
 }
