@@ -229,7 +229,6 @@ class QuanLyBaiDang {
                     }
                 })
             },
-
             save: function (loai) {
                 var modalValidtion = htmlEl.activeValidationStates("#baidang-crud");
                 if (modalValidtion) {
