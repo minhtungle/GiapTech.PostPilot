@@ -235,6 +235,7 @@
     <Content Include="Assets\images\logoEDM\logo-quanhuyen.png" />
     <Content Include="Assets\images\logoEDM\logo-xaphuong.png" />
     <Content Include="Assets\images\mail-sign.png" />
+    <Content Include="Assets\images\post.png" />
     <Content Include="Assets\images\reading.png" />
     <Content Include="Assets\plugins\input-mask\jquery.inputmask.date.extensions.js" />
     <Content Include="Assets\plugins\input-mask\jquery.inputmask.extensions.js" />
@@ -1927,7 +1928,8 @@
     <Content Include="Assets\TrangTaiLieu\assets\js\wow.min.js" />
     <Content Include="Assets\TrangTaiLieu\assets\webfonts\icomoon.svg" />
     <Content Include="Content\Admin\admin.js" />
-    <Content Include="Content\Admin\QuanLyDangBai\quanlydangbai.js" />
+    <Content Include="Content\Admin\QuanLyChienDich\quanlychiendich.js" />
+    <Content Include="Content\Admin\QuanLyBaiDang\quanlybaidang.js" />
     <Content Include="Content\Admin\UnitManage\unitmanage.js" />
     <Content Include="Content\Admin\_SystemSetting\Organization\organization.js" />
     <Content Include="Content\Admin\_SystemSetting\UserAccount\thongtincanhan.js" />
@@ -1967,6 +1969,7 @@
     <Content Include="Assets\files\[Mẫu thư mục văn bản].rar" />
     <Content Include="Assets\files\[Mẫu danh sách lương].xlsx" />
     <Content Include="App_Data\meta-buckeye-458819-m8-2044fdff02b5.json" />
+    <None Include="App_Data\appsettings.Private.json" />
     <None Include="Assets\plugins\main\scripts\jquery-3.6.3.intellisense.js" />
     <Content Include="Assets\plugins\main\scripts\jquery-3.6.3.js" />
     <Content Include="Assets\plugins\main\scripts\jquery-3.6.3.min.js" />
@@ -7827,12 +7830,6 @@
     <Content Include="ViewerJS\text_layer_builder.js" />
     <Content Include="ViewerJS\ui_utils.js" />
     <Content Include="ViewerJS\webodf.js" />
-    <Content Include="Views\Admin\QuanLyTaiLieu\nhandan\nhandan-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLyTaiLieu\nhandan\nhandan-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyTaiLieu\quanlytailieu.cshtml" />
-    <Content Include="Views\Admin\QuanLyTaiLieu\tailieu\tailieu-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLyTaiLieu\tailieu\tailieu-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyTaiLieu\tailieu\tailieu-xemchitiet.cshtml" />
     <Content Include="Views\Admin\__Home\AccountInfo\accountinfo-getList.cshtml" />
     <Content Include="Views\Admin\__Home\AccountInfo\accountinfo.cshtml" />
     <Content Include="Views\Admin\__Home\Search\search.cshtml" />
@@ -7846,10 +7843,11 @@
     <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.getList.cshtml" />
     <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.thongtinhoso.cshtml" />
     <Content Include="Views\Admin\__Home\Search\search.tinnhan.cshtml" />
-    <Content Include="Views\Admin\QuanLyDangBai\baidang\baidang-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLyDangBai\baidang\baidang-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyDangBai\quanlydangbai.cshtml" />
-    <Content Include="Views\Admin\QuanLyDangBai\chiendich\chiendich-getList.cshtml" />
+    <Content Include="Views\Admin\QuanLyBaiDang\baidang-crud.cshtml" />
+    <Content Include="Views\Admin\QuanLyBaiDang\baidang-getList.cshtml" />
+    <Content Include="Views\Admin\QuanLyBaiDang\baidang.cshtml" />
+    <Content Include="Views\Admin\QuanLyChienDich\chiendich-getList.cshtml" />
+    <Content Include="Views\Admin\QuanLyChienDich\chiendich.cshtml" />
     <None Include="Views\User\TrangTaiLieu\404.cshtml" />
     <None Include="Views\User\TrangTaiLieu\about.cshtml" />
     <None Include="Views\User\TrangTaiLieu\checkout.cshtml" />
@@ -8427,7 +8425,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\uploads\1\" />
-    <Folder Include="Views\TrangChuTaiLieu\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\templates\admin.zip" />
@@ -8452,6 +8449,14 @@
     <ProjectReference Include="..\modules\Admin\Organization\Organization.csproj">
       <Project>{4cc2c0b9-fb34-429c-a18e-7994e3dcc7b9}</Project>
       <Name>Organization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\modules\Admin\QuanLyBaiDang\QuanLyBaiDang.csproj">
+      <Project>{e0819784-65d2-4def-80e4-072cd922d8cf}</Project>
+      <Name>QuanLyBaiDang</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\modules\Admin\QuanLyChienDich\QuanLyChienDich.csproj">
+      <Project>{cf9a795e-718c-41d5-90e1-8300fd63b601}</Project>
+      <Name>QuanLyChienDich</Name>
     </ProjectReference>
     <ProjectReference Include="..\modules\Admin\UnitManage\UnitManage.csproj">
       <Project>{2946ed6e-1ef8-405d-b7f9-8d14f0ecd06b}</Project>
@@ -8484,10 +8489,6 @@
     <ProjectReference Include="..\modules\_Shared\Public\Public.csproj">
       <Project>{6f03ef6a-8234-4d31-9570-3b2c0187c0a2}</Project>
       <Name>Public</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QuanLyDangBai\QuanLyDangBai.csproj">
-      <Project>{2ac0bfef-26db-4459-abea-e6d404a7f6df}</Project>
-      <Name>QuanLyDangBai</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

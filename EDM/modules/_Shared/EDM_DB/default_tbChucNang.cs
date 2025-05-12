@@ -26,6 +26,8 @@ public partial class default_tbChucNang
 
     public string TenChucNang { get; set; }
 
+    public Nullable<bool> HienThiSideBar { get; set; }
+
     public Nullable<int> SoThuTu { get; set; }
 
     public string Icon { get; set; }

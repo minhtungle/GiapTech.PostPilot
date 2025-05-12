@@ -114,7 +114,12 @@ namespace EDM.Controllers
         {
             List<ChucNangs> kieuNguoiDung_IdChucNang = JsonConvert.DeserializeObject<List<ChucNangs>>(per.KieuNguoiDung.IdChucNang);
             List<string> idChucNangs = kieuNguoiDung_IdChucNang.Select(x => x.ChucNang).Select(x => string.Format("'{0}'", x.IdChucNang)).ToList();
-            string chucnangSQL = $@"select * from default_tbChucNang where IdCha = '{chucNang.IdChucNang}' and TrangThai = 1 and IdChucNang in ({String.Join(",", idChucNangs)}) order by SoThuTu";
+            string chucnangSQL = $@"select * 
+                from default_tbChucNang
+                where IdCha = '{chucNang.IdChucNang}' and TrangThai = 1
+                and IdChucNang in ({String.Join(",", idChucNangs)})
+                and HienThiSideBar = 1
+                order by SoThuTu";
             List<default_tbChucNangExtend> chucNangs = db.Database.SqlQuery<default_tbChucNangExtend>(chucnangSQL).ToList() ?? new List<default_tbChucNangExtend>();
             foreach (var _chucNang in chucNangs)
             {

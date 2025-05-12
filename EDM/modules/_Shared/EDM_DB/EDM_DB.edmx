@@ -13,6 +13,7 @@
           <Property Name="IdChucNang" Type="uniqueidentifier" Nullable="false" />
           <Property Name="MaChucNang" Type="nvarchar(max)" />
           <Property Name="TenChucNang" Type="nvarchar(max)" />
+          <Property Name="HienThiSideBar" Type="bit" />
           <Property Name="SoThuTu" Type="int" />
           <Property Name="Icon" Type="nvarchar(max)" />
           <Property Name="IdCha" Type="uniqueidentifier" />
@@ -416,6 +417,7 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
           <Property Name="IdChucNang" Type="Guid" Nullable="false" />
           <Property Name="MaChucNang" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TenChucNang" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="HienThiSideBar" Type="Boolean" />
           <Property Name="SoThuTu" Type="Int32" />
           <Property Name="Icon" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IdCha" Type="Guid" />
@@ -758,6 +760,7 @@ warning 6002: The table/view 'vietstarter_crm.vietstarter_admin.tbChienDich' doe
                 <ScalarProperty Name="IdCha" ColumnName="IdCha" />
                 <ScalarProperty Name="Icon" ColumnName="Icon" />
                 <ScalarProperty Name="SoThuTu" ColumnName="SoThuTu" />
+                <ScalarProperty Name="HienThiSideBar" ColumnName="HienThiSideBar" />
                 <ScalarProperty Name="TenChucNang" ColumnName="TenChucNang" />
                 <ScalarProperty Name="MaChucNang" ColumnName="MaChucNang" />
                 <ScalarProperty Name="IdChucNang" ColumnName="IdChucNang" />
