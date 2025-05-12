@@ -18,7 +18,7 @@ class QuanLyBaiDang {
             ...quanLyBaiDang.baiDang,
             dataTable: null,
             handleAnhMoTa: {
-                maxDungLuongAnh: 1024 * 1024 * 512, // 500Mb,
+                maxDungLuongAnh: 1024 * 1024 * 30, // 500Mb,
                 maxAnhDaiDien: 1,
                 maxAnhMoTa: 6,
                 idAnh: 0,
@@ -158,6 +158,28 @@ class QuanLyBaiDang {
                     })
                 },
             },
+            lichDangBai: {
+                add: function (e) {
+                    var $table_LichDangBai = $(e).closest("table#table-lichdangbai"),
+                        $tbody_LichDangBai = $("tbody.thongtin-lichdangbai", $table_LichDangBai),
+                        $banMau = $($tbody_LichDangBai[0]);
+                    // Thêm 1 buổi
+                    $("thead", $table_LichDangBai).after(`<tbody class="thongtin-lichdangbai">${$banMau.html()}<tbody>`);
+                },
+                delete: function (e) {
+                    var $table_LichDangBai = $(e).closest("table#table-lichdangbai"),
+                        $tbody_LichDangBai = $("tbody.thongtin-lichdangbai", $table_LichDangBai),
+                        $_this = $(e).closest("tbody.thongtin-lichdangbai");
+                    if ($tbody_LichDangBai.length > 1) {
+                        $_this.remove();
+                    }
+                },
+            },
+            switchCarouselItems(itemId) {
+                var $modal = $("#baidang-crud");
+                $(".carousel-item", $modal).removeClass("active");
+                $(`.carousel-item${itemId}`, $modal).addClass('active');
+            },
             getList: function () {
                 $.ajax({
                     ...ajaxDefaultProps({
@@ -177,7 +199,7 @@ class QuanLyBaiDang {
                             props: {
                                 dom: `
                                 <'row'<'col-sm-12'rt>>
-                                <'row'<'col-sm-12 col-md-6 text-left'i><'col-sm-12 col-md-6 pt-2'p>>`, 
+                                <'row'<'col-sm-12 col-md-6 text-left'i><'col-sm-12 col-md-6 pt-2'p>>`,
                                 lengthMenu: [
                                     [5, 10],
                                     [5, 10],

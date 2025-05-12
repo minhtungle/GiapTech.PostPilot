@@ -1,0 +1,99 @@
+﻿@using EDM_DB
+@{
+    string HtmlCoCaus = Session["HTMLCOCAUS"] as string;
+    List<default_tbChucVu> CHUCVUs = Session["CHUCVUs"] as List<default_tbChucVu>;
+    List<tbKieuNguoiDung> KIEUNGUOIDUNGs = Session["KIEUNGUOIDUNGs"] as List<tbKieuNguoiDung>;
+    List<tbCoCauToChuc> COCAUTOCHUCs = Session["COCAUTOCHUCs"] as List<tbCoCauToChuc>;
+}
+<div class="modal fade text-left" id="excel-nguoidung-capnhattruong" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
+        <div class="modal-content" style="border: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập nhật theo trường dữ liệu</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p class="text-danger">Lưu ý: Tích chọn các bản ghi trước khi cập nhật</p>
+                    <!--Trạng thái-->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="required" for="select-kichhoat">Trạng thái</label>
+                                <select class="form-control"
+                                        id="select-kichhoat" name="select-kichhoat"
+                                        required>
+                                    <option disabled value="">Chọn thông tin</option>
+                                    <option value="0">Vô hiệu hóa</option>
+                                    <option value="1" selected>Kích hoạt</option>
+                                </select>
+                                <div class="invalid-feedback feedback" for="select-kichhoat">Không được để trống</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Chức vụ-->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="required" for="select-chucvu">Chức vụ</label> 
+                                <select class="form-control form-select2"
+                                        id="select-chucvu" name="select-chucvu"
+                                        required>
+                                    <option disabled data-ma="" @(CHUCVUs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                    @foreach (default_tbChucVu chucVu in CHUCVUs)
+                                    {
+                                        <option value="@chucVu.IdChucVu">@chucVu.TenChucVu</option>
+                                    }
+                                </select>
+                                <div class="invalid-feedback feedback" for="select-chucvu">Không được để trống</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Kiểu người dùng-->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="required" for="select-kieunguoidung">Kiểu người dùng</label>
+                                <select class="form-control"
+                                        id="select-kieunguoidung" name="select-kieunguoidung"
+                                        required>
+                                    <option disabled @(KIEUNGUOIDUNGs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                    @foreach (var kieuNguoiDung in KIEUNGUOIDUNGs)
+                                    {
+                                        <option value="@kieuNguoiDung.IdKieuNguoiDung">@kieuNguoiDung.TenKieuNguoiDung</option>
+                                    }
+                                </select>
+                                <div class="invalid-feedback feedback" for="select-kieunguoidung">Không được để trống</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Cơ cấu tổ chức-->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="required" for="select-cocautochuc">Cơ cấu tổ chức</label>
+                                <select class="form-control form-select2"
+                                        id="select-cocautochuc" name="select-cocautochuc"
+                                        required>
+                                    <option disabled data-ma="" @(COCAUTOCHUCs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                                    @foreach (tbCoCauToChuc coCau in COCAUTOCHUCs)
+                                    {
+                                        <option value="@coCau.IdCoCauToChuc">@coCau.TenCoCauToChuc</option>
+                                    }
+                                </select>
+                                <div class="invalid-feedback feedback" for="select-cocautochuc">Không được để trống</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="ua.excelNguoiDung.updateMultipleCell()">
+                    <span class="">Cập nhật</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <span class="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

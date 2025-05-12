@@ -1,0 +1,86 @@
+﻿<div class="row" intro-container="thongtin-chung">
+    <!--Id-->
+    <input id="input-idbaidang" value="@Guid.Empty" hidden />
+
+    <!--Nội dung-->
+    <div class="col-12 col-sm-12 col-md-12">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="required" for="input-noidung">Từ khóa</label>
+                <textarea class="form-control min-h-100 max-h-300" id="input-noidung" rows="2"
+                          placeholder="Nhập từ khóa: Công nghệ, Thời trang, Mỹ phẩm, ..." required></textarea>
+                <a class="btn btn-sm btn-success" id="btn-taonoidung-ai"
+                   style="position: absolute; z-index: 1; right: .6rem; top: 2rem;"
+                   onclick="quanLyBaiDang.baiDang.handleAI.taoNoiDungAI()">
+                    <i class="bi bi-fast-forward-fill"></i>
+                </a>
+                <div class="invalid-feedback feedback" for="input-noidung">Không được để trống</div>
+            </div>
+        </div>
+    </div>
+    <!--Nội dung AI-->
+    <div class="col-12 col-sm-12 col-md-12">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="" for="input-noidung-ai">Nội dung AI</label>
+                <textarea class="form-control min-h-100 max-h-300" id="input-noidung-ai" rows="2"
+                          placeholder="Nhấn mũi tên để AI tiến hành tạo nội dung ..."></textarea>
+                <div class="invalid-feedback feedback" for="input-noidung-ai">Không được để trống</div>
+            </div>
+        </div>
+    </div>
+    <!--Sử dụng ảnh AI-->
+    <div class="col-12 col-sm-12 col-md-6">
+        <div class="position-relative mb-3" id="radio-sudunganh-ai">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="checkbox-sudunganh-ai" id="checkbox-sudunganh-ai" />
+                <label class="form-check-label" for="checkbox-sudunganh-ai">
+                    Sử dụng ảnh AI
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!--Ảnh mô tả-->
+    <div class="col-12">
+        <div class="form-group mb-3">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <td colspan="2" class="w-90 text-center">
+                            Ảnh mô tả
+                            <small class="text-danger fst-italic">(Tối đa 10 ảnh)</small>
+                        </td>
+                        <td class="text-center">
+                            <label class="btn c-pointer" for="image-anhmota">
+                                <i class="bi bi-plus-circle-fill"></i>
+                            </label>
+                            <input type="file" id="image-anhmota" class="form-control"
+                                   multiple accept="image/*"
+                                   onchange="quanLyBaiDang.baiDang.handleAnhMoTa.add('anhmota')"
+                                   hidden />
+                        </td>
+                    </tr>
+                </thead>
+                <tbody id="anhmota-container">
+                    @*@for (int i = 0; i < baiDang.TepDinhKems.Count; i++)
+                        {
+                            var tep = baiDang.TepDinhKems[i];
+                            <tr data-id="@tep .IdTep" data-idtamthoi="0">
+                                <td class="text-center">@(i+1)</td>
+                                <td class="w-90">@tep.FileName</td>
+                                <td class="text-center">
+                                    <a class="btn c-pointer"
+                                       onclick="quanLyBaiDang.baiDang.handleAnhMoTa.delete('anhmota', this)">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }*@
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

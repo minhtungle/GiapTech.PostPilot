@@ -127,7 +127,7 @@ namespace QuanLyBaiDang.Controllers
                 Loai = input.Loai,
                 BaiDang = baiDang,
             };
-            return PartialView($"{VIEW_PATH}/baidang-crud.cshtml", output);
+            return PartialView($"{VIEW_PATH}/baidang-crud/baidang-crud.cshtml", output);
         }
 
         [HttpPost]
