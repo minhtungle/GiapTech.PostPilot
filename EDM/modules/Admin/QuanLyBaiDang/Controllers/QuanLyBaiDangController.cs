@@ -8,6 +8,7 @@ using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Public.Controllers;
 using Public.Models;
 using System;
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using System.EnterpriseServices.Internal;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -153,25 +155,12 @@ namespace QuanLyBaiDang.Controllers
                             List<string> _linkTeps = new List<string>();
 
                             #region Lưu db
-                            // Thêm mới chiến dịch
-                            var chienDich = new tbChienDich
-                            {
-                                IdChienDich = Guid.NewGuid(),
-                                TenChienDich = "",
-                                TrangThaiHoatDong = 1,
-
-                                TrangThai = 1,
-                                IdNguoiTao = per.NguoiDung.IdNguoiDung,
-                                NgayTao = DateTime.Now,
-                                MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
-                            };
-                            db.tbChienDiches.Add(chienDich);
 
                             // Thêm mới
                             var baiDang = new tbBaiDang
                             {
                                 IdBaiDang = Guid.NewGuid(),
-                                IdChienDich = chienDich.IdChienDich,
+                                IdChienDich = baiDang_NEW.BaiDang.IdChienDich,
                                 NoiDung = baiDang_NEW.BaiDang.NoiDung,
                                 ThoiGian = baiDang_NEW.BaiDang.ThoiGian,
                                 TrangThaiDangBai = 1,
@@ -183,7 +172,7 @@ namespace QuanLyBaiDang.Controllers
                             };
                             db.tbBaiDangs.Add(baiDang);
 
-                            if (files != null)
+                            if (files != null && !baiDang_NEW.TuTaoAnh)
                             {
                                 foreach (var f in files)
                                 {
@@ -252,6 +241,7 @@ namespace QuanLyBaiDang.Controllers
 
                                     var baiDangTepDinhKem = new tbBaiDangTepDinhKem
                                     {
+                                        IdBaiDangTepDinhKem = Guid.NewGuid(),
                                         IdBaiDang = baiDang.IdBaiDang,
                                         IdTepDinhKem = tepDinhKem.IdTep,
                                     };
@@ -261,12 +251,28 @@ namespace QuanLyBaiDang.Controllers
                                 }
                             }
                 ;
-
                             #endregion
 
                             #region Chuyển vào sheet
+                            //string fullJson = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/oauth.json"));
+
+                            //// Parse full config
+                            //JObject config = JObject.Parse(fullJson);
+
+                            //// Lấy thông tin trong trường GoogleCloudConsole
+                            //var googleConfigJson = config["GoogleCloudConsole-Sheet"].ToString();
+
+                            //// Convert thành MemoryStream
+                            //var byteArray = Encoding.UTF8.GetBytes(googleConfigJson);
+                            //var stream = new MemoryStream(byteArray);
+
+                            //// Tạo credential từ nội dung stream này
+                            //GoogleCredential credential = GoogleCredential.FromStream(stream)
+                            //    .CreateScoped(new[] { SheetsService.Scope.Spreadsheets });
+
+
                             // Đường dẫn thực tế của file JSON đã upload
-                            string jsonPath = Server.MapPath("~/App_Data/meta-buckeye-458819-m8-b926e8aa307c.json");
+                            string jsonPath = Server.MapPath("~/App_Data/ggc-drive.json");
 
                             // Khởi tạo credential
                             GoogleCredential credential;
@@ -289,7 +295,9 @@ namespace QuanLyBaiDang.Controllers
                                 baiDang_NEW.BaiDang.ThoiGian.Value.ToString(),
                                 baiDang_NEW.BaiDang.NoiDung,
                                 baiDang_NEW.TuTaoAnh ? "TRUE" : "FALSE",
-                                string.Join(",", _linkTeps)
+                                 string.Join(",", _linkTeps),
+                                "waiting",
+                                ""
                             });
                             // Tạo yêu cầu ghi dữ liệu
                             var valueRange = new ValueRange

@@ -25,7 +25,7 @@ class QuanLyBaiDang {
                 idAnh: 0,
                 arrAnh: [],
                 add: function (loaiAnh = 'anhdaidien') {
-                    var $imgContainer = $(`#${loaiAnh}-container`),
+                    var $imgContainer = $(`#tbody-${loaiAnh}-container`),
                         soAnhDangCo = $("tr", $imgContainer).length;
 
                     var addTr = function (files) {
@@ -271,6 +271,7 @@ class QuanLyBaiDang {
                     var baiDangs = [];
                     var baiDang = {
                         BaiDang: {
+                            IdChienDich: idChienDich,
                             IdBaiDang: $("#input-idbaidang", $modal).val(),
                             NoiDung: $("#input-noidung-ai", $modal).val().trim(),
                             ThoiGian: $("#input-thoigian", $modal).val(),
@@ -278,7 +279,7 @@ class QuanLyBaiDang {
                         TuTaoAnh: $("#checkbox-sudunganh-ai").is(":checked"),
                         TepDinhKems: []
                     }
-                    $.each($(`#anhmota-container tbody tr`), function () {
+                    $.each($(`#tbody-anhmota-container tbody tr`), function () {
                         let idTep = $(this).data("id");
                         baiDang.TepDinhKems.push({
                             IdTep: idTep,

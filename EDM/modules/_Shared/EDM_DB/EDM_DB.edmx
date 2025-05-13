@@ -93,10 +93,11 @@
         </EntityType>
         <EntityType Name="tbBaiDangTepDinhKem">
           <Key>
-            <PropertyRef Name="IdBaiDang" />
+            <PropertyRef Name="IdBaiDangTepDinhKem" />
           </Key>
           <Property Name="Stt" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdBaiDang" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IdBaiDangTepDinhKem" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IdBaiDang" Type="uniqueidentifier" />
           <Property Name="IdTepDinhKem" Type="uniqueidentifier" />
           <Property Name="TrangThai" Type="int" />
           <Property Name="MaDonViSuDung" Type="uniqueidentifier" />
@@ -465,10 +466,11 @@
         </EntityType>
         <EntityType Name="tbBaiDangTepDinhKem">
           <Key>
-            <PropertyRef Name="IdBaiDang" />
+            <PropertyRef Name="IdBaiDangTepDinhKem" />
           </Key>
           <Property Name="Stt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdBaiDang" Type="Guid" Nullable="false" />
+          <Property Name="IdBaiDangTepDinhKem" Type="Guid" Nullable="false" />
+          <Property Name="IdBaiDang" Type="Guid" />
           <Property Name="IdTepDinhKem" Type="Guid" />
           <Property Name="TrangThai" Type="Int32" />
           <Property Name="MaDonViSuDung" Type="Guid" />
@@ -803,6 +805,7 @@
                 <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
                 <ScalarProperty Name="IdTepDinhKem" ColumnName="IdTepDinhKem" />
                 <ScalarProperty Name="IdBaiDang" ColumnName="IdBaiDang" />
+                <ScalarProperty Name="IdBaiDangTepDinhKem" ColumnName="IdBaiDangTepDinhKem" />
                 <ScalarProperty Name="Stt" ColumnName="Stt" />
               </MappingFragment>
             </EntityTypeMapping>
