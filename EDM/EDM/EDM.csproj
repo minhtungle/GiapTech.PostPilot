@@ -1928,6 +1928,7 @@
     <Content Include="Assets\TrangTaiLieu\assets\js\wow.min.js" />
     <Content Include="Assets\TrangTaiLieu\assets\webfonts\icomoon.svg" />
     <Content Include="Content\Admin\admin.js" />
+    <Content Include="Content\Admin\QuanLyBaiDang\JavaScript.js" />
     <Content Include="Content\Admin\QuanLyChienDich\quanlychiendich.js" />
     <Content Include="Content\Admin\QuanLyBaiDang\quanlybaidang.js" />
     <Content Include="Content\Admin\UnitManage\unitmanage.js" />

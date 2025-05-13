@@ -17,6 +17,7 @@ class QuanLyBaiDang {
         quanLyBaiDang.baiDang = {
             ...quanLyBaiDang.baiDang,
             dataTable: null,
+            suDungAnhAI: false,
             handleAnhMoTa: {
                 maxDungLuongAnh: 1024 * 1024 * 30, // 500Mb,
                 maxAnhDaiDien: 1,
@@ -134,7 +135,7 @@ class QuanLyBaiDang {
                         .filter(function (anh) {
                             return anh.id != idTamThoi;
                         });
-                }
+                },
             },
             handleAI: {
                 taoNoiDungAI: function () {
@@ -151,12 +152,24 @@ class QuanLyBaiDang {
                         }),
                         success: function (res) {
                             if (res.status == "success") {
-                                $("#input-noidung-ai").val(res.NoiDung);
+                                $("#input-noidung-ai").text(res.NoiDung);
                             };
                             sys.alert({ mess: res.mess, status: res.status, timeout: 1500 });
                         }
                     })
                 },
+                kichHoatSuDungAnhAI: function () {
+                    var trangThai = $("#checkbox-sudunganh-ai").is(":checked");
+                    var $anhMoTaContainer = $("#anhmota-container");
+                    if (trangThai) {
+                        $anhMoTaContainer.hide();
+                        quanLyBaiDang.baiDang.suDungAnhAI = true;
+                    }
+                    else {
+                        $anhMoTaContainer.show();
+                        quanLyBaiDang.baiDang.suDungAnhAI = false;
+                    };
+                }
             },
             lichDangBai: {
                 add: function (e) {
@@ -252,20 +265,20 @@ class QuanLyBaiDang {
                 })
             },
             save: function (loai) {
-                var modalValidtion = htmlEl.activeValidationStates("#baidang-crud");
+                var $modal = $("#baidang-crud");
+                var modalValidtion = htmlEl.activeValidationStates($modal);
                 if (modalValidtion) {
                     var baiDangs = [];
                     var baiDang = {
                         BaiDang: {
-                            IdBaiDang: $("#input-idbaidang").val(),
-                            NoiDung: $("#input-noidung").val().trim(),
-                            ThoiGian: $("#input-thoigian").val().trim(),
-                            IdDonViTien: $("#select-donvitien").val(),
+                            IdBaiDang: $("#input-idbaidang", $modal).val(),
+                            NoiDung: $("#input-noidung-ai", $modal).val().trim(),
+                            ThoiGian: $("#input-thoigian", $modal).val(),
                         },
-                        TuTaoAnh: $("#select-tutaoanh").val(),
+                        TuTaoAnh: $("#checkbox-sudunganh-ai").is(":checked"),
                         TepDinhKems: []
                     }
-                    $.each($(`#anhmota-container tr`), function () {
+                    $.each($(`#anhmota-container tbody tr`), function () {
                         let idTep = $(this).data("id");
                         baiDang.TepDinhKems.push({
                             IdTep: idTep,

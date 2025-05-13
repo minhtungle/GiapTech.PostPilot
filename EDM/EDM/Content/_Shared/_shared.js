@@ -295,7 +295,7 @@ class HtmlElement {
             htmlEl.inputValidationStates(this, parentName);
         });
         $textareaRequired.on("change", function () {
-            htmlEl.inputValidationStates(this, parentName);
+            htmlEl.textAreaValidationStates(this, parentName);
         });
         $selectRequired.on("change", function () {
             htmlEl.selectValidationStates(this, parentName);
@@ -353,6 +353,57 @@ class HtmlElement {
             //};
         };
     }
+    textAreaValidationStates(el, parentName, feedBack = "Không được để trống",
+        activeManual = {
+            status: false, isvalid: false
+        }) {
+        var htmlEl = this;
+
+        var $textArea = $(el),
+            textAreaName = $textArea.attr("name"),
+            $feedBack = htmlEl.findByParent(`.feedback[for="${textAreaName}"]`, parentName);
+        $feedBack.text(feedBack);
+        if (activeManual.status) {
+            $textArea.removeClass("is-invalid").addClass("is-valid");
+            $feedBack.hide();
+
+            if (!activeManual.isvalid) {
+                $textArea.removeClass("is-valid").addClass("is-invalid");
+                $textArea.focus();
+                $feedBack.show();
+            };
+        } else {
+            $textArea.removeClass("is-invalid").addClass("is-valid");
+            $feedBack.hide();
+
+            var val = $textArea.text().trim();
+            if (val == "") {
+                $textArea.removeClass("is-valid").addClass("is-invalid");
+                $textArea.focus();
+                $feedBack.show();
+            };
+
+            //const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            ////const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            //var pattern = new RegExp(re);
+            //if ($textArea.attr("type") == "email" && !pattern.test(val)) {
+            //    feedBack = "Không đúng định dạng email";
+            //    $feedBack.text(feedBack);
+            //    $feedBack.show();
+
+            //    $textArea.removeClass("is-valid").addClass("is-invalid");
+            //    $textArea.focus();
+            //};
+            //var pattern = new RegExp($input.attr("pattern"));
+            //feedBack = $input.attr("pattern-feedback");
+            //if (!pattern.test(val)) {
+            //    $input.removeClass("is-valid").addClass("is-invalid");
+            //    $input.focus();
+            //    $feedBack.text(feedBack);
+            //    $feedBack.show();
+            //};
+        };
+    }
     // Kiểm tra dữ liệu input trong 1 thẻ cha (thẻ cha có thể null)
     selectValidationStates(el, parentName, feedBack = "Không được để trống",
         activeManual = {
@@ -387,9 +438,11 @@ class HtmlElement {
     activeValidationStates(parentName) {
         var htmlEl = this,
             $inputRequired = htmlEl.findByParent("input[required]", parentName),
+            $textAreaRequired = htmlEl.findByParent("textarea[required]", parentName),
             $selectRequired = htmlEl.findByParent("select[required]", parentName);
         // Kích hoạt kiểm tra thẻ
         $inputRequired.trigger("change");
+        $textAreaRequired.trigger("change");
         $selectRequired.trigger("change");
         // Kiểm tra có thẻ nào chưa đủ điều kiện
         var $invalidEl = htmlEl.findByParent("[required].is-invalid", parentName);
