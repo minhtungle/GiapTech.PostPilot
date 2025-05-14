@@ -881,6 +881,13 @@ class System {
     chuyenThoiGianDungLocalVN(date) {
         return new Date(date.getTime() - date.getTimezoneOffset() * 60000);
     }
+    generateGUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0,
+                v = c === 'x' ? r : (r & 0x3 | 0x8); // RFC4122 variant
+            return v.toString(16);
+        });
+    }
 }
 //var sys = new System();
 /**

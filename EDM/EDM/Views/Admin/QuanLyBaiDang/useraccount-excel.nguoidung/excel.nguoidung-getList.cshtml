@@ -1,22 +1,17 @@
 ﻿@using UserAccount.Models;
 @using EDM_DB
 @{
-    List<tbNguoiDungExtend> EXCEL_NGUOIDUNGs_UPLOAD = Session["EXCEL_NGUOIDUNGs_UPLOAD"] as List<tbNguoiDungExtend>;
-    int EXCEL_NGUOIDUNGs_UPLOAD_COUNT = EXCEL_NGUOIDUNGs_UPLOAD.Count;
-    List<tbKieuNguoiDung> KIEUNGUOIDUNGs = Session["KIEUNGUOIDUNGs"] as List<tbKieuNguoiDung>;
-    List<tbCoCauToChuc> COCAUTOCHUCs = Session["COCAUTOCHUCs"] as List<tbCoCauToChuc>;
-    List<default_tbChucVu> CHUCVUs = Session["CHUCVUs"] as List<default_tbChucVu>;
+    var guid = Guid.NewGuid();
 }
 <div class="row">
-    <div class="@(EXCEL_NGUOIDUNGs_UPLOAD_COUNT == 0 ? "col-12": "col-sm-12 col-md-5 col-lg-6")">
+    <div class="col-sm-12 col-md-5 col-lg-6">
         <table class="table table-hover table-bordered w-100 nowrap" id="excel-nguoidung-getList" data-page-length="10" data-order="[[ 1, &quot;asc&quot; ]]">
             <thead>
                 <tr>
                     <th class="text-center" data-orderable="false">
-                        <a href="#" class="btn btn-sm btn-success" title="Thêm" onclick="ua.excelNguoiDung.createRow()" hidden><i class="bi bi-plus-square-fill"></i></a>
+                        <a href="#" class="btn btn-sm btn-success" title="Thêm" onclick="ua.excelNguoiDung.createRow()"><i class="bi bi-plus-square-fill"></i></a>
                         <a href="#" class="btn btn-sm btn-danger" title="Xóa" onclick="ua.excelNguoiDung.deleteRow()"><i class="bi bi-trash3-fill"></i></a>
                     </th>
-                    <th class="text-center text-danger" style="min-width: 10rem!important">KIỂM TRA</th>
                     <th class="text-center w-70" style="min-width: 10rem!important">Tên đăng nhập</th>
                 </tr>
             </thead>
@@ -27,260 +22,29 @@
                     <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
                 </tr>
             </tfoot>
-            <tbody>
-                @for (int i = 0; i < EXCEL_NGUOIDUNGs_UPLOAD_COUNT; i++)
-                {
-                    tbNguoiDungExtend nguoiDung = EXCEL_NGUOIDUNGs_UPLOAD[i];
-                    <tr row="@i" onclick="ua.excelNguoiDung.readRow(this)">
-                        <td class="text-center"><input class="form-check-input checkRow-excel-nguoidung-getList" type="checkbox" /></td>
-                        <td class="text-center">
-                            @{
-                                string className = "";
-                                if (nguoiDung.KiemTraExcel.TrangThai == 0)
-                                {
-                                    className = "bg-danger";
-                                }
-                                else if (nguoiDung.KiemTraExcel.TrangThai == 1)
-                                {
-                                    className = "bg-success";
-                                }
-                                else
-                                {
-                                    className = "bg-warning";
-                                }
-                            }
-                            <span class="badge @className" data-tentruong="TrangThaiKiemTra">@nguoiDung.KiemTraExcel.KetQua</span>
-                        </td>
-                        <!--Tên đăng nhập-->
-                        <td class="w-70" style="vertical-align: top;">
-                            <span data-tentruong="MaHoSo">@nguoiDung.TenDangNhap</span>
-                        </td>
-                    </tr>
-                }
+            <tbody id="tbody-container">
+                <tr row="@guid" onclick="ua.excelNguoiDung.readRow(this)">
+                    <td class="text-center"><input class="form-check-input checkRow-excel-nguoidung-getList" type="checkbox" /></td>
+                    <td class="w-70" style="vertical-align: top;">
+                        <span data-tentruong="NoiDung">@guid</span>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
-    @if (EXCEL_NGUOIDUNGs_UPLOAD_COUNT > 0)
-    {
-        <div class="col-sm-12 col-md-7 col-lg-6" id="excel-nguoidung-read-container" style="overflow-y: scroll; border: 1px solid #d3d3d35c;">
-            @for (int i = 0; i < EXCEL_NGUOIDUNGs_UPLOAD_COUNT; i++)
-            {
-                tbNguoiDungExtend nguoiDung = EXCEL_NGUOIDUNGs_UPLOAD[i];
-                string ngaySinh = nguoiDung.NgaySinh == null ? "" : nguoiDung.NgaySinh.Value.ToString("dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
-
-                <div class="row excel-nguoidung-read" row="@i">
-                    <div class="col-12 border-1">
-                        <div class="row">
-                            <input id="input-idcocautochuc" value="@nguoiDung.IdCoCauToChuc" hidden />
-                            <div class="col-12">
-                                <div class="row pt-3">
-                                    <!--Tên người dùng-->
-                                    <div class="col-sm-12 col-md-6">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="required" for="input-tennguoidung">Tên người dùng</label>
-                                                <input type="text" class="form-control" placeholder="Nhập thông tin ..."
-                                                       id="input-tennguoidung" name="input-tennguoidung"
-                                                       value="@(nguoiDung.TenNguoiDung ?? "")" onkeyup="ua.excelNguoiDung.updateSingleCell(this)" required>
-                                                <div class="invalid-feedback feedback" for="input-tennguoidung">Không được để trống</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--Trạng thái-->
-                                    <div class="col-sm-12 col-md-6">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="required" for="select-kichhoat">Trạng thái</label>
-                                                <select class="form-control"
-                                                        id="select-kichhoat" name="select-kichhoat"
-                                                        required>
-                                                    <option disabled @(nguoiDung.KichHoat == null ? "selected" : "")>Chọn thông tin</option>
-                                                    <option value="0" @(nguoiDung.KichHoat == false ? "selected" : "")>Vô hiệu hóa</option>
-                                                    <option value="1" @(nguoiDung.KichHoat == true ? "selected" : "")>Kích hoạt</option>
-                                                </select>
-                                                <div class="invalid-feedback feedback" for="select-kichhoat">Không được để trống</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!--Tên đăng nhập-->
-                                    <div class="col-sm-12 col-md-12 col-lg-8">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="required" for="input-tendangnhap">Tên đăng nhập</label>
-                                                <div class="input-group mb-3">
-                                                    <input type="text" class="form-control" placeholder="Nhập thông tin ..."
-                                                           id="input-tendangnhap" name="input-tendangnhap"
-                                                           value="@(nguoiDung.TenDangNhap ?? "")" required>
-                                                    <span class="input-group-text">@string.Format("@vietgenacademy.edu.vn")</span>
-                                                </div>
-                                                <div class="invalid-feedback feedback" for="input-tendangnhap">Không được để trống</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--Mật khẩu--> 
-                                    <div class="col-sm-12 col-md-12 col-lg-4">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="required" for="input-matkhau">Mật khẩu</label>
-                                                <input type="password" class="form-control" placeholder="Nhập thông tin ..."
-                                                       id="input-matkhau" name="input-matkhau"
-                                                       value="@(nguoiDung.MatKhau ?? "")" required>
-                                                <div class="invalid-feedback feedback" for="input-matkhau">Không được để trống</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!--Giới tính-->
-                                    <div class="col-sm-12 col-md-6">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="required" for="select-gioitinh">Giới tính</label>
-                                                <select class="form-control"
-                                                        id="select-gioitinh" name="select-gioitinh"
-                                                        required>
-                                                    <option disabled @(nguoiDung.GioiTinh == null ? "selected" : "")>Chọn thông tin</option>
-                                                    <option value="1" @(nguoiDung.GioiTinh == true ? "selected" : "")>Nam</option>
-                                                    <option value="0" @(nguoiDung.GioiTinh == false ? "selected" : "")>Nữ</option>
-                                                </select>
-                                                <div class="invalid-feedback feedback" for="select-gioitinh">Không được để trống</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--Email-->
-                                    <div class="col-sm-12 col-md-6">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="required" for="input-email">Email</label>
-                                                <input type="email" class="form-control" placeholder="Nhập thông tin ..."
-                                                       id="input-email" name="input-email"
-                                                       value="@(nguoiDung.Email ?? "")" required>
-                                                <div class="invalid-feedback feedback" for="input-email">Không được để trống</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--Kiểu người dùng-->
-                                    <div class="col-sm-12 col-md-6">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="required" for="select-kieunguoidung">Kiểu người dùng</label>
-                                                <select class="form-control"
-                                                        id="select-kieunguoidung" name="select-kieunguoidung"
-                                                        required>
-                                                    <option disabled @(KIEUNGUOIDUNGs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
-                                                    @foreach (var kieuNguoiDung in KIEUNGUOIDUNGs)
-                                                    {
-                                                        <option value="@kieuNguoiDung.IdKieuNguoiDung"
-                                                                @(kieuNguoiDung.TenKieuNguoiDung == nguoiDung.KieuNguoiDung.TenKieuNguoiDung ? "selected" : "")>
-                                                            @kieuNguoiDung.TenKieuNguoiDung
-                                                        </option>
-                                                    }
-                                                </select>
-                                                <div class="invalid-feedback feedback" for="select-kieunguoidung">Không được để trống</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--Cơ cấu tổ chức-->
-                                    <div class="col-sm-12 col-md-6">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="required" for="select-cocautochuc">Cơ cấu tổ chức</label>
-                                                <select class="form-control form-select2"
-                                                        id="select-cocautochuc" name="select-cocautochuc"
-                                                        required>
-                                                    <option disabled data-ma="" @(COCAUTOCHUCs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
-                                                    @foreach (tbCoCauToChuc coCau in COCAUTOCHUCs)
-                                                    {
-                                                        <option value="@coCau.IdCoCauToChuc"
-                                                                @(coCau.TenCoCauToChuc == nguoiDung.CoCauToChuc.TenCoCauToChuc ? "selected" : "")>
-                                                            @coCau.TenCoCauToChuc
-                                                        </option>
-                                                    }
-                                                </select>
-                                                <div class="invalid-feedback feedback" for="select-cocautochuc">Không được để trống</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--Chức vụ-->
-                                    <div class="col-sm-12 col-md-12">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="required" for="select-chucvu">Chức vụ</label> <span>
-                                                    @*<a href="/Organization" class="text-primary"
-                                                        data-bs-toggle="tooltip" data-bs-placement="left" title="Đi tới cơ cấu tổ chức"><i class="bi bi-link-45deg"></i></a>*@
-                                                </span>
-                                                <select class="form-control form-select2"
-                                                        id="select-chucvu" name="select-chucvu"
-                                                        required>
-                                                    <option disabled data-ma="" @(CHUCVUs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
-                                                    @foreach (default_tbChucVu chucVu in CHUCVUs)
-                                                    {
-                                                        <option style="white-space: pre!important"
-                                                                value="@chucVu.IdChucVu"
-                                                                @(chucVu.TenChucVu == nguoiDung.ChucVu.TenChucVu ? "selected" : "")>
-                                                            @chucVu.TenChucVu
-                                                        </option>
-                                                    }
-                                                </select>
-                                                <div class="invalid-feedback feedback" for="select-chucvu">Không được để trống</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!--Link liên hệ-->
-                                    <div class="col-sm-12 col-md-6">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="" for="input-linklienhe">Link liên hệ</label>
-                                                <input type="text" class="form-control" placeholder="Nhập thông tin ..."
-                                                       id="input-linklienhe" name="input-linklienhe"
-                                                       value="@(nguoiDung.LinkLienHe ?? "")">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--Số điện thoại-->
-                                    <div class="col-sm-12 col-md-6">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="" for="input-sodienthoai">Số điện thoại</label>
-                                                <input type="number" class="form-control" placeholder="Nhập thông tin ..." id="input-sodienthoai" value="@(nguoiDung.SoDienThoai ?? "")">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--Số tài khoản-->
-                                    <div class="col-sm-12 col-md-6">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="" for="input-sotaikhoannganhang">Số tài khoản</label>
-                                                <input type="text" class="form-control" placeholder="Nhập thông tin ..." id="input-sotaikhoannganhang" value="@(nguoiDung.SoTaiKhoanNganHang ?? "")">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--Ngày sinh-->
-                                    <div class="col-sm-12 col-md-6">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label class="" for="input-ngaysinh">Ngày sinh</label>
-                                                <input type="date" class="form-control" placeholder="Nhập thông tin ..." id="input-ngaysinh" value="@ngaySinh">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--Ghi chú-->
-                                    <div class="col-sm-12 col-md-12">
-                                        <div class="position-relative">
-                                            <div class="form-group mb-3">
-                                                <label for="input-ghichu">Ghi chú</label>
-                                                <textarea class="form-control min-h-50 max-h-200" id="input-ghichu" rows="2"
-                                                          placeholder="Nhập thông tin ...">@(nguoiDung.GhiChu ?? "")</textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <div class="col-sm-12 col-md-7 col-lg-6" id="excel-nguoidung-read-container"
+         style="overflow-y: scroll; border: 1px solid #d3d3d35c;">
+        <div class="row excel-nguoidung-read" row="@guid">
+            <div class="col-12 border-1">
+                <div class="row">
+                    <div class="col-sm-12 col-lg-6">
+                        @Html.Partial("~/Views/Admin/QuanLyBaiDang/baidang-crud/form-thongtinchung.cshtml")
+                    </div>
+                    <div class="col-sm-12 col-lg-6">
+                        @Html.Partial("~/Views/Admin/QuanLyBaiDang/baidang-crud/form-lichdangbai.cshtml")
                     </div>
                 </div>
-            }
+            </div>
         </div>
-    }
+    </div>
 </div>

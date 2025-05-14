@@ -2,8 +2,48 @@
     <!--Id-->
     <input id="input-idbaidang" value="@Guid.Empty" hidden />
 
-    <!--Nội dung-->
+    <!--Prompt-->
     <div class="col-12 col-sm-12 col-md-12">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="" for="input-prompt">Prompt</label>
+                @{ 
+                    var email = "email@gmail.com";
+                    var website = "https://giaptech.com";
+                    var diaChi = "Hà Nội, Việt Nam";
+                    var chuDe = "";
+                    var prompt = $@"
+Viết một bài đăng fanpage chất lượng cao theo phong cách sau:
+
+1. **Tiêu đề ngắn gọn, mạnh mẽ và thu hút**, có thể dùng biểu tượng cảm xúc (emoji) phù hợp.
+2. **Feedback thực tế hoặc câu chuyện truyền cảm hứng** từ khách hàng hoặc học viên (dạng lời kể, dẫn chứng).
+3. **Danh sách gạch đầu dòng** các lợi ích, kết quả cụ thể mà người dùng đạt được.
+4. **Lý do tại sao người khác cũng nên lựa chọn dịch vụ/sản phẩm này** (USP – điểm mạnh, cam kết...).
+5. **Kêu gọi hành động rõ ràng**: inbox, bình luận, hoặc để lại thông tin để được tư vấn.
+6. **Thông tin liên hệ**, bao gồm:
+7. **Hashtag liên quan ở cuối bài viết** (4–6 hashtag)
+   - Email: {email}
+   - Website: {website}
+   - Địa chỉ: {diaChi}
+
+Nội dung bài viết nói về: ""{chuDe}""
+
+Yêu cầu:
+- Viết bằng tiếng Việt
+- Văn phong thuyết phục, tự nhiên, gần gũi, hướng đến hành động, dành cho fanpage
+- Có thể sử dụng emoji để làm nổi bật
+- Toàn bộ nội dung không quá 500 từ
+";
+                }
+
+                <textarea class="form-control min-h-100 max-h-300" id="input-prompt" rows="2"
+                          placeholder="Nhập nội dung prompt ...">@prompt</textarea>
+                <div class="invalid-feedback feedback" for="input-prompt">Không được để trống</div>
+            </div>
+        </div>
+    </div>
+    <!--Nội dung gốc-->
+    <div class="col-12 col-sm-12 col-md-6">
         <div class="position-relative">
             <div class="form-group mb-3">
                 <label class="S" for="input-noidung">Từ khóa</label>
@@ -18,8 +58,8 @@
             </div>
         </div>
     </div>
-    <!--Nội dung-->
-    <div class="col-12 col-sm-12 col-md-12">
+    <!--Nội dung AI-->
+    <div class="col-12 col-sm-12 col-md-6">
         <div class="position-relative">
             <div class="form-group mb-3">
                 <label class="required" for="input-noidung-ai">Nội dung</label>
@@ -29,21 +69,76 @@
             </div>
         </div>
     </div>
-    <!--Thời gian-->
+     <!--Thời gian-->
+ <div class="col-12 col-sm-12 col-md-12">
+     <div class="position-relative">
+         <div class="form-group mb-3">
+             <label class="required" for="input-thoigian">Thời gian</label>
+             @{
+                 var minTime = DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm");
+             }
+             <input type="datetime-local" class="form-control input-thoigian"
+                    id="input-thoigian"
+                    name="input-thoigian"
+                    min="@minTime"
+                    required />
+             <div class="invalid-feedback feedback" for="input-thoigian">Không được để trống</div>
+         </div>
+     </div>
+ </div>
+</div>
+
+<div class="row">
+    <!--Tự tạo ảnh bằng AI-->
     <div class="col-12 col-sm-12 col-md-12">
-        <div class="position-relative">
-            <div class="form-group mb-3">
-                <label class="required" for="input-thoigian">Thời gian</label>
-                @{
-                    var minTime = DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm");
-                }
-                <input type="datetime-local" class="form-control input-thoigian"
-                       id="input-thoigian"
-                       name="input-thoigian"
-                       min="@minTime"
-                       required />
-                <div class="invalid-feedback feedback" for="input-thoigian">Không được để trống</div>
+        <div class="position-relative mb-3">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="checkbox-sudunganh-ai" id="checkbox-sudunganh-ai"
+                       onchange="quanLyBaiDang.baiDang.handleAI.kichHoatSuDungAnhAI()" />
+                <label class="form-check-label" for="checkbox-sudunganh-ai">
+                    Tự tạo ảnh bằng AI
+                </label>
             </div>
+        </div>
+    </div>
+    <!--Ảnh mô tả-->
+    <div class="col-12" id="anhmota-container">
+        <div class="form-group mb-3">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <td colspan="2" class="w-90 text-center">
+                            Ảnh mô tả
+                            <small class="text-danger fst-italic">(Tối đa 10 ảnh)</small>
+                        </td>
+                        <td class="text-center">
+                            <label class="btn c-pointer" for="image-anhmota">
+                                <i class="bi bi-plus-circle-fill"></i>
+                            </label>
+                            <input type="file" id="image-anhmota" class="form-control"
+                                   multiple accept="image/*"
+                                   onchange="quanLyBaiDang.baiDang.handleAnhMoTa.add('anhmota')"
+                                   hidden />
+                        </td>
+                    </tr>
+                </thead>
+                <tbody id="tbody-anhmota-container">
+                    @*@for (int i = 0; i < baiDang.TepDinhKems.Count; i++)
+                        {
+                            var tep = baiDang.TepDinhKems[i];
+                            <tr data-id="@tep .IdTep" data-idtamthoi="0">
+                                <td class="text-center">@(i+1)</td>
+                                <td class="w-90">@tep.FileName</td>
+                                <td class="text-center">
+                                    <a class="btn c-pointer"
+                                       onclick="quanLyBaiDang.baiDang.handleAnhMoTa.delete('anhmota', this)">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }*@
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
