@@ -434,42 +434,42 @@ namespace QuanLyBaiDang.Controllers
 
 
 
-        public void SaveEncryptedCredential(string serviceName, string credentialType, string rawKeyJson, Guid? userId = null)
-        {
-                var encrypted = CryptoHelper.Encrypt(rawKeyJson);
+        //public void SaveEncryptedCredential(string serviceName, string credentialType, string rawKeyJson, Guid? userId = null)
+        //{
+        //        var encrypted = CryptoHelper.Encrypt(rawKeyJson);
 
-                var newCred = new tbApiCredential
-                {
-                    IdApiCredentials = Guid.NewGuid(),
-                    IdNguoiDung = Guid.Empty,
-                    ServiceName = serviceName,
-                    CredentialType = credentialType,
-                    KeyJson = encrypted,
-                    TrangThai = 1,
-                    NgayTao = DateTime.Now,
-                    IdNguoiTao = userId
-                };
+        //        var newCred = new tbApiCredential
+        //        {
+        //            IdApiCredentials = Guid.NewGuid(),
+        //            IdNguoiDung = Guid.Empty,
+        //            ServiceName = serviceName,
+        //            CredentialType = credentialType,
+        //            KeyJson = encrypted,
+        //            TrangThai = 1,
+        //            NgayTao = DateTime.Now,
+        //            IdNguoiTao = userId
+        //        };
 
-                db.tbApiCredentials.Add(newCred);
-                db.SaveChanges();
-        }
-        public void SaveEncryptedKeys()
-        {
-            // OpenAI Key
-            SaveEncryptedCredential("OpenAI", "ApiKey", "");
+        //        db.tbApiCredentials.Add(newCred);
+        //        db.SaveChanges();
+        //}
+        //public void SaveEncryptedKeys()
+        //{
+        //    // OpenAI Key
+        //    SaveEncryptedCredential("OpenAI", "ApiKey", "");
 
-            // Google JSON (nội dung file)
-            string jsonFilePath = Server.MapPath("~/App_Data/ggc-drive.json");
-            if (System.IO.File.Exists(jsonFilePath))
-            {
-                string jsonContent = System.IO.File.ReadAllText(jsonFilePath);
-                SaveEncryptedCredential("Google", "ServiceAccountJson", jsonContent);
-            }
-            else
-            {
-                throw new FileNotFoundException("The specified file does not exist.", jsonFilePath);
-            }
-        }
+        //    // Google JSON (nội dung file)
+        //    string jsonFilePath = Server.MapPath("~/App_Data/ggc-drive.json");
+        //    if (System.IO.File.Exists(jsonFilePath))
+        //    {
+        //        string jsonContent = System.IO.File.ReadAllText(jsonFilePath);
+        //        SaveEncryptedCredential("Google", "ServiceAccountJson", jsonContent);
+        //    }
+        //    else
+        //    {
+        //        throw new FileNotFoundException("The specified file does not exist.", jsonFilePath);
+        //    }
+        //}
 
     }
 }
