@@ -1970,8 +1970,6 @@
     <Content Include="Assets\files\[Mẫu thư mục văn bản].rar" />
     <Content Include="Assets\files\[Mẫu danh sách lương].xlsx" />
     <Content Include="App_Data.zip" />
-    <None Include="App_Data\oauth.json" />
-    <Content Include="App_Data\ggc-drive.json" />
     <None Include="Assets\plugins\main\scripts\jquery-3.6.3.intellisense.js" />
     <Content Include="Assets\plugins\main\scripts\jquery-3.6.3.js" />
     <Content Include="Assets\plugins\main\scripts\jquery-3.6.3.min.js" />
