@@ -432,8 +432,6 @@ namespace QuanLyBaiDang.Controllers
                 return CryptoHelper.Decrypt(cred.KeyJson);
         }
 
-
-
         //public void SaveEncryptedCredential(string serviceName, string credentialType, string rawKeyJson, Guid? userId = null)
         //{
         //        var encrypted = CryptoHelper.Encrypt(rawKeyJson);
