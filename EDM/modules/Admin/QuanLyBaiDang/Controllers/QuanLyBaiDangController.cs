@@ -456,7 +456,7 @@ namespace QuanLyBaiDang.Controllers
         public void SaveEncryptedKeys()
         {
             // OpenAI Key
-            SaveEncryptedCredential("OpenAI", "ApiKey", "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");
+            SaveEncryptedCredential("OpenAI", "ApiKey", "");
 
             // Google JSON (nội dung file)
             string jsonFilePath = Server.MapPath("~/App_Data/ggc-drive.json");
