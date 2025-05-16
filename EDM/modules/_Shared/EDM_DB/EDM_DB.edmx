@@ -71,6 +71,24 @@
           <Property Name="NgaySua" Type="datetime" />
           <Property Name="IdNguoiSua" Type="uniqueidentifier" />
         </EntityType>
+        <EntityType Name="tbApiCredentials">
+          <Key>
+            <PropertyRef Name="IdApiCredentials" />
+          </Key>
+          <Property Name="Stt" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdApiCredentials" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IdNguoiDung" Type="uniqueidentifier" />
+          <Property Name="ServiceName" Type="nvarchar(max)" />
+          <Property Name="CredentialType" Type="nvarchar(max)" />
+          <Property Name="KeyJson" Type="nvarchar(max)" />
+          <Property Name="GhiChu" Type="nvarchar(max)" />
+          <Property Name="TrangThai" Type="int" />
+          <Property Name="MaDonViSuDung" Type="uniqueidentifier" />
+          <Property Name="NgayTao" Type="datetime" />
+          <Property Name="IdNguoiTao" Type="uniqueidentifier" />
+          <Property Name="NgaySua" Type="datetime" />
+          <Property Name="IdNguoiSua" Type="uniqueidentifier" />
+        </EntityType>
         <EntityType Name="tbBaiDang">
           <Key>
             <PropertyRef Name="IdBaiDang" />
@@ -79,6 +97,8 @@
           <Property Name="IdBaiDang" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IdChienDich" Type="uniqueidentifier" />
           <Property Name="IdNenTang" Type="uniqueidentifier" />
+          <Property Name="TuTaoAnhAI" Type="bit" />
+          <Property Name="Prompt" Type="nvarchar(max)" />
           <Property Name="NoiDung" Type="nvarchar(max)" />
           <Property Name="ThoiGian" Type="datetime" />
           <Property Name="SoLuongLike" Type="int" />
@@ -246,7 +266,7 @@
           </Key>
           <Property Name="Stt" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdNenTang" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="TenNangTang" Type="nvarchar(max)" />
+          <Property Name="TenNenTang" Type="nvarchar(max)" />
           <Property Name="TenPhu" Type="nvarchar(max)" />
           <Property Name="LogoByteData" Type="varbinary(max)" />
           <Property Name="TrangThai" Type="int" />
@@ -329,6 +349,7 @@
           <EntitySet Name="default_tbChucNang_ThaoTac" EntityType="Self.default_tbChucNang_ThaoTac" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="default_tbChucVu" EntityType="Self.default_tbChucVu" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="default_tbQuocGia" EntityType="Self.default_tbQuocGia" Schema="vietstarter_admin" store:Type="Tables" />
+          <EntitySet Name="tbApiCredentials" EntityType="Self.tbApiCredentials" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbBaiDang" EntityType="Self.tbBaiDang" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbBaiDangTepDinhKem" EntityType="Self.tbBaiDangTepDinhKem" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbChienDich" EntityType="Self.tbChienDich" Schema="vietstarter_admin" store:Type="Tables" />
@@ -359,6 +380,7 @@
           <EntitySet Name="default_tbChucNang_ThaoTac" EntityType="EDM_DBModel.default_tbChucNang_ThaoTac" />
           <EntitySet Name="default_tbChucVu" EntityType="EDM_DBModel.default_tbChucVu" />
           <EntitySet Name="default_tbQuocGia" EntityType="EDM_DBModel.default_tbQuocGia" />
+          <EntitySet Name="tbApiCredentials" EntityType="EDM_DBModel.tbApiCredential" />
           <EntitySet Name="tbBaiDangs" EntityType="EDM_DBModel.tbBaiDang" />
           <EntitySet Name="tbBaiDangTepDinhKems" EntityType="EDM_DBModel.tbBaiDangTepDinhKem" />
           <EntitySet Name="tbChienDiches" EntityType="EDM_DBModel.tbChienDich" />
@@ -444,6 +466,24 @@
           <Property Name="NgaySua" Type="DateTime" Precision="3" />
           <Property Name="IdNguoiSua" Type="Guid" />
         </EntityType>
+        <EntityType Name="tbApiCredential">
+          <Key>
+            <PropertyRef Name="IdApiCredentials" />
+          </Key>
+          <Property Name="Stt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdApiCredentials" Type="Guid" Nullable="false" />
+          <Property Name="IdNguoiDung" Type="Guid" />
+          <Property Name="ServiceName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CredentialType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="KeyJson" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GhiChu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TrangThai" Type="Int32" />
+          <Property Name="MaDonViSuDung" Type="Guid" />
+          <Property Name="NgayTao" Type="DateTime" Precision="3" />
+          <Property Name="IdNguoiTao" Type="Guid" />
+          <Property Name="NgaySua" Type="DateTime" Precision="3" />
+          <Property Name="IdNguoiSua" Type="Guid" />
+        </EntityType>
         <EntityType Name="tbBaiDang">
           <Key>
             <PropertyRef Name="IdBaiDang" />
@@ -452,6 +492,8 @@
           <Property Name="IdBaiDang" Type="Guid" Nullable="false" />
           <Property Name="IdChienDich" Type="Guid" />
           <Property Name="IdNenTang" Type="Guid" />
+          <Property Name="TuTaoAnhAI" Type="Boolean" />
+          <Property Name="Prompt" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="NoiDung" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ThoiGian" Type="DateTime" Precision="3" />
           <Property Name="SoLuongLike" Type="Int32" />
@@ -619,7 +661,7 @@
           </Key>
           <Property Name="Stt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdNenTang" Type="Guid" Nullable="false" />
-          <Property Name="TenNangTang" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TenNenTang" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TenPhu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="LogoByteData" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="TrangThai" Type="Int32" />
@@ -773,6 +815,25 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="tbApiCredentials">
+            <EntityTypeMapping TypeName="EDM_DBModel.tbApiCredential">
+              <MappingFragment StoreEntitySet="tbApiCredentials">
+                <ScalarProperty Name="IdNguoiSua" ColumnName="IdNguoiSua" />
+                <ScalarProperty Name="NgaySua" ColumnName="NgaySua" />
+                <ScalarProperty Name="IdNguoiTao" ColumnName="IdNguoiTao" />
+                <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
+                <ScalarProperty Name="MaDonViSuDung" ColumnName="MaDonViSuDung" />
+                <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
+                <ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
+                <ScalarProperty Name="KeyJson" ColumnName="KeyJson" />
+                <ScalarProperty Name="CredentialType" ColumnName="CredentialType" />
+                <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
+                <ScalarProperty Name="IdNguoiDung" ColumnName="IdNguoiDung" />
+                <ScalarProperty Name="IdApiCredentials" ColumnName="IdApiCredentials" />
+                <ScalarProperty Name="Stt" ColumnName="Stt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="tbBaiDangs">
             <EntityTypeMapping TypeName="EDM_DBModel.tbBaiDang">
               <MappingFragment StoreEntitySet="tbBaiDang">
@@ -787,6 +848,8 @@
                 <ScalarProperty Name="SoLuongLike" ColumnName="SoLuongLike" />
                 <ScalarProperty Name="ThoiGian" ColumnName="ThoiGian" />
                 <ScalarProperty Name="NoiDung" ColumnName="NoiDung" />
+                <ScalarProperty Name="Prompt" ColumnName="Prompt" />
+                <ScalarProperty Name="TuTaoAnhAI" ColumnName="TuTaoAnhAI" />
                 <ScalarProperty Name="IdNenTang" ColumnName="IdNenTang" />
                 <ScalarProperty Name="IdChienDich" ColumnName="IdChienDich" />
                 <ScalarProperty Name="IdBaiDang" ColumnName="IdBaiDang" />
@@ -963,7 +1026,7 @@
                 <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
                 <ScalarProperty Name="LogoByteData" ColumnName="LogoByteData" />
                 <ScalarProperty Name="TenPhu" ColumnName="TenPhu" />
-                <ScalarProperty Name="TenNangTang" ColumnName="TenNangTang" />
+                <ScalarProperty Name="TenNenTang" ColumnName="TenNenTang" />
                 <ScalarProperty Name="IdNenTang" ColumnName="IdNenTang" />
                 <ScalarProperty Name="Stt" ColumnName="Stt" />
               </MappingFragment>

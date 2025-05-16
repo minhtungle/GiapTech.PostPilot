@@ -25,14 +25,14 @@ namespace Applications.OpenAIApi.AppServices
         //    dynamic config = JsonConvert.DeserializeObject(json);
         //    return config?.OpenAI?.ApiKey;
         //}
-        public async Task<string> GetCompletionAsync(string prompt)
+        public async Task<string> GetCompletionAsync(string prompt, string _apiKey)
         {
             using (var client = new HttpClient())
             {
 
                 //var _apiKey = GetOpenAIApiKey();
-                string _apiKey = ConfigurationManager.AppSettings["OpenAI_ApiKey"];
-                string apiKey = Environment.GetEnvironmentVariable("OpenAI_ApiKey");
+                //string _apiKey = ConfigurationManager.AppSettings["OpenAI_ApiKey"];
+                //string apiKey = Environment.GetEnvironmentVariable("OpenAI_ApiKey");
 
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", _apiKey);

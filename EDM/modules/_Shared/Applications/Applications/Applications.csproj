@@ -83,6 +83,7 @@
     <Compile Include="Organization\OrganizationAppService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OpenAIApi\AppServices\OpenAIApiService.cs" />
+    <Compile Include="QuanLyBaiDang\Dtos\FormAddBaiDangDto.cs" />
     <Compile Include="QuanLyBaiDang\Dtos\IndexOutPut_Dto.cs" />
     <Compile Include="QuanLyChienDich\Dtos\DisplayModel_CRUD_ChienDich_Input_Dto.cs" />
     <Compile Include="QuanLyChienDich\Dtos\DisplayModel_CRUD_ChienDich_Output_Dto.cs" />

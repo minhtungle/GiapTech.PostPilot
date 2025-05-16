@@ -1,17 +1,23 @@
-﻿<div class="row" intro-container="thongtin-chung">
+﻿@using EDM_DB
+@model Applications.QuanLyBaiDang.Dtos.FormAddBaiDangDto
+@{
+    var NENTANGs = Session["NENTANGs"] as List<tbNenTang>;
+}
+
+<div class="row" intro-container="thongtin-chung">
     <!--Id-->
     <input id="input-idbaidang" value="@Guid.Empty" hidden />
 
     <!--Prompt-->
-    <div class="col-12 col-sm-12 col-md-12">
+    <div class="col-12 col-sm-12 col-md-6">
         <div class="position-relative">
             <div class="form-group mb-3">
                 <label class="" for="input-prompt">Prompt</label>
-                @{ 
+                @{
                     var email = "email@gmail.com";
                     var website = "https://giaptech.com";
                     var diaChi = "Hà Nội, Việt Nam";
-                    var chuDe = "";
+                    var chuDe = "Thời trang, Mỹ phẩm";
                     var prompt = $@"
 Viết một bài đăng fanpage chất lượng cao theo phong cách sau:
 
@@ -22,9 +28,9 @@ Viết một bài đăng fanpage chất lượng cao theo phong cách sau:
 5. **Kêu gọi hành động rõ ràng**: inbox, bình luận, hoặc để lại thông tin để được tư vấn.
 6. **Thông tin liên hệ**, bao gồm:
 7. **Hashtag liên quan ở cuối bài viết** (4–6 hashtag)
-   - Email: {email}
-   - Website: {website}
-   - Địa chỉ: {diaChi}
+                                   - Email: {email}
+                                   - Website: {website}
+                                   - Địa chỉ: {diaChi}
 
 Nội dung bài viết nói về: ""{chuDe}""
 
@@ -34,16 +40,22 @@ Yêu cầu:
 - Có thể sử dụng emoji để làm nổi bật
 - Toàn bộ nội dung không quá 500 từ
 ";
+                    var title = $@"Viết prompt của bạn để AI hỗ trợ tạo nội dung phù hợp";
                 }
-
-                <textarea class="form-control min-h-100 max-h-300" id="input-prompt" rows="2"
+                <textarea class="form-control min-h-100 max-h-300" id="input-prompt" rows="10"
+                          title="@title"
                           placeholder="Nhập nội dung prompt ...">@prompt</textarea>
+                <a class="btn btn-sm btn-success" id="btn-taonoidung-ai"
+                   style="position: absolute; z-index: 1; right: .6rem; top: 2rem;"
+                   onclick="quanLyBaiDang.baiDang.handleAI.taoNoiDungAI('@Model.BaiDang.RowNumber')">
+                    <i class="bi bi-fast-forward-fill"></i>
+                </a>
                 <div class="invalid-feedback feedback" for="input-prompt">Không được để trống</div>
             </div>
         </div>
     </div>
     <!--Nội dung gốc-->
-    <div class="col-12 col-sm-12 col-md-6">
+    @*<div class="col-12 col-sm-12 col-md-6">
         <div class="position-relative">
             <div class="form-group mb-3">
                 <label class="S" for="input-noidung">Từ khóa</label>
@@ -57,35 +69,52 @@ Yêu cầu:
                 <div class="invalid-feedback feedback" for="input-noidung">Không được để trống</div>
             </div>
         </div>
-    </div>
+    </div>*@
     <!--Nội dung AI-->
     <div class="col-12 col-sm-12 col-md-6">
         <div class="position-relative">
             <div class="form-group mb-3">
                 <label class="required" for="input-noidung-ai">Nội dung</label>
-                <textarea class="form-control min-h-100 max-h-300" id="input-noidung-ai" rows="2"
+                <textarea class="form-control min-h-100 max-h-300" id="input-noidung-ai" rows="10"
                           placeholder="Nhấn mũi tên để AI tiến hành tạo nội dung ..." required></textarea>
                 <div class="invalid-feedback feedback" for="input-noidung-ai">Không được để trống</div>
             </div>
         </div>
     </div>
-     <!--Thời gian-->
- <div class="col-12 col-sm-12 col-md-12">
-     <div class="position-relative">
-         <div class="form-group mb-3">
-             <label class="required" for="input-thoigian">Thời gian</label>
-             @{
-                 var minTime = DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm");
-             }
-             <input type="datetime-local" class="form-control input-thoigian"
-                    id="input-thoigian"
-                    name="input-thoigian"
-                    min="@minTime"
-                    required />
-             <div class="invalid-feedback feedback" for="input-thoigian">Không được để trống</div>
-         </div>
-     </div>
- </div>
+    <!--Thời gian-->
+    <div class="col-12 col-sm-12 col-md-6">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="required" for="input-thoigian">Thời gian</label>
+                @{
+                    var minTime = DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm");
+                }
+                <input type="datetime-local" class="form-control input-thoigian"
+                       id="input-thoigian"
+                       name="input-thoigian"
+                       min="@minTime"
+                       required />
+                <div class="invalid-feedback feedback" for="input-thoigian">Không được để trống</div>
+            </div>
+        </div>
+    </div>
+    <!--Nền tảng-->
+    <div class="col-sm-12 col-md-6">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="required" for="select-nentang">Nền tảng</label>
+                <select class="form-control"
+                        id="select-nentang" name="select-nentang" required>
+                    <option disabled @(NENTANGs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                    @foreach (var nenTang in NENTANGs)
+                    {
+                        <option value="@nenTang.IdNenTang">@nenTang.TenNenTang</option>
+                    }
+                </select>
+                <div class="invalid-feedback feedback" for="select-nentang">Không được để trống</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row">
@@ -112,12 +141,12 @@ Yêu cầu:
                             <small class="text-danger fst-italic">(Tối đa 10 ảnh)</small>
                         </td>
                         <td class="text-center">
-                            <label class="btn c-pointer" for="image-anhmota">
+                            <label class="btn c-pointer" for="image-anhmota-@Model.BaiDang.RowNumber">
                                 <i class="bi bi-plus-circle-fill"></i>
                             </label>
-                            <input type="file" id="image-anhmota" class="form-control"
-                                   multiple accept="image/*"
-                                   onchange="quanLyBaiDang.baiDang.handleAnhMoTa.add('anhmota')"
+                            <input type="file" id="image-anhmota-@Model.BaiDang.RowNumber" class="form-control"
+                                   multiple accept=".png, .jpg, .jpeg"
+                                   onchange="quanLyBaiDang.baiDang.handleAnhMoTa.add(this, 'anhmota', '@Model.BaiDang.RowNumber')"
                                    hidden />
                         </td>
                     </tr>

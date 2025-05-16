@@ -15,30 +15,22 @@ namespace EDM_DB
 using System;
     using System.Collections.Generic;
     
-public partial class tbBaiDang
+public partial class tbApiCredential
 {
 
     public int Stt { get; set; }
 
-    public System.Guid IdBaiDang { get; set; }
+    public System.Guid IdApiCredentials { get; set; }
 
-    public Nullable<System.Guid> IdChienDich { get; set; }
+    public Nullable<System.Guid> IdNguoiDung { get; set; }
 
-    public Nullable<System.Guid> IdNenTang { get; set; }
+    public string ServiceName { get; set; }
 
-    public Nullable<bool> TuTaoAnhAI { get; set; }
+    public string CredentialType { get; set; }
 
-    public string Prompt { get; set; }
+    public string KeyJson { get; set; }
 
-    public string NoiDung { get; set; }
-
-    public Nullable<System.DateTime> ThoiGian { get; set; }
-
-    public Nullable<int> SoLuongLike { get; set; }
-
-    public Nullable<int> SoLuongComment { get; set; }
-
-    public Nullable<int> TrangThaiDangBai { get; set; }
+    public string GhiChu { get; set; }
 
     public Nullable<int> TrangThai { get; set; }
 

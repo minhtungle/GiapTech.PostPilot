@@ -376,8 +376,9 @@ class HtmlElement {
             $textArea.removeClass("is-invalid").addClass("is-valid");
             $feedBack.hide();
 
-            var val = $textArea.text().trim();
-            if (val == "") {
+            var val = $textArea.val().trim();
+            var text = $textArea.text().trim();
+            if (val == "" && text == "") {
                 $textArea.removeClass("is-valid").addClass("is-invalid");
                 $textArea.focus();
                 $feedBack.show();

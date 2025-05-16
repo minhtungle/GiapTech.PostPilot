@@ -179,6 +179,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Handle\Handle.cs" />
+    <Compile Include="Helpers\CryptoHelper.cs" />
     <Compile Include="Mappers\UserAccountMapping.cs" />
     <Compile Include="Models\ChucNang.cs" />
     <Compile Include="Models\DuLieu_LichSu_ChiTiet.cs" />

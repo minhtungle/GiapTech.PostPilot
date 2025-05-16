@@ -22,7 +22,7 @@ public partial class tbNenTang
 
     public System.Guid IdNenTang { get; set; }
 
-    public string TenNangTang { get; set; }
+    public string TenNenTang { get; set; }
 
     public string TenPhu { get; set; }
 

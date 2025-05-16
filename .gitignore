@@ -477,3 +477,6 @@ $RECYCLE.BIN/
 *.lnk
 /EDM/EDM/Assets/uploads/
 /EDM/EDM/App_Data/meta-buckeye-458819-m8-2044fdff02b5.json
+/EDM/EDM/Web.config
+/EDM/EDM/Web.Debug.config
+/EDM/EDM/Web.Release.config
