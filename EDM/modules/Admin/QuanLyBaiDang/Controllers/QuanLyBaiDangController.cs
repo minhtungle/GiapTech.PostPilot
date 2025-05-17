@@ -284,7 +284,7 @@ namespace QuanLyBaiDang.Controllers
                                         #region Lưu file trong server
                                         tepDinhKem.FileNameUpdate = duongDanTep.TenTep_CHUYENDOI;
                                         tepDinhKem.FileExtension = duongDanTep.LoaiTep;
-                                        tepDinhKem.DuongDanTepVatLy = duongDanTep.DuongDanTep_BANDAU;
+                                        tepDinhKem.DuongDanTepVatLy = filePath;
                                         tepDinhKem.ByteData = imgData;
 
                                         db.tbTepDinhKems.Add(tepDinhKem);
