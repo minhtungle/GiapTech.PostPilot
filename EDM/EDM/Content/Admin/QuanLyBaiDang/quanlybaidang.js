@@ -19,7 +19,7 @@ class QuanLyBaiDang {
             dataTable: null,
             suDungAnhAI: false,
             handleAnhMoTa: {
-                maxDungLuongAnh: 1024 * 1024 * 30, // 500Mb,
+                maxDungLuongAnh: 1024 * 1024 * 30, // 30MB,
                 maxAnhDaiDien: 1,
                 maxAnhMoTa: 6,
                 arrAnh: [],

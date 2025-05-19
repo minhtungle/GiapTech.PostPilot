@@ -226,6 +226,17 @@ namespace QuanLyBaiDang.Controllers
                                     if (baiDang_NEW.RowNumber == rowNumber)
                                     {
                                         var f = files[i];
+
+                                        if (f == null || f.ContentLength <= 0)
+                                        {
+                                            status = "error";
+                                            mess = "Chưa có file nào được chọn";
+                                            return Json(new
+                                            {
+                                                status,
+                                                mess
+                                            }, JsonRequestBehavior.AllowGet);
+                                        }
                                         var tepDinhKem = new tbTepDinhKem
                                         {
                                             IdTep = Guid.NewGuid(),
@@ -251,14 +262,16 @@ namespace QuanLyBaiDang.Controllers
 
                                         // Kiểm tra max dung lượng
                                         // Lưu
-                                        string duongDanThuMucGoc = string.Format("/Assets/uploads/{0}/THUVIEN_TEPDINHKEM/{1}",
-                                       per.DonViSuDung.MaDonViSuDung, tepDinhKem.IdTep);
+                                        string duongDanThuMucGoc = string.Format("/Assets/uploads/{0}/TEPDINHKEM/{1}/{2}/{3}",
+                                       per.DonViSuDung.MaDonViSuDung, baiDang.IdChienDich, baiDang.IdBaiDang, tepDinhKem.IdTep);
+
+                               //         duongDanThuMucGoc = string.Format("/Assets/uploads/{0}/TEPDINHKEM/",
+                               //per.DonViSuDung.MaDonViSuDung);
                                         string tenTaiLieu_BANDAU = Path.GetFileName(f.FileName);
                                         var duongDanTep = LayDuongDanTep(duongDanThuMucGoc: duongDanThuMucGoc, tenTep_BANDAU: tenTaiLieu_BANDAU);
 
                                         string inputFileName = Public.Handle.ConvertToUnSign(s: Path.GetFileName(f.FileName), khoangCach: "-");
-                                        string filePath = string.Format("/{0}/{1}",
-                                            duongDanThuMucGoc, inputFileName);
+                                        string filePath = string.Format("/{0}/{1}", duongDanThuMucGoc, inputFileName);
                                         string folderPath_SERVER = Request.MapPath(duongDanThuMucGoc);
                                         string inputFilePath_SERVER = Request.MapPath(filePath);
                                         try
@@ -269,7 +282,8 @@ namespace QuanLyBaiDang.Controllers
                                             // (Nếu có rồi thì xóa)
                                             if (System.IO.File.Exists(inputFilePath_SERVER))
                                                 System.IO.File.Delete(inputFilePath_SERVER);
-                                            f.SaveAs(inputFilePath_SERVER);
+                                            System.IO.File.WriteAllBytes(inputFilePath_SERVER, imgData);
+                                            //f.SaveAs(inputFilePath_SERVER);
                                             string currentDomain = Request.Url.Host.ToLower();
                                             string link = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, filePath);
                                             _linkTeps.Add(link);
@@ -281,7 +295,6 @@ namespace QuanLyBaiDang.Controllers
                                         }
                                         #endregion
 
-                                        #region Lưu file trong server
                                         tepDinhKem.FileNameUpdate = duongDanTep.TenTep_CHUYENDOI;
                                         tepDinhKem.FileExtension = duongDanTep.LoaiTep;
                                         tepDinhKem.DuongDanTepVatLy = filePath;
@@ -297,7 +310,6 @@ namespace QuanLyBaiDang.Controllers
                                         };
 
                                         db.tbBaiDangTepDinhKems.Add(baiDangTepDinhKem);
-                                        #endregion
                                     }
                                     ;
                                 }
@@ -421,15 +433,15 @@ namespace QuanLyBaiDang.Controllers
         }
         public string GetDecryptedCredential(string serviceName, string credentialType, Guid? userId = null)
         {
-                var cred = db.tbApiCredentials
-                    .FirstOrDefault(x => x.ServiceName == serviceName
-                                      && x.CredentialType == credentialType
-                                      //&& (userId == null || x.IdNguoiDung == userId)
-                                      );
+            var cred = db.tbApiCredentials
+                .FirstOrDefault(x => x.ServiceName == serviceName
+                                  && x.CredentialType == credentialType
+                                  //&& (userId == null || x.IdNguoiDung == userId)
+                                  );
 
-                if (cred == null) throw new Exception("Không tìm thấy dữ liệu!");
+            if (cred == null) throw new Exception("Không tìm thấy dữ liệu!");
 
-                return CryptoHelper.Decrypt(cred.KeyJson);
+            return CryptoHelper.Decrypt(cred.KeyJson);
         }
 
         //public void SaveEncryptedCredential(string serviceName, string credentialType, string rawKeyJson, Guid? userId = null)
