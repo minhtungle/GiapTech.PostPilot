@@ -265,8 +265,6 @@ namespace QuanLyBaiDang.Controllers
                                         string duongDanThuMucGoc = string.Format("/Assets/uploads/{0}/TEPDINHKEM/{1}/{2}/{3}",
                                        per.DonViSuDung.MaDonViSuDung, baiDang.IdChienDich, baiDang.IdBaiDang, tepDinhKem.IdTep);
 
-                               //         duongDanThuMucGoc = string.Format("/Assets/uploads/{0}/TEPDINHKEM/",
-                               //per.DonViSuDung.MaDonViSuDung);
                                         string tenTaiLieu_BANDAU = Path.GetFileName(f.FileName);
                                         var duongDanTep = LayDuongDanTep(duongDanThuMucGoc: duongDanThuMucGoc, tenTep_BANDAU: tenTaiLieu_BANDAU);
 
@@ -283,10 +281,13 @@ namespace QuanLyBaiDang.Controllers
                                             if (System.IO.File.Exists(inputFilePath_SERVER))
                                                 System.IO.File.Delete(inputFilePath_SERVER);
                                             System.IO.File.WriteAllBytes(inputFilePath_SERVER, imgData);
-                                            //f.SaveAs(inputFilePath_SERVER);
-                                            string currentDomain = Request.Url.Host.ToLower();
-                                            string link = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, filePath);
-                                            _linkTeps.Add(link);
+
+                                            //f.SaveAs(inputFilePath_SERVER); // Lưu cách này k được
+
+                                            // Đoạn này khóa vì không còn lưu vào drive
+                                            //string currentDomain = Request.Url.Host.ToLower();
+                                            //string link = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, filePath);
+                                            //_linkTeps.Add(link);
                                         }
                                         catch (Exception ex)
                                         {
@@ -377,7 +378,73 @@ namespace QuanLyBaiDang.Controllers
                 mess
             }, JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
+        public JsonResult delete_BaiDangs()
+        {
+            string status = "success";
+            string mess = "Xóa bản ghi thành công";
+            using (var scope = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    List<Guid> idBaiDangs = JsonConvert.DeserializeObject<List<Guid>>(Request.Form["idBaiDangs"]);
+                    if (idBaiDangs.Count > 0)
+                    {
+                        foreach (var idBaiDang in idBaiDangs)
+                        {
+                            var baiDang_OLD = db.tbBaiDangs.Find(idBaiDang);
+                            if (baiDang_OLD != null)
+                            {
+                                baiDang_OLD.TrangThaiDangBai = 9; // Chờ xóa trên nền tảng
+                                baiDang_OLD.TrangThai = 0;
+                                baiDang_OLD.IdNguoiSua = per.NguoiDung.IdNguoiDung;
+                                baiDang_OLD.NgaySua = DateTime.Now;
 
+                                var baiDangTepDinhKems = db.tbBaiDangTepDinhKems
+                                       .Where(x => x.IdBaiDang == baiDang_OLD.IdBaiDang)
+                                       .ToList();
+
+                                // Ép danh sách ID tệp về danh sách Guid
+                                var tepIds = baiDangTepDinhKems.Select(y => y.IdTepDinhKem).ToList();
+
+                                var tepDinhKems = db.tbTepDinhKems
+                                    .Where(x => tepIds.Contains(x.IdTep))
+                                    .ToList();
+                                foreach (var tepDinhKem in tepDinhKems)
+                                {
+                                    tepDinhKem.TrangThai = 0;
+                                    tepDinhKem.IdNguoiSua = per.NguoiDung.IdNguoiDung;
+                                    tepDinhKem.NgaySua = DateTime.Now;
+                                    // Xóa file trong server
+                                    string duongDanTepVatLy = tepDinhKem.DuongDanTepVatLy;
+                                    string duongDanThuMucGoc = Path.GetDirectoryName(duongDanTepVatLy);
+                                    string inputFilePath_SERVER = Request.MapPath(duongDanTepVatLy);
+                                    if (System.IO.File.Exists(inputFilePath_SERVER))
+                                        System.IO.File.Delete(inputFilePath_SERVER);
+                                    // Xóa bản ghi trong DB
+                                    db.tbTepDinhKems.Remove(tepDinhKem);
+                                };
+                            }
+                            ;
+                        }
+                        ;
+                        db.SaveChanges();
+                        scope.Commit();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    status = "error";
+                    mess = ex.Message;
+                    scope.Rollback();
+                }
+            }
+            return Json(new
+            {
+                status,
+                mess
+            }, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         public async Task<JsonResult> taoNoiDungAI(string prompt)
         {

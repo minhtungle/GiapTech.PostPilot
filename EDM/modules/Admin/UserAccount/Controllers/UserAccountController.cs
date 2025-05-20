@@ -1048,7 +1048,7 @@ namespace UserAccount.Controllers
         }
         private string taoTenDangNhap(string tenDangNhap)
         {
-            return string.Format("{0}@vietgenacademy.edu.vn", tenDangNhap.Replace("@vietgenacademy.edu.vn", ""));
+            return string.Format("{0}@giaptech.com", tenDangNhap.Replace("@giaptech.com", ""));
         }
         #endregion
     }

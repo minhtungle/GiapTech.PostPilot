@@ -334,7 +334,7 @@ class QuanLyBaiDang {
                         callback: function () {
                             $.ajax({
                                 ...ajaxDefaultProps({
-                                    url: "/QuanLyBaiDang/delete_BaiDang",
+                                    url: "/QuanLyBaiDang/delete_BaiDangs",
                                     type: "POST",
                                     data: f,
                                 }),

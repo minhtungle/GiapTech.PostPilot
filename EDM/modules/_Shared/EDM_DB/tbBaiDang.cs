@@ -26,6 +26,10 @@ public partial class tbBaiDang
 
     public Nullable<System.Guid> IdNenTang { get; set; }
 
+    public string IdBaiDang_TrenNenTang { get; set; }
+
+    public string LienKetBaiDang_TrenNenTang { get; set; }
+
     public Nullable<bool> TuTaoAnhAI { get; set; }
 
     public string Prompt { get; set; }

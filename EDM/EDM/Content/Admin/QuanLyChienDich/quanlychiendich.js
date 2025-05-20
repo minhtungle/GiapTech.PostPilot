@@ -161,7 +161,7 @@ class QuanLyChienDich {
                         callback: function () {
                             $.ajax({
                                 ...ajaxDefaultProps({
-                                    url: "/QuanLyChienDich/delete_ChienDich",
+                                    url: "/QuanLyChienDich/delete_ChienDichs",
                                     type: "POST",
                                     data: f,
                                 }),

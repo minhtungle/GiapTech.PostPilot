@@ -97,6 +97,8 @@
           <Property Name="IdBaiDang" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IdChienDich" Type="uniqueidentifier" />
           <Property Name="IdNenTang" Type="uniqueidentifier" />
+          <Property Name="IdBaiDang_TrenNenTang" Type="nvarchar(max)" />
+          <Property Name="LienKetBaiDang_TrenNenTang" Type="nvarchar(max)" />
           <Property Name="TuTaoAnhAI" Type="bit" />
           <Property Name="Prompt" Type="nvarchar(max)" />
           <Property Name="NoiDung" Type="nvarchar(max)" />
@@ -492,6 +494,8 @@
           <Property Name="IdBaiDang" Type="Guid" Nullable="false" />
           <Property Name="IdChienDich" Type="Guid" />
           <Property Name="IdNenTang" Type="Guid" />
+          <Property Name="IdBaiDang_TrenNenTang" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LienKetBaiDang_TrenNenTang" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TuTaoAnhAI" Type="Boolean" />
           <Property Name="Prompt" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="NoiDung" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -850,6 +854,8 @@
                 <ScalarProperty Name="NoiDung" ColumnName="NoiDung" />
                 <ScalarProperty Name="Prompt" ColumnName="Prompt" />
                 <ScalarProperty Name="TuTaoAnhAI" ColumnName="TuTaoAnhAI" />
+                <ScalarProperty Name="LienKetBaiDang_TrenNenTang" ColumnName="LienKetBaiDang_TrenNenTang" />
+                <ScalarProperty Name="IdBaiDang_TrenNenTang" ColumnName="IdBaiDang_TrenNenTang" />
                 <ScalarProperty Name="IdNenTang" ColumnName="IdNenTang" />
                 <ScalarProperty Name="IdChienDich" ColumnName="IdChienDich" />
                 <ScalarProperty Name="IdBaiDang" ColumnName="IdBaiDang" />

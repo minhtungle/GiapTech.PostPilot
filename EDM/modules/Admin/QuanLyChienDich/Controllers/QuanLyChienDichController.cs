@@ -7,6 +7,7 @@ using Public.Controllers;
 using Public.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -96,9 +97,9 @@ namespace QuanLyChienDich.Controllers
         public bool kiemTra_ChienDich(tbChienDich chienDich)
         {
             // Kiểm tra còn hồ sơ khác có trùng mã không
-            var chienDich_OLD = db.tbChienDiches.FirstOrDefault(x => 
+            var chienDich_OLD = db.tbChienDiches.FirstOrDefault(x =>
             x.TenChienDich == chienDich.TenChienDich
-            && x.IdChienDich!= chienDich.IdChienDich
+            && x.IdChienDich != chienDich.IdChienDich
             && x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung);
             if (chienDich_OLD == null) return false;
             return true;
@@ -163,7 +164,7 @@ namespace QuanLyChienDich.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult delete_NguoiDungs()
+        public JsonResult delete_ChienDichs()
         {
             string status = "success";
             string mess = "Xóa bản ghi thành công";
@@ -171,49 +172,59 @@ namespace QuanLyChienDich.Controllers
             {
                 try
                 {
-                    List<Guid> idNguoiDungs_XOA = JsonConvert.DeserializeObject<List<Guid>>(Request.Form["str_idNguoiDungs_XOA"]);
-                    Guid idNguoiDung_THAYTHE = Guid.Parse(Request.Form["idNguoiDung_THAYTHE"]);
-                    if (idNguoiDungs_XOA.Count > 0)
+                    List<Guid> idChienDichs = JsonConvert.DeserializeObject<List<Guid>>(Request.Form["idChienDichs"]);
+                    if (idChienDichs.Count > 0)
                     {
-                        string str_idNguoiDungs_XOA = string.Join(",", idNguoiDungs_XOA.Select(x => string.Format("'{0}'", x)));
-                        string capNhatSQL = $@"
-                        -- Xóa người dùng
-                        update tbNguoiDung 
-                        set 
-                            TrangThai = 0 , IdNguoiSua = '{per.NguoiDung.IdNguoiDung}' , NgaySua = '{DateTime.Now}' 
-                        where 
-                            MaDonViSuDung = '{per.DonViSuDung.MaDonViSuDung}' and IdNguoiDung in ({str_idNguoiDungs_XOA})
+                        foreach (var idChienDich in idChienDichs)
+                        {
+                            var chienDich_OLD = db.tbChienDiches.Find(idChienDich);
+                            if (chienDich_OLD != null)
+                            {
+                                chienDich_OLD.TrangThaiHoatDong = 10; // Đã xóa
+                                chienDich_OLD.TrangThai = 0;
+                                chienDich_OLD.IdNguoiSua = per.NguoiDung.IdNguoiDung;
+                                chienDich_OLD.NgaySua = DateTime.Now;
 
-                        -- Cập nhật hồ sơ
-                        DECLARE @idNguoiDungs_XOA TABLE (value NVARCHAR(100))
-                        -- Tách chuỗi str_idNguoiDungs_XOA
-                        INSERT INTO @idNguoiDungs_XOA (value)
-                        SELECT value
-                        FROM STRING_SPLIT('{idNguoiDungs_XOA.ToString()}', ',')
+                                string duongDanThuMucGoc = string.Format("/Assets/uploads/{0}/TEPDINHKEM/{1}",
+                                     per.DonViSuDung.MaDonViSuDung, chienDich_OLD.IdChienDich);
 
-                        UPDATE tbKhachHang
-                        SET 
-                        IdNguoiSua = '{per.NguoiDung.IdNguoiDung}' , NgaySua = '{DateTime.Now}',
-                        QuyenTruyCap = (
-                            SELECT STRING_AGG(new_id, ',')
-                            FROM (
-                                SELECT value AS new_id
-                                FROM STRING_SPLIT(QuyenTruyCap, ',')
-                                WHERE value NOT IN (SELECT value FROM @idNguoiDungs_XOA)
-                                UNION
-                                SELECT value
-                                FROM @idNguoiDungs_XOA
-                                WHERE value NOT IN (SELECT value FROM STRING_SPLIT(QuyenTruyCap, ','))
-                                UNION
-                                SELECT '{idNguoiDung_THAYTHE}' AS value
-                            ) AS NewValues
-                        )
-                        WHERE (EXISTS (SELECT value FROM STRING_SPLIT(QuyenTruyCap, ',') WHERE value IN (SELECT value FROM @idNguoiDungs_XOA))
-                            OR EXISTS (SELECT value FROM @idNguoiDungs_XOA WHERE value IN (SELECT value FROM STRING_SPLIT(QuyenTruyCap, ','))))
-                            AND TrangThai <> 0 AND MaDonViSuDung = '{per.DonViSuDung.MaDonViSuDung}'
-                        ";
-                        db.Database.ExecuteSqlCommand(capNhatSQL);
+                                string folderPath_SERVER = Request.MapPath(duongDanThuMucGoc);
+                                // Xóa thư mục
+                                if (System.IO.Directory.Exists(folderPath_SERVER))
+                                    System.IO.Directory.Delete(folderPath_SERVER, true);
 
+                                var baiDangs = db.tbBaiDangs.Where(x => x.IdChienDich == idChienDich).ToList();
+                                foreach (var baiDang in baiDangs)
+                                {
+                                    baiDang.TrangThaiDangBai = 9; // Chờ xóa trên nền tảng
+                                    baiDang.TrangThai = 0;
+                                    baiDang.IdNguoiSua = per.NguoiDung.IdNguoiDung;
+                                    baiDang.NgaySua = DateTime.Now;
+
+                                    var baiDangTepDinhKems = db.tbBaiDangTepDinhKems
+                                        .Where(x => x.IdBaiDang == baiDang.IdBaiDang)
+                                        .ToList();
+
+                                    // Ép danh sách ID tệp về danh sách Guid
+                                    var tepIds = baiDangTepDinhKems.Select(y => y.IdTepDinhKem).ToList();
+
+                                    var tepDinhKems = db.tbTepDinhKems
+                                        .Where(x => tepIds.Contains(x.IdTep))
+                                        .ToList();
+
+                                    foreach (var tepDinhKem in tepDinhKems)
+                                    {
+                                        tepDinhKem.TrangThai = 0;
+                                        tepDinhKem.IdNguoiSua = per.NguoiDung.IdNguoiDung;
+                                        tepDinhKem.NgaySua = DateTime.Now;
+                                    };
+                                }
+
+                            }
+                            ;
+                        }
+                        ;
+                        db.SaveChanges();
                         scope.Commit();
                     }
                 }

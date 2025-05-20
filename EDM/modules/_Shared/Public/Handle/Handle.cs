@@ -323,7 +323,7 @@ namespace Public
                 using (MailMessage mail = new MailMessage())
                 {
                     mail.From = new MailAddress(cfg.From, donViSuDung.TenDonViSuDung);
-                    //mail.From = new MailAddress("admin@vietgenacademy.edu.vn", donViSuDung.TenDonViSuDung);
+                    //mail.From = new MailAddress("admin@giaptech.com", donViSuDung.TenDonViSuDung);
                     var mId = Guid.NewGuid().ToString();
                     mail.Headers.Add("Message-ID", mId);
                     mail.Headers.Add("X-Entity-Ref-ID", mId);
@@ -358,7 +358,7 @@ namespace Public
                     client.Host = cfg.Network.Host;
                     client.Port = cfg.Network.Port;
                     client.EnableSsl = cfg.Network.EnableSsl;
-                    //client.Credentials = new NetworkCredential("admin@vietgenacademy.edu.vn", "[ #:Z'n'_\"AV:[OUQ=/A");
+                    //client.Credentials = new NetworkCredential("admin@giaptech.com", "[ #:Z'n'_\"AV:[OUQ=/A");
                     //client.Host = "smtp.gmail.com";
                     //client.Port = 587;
                     //client.EnableSsl = true;
