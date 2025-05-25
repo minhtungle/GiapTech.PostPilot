@@ -3,30 +3,6 @@
     Permission per = Session["Permission"] as Permission;
 }
 <div class="card-body" intro-container="dulieu-container">
-    <div class="row">
-        <div class="col-sm-12 col-md-6 p-4 text-center" id="process-capdodoanhthu-canhan-container">
-            <div class="position-relative">
-                <div class="form-group">
-                    <div class="row justify-content-between px-2">
-                        <h4 class="font-bold mb-3" style="width: fit-content;" id="tencapdodoanhthu-hientai">@per.CapDo_DoanhThu.TenCapDo_DoanhThu</h4>
-                        <h4 class="font-bold mb-3" style="width: fit-content;" id="tencapdodoanhthu-tieptheo">@per.CapDo_DoanhThu.TenCapDo_DoanhThu</h4>
-                    </div>
-                    <div class="w-100" id="process-capdodoanhthu-canhan"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-12 col-md-6 p-4 text-center" id="process-muctieudoanhthu-canhan-container">
-            <div class="position-relative">
-                <div class="form-group">
-                    <div class="row justify-content-center">
-                        <h4 class="font-bold mb-3">MỤC TIÊU CÁ NHÂN @DateTime.Now.ToString("MM/yyyy")</h4>
-                    </div>
-                    <div class="w-100" id="process-muctieudoanhthu-canhan"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <hr />
     <div class="mb-2 toggle-vis-bar" intro-container="dulieu-hienthicot">
         Hiển thị:
         @*<a href="#" class="toggle-vis" data-table="thongtincanhan-getList" data-column="1">Tiến độ</a>*@ |

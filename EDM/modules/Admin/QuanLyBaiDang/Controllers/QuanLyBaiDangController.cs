@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.EnterpriseServices.Internal;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -175,7 +176,7 @@ namespace QuanLyBaiDang.Controllers
             return Json(output, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public ActionResult create_BaiDang(HttpPostedFileBase[] files, Guid[] rowNumbers)
+        public async Task<ActionResult> create_BaiDang(HttpPostedFileBase[] files, Guid[] rowNumbers, HttpClient httpClient)
         {
             string status = "success";
             string mess = "Thêm mới bản ghi thành công";
@@ -225,9 +226,9 @@ namespace QuanLyBaiDang.Controllers
                                     // Lấy ảnh của bài đăng
                                     if (baiDang_NEW.RowNumber == rowNumber)
                                     {
-                                        var f = files[i];
+                                        var file = files[i];
 
-                                        if (f == null || f.ContentLength <= 0)
+                                        if (file == null || file.ContentLength <= 0)
                                         {
                                             status = "error";
                                             mess = "Chưa có file nào được chọn";
@@ -237,10 +238,175 @@ namespace QuanLyBaiDang.Controllers
                                                 mess
                                             }, JsonRequestBehavior.AllowGet);
                                         }
+
+                                        using (var ms = new MemoryStream())
+                                        {
+                                            file.InputStream.CopyTo(ms);
+                                            var fileBytes = ms.ToArray();
+                                            var base64Image = Convert.ToBase64String(fileBytes);
+
+                                            //string apiKey = "1e400d7c7e3474f17176880df3027c34";
+                                            string _apiKey = GetDecryptedCredential("Imgbb", "ApiKey");
+                                            var formData = new MultipartFormDataContent();
+                                            formData.Add(new StringContent(_apiKey), "key");
+                                            formData.Add(new StringContent(base64Image), "image");
+
+                                            var response = await httpClient.PostAsync("https://api.imgbb.com/1/upload", formData);
+                                            if (response.IsSuccessStatusCode)
+                                            {
+                                                var jsonString = await response.Content.ReadAsStringAsync();
+                                                dynamic result = JsonConvert.DeserializeObject(jsonString);
+                                                string imageUrl = result.data.url;
+
+                                                var tepDinhKem = new tbTepDinhKem
+                                                {
+                                                    IdTep = Guid.NewGuid(),
+                                                    FileName = Path.GetFileNameWithoutExtension(file.FileName),
+                                                    DuongDanTepOnline = imageUrl,
+
+                                                    TrangThai = 1,
+                                                    IdNguoiTao = per.NguoiDung.IdNguoiDung,
+                                                    NgayTao = DateTime.Now,
+                                                    MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
+                                                };
+
+                                                db.tbTepDinhKems.Add(tepDinhKem);
+
+                                                var baiDangTepDinhKem = new tbBaiDangTepDinhKem
+                                                {
+                                                    IdBaiDangTepDinhKem = Guid.NewGuid(),
+                                                    IdBaiDang = baiDang.IdBaiDang,
+                                                    IdTepDinhKem = tepDinhKem.IdTep,
+                                                };
+
+                                                db.tbBaiDangTepDinhKems.Add(baiDangTepDinhKem);
+                                            }
+                                            else
+                                            {
+                                                // Xử lý lỗi nếu cần
+                                                ModelState.AddModelError("", "Upload ảnh thất bại.");
+                                            }
+                                        };
+                                    }
+                                    ;
+                                }
+                            }
+                ;
+                            #endregion
+                        }
+                        ;
+
+                        db.SaveChanges();
+                        scope.Commit();
+                    }
+                    ;
+                }
+                catch (Exception ex)
+                {
+                    status = "error";
+                    mess = ex.Message;
+                }
+            }
+            return Json(new
+            {
+                status,
+                mess
+            }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public async Task<ActionResult> create_BaiDangAsync(HttpPostedFileBase[] files, Guid[] rowNumbers, HttpClient httpClient)
+        {
+            string status = "success";
+            string mess = "Thêm mới bản ghi thành công";
+            using (var scope = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var baiDang_NEWs = JsonConvert.DeserializeObject<List<tbBaiDangExtend>>(Request.Form["baiDangs"]);
+
+                    if (baiDang_NEWs == null)
+                    {
+                        status = "error";
+                        mess = "Chưa có bản ghi nào";
+                    }
+                    else
+                    {
+                        foreach (var baiDang_NEW in baiDang_NEWs)
+                        {
+                            List<string> _linkTeps = new List<string>();
+
+                            #region Lưu db
+
+                            // Thêm mới
+                            var baiDang = new tbBaiDang
+                            {
+                                IdBaiDang = Guid.NewGuid(),
+                                IdChienDich = baiDang_NEW.BaiDang.IdChienDich,
+                                IdNenTang = baiDang_NEW.BaiDang.IdNenTang,
+                                Prompt = baiDang_NEW.BaiDang.Prompt,
+                                NoiDung = baiDang_NEW.BaiDang.NoiDung,
+                                ThoiGian = baiDang_NEW.BaiDang.ThoiGian,
+                                TuTaoAnhAI = baiDang_NEW.BaiDang.TuTaoAnhAI,
+
+                                TrangThaiDangBai = 0,
+                                TrangThai = 1,
+                                IdNguoiTao = per.NguoiDung.IdNguoiDung,
+                                NgayTao = DateTime.Now,
+                                MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
+                            };
+                            db.tbBaiDangs.Add(baiDang);
+
+                            if (files != null && (baiDang_NEW.BaiDang.TuTaoAnhAI.HasValue && !baiDang_NEW.BaiDang.TuTaoAnhAI.Value))
+                            {
+                                for (int i = 0; i < files.Length; i++)
+                                {
+                                    var rowNumber = rowNumbers[i];
+                                    // Lấy ảnh của bài đăng
+                                    if (baiDang_NEW.RowNumber == rowNumber)
+                                    {
+                                        var file = files[i];
+
+                                        if (file == null || file.ContentLength <= 0)
+                                        {
+                                            status = "error";
+                                            mess = "Chưa có file nào được chọn";
+                                            return Json(new
+                                            {
+                                                status,
+                                                mess
+                                            }, JsonRequestBehavior.AllowGet);
+                                        }
+
+                                        using (var ms = new MemoryStream())
+                                        {
+                                            file.InputStream.CopyTo(ms);
+                                            var fileBytes = ms.ToArray();
+                                            var base64Image = Convert.ToBase64String(fileBytes);
+
+                                            string apiKey = "1e400d7c7e3474f17176880df3027c34";
+                                            var formData = new MultipartFormDataContent();
+                                            formData.Add(new StringContent(apiKey), "key");
+                                            formData.Add(new StringContent(base64Image), "image");
+
+                                            var response = await httpClient.PostAsync("https://api.imgbb.com/1/upload", formData);
+                                            if (response.IsSuccessStatusCode)
+                                            {
+                                                var jsonString = await response.Content.ReadAsStringAsync();
+                                                dynamic result = JsonConvert.DeserializeObject(jsonString);
+                                                string imageUrl = result.data.url;
+                                                //imageUrls.Add(imageUrl);
+                                            }
+                                            else
+                                            {
+                                                // Xử lý lỗi nếu cần
+                                                ModelState.AddModelError("", "Upload ảnh thất bại.");
+                                            }
+                                        }
+
                                         var tepDinhKem = new tbTepDinhKem
                                         {
                                             IdTep = Guid.NewGuid(),
-                                            FileName = Path.GetFileNameWithoutExtension(f.FileName),
+                                            FileName = Path.GetFileNameWithoutExtension(file.FileName),
                                             //FileNameUpdate = duongDanTep.TenTep_CHUYENDOI,
                                             //FileExtension = duongDanTep.LoaiTep,
                                             //DuongDanTepVatLy = duongDanTep.DuongDanTep_BANDAU,
@@ -254,9 +420,9 @@ namespace QuanLyBaiDang.Controllers
 
                                         #region Lưu file trong server
                                         byte[] imgData = null;
-                                        using (var binaryReader = new BinaryReader(f.InputStream))
+                                        using (var binaryReader = new BinaryReader(file.InputStream))
                                         {
-                                            imgData = binaryReader.ReadBytes(f.ContentLength);
+                                            imgData = binaryReader.ReadBytes(file.ContentLength);
                                         }
                                     ;
 
@@ -265,10 +431,10 @@ namespace QuanLyBaiDang.Controllers
                                         string duongDanThuMucGoc = string.Format("/Assets/uploads/{0}/TEPDINHKEM/{1}/{2}/{3}",
                                        per.DonViSuDung.MaDonViSuDung, baiDang.IdChienDich, baiDang.IdBaiDang, tepDinhKem.IdTep);
 
-                                        string tenTaiLieu_BANDAU = Path.GetFileName(f.FileName);
+                                        string tenTaiLieu_BANDAU = Path.GetFileName(file.FileName);
                                         var duongDanTep = LayDuongDanTep(duongDanThuMucGoc: duongDanThuMucGoc, tenTep_BANDAU: tenTaiLieu_BANDAU);
 
-                                        string inputFileName = Public.Handle.ConvertToUnSign(s: Path.GetFileName(f.FileName), khoangCach: "-");
+                                        string inputFileName = Public.Handle.ConvertToUnSign(s: Path.GetFileName(file.FileName), khoangCach: "-");
                                         string filePath = string.Format("/{0}/{1}", duongDanThuMucGoc, inputFileName);
                                         string folderPath_SERVER = Request.MapPath(duongDanThuMucGoc);
                                         string inputFilePath_SERVER = Request.MapPath(filePath);
@@ -423,7 +589,8 @@ namespace QuanLyBaiDang.Controllers
                                         System.IO.File.Delete(inputFilePath_SERVER);
                                     // Xóa bản ghi trong DB
                                     db.tbTepDinhKems.Remove(tepDinhKem);
-                                };
+                                }
+                                ;
                             }
                             ;
                         }
@@ -453,36 +620,8 @@ namespace QuanLyBaiDang.Controllers
             string noiDung = "";
             try
             {
-                //                var email = "email@gmail.com";
-                //                var website = "https://giaptech.com";
-                //                var diaChi = "Hà Nội, Việt Nam";
-                //                var chuDe = input;
-                //                var prompt = $@"
-                //Viết một bài đăng fanpage chất lượng cao theo phong cách sau:
-
-                //1. **Tiêu đề ngắn gọn, mạnh mẽ và thu hút**, có thể dùng biểu tượng cảm xúc (emoji) phù hợp.
-                //2. **Feedback thực tế hoặc câu chuyện truyền cảm hứng** từ khách hàng hoặc học viên (dạng lời kể, dẫn chứng).
-                //3. **Danh sách gạch đầu dòng** các lợi ích, kết quả cụ thể mà người dùng đạt được.
-                //4. **Lý do tại sao người khác cũng nên lựa chọn dịch vụ/sản phẩm này** (USP – điểm mạnh, cam kết...).
-                //5. **Kêu gọi hành động rõ ràng**: inbox, bình luận, hoặc để lại thông tin để được tư vấn.
-                //6. **Thông tin liên hệ**, bao gồm:
-                //7. **Hashtag liên quan ở cuối bài viết** (4–6 hashtag)
-                //   - Email: {email}
-                //   - Website: {website}
-                //   - Địa chỉ: {diaChi}
-
-                //Nội dung bài viết nói về: ""{chuDe}""
-
-                //Yêu cầu:
-                //- Viết bằng tiếng Việt
-                //- Văn phong thuyết phục, tự nhiên, gần gũi, hướng đến hành động, dành cho fanpage
-                //- Có thể sử dụng emoji để làm nổi bật
-                //- Toàn bộ nội dung không quá 500 từ
-                //";
-
                 // 🔒 Lấy key đã được giải mã từ DB
                 string _apiKey = GetDecryptedCredential("OpenAI", "ApiKey");
-
                 noiDung = await _openAIApiService.GetCompletionAsync(prompt: prompt, _apiKey: _apiKey);
             }
             catch (Exception ex)
@@ -511,42 +650,42 @@ namespace QuanLyBaiDang.Controllers
             return CryptoHelper.Decrypt(cred.KeyJson);
         }
 
-        //public void SaveEncryptedCredential(string serviceName, string credentialType, string rawKeyJson, Guid? userId = null)
-        //{
-        //        var encrypted = CryptoHelper.Encrypt(rawKeyJson);
+        public void SaveEncryptedCredential(string serviceName, string credentialType, string rawKeyJson, Guid? userId = null)
+        {
+            var encrypted = CryptoHelper.Encrypt(rawKeyJson);
 
-        //        var newCred = new tbApiCredential
-        //        {
-        //            IdApiCredentials = Guid.NewGuid(),
-        //            IdNguoiDung = Guid.Empty,
-        //            ServiceName = serviceName,
-        //            CredentialType = credentialType,
-        //            KeyJson = encrypted,
-        //            TrangThai = 1,
-        //            NgayTao = DateTime.Now,
-        //            IdNguoiTao = userId
-        //        };
+            var newCred = new tbApiCredential
+            {
+                IdApiCredentials = Guid.NewGuid(),
+                IdNguoiDung = Guid.Empty,
+                ServiceName = serviceName,
+                CredentialType = credentialType,
+                KeyJson = encrypted,
+                TrangThai = 1,
+                NgayTao = DateTime.Now,
+                IdNguoiTao = userId
+            };
 
-        //        db.tbApiCredentials.Add(newCred);
-        //        db.SaveChanges();
-        //}
-        //public void SaveEncryptedKeys()
-        //{
-        //    // OpenAI Key
-        //    SaveEncryptedCredential("OpenAI", "ApiKey", "");
+            db.tbApiCredentials.Add(newCred);
+            db.SaveChanges();
+        }
+        public void SaveEncryptedKeys()
+        {
+            // OpenAI Key
+            SaveEncryptedCredential("Imgbb", "ApiKey", "1e400d7c7e3474f17176880df3027c34");
 
-        //    // Google JSON (nội dung file)
-        //    string jsonFilePath = Server.MapPath("~/App_Data/ggc-drive.json");
-        //    if (System.IO.File.Exists(jsonFilePath))
-        //    {
-        //        string jsonContent = System.IO.File.ReadAllText(jsonFilePath);
-        //        SaveEncryptedCredential("Google", "ServiceAccountJson", jsonContent);
-        //    }
-        //    else
-        //    {
-        //        throw new FileNotFoundException("The specified file does not exist.", jsonFilePath);
-        //    }
-        //}
+            // Google JSON (nội dung file)
+            //string jsonFilePath = Server.MapPath("~/App_Data/ggc-drive.json");
+            //if (System.IO.File.Exists(jsonFilePath))
+            //{
+            //    string jsonContent = System.IO.File.ReadAllText(jsonFilePath);
+            //    SaveEncryptedCredential("Google", "ServiceAccountJson", jsonContent);
+            //}
+            //else
+            //{
+            //    throw new FileNotFoundException("The specified file does not exist.", jsonFilePath);
+            //}
+        }
 
     }
 }

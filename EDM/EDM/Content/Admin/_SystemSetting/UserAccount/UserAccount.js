@@ -28,81 +28,36 @@ class UserAccount {
         ua.pageGroup = ua.page.attr("page-group");
         ua.nguoiDung = {
             ...ua.nguoiDung,
-            dataTable: new DataTableCustom({
-                name: "useraccount-getList",
-                table: $("#useraccount-getList"),
-                props: {
-                    ajax: {
-                        url: '/UserAccount/getList',
-                        type: "GET",
-                        complete: function (data) {
-                            ua.nguoiDung.data = data.responseJSON.data;
-                        },
-                    },
-                    rowId: 'IdNguoiDung',
-                    columns: [
-                        {
-                            data: null,
-                            className: "text-center",
-                            searchable: false,
-                            orderable: false,
-                            render: function (data, type, row, meta) {
-                                if (idNguoiDung_DangSuDung == data.IdNguoiDung) {
-                                    return ``;
-                                }
-                                return `<input class="form-check-input checkRow-useraccount-getList" type="checkbox"/>`;
+            dataTable: null,
+            getList: function () {
+                $.ajax({
+                    ...ajaxDefaultProps({
+                        url: "/UserAccount/getList",
+                        type: "GET", // Phải là POST để gửi JSON
+                        //contentType: "application/json; charset=utf-8",  // Định dạng JSON
+                        //data: { locThongTin: ua.nguoiDung.locThongTin.data }
+                        //dataType: "json",
+                    }),
+                    //contentType: false,
+                    //processData: false,
+                    success: function (res) {
+                        $("#useraccount-getList-container").html(res);
+                        ua.nguoiDung.dataTable = new DataTableCustom({
+                            name: "useraccount-getList",
+                            table: $("#useraccount-getList"),
+                            props: {
+                                dom: `
+                                <'row'<'col-sm-12'rt>>
+                                <'row'<'col-sm-12 col-md-6 text-left'i><'col-sm-12 col-md-6 pt-2'p>>`,
+                                lengthMenu: [
+                                    [5, 10],
+                                    [5, 10],
+                                ],
                             }
-                        },
-                        {
-                            data: "Online",
-                            className: "text-center",
-                            render: function (data, type, row, meta) {
-                                if (data) {
-                                    return `<span hidden>online, trực tuyến</span>
-                                    <span class="badge bg-success"><i class="bi bi-wifi"></i></span>`;
-                                };
-                                return `<span hidden>offline, ngoại tuyến</span>
-                                <span class="badge bg-danger"><i class="bi bi-wifi-off"></span>`;
-                            }
-                        },
-                        {
-                            data: null,
-                            render: function (data, type, row, meta) {
-                                if (idNguoiDung_DangSuDung == data.IdNguoiDung) {
-                                    return `${data.TenDangNhap} <span class="text-danger fst-italic"> (Đang sử dụng)</span>`;
-                                }
-                                return data.TenDangNhap;
-                            }
-                        },
-                        { data: "TenNguoiDung", },
-                        { data: "ChucVu.TenChucVu" },
-                        { data: "KieuNguoiDung.TenKieuNguoiDung" },
-                        { data: "CoCauToChuc.TenCoCauToChuc" },
-                        {
-                            data: "KichHoat",
-                            className: "text-center",
-                            render: function (data, type, row, meta) {
-                                return `<span class="badge ${data ? 'bg-success' : 'bg-danger'}">${data ? 'Kích hoạt' : 'Vô hiệu hóa'}</span>`;
-                            }
-                        },
-                        {
-                            data: "IdNguoiDung",
-                            className: "text-center",
-                            searchable: false,
-                            orderable: false,
-                            render: function (data, type, row, meta) {
-                                if (idNguoiDung_DangSuDung == data) {
-                                    return `<a href="#" class="btn btn-sm btn-primary" title="Cập nhật" onclick="ua.nguoiDung.displayModal_CRUD('update', '${data}')"><i class="bi bi-pencil-square"></i></a>`;
-                                }
-                                return `
-                                <a href="#" class="btn btn-sm btn-primary" title="Cập nhật" onclick="ua.nguoiDung.displayModal_CRUD('update', '${data}')"><i class="bi bi-pencil-square"></i></a>
-                                <a href="#" class="btn btn-sm btn-danger" title="Xóa bỏ" onclick="ua.nguoiDung.displayModal_Delete('single','${data}')"><i class="bi bi-trash3-fill"></i></a>
-                                `;
-                            }
-                        }
-                    ],
-                }
-            }).dataTable,
+                        }).dataTable;
+                    }
+                });
+            },
             btnDownload: function (btn) {
                 ua.nguoiDung.dataTable.buttons(btn).trigger();
             },
@@ -134,114 +89,50 @@ class UserAccount {
                     var modalValidtion = htmlEl.activeValidationStates("#useraccount-crud #thongtin");
                     if (modalValidtion) {
                         var nguoiDung = {
-                            IdNguoiDung: $("#input-idnguoidung", $("#useraccount-crud")).val(),
+                            NguoiDung: {
+                                IdNguoiDung: $("#input-idnguoidung", $("#useraccount-crud")).val(),
 
-                            GioiTinh: $("#select-gioitinh", $("#useraccount-crud")).val() == 1 ? true : false,
-                            KichHoat: $("#select-kichhoat", $("#useraccount-crud")).val() == 1 ? true : false,
-                            IdKieuNguoiDung: $("#select-kieunguoidung", $("#useraccount-crud")).val(),
-                            IdCoCauToChuc: $("#select-cocautochuc", $("#useraccount-crud")).val(),
-                            IdChucVu: $("#select-chucvu", $("#useraccount-crud")).val(),
-                            IdCapDo_DoanhThu: $("#select-capdodoanhthu", $("#useraccount-crud")).val(),
+                                GioiTinh: $("#select-gioitinh", $("#useraccount-crud")).val() == 1 ? true : false,
+                                KichHoat: $("#select-kichhoat", $("#useraccount-crud")).val() == 1 ? true : false,
+                                IdKieuNguoiDung: $("#select-kieunguoidung", $("#useraccount-crud")).val(),
+                                IdCoCauToChuc: $("#select-cocautochuc", $("#useraccount-crud")).val(),
+                                IdChucVu: $("#select-chucvu", $("#useraccount-crud")).val(),
+                                IdCapDo_DoanhThu: $("#select-capdodoanhthu", $("#useraccount-crud")).val(),
 
-                            TenNguoiDung: $("#input-tennguoidung", $("#useraccount-crud")).val().trim(),
-                            TenDangNhap: $("#input-tendangnhap", $("#useraccount-crud")).val().trim(),
-                            Email: $("#input-email", $("#useraccount-crud")).val().trim(),
-                            SoDienThoai: $("#input-sodienthoai", $("#useraccount-crud")).val().trim(),
-                            SoTaiKhoanNganHang: $("#input-sotaikhoannganhang", $("#useraccount-crud")).val().trim(),
-                            NgaySinh: $("#input-ngaysinh", $("#useraccount-crud")).val().trim(),
-                            GhiChu: $("#input-ghichu", $("#useraccount-crud")).val().trim(),
-                            LinkLienHe: $("#input-linklienhe", $("#useraccount-crud")).val().trim(),
+                                TenNguoiDung: $("#input-tennguoidung", $("#useraccount-crud")).val().trim(),
+                                TenDangNhap: $("#input-tendangnhap", $("#useraccount-crud")).val().trim(),
+                                Email: $("#input-email", $("#useraccount-crud")).val().trim(),
+                                SoDienThoai: $("#input-sodienthoai", $("#useraccount-crud")).val().trim(),
+                                SoTaiKhoanNganHang: $("#input-sotaikhoannganhang", $("#useraccount-crud")).val().trim(),
+                                NgaySinh: $("#input-ngaysinh", $("#useraccount-crud")).val().trim(),
+                                GhiChu: $("#input-ghichu", $("#useraccount-crud")).val().trim(),
+                                LinkLienHe: $("#input-linklienhe", $("#useraccount-crud")).val().trim(),
+                            },
                         };
                         // Nếu là thêm mới thì lấy mật khẩu
                         if (loai == "create") nguoiDung.MatKhau = $("#input-matkhau", $("#useraccount-crud")).val().trim();
                         if (nguoiDung.NgaySinh != "")
                             nguoiDung.NgaySinh = moment(nguoiDung.NgaySinh, 'YYYY-MM-DD').format('DD/MM/YYYY');
 
-                        $.ajax({
-                            ...ajaxDefaultProps({
-                                url: loai == "create" ? "/UserAccount/create_NguoiDung" : "/UserAccount/update_NguoiDung",
-                                type: "POST",
-                                data: {
-                                    str_nguoiDung: JSON.stringify(nguoiDung),
-                                }
-                            }),
-                            success: function (res) {
-                                if (res.status == "success") {
-                                    ua.nguoiDung.dataTable.ajax.reload(function () {
-                                        sys.displayModal({
-                                            name: "#useraccount-crud",
-                                            displayStatus: "hide"
-                                        });
-                                        sys.alert({ status: res.status, mess: res.mess });
-                                        var thongTinKiemTra = {
-                                            NguoiDungs: [
-                                                {
-                                                    IdNguoiDung: nguoiDung.IdNguoiDung
-                                                }
-                                            ],
-                                            LoaiHinhKiemTra: ["idnguoidung"],
-                                            NoiDungThongBao: "Thông tin tài khoản đã được thay đổi bởi [quản trị viên]"
-                                        };
-                                        chat.dangXuatNguoiDungHoatDong({ thongTinKiemTra: thongTinKiemTra });
-                                    }, false);
-                                } else if (res.status == "datontai") {
-                                    htmlEl.inputValidationStates(
-                                        $("#input-tendangnhap"),
-                                        "#useraccount-crud",
-                                        res.mess,
-                                        {
-                                            status: true,
-                                            isvalid: false
-                                        }
-                                    );
-                                    sys.alert({ status: "warning", mess: res.mess });
-                                } else if (res.status == "logout") {
-                                    sys.displayModal({
-                                        name: "#useraccount-crud",
-                                        displayStatus: "hide"
-                                    });
-                                    sys.logoutDialog({
-                                        mess: res.mess,
-                                    });
-                                } else {
-                                    sys.alert({ status: res.status, mess: res.mess });
-                                };
-                            }
-                        });
-                    };
-                } else {
-                    var modalValidtion = htmlEl.activeValidationStates("#useraccount-crud #doimatkhau");
-                    if (modalValidtion) {
-                        var nguoiDung = {
-                            IdNguoiDung: $("#input-idnguoidung", $("#useraccount-crud")).val(),
+                        sys.confirmDialog({
+                            mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
+                            callback: function () {
+                                var formData = new FormData();
+                                formData.append("nguoiDung", JSON.stringify(nguoiDung));
+                                formData.append("loai", loai);
 
-                            MatKhauCu: $("#input-matkhau-cu", $("#useraccount-crud")).val().trim(),
-                            MatKhauMoi: $("#input-matkhau-moi", $("#useraccount-crud")).val().trim(),
-                            MatKhauMoi_XacNhan: $("#input-matkhau-moi-xacnhan", $("#useraccount-crud")).val().trim(),
-                        };
-
-                        if (nguoiDung.MatKhauMoi != nguoiDung.MatKhauMoi_XacNhan) {
-                            htmlEl.inputValidationStates(
-                                $("#input-matkhau-moi-xacnhan"),
-                                "#useraccount-crud",
-                                "Mật khẩu mới chưa chính xác",
-                                {
-                                    status: true,
-                                    isvalid: false
-                                }
-                            );
-                        } else {
-                            $.ajax({
-                                ...ajaxDefaultProps({
-                                    url: "/UserAccount/capNhat_MatKhau",
-                                    type: "POST",
-                                    data: {
-                                        str_nguoiDung: JSON.stringify(nguoiDung),
-                                    }
-                                }),
-                                success: function (res) {
-                                    if (res.status == "success") {
-                                        ua.nguoiDung.dataTable.ajax.reload(function () {
+                                $.ajax({
+                                    ...ajaxDefaultProps({
+                                        url: loai == "create" ? "/UserAccount/create_NguoiDung" : "/UserAccount/update_NguoiDung",
+                                        type: "POST",
+                                        data: formData,
+                                    }),
+                                    //contentType: "application/json; charset=utf-8",  // Chỉ định kiểu nội dung là JSON
+                                    contentType: false,
+                                    processData: false,
+                                    success: function (res) {
+                                        if (res.status == "success") {
+                                            ua.nguoiDung.getList();
                                             sys.displayModal({
                                                 name: "#useraccount-crud",
                                                 displayStatus: "hide"
@@ -257,29 +148,115 @@ class UserAccount {
                                                 NoiDungThongBao: "Thông tin tài khoản đã được thay đổi bởi [quản trị viên]"
                                             };
                                             chat.dangXuatNguoiDungHoatDong({ thongTinKiemTra: thongTinKiemTra });
-                                        }, false);
-                                    } else if (res.status == "matkhaucuchuachinhxac") {
-                                        htmlEl.inputValidationStates(
-                                            $("#input-matkhau-cu"),
-                                            "#useraccount-crud",
-                                            "Mật khẩu cũ chưa chính xác",
-                                            {
-                                                status: true,
-                                                isvalid: false
-                                            }
-                                        );
-                                        sys.alert({ status: "warning", mess: res.mess });
-                                    } else if (res.status == "logout") {
-                                        sys.displayModal({
-                                            name: "#useraccount-crud",
-                                            displayStatus: "hide"
-                                        });
-                                        sys.logoutDialog({
-                                            mess: res.mess,
-                                        });
-                                    } else {
-                                        sys.alert({ status: res.status, mess: res.mess });
-                                    };
+                                        } else if (res.status == "datontai") {
+                                            htmlEl.inputValidationStates(
+                                                $("#input-tendangnhap"),
+                                                "#useraccount-crud",
+                                                res.mess,
+                                                {
+                                                    status: true,
+                                                    isvalid: false
+                                                }
+                                            );
+                                            sys.alert({ status: "warning", mess: res.mess });
+                                        } else if (res.status == "logout") {
+                                            sys.displayModal({
+                                                name: "#useraccount-crud",
+                                                displayStatus: "hide"
+                                            });
+                                            sys.logoutDialog({
+                                                mess: res.mess,
+                                            });
+                                        } else {
+                                            sys.alert({ status: res.status, mess: res.mess });
+                                        };
+                                    }
+                                });
+                            }
+                        });
+                    };
+                } else {
+                    var modalValidtion = htmlEl.activeValidationStates("#useraccount-crud #doimatkhau");
+                    if (modalValidtion) {
+                        var nguoiDung = {
+                            NguoiDung: {
+                                IdNguoiDung: $("#input-idnguoidung", $("#useraccount-crud")).val(),
+
+                                MatKhauCu: $("#input-matkhau-cu", $("#useraccount-crud")).val().trim(),
+                                MatKhauMoi: $("#input-matkhau-moi", $("#useraccount-crud")).val().trim(),
+                                MatKhauMoi_XacNhan: $("#input-matkhau-moi-xacnhan", $("#useraccount-crud")).val().trim(),
+                            }
+                        };
+
+                        if (nguoiDung.MatKhauMoi != nguoiDung.MatKhauMoi_XacNhan) {
+                            htmlEl.inputValidationStates(
+                                $("#input-matkhau-moi-xacnhan"),
+                                "#useraccount-crud",
+                                "Mật khẩu mới chưa chính xác",
+                                {
+                                    status: true,
+                                    isvalid: false
+                                }
+                            );
+                        } else {
+                            sys.confirmDialog({
+                                mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
+                                callback: function () {
+                                    var formData = new FormData();
+                                    formData.append("nguoiDung", JSON.stringify(nguoiDung));
+                                    formData.append("loai", loai);
+
+                                    $.ajax({
+                                        ...ajaxDefaultProps({
+                                            url: "/UserAccount/capNhat_MatKhau",
+                                            type: "POST",
+                                            data: formData,
+                                        }),
+                                        //contentType: "application/json; charset=utf-8",  // Chỉ định kiểu nội dung là JSON
+                                        contentType: false,
+                                        processData: false,
+                                        success: function (res) {
+                                            if (res.status == "success") {
+                                                ua.nguoiDung.getList();
+                                                sys.displayModal({
+                                                    name: "#useraccount-crud",
+                                                    displayStatus: "hide"
+                                                });
+                                                sys.alert({ status: res.status, mess: res.mess });
+                                                var thongTinKiemTra = {
+                                                    NguoiDungs: [
+                                                        {
+                                                            IdNguoiDung: nguoiDung.IdNguoiDung
+                                                        }
+                                                    ],
+                                                    LoaiHinhKiemTra: ["idnguoidung"],
+                                                    NoiDungThongBao: "Thông tin tài khoản đã được thay đổi bởi [quản trị viên]"
+                                                };
+                                                chat.dangXuatNguoiDungHoatDong({ thongTinKiemTra: thongTinKiemTra });
+                                            } else if (res.status == "matkhaucuchuachinhxac") {
+                                                htmlEl.inputValidationStates(
+                                                    $("#input-matkhau-cu"),
+                                                    "#useraccount-crud",
+                                                    "Mật khẩu cũ chưa chính xác",
+                                                    {
+                                                        status: true,
+                                                        isvalid: false
+                                                    }
+                                                );
+                                                sys.alert({ status: "warning", mess: res.mess });
+                                            } else if (res.status == "logout") {
+                                                sys.displayModal({
+                                                    name: "#useraccount-crud",
+                                                    displayStatus: "hide"
+                                                });
+                                                sys.logoutDialog({
+                                                    mess: res.mess,
+                                                });
+                                            } else {
+                                                sys.alert({ status: res.status, mess: res.mess });
+                                            };
+                                        }
+                                    });
                                 }
                             });
                         };
@@ -363,21 +340,20 @@ class UserAccount {
                         processData: false,
                         success: function (res) {
                             if (res.status == "success") {
-                                ua.nguoiDung.dataTable.ajax.reload(function () {
-                                    sys.displayModal({
-                                        name: "#useraccount-delete",
-                                        displayStatus: "hide"
-                                    });
-                                    sys.alert({ status: res.status, mess: res.mess });
-                                    var thongTinKiemTra = {
-                                        NguoiDungs: ua.nguoiDung.idNguoiDungs_XOA.map(idNguoiDung_XOA => ({
-                                            IdNguoiDung: idNguoiDung_XOA
-                                        })),
-                                        LoaiHinhKiemTra: ["idnguoidung"],
-                                        NoiDungThongBao: "Thông tin tài khoản đã được thay đổi bởi [quản trị viên]"
-                                    };
-                                    chat.dangXuatNguoiDungHoatDong({ thongTinKiemTra: thongTinKiemTra });
-                                }, false);
+                                ua.nguoiDung.getList();
+                                sys.displayModal({
+                                    name: "#useraccount-delete",
+                                    displayStatus: "hide"
+                                });
+                                sys.alert({ status: res.status, mess: res.mess });
+                                var thongTinKiemTra = {
+                                    NguoiDungs: ua.nguoiDung.idNguoiDungs_XOA.map(idNguoiDung_XOA => ({
+                                        IdNguoiDung: idNguoiDung_XOA
+                                    })),
+                                    LoaiHinhKiemTra: ["idnguoidung"],
+                                    NoiDungThongBao: "Thông tin tài khoản đã được thay đổi bởi [quản trị viên]"
+                                };
+                                chat.dangXuatNguoiDungHoatDong({ thongTinKiemTra: thongTinKiemTra });
                             } else if (res.status == "logout") {
                                 sys.displayModal({
                                     name: "#useraccount-delete",
@@ -405,10 +381,11 @@ class UserAccount {
                     }
                 }),
                 success: function (res) {
-                    if (res) ua.nguoiDung.dataTable.ajax.reload();
+                    if (res) ua.nguoiDung.getList();
                 }
             });
         };
+        ua.nguoiDung.getList();
         sys.activePage({
             page: ua.page.attr("id"),
             pageGroup: ua.pageGroup
@@ -592,34 +569,39 @@ class UserAccount {
                             rowNumber = $rowCheck.attr("row"),
                             $div = $(`.excel-nguoidung-read[row=${rowNumber}]`, $("#excel-nguoidung")),
                             nguoiDung = {
-                                IdNguoiDung: '00000000-0000-0000-0000-000000000000',
+                                NguoiDung: {
+                                    IdNguoiDung: '00000000-0000-0000-0000-000000000000',
 
-                                GioiTinh: $("#select-gioitinh", $div).val() == 1 ? true : false,
-                                KichHoat: $("#select-kichhoat", $div).val() == 1 ? true : false,
-                                IdKieuNguoiDung: $("#select-kieunguoidung", $div).val(),
+                                    GioiTinh: $("#select-gioitinh", $div).val() == 1 ? true : false,
+                                    KichHoat: $("#select-kichhoat", $div).val() == 1 ? true : false,
+                                    IdKieuNguoiDung: $("#select-kieunguoidung", $div).val(),
+
+                                    IdCoCauToChuc: $("#select-cocautochuc", $div).val(),
+
+                                    IdChucVu: $("#select-chucvu", $div).val(),
+
+                                    TenNguoiDung: $("#input-tennguoidung", $div).val().trim(),
+                                    TenDangNhap: $("#input-tendangnhap", $div).val().trim(),
+                                    MatKhau: $("#input-matkhau", $div).val().trim(),
+                                    Email: $("#input-email", $div).val().trim(),
+                                    SoDienThoai: $("#input-sodienthoai", $div).val().trim(),
+                                    SoTaiKhoanNganHang: $("#input-sotaikhoannganhang", $div).val().trim(),
+                                    NgaySinh: $("#input-ngaysinh", $div).val().trim(),
+                                    GhiChu: $("#input-ghichu", $div).val().trim(),
+                                    LinkLienHe: $("#input-linklienhe", $div).val().trim(),
+                                },
                                 KieuNguoiDung: {
                                     IdKieuNguoiDung: $("#select-kieunguoidung", $div).val(),
                                     TenKieuNguoiDung: $("#select-kieunguoidung option:selected", $div).text(),
                                 },
-                                IdCoCauToChuc: $("#select-cocautochuc", $div).val(),
                                 CoCauToChuc: {
                                     IdCoCauToChuc: $("#select-cocautochuc", $div).val(),
                                     TenCoCauToChuc: $("#select-cocautochuc option:selected", $div).text(),
                                 },
-                                IdChucVu: $("#select-chucvu", $div).val(),
                                 ChucVu: {
                                     IdChucVu: $("#select-chucvu", $div).val(),
                                     TenChucVu: $("#select-chucvu option:selected", $div).text(),
                                 },
-                                TenNguoiDung: $("#input-tennguoidung", $div).val().trim(),
-                                TenDangNhap: $("#input-tendangnhap", $div).val().trim(),
-                                MatKhau: $("#input-matkhau", $div).val().trim(),
-                                Email: $("#input-email", $div).val().trim(),
-                                SoDienThoai: $("#input-sodienthoai", $div).val().trim(),
-                                SoTaiKhoanNganHang: $("#input-sotaikhoannganhang", $div).val().trim(),
-                                NgaySinh: $("#input-ngaysinh", $div).val().trim(),
-                                GhiChu: $("#input-ghichu", $div).val().trim(),
-                                LinkLienHe: $("#input-linklienhe", $div).val().trim(),
                             };
                         if (nguoiDung.NgaySinh != "")
                             nguoiDung.NgaySinh = moment(nguoiDung.NgaySinh, 'YYYY-MM-DD').format('DD/MM/YYYY');
@@ -654,35 +636,40 @@ class UserAccount {
                     var $div = $(this),
                         rowNumber = $div.attr("row"),
                         nguoiDung = {
-                            IdNguoiDung: '00000000-0000-0000-0000-000000000000',
+                            NguoiDung: {
+                                IdNguoiDung: '00000000-0000-0000-0000-000000000000',
 
-                            GioiTinh: $("#select-gioitinh", $div).val() == 1 ? true : false,
-                            KichHoat: $("#select-kichhoat", $div).val() == 1 ? true : false,
-                            IdKieuNguoiDung: $("#select-kieunguoidung", $div).val(),
-                            KieuNguoiDung: {
+                                GioiTinh: $("#select-gioitinh", $div).val() == 1 ? true : false,
+                                KichHoat: $("#select-kichhoat", $div).val() == 1 ? true : false,
                                 IdKieuNguoiDung: $("#select-kieunguoidung", $div).val(),
-                                TenKieuNguoiDung: $("#select-kieunguoidung option:selected", $div).text(),
+
+                                IdCoCauToChuc: $("#select-cocautochuc", $div).val(),
+
+                                IdChucVu: $("#select-chucvu", $div).val(),
+
+
+                                TenNguoiDung: $("#input-tennguoidung", $div).val().trim(),
+                                TenDangNhap: $("#input-tendangnhap", $div).val().trim(),
+                                MatKhau: $("#input-matkhau", $div).val().trim(),
+                                Email: $("#input-email", $div).val().trim(),
+                                SoDienThoai: $("#input-sodienthoai", $div).val().trim(),
+                                SoTaiKhoanNganHang: $("#input-sotaikhoannganhang", $div).val().trim(),
+                                NgaySinh: $("#input-ngaysinh", $div).val().trim(),
+                                GhiChu: $("#input-ghichu", $div).val().trim(),
+                                LinkLienHe: $("#input-linklienhe", $div).val().trim(),
                             },
-                            IdCoCauToChuc: $("#select-cocautochuc", $div).val(),
                             CoCauToChuc: {
                                 IdCoCauToChuc: $("#select-cocautochuc", $div).val(),
                                 TenCoCauToChuc: $("#select-cocautochuc option:selected", $div).text(),
                             },
-                            IdChucVu: $("#select-chucvu", $div).val(),
+                            KieuNguoiDung: {
+                                IdKieuNguoiDung: $("#select-kieunguoidung", $div).val(),
+                                TenKieuNguoiDung: $("#select-kieunguoidung option:selected", $div).text(),
+                            },
                             ChucVu: {
                                 IdChucVu: $("#select-chucvu", $div).val(),
                                 TenChucVu: $("#select-chucvu option:selected", $div).text(),
                             },
-
-                            TenNguoiDung: $("#input-tennguoidung", $div).val().trim(),
-                            TenDangNhap: $("#input-tendangnhap", $div).val().trim(),
-                            MatKhau: $("#input-matkhau", $div).val().trim(),
-                            Email: $("#input-email", $div).val().trim(),
-                            SoDienThoai: $("#input-sodienthoai", $div).val().trim(),
-                            SoTaiKhoanNganHang: $("#input-sotaikhoannganhang", $div).val().trim(),
-                            NgaySinh: $("#input-ngaysinh", $div).val().trim(),
-                            GhiChu: $("#input-ghichu", $div).val().trim(),
-                            LinkLienHe: $("#input-linklienhe", $div).val().trim(),
                         };
                     if (nguoiDung.NgaySinh != "")
                         nguoiDung.NgaySinh = moment(nguoiDung.NgaySinh, 'YYYY-MM-DD').format('DD/MM/YYYY');
@@ -712,20 +699,18 @@ class UserAccount {
                     processData: false,
                     success: function (res) {
                         if (res.status == "success") {
-                            ua.nguoiDung.dataTable.ajax.reload(function () {
-                                sys.displayModal({
-                                    name: '#excel-nguoidung',
-                                    displayStatus: "hide"
-                                });
-                                sys.alert({ status: res.status, mess: res.mess })
-                            }, false);
+                            ua.nguoiDung.getList();
+                            sys.displayModal({
+                                name: '#excel-nguoidung',
+                                displayStatus: "hide"
+                            });
+                            sys.alert({ status: res.status, mess: res.mess })
                         } else if (res.status == "warning") {
-                            ua.nguoiDung.dataTable.ajax.reload(function () {
-                                // Đẩy lại danh sách dữ liệu chưa hợp lệ
-                                ua.getList_Excel_NguoiDung("upload");
-                                ua.excelNguoiDung.dataTable.search('').draw();
-                                sys.alert({ status: "success", mess: res.mess });
-                            }, false);
+                            ua.nguoiDung.getList();
+                            // Đẩy lại danh sách dữ liệu chưa hợp lệ
+                            ua.getList_Excel_NguoiDung("upload");
+                            ua.excelNguoiDung.dataTable.search('').draw();
+                            sys.alert({ status: "success", mess: res.mess });
                         } else if (res.status == "error-0") {
                             sys.alert({ status: "error", mess: res.mess })
                         } else {

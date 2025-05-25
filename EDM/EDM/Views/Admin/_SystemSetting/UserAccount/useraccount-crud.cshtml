@@ -3,9 +3,9 @@
     string loai = ViewBag.loai;
     tbNguoiDung nguoiDung = ViewBag.nguoiDung;
     string ngaySinh = nguoiDung.NgaySinh == null ? "" : nguoiDung.NgaySinh.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
-    List<tbCoCauToChuc> COCAUTOCHUCs = Session["COCAUTOCHUCs"] as List<tbCoCauToChuc>;
-    List<tbKieuNguoiDung> KIEUNGUOIDUNGs = Session["KIEUNGUOIDUNGs"] as List<tbKieuNguoiDung>;
-    List<default_tbChucVu> CHUCVUs = Session["CHUCVUs"] as List<default_tbChucVu>;
+    var COCAUTOCHUCs = Session["COCAUTOCHUCs"] as List<tbCoCauToChuc>;
+    var KIEUNGUOIDUNGs = Session["KIEUNGUOIDUNGs"] as List<tbKieuNguoiDung>;
+    var CHUCVUs = Session["CHUCVUs"] as List<default_tbChucVu>;
 }
 <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
     <div class="modal-content">
@@ -173,10 +173,10 @@
                         <div class="col-sm-12 col-md-12">
                             <div class="position-relative">
                                 <div class="form-group mb-3">
-                                    <label class="required" for="select-chucvu">Chức vụ</label>
+                                    <label class="" for="select-chucvu">Chức vụ</label>
                                     <select class="form-control form-select2"
                                             id="select-chucvu" name="select-chucvu"
-                                            @(loai == "read" ? "disabled" : "") required>
+                                            @(loai == "read" ? "disabled" : "")>
                                         <option disabled data-ma="" @(CHUCVUs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
                                         @foreach (default_tbChucVu chucVu in CHUCVUs)
                                         {

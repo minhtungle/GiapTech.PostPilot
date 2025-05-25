@@ -1,5 +1,5 @@
 ﻿@using EDM_DB
-@using UserAccount.Models
+@using Applications.UserAccount.Models
 @{
     List<tbNguoiDungExtend> nguoiDungs = ViewBag.nguoiDungs;
     List<Guid> idNguoiDungs_XOA = ViewBag.idNguoiDungs_XOA;
@@ -20,20 +20,20 @@
                         <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
                     </tr>
                 </tfoot>
-                @foreach (tbNguoiDungExtend nguoiDung in nguoiDungs)
+                @foreach (var nguoiDung in nguoiDungs)
                 {
-                    if (idNguoiDungs_XOA.Contains(nguoiDung.IdNguoiDung))
+                    if (idNguoiDungs_XOA.Contains(nguoiDung.NguoiDung.IdNguoiDung))
                     {
-                        <tr id="@nguoiDung.IdNguoiDung">
+                        <tr id="@nguoiDung.NguoiDung.IdNguoiDung">
                             <td></td>
-                            <td class="text-decoration-line-through">@nguoiDung.TenDangNhap - @nguoiDung.TenNguoiDung</td>
+                            <td class="text-decoration-line-through">@nguoiDung.NguoiDung.TenDangNhap - @nguoiDung.NguoiDung.TenNguoiDung</td>
                         </tr>
                     }
                     else
                     {
-                        <tr id="@nguoiDung.IdNguoiDung">
-                            <td class="text-center"><input class="form-check-input checkRow-useraccount-thaythe-getList" type="checkbox" data-id="@nguoiDung.IdNguoiDung" /></td>
-                            <td>@nguoiDung.TenDangNhap - @nguoiDung.TenNguoiDung</td>
+                        <tr id="@nguoiDung.NguoiDung.IdNguoiDung">
+                            <td class="text-center"><input class="form-check-input checkRow-useraccount-thaythe-getList" type="checkbox" data-id="@nguoiDung.NguoiDung.IdNguoiDung" /></td>
+                            <td>@nguoiDung.NguoiDung.TenDangNhap - @nguoiDung.NguoiDung.TenNguoiDung</td>
                         </tr>
                     }
                 }

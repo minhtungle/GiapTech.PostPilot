@@ -93,6 +93,10 @@
     <Compile Include="QuanLyBaiDang\Dtos\DisplayModel_CRUD_BaiDang_Output_Dto.cs" />
     <Compile Include="QuanLyBaiDang\Dtos\LocThongTinDto.cs" />
     <Compile Include="QuanLyBaiDang\Models\tbBaiDangExtend.cs" />
+    <Compile Include="UserAccount\Models\CapNhatTaiKhoanMail.cs" />
+    <Compile Include="UserAccount\Models\NoiDungBanQuyen.cs" />
+    <Compile Include="UserAccount\Models\tbNguoiDungExtend.cs" />
+    <Compile Include="UserAccount\Models\ThongTinThietBiLuuTru.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -116,7 +120,6 @@
   <ItemGroup>
     <Folder Include="Organization\Validator\" />
     <Folder Include="UnitManage\" />
-    <Folder Include="UserAccount\" />
     <Folder Include="UserType\" />
   </ItemGroup>
   <PropertyGroup>

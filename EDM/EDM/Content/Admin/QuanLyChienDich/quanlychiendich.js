@@ -139,7 +139,7 @@ class QuanLyChienDich {
                     });
                 };
             },
-            delete: function (loai, idChienDich) {
+            delete: function (loai, idChienDich = '00000000-0000-0000-0000-000000000000') {
                 var idChienDichs = [];
                 // Lấy id
                 if (loai == "single") {

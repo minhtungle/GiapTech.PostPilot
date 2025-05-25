@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using UserAccount.Models;
 using Public.Controllers;
+using Applications.UserAccount.Models;
 
 namespace UserAccount.Controllers
 {
@@ -49,9 +49,9 @@ namespace UserAccount.Controllers
             {
                 foreach (tbNguoiDungExtend nguoiDung in nguoiDungs)
                 {
-                    nguoiDung.KieuNguoiDung = db.tbKieuNguoiDungs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung.IdKieuNguoiDung) ?? new tbKieuNguoiDung();
-                    nguoiDung.CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung.IdCoCauToChuc) ?? new tbCoCauToChuc();
-                    nguoiDung.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung.IdChucVu) ?? new default_tbChucVu();
+                    nguoiDung.KieuNguoiDung = db.tbKieuNguoiDungs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung.NguoiDung.IdKieuNguoiDung) ?? new tbKieuNguoiDung();
+                    nguoiDung.CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung.NguoiDung.IdCoCauToChuc) ?? new tbCoCauToChuc();
+                    nguoiDung.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung.NguoiDung.IdChucVu) ?? new default_tbChucVu();
                 };
             }
             return nguoiDungs;
@@ -86,57 +86,57 @@ namespace UserAccount.Controllers
                     }
                     else
                     {
-                        if (kiemTra_NguoiDung(nguoiDung: nguoiDung_NEW))
+                        if (kiemTra_NguoiDung(nguoiDung: nguoiDung_NEW.NguoiDung))
                         {
                             status = "datontai";
                             mess = "Tên đăng nhập đã tồn tại";
                         }
                         else
                         {
-                            tbNguoiDungExtend nguoiDung_OLD = db.Database.SqlQuery<tbNguoiDungExtend>($@"select * from tbNguoiDung where MaDonViSuDung = '{per.DonViSuDung.MaDonViSuDung}' and IdNguoiDung = '{nguoiDung_NEW.IdNguoiDung}'").FirstOrDefault();
-                            if (nguoiDung_NEW.IdKieuNguoiDung != null || nguoiDung_NEW.IdKieuNguoiDung != Guid.Empty)
+                            tbNguoiDungExtend nguoiDung_OLD = db.Database.SqlQuery<tbNguoiDungExtend>($@"select * from tbNguoiDung where MaDonViSuDung = '{per.DonViSuDung.MaDonViSuDung}' and IdNguoiDung = '{nguoiDung_NEW.NguoiDung.IdNguoiDung}'").FirstOrDefault();
+                            if (nguoiDung_NEW.NguoiDung.IdKieuNguoiDung != null || nguoiDung_NEW.NguoiDung.IdKieuNguoiDung != Guid.Empty)
                             {
-                                nguoiDung_NEW.KieuNguoiDung = db.tbKieuNguoiDungs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung_NEW.IdKieuNguoiDung) ?? new tbKieuNguoiDung();
-                                nguoiDung_OLD.KieuNguoiDung = db.tbKieuNguoiDungs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung_OLD.IdKieuNguoiDung) ?? new tbKieuNguoiDung();
+                                nguoiDung_NEW.KieuNguoiDung = db.tbKieuNguoiDungs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung_NEW.NguoiDung.IdKieuNguoiDung) ?? new tbKieuNguoiDung();
+                                nguoiDung_OLD.KieuNguoiDung = db.tbKieuNguoiDungs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung_OLD.NguoiDung.IdKieuNguoiDung) ?? new tbKieuNguoiDung();
 
                             };
-                            if (nguoiDung_NEW.IdCoCauToChuc != null || nguoiDung_NEW.IdCoCauToChuc != Guid.Empty)
+                            if (nguoiDung_NEW.NguoiDung.IdCoCauToChuc != null || nguoiDung_NEW.NguoiDung.IdCoCauToChuc != Guid.Empty)
                             {
-                                nguoiDung_NEW.CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung_NEW.IdCoCauToChuc) ?? new tbCoCauToChuc();
-                                nguoiDung_OLD.CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung_OLD.IdCoCauToChuc) ?? new tbCoCauToChuc();
+                                nguoiDung_NEW.CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung_NEW.NguoiDung.IdCoCauToChuc) ?? new tbCoCauToChuc();
+                                nguoiDung_OLD.CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung_OLD.NguoiDung.IdCoCauToChuc) ?? new tbCoCauToChuc();
                             };
-                            if (nguoiDung_NEW.IdChucVu != null || nguoiDung_NEW.IdChucVu != Guid.Empty)
+                            if (nguoiDung_NEW.NguoiDung.IdChucVu != null || nguoiDung_NEW.NguoiDung.IdChucVu != Guid.Empty)
                             {
-                                nguoiDung_NEW.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung_NEW.IdChucVu) ?? new default_tbChucVu();
-                                nguoiDung_OLD.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung_OLD.IdChucVu) ?? new default_tbChucVu();
+                                nguoiDung_NEW.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung_NEW.NguoiDung.IdChucVu) ?? new default_tbChucVu();
+                                nguoiDung_OLD.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung_OLD.NguoiDung.IdChucVu) ?? new default_tbChucVu();
                             };
                         
                             string sql_capNhatNguoiDung = $@"
                             update tbNguoiDung set
-                                TenNguoiDung = N'{nguoiDung_NEW.TenNguoiDung}',
-                                GioiTinh = {(nguoiDung_NEW.GioiTinh.Value ? 1 : 0)},
-                                Email = '{nguoiDung_NEW.Email}',
-                                SoDienThoai = '{nguoiDung_NEW.SoDienThoai}',
-                                SoTaiKhoanNganHang = '{nguoiDung_NEW.SoTaiKhoanNganHang}',
-                                NgaySinh = '{nguoiDung_NEW.NgaySinh}',
-                                GhiChu = N'{nguoiDung_NEW.GhiChu}',
-                                LinkLienHe = '{nguoiDung_NEW.LinkLienHe}',
+                                TenNguoiDung = N'{nguoiDung_NEW.NguoiDung.TenNguoiDung}',
+                                GioiTinh = {(nguoiDung_NEW.NguoiDung.GioiTinh.Value ? 1 : 0)},
+                                Email = '{nguoiDung_NEW.NguoiDung.Email}',
+                                SoDienThoai = '{nguoiDung_NEW.NguoiDung.SoDienThoai}',
+                                SoTaiKhoanNganHang = '{nguoiDung_NEW.NguoiDung.SoTaiKhoanNganHang}',
+                                NgaySinh = '{nguoiDung_NEW.NguoiDung.NgaySinh}',
+                                GhiChu = N'{nguoiDung_NEW.NguoiDung.GhiChu}',
+                                LinkLienHe = '{nguoiDung_NEW.NguoiDung.LinkLienHe}',
 
                                 IdNguoiSua = '{per.NguoiDung.IdNguoiDung}',
                                 NgaySua = '{DateTime.Now}'
-                            where MaDonViSuDung = '{per.DonViSuDung.MaDonViSuDung}' and IdNguoiDung = '{nguoiDung_NEW.IdNguoiDung}'
+                            where MaDonViSuDung = '{per.DonViSuDung.MaDonViSuDung}' and IdNguoiDung = '{nguoiDung_NEW.NguoiDung.IdNguoiDung}'
                             ";
                             db.Database.ExecuteSqlCommand(sql_capNhatNguoiDung);
                             // Cập nhật lại session
                             //status = "logout";
                             //mess = "[Tài khoản đang sử dụng]";
-                            per.NguoiDung = nguoiDung_OLD;
+                            per.NguoiDung = nguoiDung_OLD.NguoiDung;
 
                             db.SaveChanges();
                             #region Gửi mail
                             string mail()
                             {
-                                var model = new CapNhatTaiKhoanMailM<tbNguoiDungExtend>
+                                var model = new CapNhatTaiKhoanMail<tbNguoiDungExtend>
                                 {
                                     NguoiDung_OLD = nguoiDung_OLD,
                                     NguoiDung_NEW = nguoiDung_NEW,
@@ -150,10 +150,10 @@ namespace UserAccount.Controllers
                             string tieuDeMail = "[📣 GIAPTECH] - CẬP NHẬT THÔNG TIN TÀI KHOẢN❗";
                             string mailBody = mail();
                             // Gửi mail
-                            Public.Handle.SendEmail(sendTo: nguoiDung_OLD.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
-                            if (nguoiDung_NEW.Email != nguoiDung_OLD.Email)
+                            Public.Handle.SendEmail(sendTo: nguoiDung_OLD.NguoiDung.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
+                            if (nguoiDung_NEW.NguoiDung.Email != nguoiDung_OLD.NguoiDung.Email)
                             {
-                                Public.Handle.SendEmail(sendTo: nguoiDung_NEW.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
+                                Public.Handle.SendEmail(sendTo: nguoiDung_NEW.NguoiDung.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
                             };
                             #endregion
                             scope.Commit();
@@ -193,7 +193,7 @@ namespace UserAccount.Controllers
                     }
                     else
                     {
-                        tbNguoiDung nguoiDung_OLD = db.tbNguoiDungs.FirstOrDefault(x => x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung && x.IdNguoiDung == nguoiDung_NEW.IdNguoiDung);
+                        tbNguoiDung nguoiDung_OLD = db.tbNguoiDungs.FirstOrDefault(x => x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung && x.IdNguoiDung == nguoiDung_NEW.NguoiDung.IdNguoiDung);
                         string matKhau_MD5 = Public.Handle.HashToMD5(nguoiDung_NEW.MatKhauMoi);
                         if (nguoiDung_OLD.MatKhau != matKhau_MD5)
                         {
@@ -222,7 +222,7 @@ namespace UserAccount.Controllers
                             #region Gửi mail
                             string mail()
                             {
-                                var model = new CapNhatTaiKhoanMailM<tbNguoiDungExtend>
+                                var model = new CapNhatTaiKhoanMail<tbNguoiDungExtend>
                                 {
                                     NguoiDung_NEW = nguoiDung_NEW,
                                     DonViSuDung = per.DonViSuDung,
@@ -237,9 +237,9 @@ namespace UserAccount.Controllers
                             string mailBody = mail();
                             // Gửi mail
                             Public.Handle.SendEmail(sendTo: nguoiDung_OLD.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
-                            if (nguoiDung_NEW.Email != nguoiDung_OLD.Email)
+                            if (nguoiDung_NEW.NguoiDung.Email != nguoiDung_OLD.Email)
                             {
-                                Public.Handle.SendEmail(sendTo: nguoiDung_NEW.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
+                                Public.Handle.SendEmail(sendTo: nguoiDung_NEW.NguoiDung.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
                             };
                             #endregion
                             scope.Commit();

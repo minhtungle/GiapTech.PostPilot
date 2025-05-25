@@ -1,7 +1,13 @@
-﻿<div class="card-body">
+﻿@model List<Applications.UserAccount.Models.tbNguoiDungExtend>
+@using Public.Models
+@{
+    Permission per = Session["Permission"] as Permission;
+}
+
+<div class="card-body">
     <div class="mb-2 toggle-vis-bar">
         Hiển thị:
-        <a href="#" class="toggle-vis" data-table="useraccount-getList" data-column="4">Chức vụ</a> |
+        @*<a href="#" class="toggle-vis" data-table="useraccount-getList" data-column="4">Chức vụ</a> |*@
         <a href="#" class="toggle-vis" data-table="useraccount-getList" data-column="5">Kiểu người dùng</a> |
         <a href="#" class="toggle-vis" data-table="useraccount-getList" data-column="6">Cơ cấu tổ chức</a> |
         <a href="#" class="toggle-vis" data-table="useraccount-getList" data-column="7">Kích hoạt</a> |
@@ -14,7 +20,7 @@
                 <th class="text-center">Hoạt động</th>
                 <th class="text-center">Tên đăng nhập</th>
                 <th class="text-center">Tên người dùng</th>
-                <th class="text-center">Chức vụ</th>
+                @*<th class="text-center">Chức vụ</th>*@
                 <th class="text-center">Kiểu người dùng</th>
                 <th class="text-center">Cơ cấu tổ chức</th>
                 <th class="text-center">Kích hoạt</th>
@@ -28,11 +34,67 @@
                 <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
                 <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
                 <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
-                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                @*<th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>*@
                 <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
                 <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
                 <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
             </tr>
         </tfoot>
+        <tbody>
+            @foreach (var nguoiDung in Model)
+            {
+                <tr id="@nguoiDung.NguoiDung.IdNguoiDung">
+                    <td class="text-center"><input class="form-check-input checkRow-useraccount-getList" type="checkbox" /></td>
+                    <td class="text-center">
+                        @if (nguoiDung.NguoiDung.Online.HasValue && nguoiDung.NguoiDung.Online.Value == true)
+                        {
+                            <span hidden>online, trực tuyến</span>
+                            <span class="badge bg-success"><i class="bi bi-wifi"></i></span>
+                        }
+                        else
+                        {
+                            <span hidden>offline, ngoại tuyến</span>
+                            <span class="badge bg-danger"><i class="bi bi-wifi-off"></i></span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        <span>@nguoiDung.NguoiDung.TenDangNhap</span>
+                        @if (per.NguoiDung.IdNguoiDung == nguoiDung.NguoiDung.IdNguoiDung)
+                        {
+                            <br />
+                            <span class="text-danger fst-italic"> (Đang sử dụng)</span>
+                        }
+                    </td>
+                    <td class="text-center">@nguoiDung.NguoiDung.TenNguoiDung</td>
+                    <td class="text-center">@nguoiDung.KieuNguoiDung.TenKieuNguoiDung</td>
+                    <td class="text-center">@nguoiDung.CoCauToChuc.TenCoCauToChuc</td>
+                    <td class="text-center">
+                        @if (nguoiDung.NguoiDung.KichHoat.HasValue && nguoiDung.NguoiDung.KichHoat.Value == true)
+                        {
+                            <span class="badge bg-success">Kích hoạt</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Vô hiệu hóa</span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        <div style="white-space: nowrap">
+                            <a href="#" class="btn btn-sm btn-primary" title="Cập nhật"
+                               onclick="ua.nguoiDung.displayModal_CRUD('update', '@nguoiDung.NguoiDung.IdNguoiDung')">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            @if (!(per.NguoiDung.IdNguoiDung == nguoiDung.NguoiDung.IdNguoiDung))
+                            {
+                                <a href="#" class="btn btn-sm btn-danger" title="Xóa bỏ"
+                                   onclick="ua.nguoiDung.displayModal_Delete('single','@nguoiDung.NguoiDung.IdNguoiDung')">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 </div>

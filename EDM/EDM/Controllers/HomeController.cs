@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
-using UserAccount.Models;
 using UserType.Models;
 
 namespace EDM.Controllers

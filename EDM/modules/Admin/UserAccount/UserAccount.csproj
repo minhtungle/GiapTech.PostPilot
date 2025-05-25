@@ -133,7 +133,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\UserAccountM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +150,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\_Shared\Applications\Applications\Applications.csproj">
+      <Project>{86DA7BDA-C66A-4127-9096-28BBB66CFA58}</Project>
+      <Name>Applications</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\_Shared\EDM_DB\EDM_DB.csproj">
       <Project>{4a2aa8b2-7faf-4400-964e-b45818002093}</Project>
       <Name>EDM_DB</Name>

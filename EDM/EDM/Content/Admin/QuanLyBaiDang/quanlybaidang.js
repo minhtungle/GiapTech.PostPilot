@@ -312,15 +312,15 @@ class QuanLyBaiDang {
                     }
                 })
             },
-            delete: function (loai, id) {
+            delete: function (loai, idBaiDang = '00000000-0000-0000-0000-000000000000') {
                 var idBaiDangs = [];
                 // Lấy id
                 if (loai == "single") {
-                    idBaiDangs.push(id)
+                    idBaiDangs.push(idBaiDang)
                 } else {
                     quanLyBaiDang.baiDang.dataTable.rows().iterator('row', function (context, index) {
                         var $row = $(this.row(index).node());
-                        if ($row.has("input.checkRow-vanban-getList:checked").length > 0) {
+                        if ($row.has("input.checkRow-baidang-getList:checked").length > 0) {
                             idBaiDangs.push($row.attr('id'));
                         };
                     });
@@ -328,7 +328,7 @@ class QuanLyBaiDang {
                 // Kiểm tra id
                 if (idBaiDangs.length > 0) {
                     var f = new FormData();
-                    f.append("idBaiDangs", idBaiDangs.toString());
+                    f.append("idBaiDangs", JSON.stringify(idBaiDangs));
                     sys.confirmDialog({
                         mess: `Bạn có thực sự muốn xóa bản ghi này hay không ?`,
                         callback: function () {

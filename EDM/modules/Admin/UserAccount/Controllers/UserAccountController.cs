@@ -17,13 +17,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
-using UserAccount.Models;
 using UserType.Models;
 using System.Net.Http;
 using System.Data.Entity.Core.Objects;
 using System.Management;
 using ObjectQuery = System.Management.ObjectQuery;
 using System.Runtime.InteropServices;
+using Applications.UserAccount.Models;
 
 namespace UserAccount.Controllers
 {
@@ -152,13 +152,10 @@ namespace UserAccount.Controllers
             return View($"{VIEW_PATH}/useraccount.cshtml");
         }
         [HttpGet]
-        public JsonResult getList()
+        public ActionResult getList()
         {
             List<tbNguoiDungExtend> nguoiDungs = get_NguoiDungs(loai: "all");
-            return Json(new
-            {
-                data = nguoiDungs
-            }, JsonRequestBehavior.AllowGet);
+            return PartialView($"{VIEW_PATH}/useraccount-getList.cshtml", nguoiDungs);
         }
         private void downloadDialog(MemoryStream data, string fileName, string contentType)
         {
@@ -173,25 +170,45 @@ namespace UserAccount.Controllers
 
         #region Lấy danh sách dữ liệu
         public List<tbNguoiDungExtend> get_NguoiDungs(
-            string loai,
-            //List<Guid> idNguoiDungs = null
-            string str_idNguoiDungs = "")
+            string loai = "all",
+            List<Guid> idNguoiDungs = null)
         {
-            //var nguoiDungRepo = db.tbNguoiDungs.Where(x =>
-            //x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung).OrderByDescending(x => x.Stt).ToList();
-            var nguoiDungs = db.Database.SqlQuery<tbNguoiDungExtend>($@"
-            select nguoiDung.*
-            from tbNguoiDung nguoiDung
-            where nguoiDung.TrangThai != 0 and nguoiDung.MaDonViSuDung = '{per.DonViSuDung.MaDonViSuDung}'
-            {(loai != "single" ? "" : $"and nguoiDung.IdNguoiDung in ({str_idNguoiDungs}) ")}
-            ").ToList() ?? new List<tbNguoiDungExtend>();
+            var nguoiDungRepo = db.tbNguoiDungs.Where(x =>
+            x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung).ToList();
 
-            foreach (tbNguoiDungExtend nguoiDung in nguoiDungs)
-            {
-                nguoiDung.KieuNguoiDung = KIEUNGUOIDUNGs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung.IdKieuNguoiDung) ?? new tbKieuNguoiDung();
-                nguoiDung.CoCauToChuc = COCAUTOCHUCs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung.IdCoCauToChuc) ?? new tbCoCauToChuc();
-                nguoiDung.ChucVu = CHUCVUs.FirstOrDefault(x => x.IdChucVu == nguoiDung.IdChucVu) ?? new default_tbChucVu();
-            };
+            var nguoiDungs = nguoiDungRepo
+               .Where(x => loai != "single" || idNguoiDungs.Contains(x.IdNguoiDung))
+               .Select(x => new tbNguoiDungExtend
+               {
+                   NguoiDung = x,
+               })
+               .Join(KIEUNGUOIDUNGs,
+                nd => nd.NguoiDung.IdKieuNguoiDung,
+                knd => knd.IdKieuNguoiDung,
+                (nd, knd) => new tbNguoiDungExtend
+                {
+                    NguoiDung = nd.NguoiDung,
+                    KieuNguoiDung = knd
+                })
+               .Join(COCAUTOCHUCs,
+                nd => nd.NguoiDung.IdCoCauToChuc,
+                cctc => cctc.IdCoCauToChuc,
+                (nd, cctc) => new tbNguoiDungExtend
+                {
+                    NguoiDung = nd.NguoiDung,
+                    KieuNguoiDung = nd.KieuNguoiDung,
+                    CoCauToChuc = cctc
+                })
+              .OrderByDescending(x => x.NguoiDung.Stt)
+              .ToList() ?? new List<tbNguoiDungExtend>();
+
+            //foreach (tbNguoiDungExtend nguoiDung in nguoiDungs)
+            //{
+            //    nguoiDung.KieuNguoiDung = KIEUNGUOIDUNGs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung.NguoiDung.IdKieuNguoiDung) ?? new tbKieuNguoiDung();
+            //    nguoiDung.CoCauToChuc = COCAUTOCHUCs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung.NguoiDung.IdCoCauToChuc) ?? new tbCoCauToChuc();
+            //    //nguoiDung.ChucVu = CHUCVUs.FirstOrDefault(x => x.IdChucVu == nguoiDung.NguoiDung.IdChucVu) ?? new default_tbChucVu();
+            //}
+            ;
             return nguoiDungs;
         }
         #endregion
@@ -206,21 +223,23 @@ namespace UserAccount.Controllers
                 if (nguoiDung != null)
                 {
                     nguoiDung.Online = true;
-                };
+                }
+                ;
                 db.SaveChanges();
                 return true;
             }
             catch (Exception ex)
             {
                 return false;
-            };
+            }
+            ;
         }
         [HttpPost]
         public ActionResult displayModal_CRUD(string loai, Guid idNguoiDung)
         {
             tbNguoiDungExtend nguoiDung = new tbNguoiDungExtend();
             if (loai != "create" && idNguoiDung != Guid.Empty)
-                nguoiDung = get_NguoiDungs(loai: "single", str_idNguoiDungs: string.Format("'{0}'", idNguoiDung)).FirstOrDefault();
+                nguoiDung = get_NguoiDungs(loai: "single", idNguoiDungs: new List<Guid>{ idNguoiDung}).FirstOrDefault();
             ViewBag.nguoiDung = nguoiDung;
             ViewBag.loai = loai;
             return PartialView($"{VIEW_PATH}/useraccount-crud.cshtml");
@@ -244,7 +263,7 @@ namespace UserAccount.Controllers
             return true;
         }
         [HttpPost]
-        public ActionResult create_NguoiDung(string str_nguoiDung)
+        public ActionResult create_NguoiDung()
         {
             string status = "success";
             string mess = "Thêm mới bản ghi thành công";
@@ -254,7 +273,7 @@ namespace UserAccount.Controllers
                 {
                     string format = "dd/MM/yyyy";
                     IsoDateTimeConverter dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
-                    tbNguoiDungExtend nguoiDung_NEW = JsonConvert.DeserializeObject<tbNguoiDungExtend>(str_nguoiDung ?? "", dateTimeConverter);
+                    tbNguoiDungExtend nguoiDung_NEW = JsonConvert.DeserializeObject<tbNguoiDungExtend>(Request.Form["nguoiDung"] ?? "", dateTimeConverter);
                     if (nguoiDung_NEW == null)
                     {
                         status = "error";
@@ -262,37 +281,37 @@ namespace UserAccount.Controllers
                     }
                     else
                     {
-                        nguoiDung_NEW.TenDangNhap = taoTenDangNhap(tenDangNhap: nguoiDung_NEW.TenDangNhap);
-                        if (kiemTra_NguoiDung(nguoiDung: nguoiDung_NEW))
+                        nguoiDung_NEW.NguoiDung.TenDangNhap = taoTenDangNhap(tenDangNhap: nguoiDung_NEW.NguoiDung.TenDangNhap);
+                        if (kiemTra_NguoiDung(nguoiDung: nguoiDung_NEW.NguoiDung))
                         {
                             status = "datontai";
                             mess = "Tên đăng nhập đã tồn tại";
                         }
                         else
                         {
-                            string matKhau = Public.Handle.HashToMD5(nguoiDung_NEW.MatKhau);
+                            string matKhau = Public.Handle.HashToMD5(nguoiDung_NEW.NguoiDung.MatKhau);
                             // Tạo hồ sơ
                             tbNguoiDung nguoiDung = new tbNguoiDung
                             {
                                 IdNguoiDung = Guid.NewGuid(),
-                                TenDangNhap = nguoiDung_NEW.TenDangNhap,
+                                TenDangNhap = nguoiDung_NEW.NguoiDung.TenDangNhap,
                                 MatKhau = matKhau,
-                                TenNguoiDung = nguoiDung_NEW.TenNguoiDung,
-                                GioiTinh = nguoiDung_NEW.GioiTinh,
-                                KichHoat = nguoiDung_NEW.KichHoat,
+                                TenNguoiDung = nguoiDung_NEW.NguoiDung.TenNguoiDung,
+                                GioiTinh = nguoiDung_NEW.NguoiDung.GioiTinh,
+                                KichHoat = nguoiDung_NEW.NguoiDung.KichHoat,
                                 SoLanDangNhap = 0,
                                 YeuCauDoiMatKhau = true,
                                 Online = false,
-                                Email = nguoiDung_NEW.Email,
-                                SoDienThoai = nguoiDung_NEW.SoDienThoai,
-                                SoTaiKhoanNganHang = nguoiDung_NEW.SoTaiKhoanNganHang,
-                                NgaySinh = nguoiDung_NEW.NgaySinh,
-                                GhiChu = nguoiDung_NEW.GhiChu,
-                                LinkLienHe = nguoiDung_NEW.LinkLienHe,
+                                Email = nguoiDung_NEW.NguoiDung.Email,
+                                SoDienThoai = nguoiDung_NEW.NguoiDung.SoDienThoai,
+                                SoTaiKhoanNganHang = nguoiDung_NEW.NguoiDung.SoTaiKhoanNganHang,
+                                NgaySinh = nguoiDung_NEW.NguoiDung.NgaySinh,
+                                GhiChu = nguoiDung_NEW.NguoiDung.GhiChu,
+                                LinkLienHe = nguoiDung_NEW.NguoiDung.LinkLienHe,
 
-                                IdKieuNguoiDung = nguoiDung_NEW.IdKieuNguoiDung,
-                                IdCoCauToChuc = nguoiDung_NEW.IdCoCauToChuc,
-                                IdChucVu = nguoiDung_NEW.IdChucVu,
+                                IdKieuNguoiDung = nguoiDung_NEW.NguoiDung.IdKieuNguoiDung,
+                                IdCoCauToChuc = nguoiDung_NEW.NguoiDung.IdCoCauToChuc,
+                                IdChucVu = nguoiDung_NEW.NguoiDung.IdChucVu,
 
                                 TrangThai = 1,
                                 IdNguoiTao = per.NguoiDung.IdNguoiDung,
@@ -303,11 +322,13 @@ namespace UserAccount.Controllers
 
                             db.SaveChanges();
                             // Gửi mail
-                            GuiMai(nguoiDung: nguoiDung, nguoiDung_NEW: nguoiDung_NEW);
+                            GuiMai(nguoiDung: nguoiDung, nguoiDung_NEW: nguoiDung_NEW.NguoiDung);
 
                             scope.Commit();
-                        };
-                    };
+                        }
+                        ;
+                    }
+                    ;
                 }
                 catch (Exception ex)
                 {
@@ -323,7 +344,7 @@ namespace UserAccount.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public ActionResult update_NguoiDung(string str_nguoiDung)
+        public ActionResult update_NguoiDung()
         {
             string status = "success";
             string mess = "Cập nhật bản ghi thành công";
@@ -334,7 +355,7 @@ namespace UserAccount.Controllers
                 {
                     string format = "dd/MM/yyyy";
                     IsoDateTimeConverter dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
-                    tbNguoiDungExtend nguoiDung_NEW = JsonConvert.DeserializeObject<tbNguoiDungExtend>(str_nguoiDung ?? "", dateTimeConverter);
+                    tbNguoiDungExtend nguoiDung_NEW = JsonConvert.DeserializeObject<tbNguoiDungExtend>(Request.Form["nguoiDung"] ?? "", dateTimeConverter);
                     if (nguoiDung_NEW == null)
                     {
                         status = "error";
@@ -342,65 +363,69 @@ namespace UserAccount.Controllers
                     }
                     else
                     {
-                        nguoiDung_NEW.TenDangNhap = taoTenDangNhap(tenDangNhap: nguoiDung_NEW.TenDangNhap);
-                        if (kiemTra_NguoiDung(nguoiDung: nguoiDung_NEW))
+                        nguoiDung_NEW.NguoiDung.TenDangNhap = taoTenDangNhap(tenDangNhap: nguoiDung_NEW.NguoiDung.TenDangNhap);
+                        if (kiemTra_NguoiDung(nguoiDung: nguoiDung_NEW.NguoiDung))
                         {
                             status = "datontai";
                             mess = "Tên đăng nhập đã tồn tại";
                         }
                         else
                         {
-                            tbNguoiDungExtend nguoiDung_OLD = db.Database.SqlQuery<tbNguoiDungExtend>($@"select * from tbNguoiDung where MaDonViSuDung = '{per.DonViSuDung.MaDonViSuDung}' and IdNguoiDung = '{nguoiDung_NEW.IdNguoiDung}'").FirstOrDefault();
-                            if (nguoiDung_NEW.IdKieuNguoiDung != null || nguoiDung_NEW.IdKieuNguoiDung != Guid.Empty)
+                            tbNguoiDungExtend nguoiDung_OLD = db.Database.SqlQuery<tbNguoiDungExtend>($@"select * from tbNguoiDung where MaDonViSuDung = '{per.DonViSuDung.MaDonViSuDung}' and IdNguoiDung = '{nguoiDung_NEW.NguoiDung.IdNguoiDung}'").FirstOrDefault();
+                            if (nguoiDung_NEW.NguoiDung.IdKieuNguoiDung != null || nguoiDung_NEW.NguoiDung.IdKieuNguoiDung != Guid.Empty)
                             {
-                                nguoiDung_NEW.KieuNguoiDung = db.tbKieuNguoiDungs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung_NEW.IdKieuNguoiDung) ?? new tbKieuNguoiDung();
-                                nguoiDung_OLD.KieuNguoiDung = db.tbKieuNguoiDungs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung_OLD.IdKieuNguoiDung) ?? new tbKieuNguoiDung();
+                                nguoiDung_NEW.KieuNguoiDung = db.tbKieuNguoiDungs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung_NEW.NguoiDung.IdKieuNguoiDung) ?? new tbKieuNguoiDung();
+                                nguoiDung_OLD.KieuNguoiDung = db.tbKieuNguoiDungs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung_OLD.NguoiDung.IdKieuNguoiDung) ?? new tbKieuNguoiDung();
 
-                            };
-                            if (nguoiDung_NEW.IdCoCauToChuc != null || nguoiDung_NEW.IdCoCauToChuc != Guid.Empty)
+                            }
+                            ;
+                            if (nguoiDung_NEW.NguoiDung.IdCoCauToChuc != null || nguoiDung_NEW.NguoiDung.IdCoCauToChuc != Guid.Empty)
                             {
-                                nguoiDung_NEW.CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung_NEW.IdCoCauToChuc) ?? new tbCoCauToChuc();
-                                nguoiDung_OLD.CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung_OLD.IdCoCauToChuc) ?? new tbCoCauToChuc();
-                            };
-                            if (nguoiDung_NEW.IdChucVu != null || nguoiDung_NEW.IdChucVu != Guid.Empty)
+                                nguoiDung_NEW.CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung_NEW.NguoiDung.IdCoCauToChuc) ?? new tbCoCauToChuc();
+                                nguoiDung_OLD.CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung_OLD.NguoiDung.IdCoCauToChuc) ?? new tbCoCauToChuc();
+                            }
+                            ;
+                            if (nguoiDung_NEW.NguoiDung.IdChucVu != null || nguoiDung_NEW.NguoiDung.IdChucVu != Guid.Empty)
                             {
-                                nguoiDung_NEW.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung_NEW.IdChucVu) ?? new default_tbChucVu();
-                                nguoiDung_OLD.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung_OLD.IdChucVu) ?? new default_tbChucVu();
-                            };
+                                nguoiDung_NEW.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung_NEW.NguoiDung.IdChucVu) ?? new default_tbChucVu();
+                                nguoiDung_OLD.ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung_OLD.NguoiDung.IdChucVu) ?? new default_tbChucVu();
+                            }
+                            ;
                             string sql_capNhatNguoiDung = $@"
                             update tbNguoiDung set
-                                TenDangNhap = '{nguoiDung_NEW.TenDangNhap}',
-                                TenNguoiDung = N'{nguoiDung_NEW.TenNguoiDung}',
-                                GioiTinh = {(nguoiDung_NEW.GioiTinh.Value ? 1 : 0)},
-                                KichHoat = {(nguoiDung_NEW.KichHoat.Value ? 1 : 0)},
-                                Email = '{nguoiDung_NEW.Email}',
-                                SoDienThoai = '{nguoiDung_NEW.SoDienThoai}',
-                                SoTaiKhoanNganHang = '{nguoiDung_NEW.SoTaiKhoanNganHang}',
-                                NgaySinh = '{nguoiDung_NEW.NgaySinh}',
-                                GhiChu = N'{nguoiDung_NEW.GhiChu}',
-                                LinkLienHe = '{nguoiDung_NEW.LinkLienHe}',
-                                IdChucVu = '{nguoiDung_NEW.IdChucVu}',
-                                IdKieuNguoiDung = '{nguoiDung_NEW.IdKieuNguoiDung}',
-                                IdCoCauToChuc = '{nguoiDung_NEW.IdCoCauToChuc}',
+                                TenDangNhap = '{nguoiDung_NEW.NguoiDung.TenDangNhap}',
+                                TenNguoiDung = N'{nguoiDung_NEW.NguoiDung.TenNguoiDung}',
+                                GioiTinh = {(nguoiDung_NEW.NguoiDung.GioiTinh.Value ? 1 : 0)},
+                                KichHoat = {(nguoiDung_NEW.NguoiDung.KichHoat.Value ? 1 : 0)},
+                                Email = '{nguoiDung_NEW.NguoiDung.Email}',
+                                SoDienThoai = '{nguoiDung_NEW.NguoiDung.SoDienThoai}',
+                                SoTaiKhoanNganHang = '{nguoiDung_NEW.NguoiDung.SoTaiKhoanNganHang}',
+                                NgaySinh = '{nguoiDung_NEW.NguoiDung.NgaySinh}',
+                                GhiChu = N'{nguoiDung_NEW.NguoiDung.GhiChu}',
+                                LinkLienHe = '{nguoiDung_NEW.NguoiDung.LinkLienHe}',
+                                IdChucVu = '{nguoiDung_NEW.NguoiDung.IdChucVu}',
+                                IdKieuNguoiDung = '{nguoiDung_NEW.NguoiDung.IdKieuNguoiDung}',
+                                IdCoCauToChuc = '{nguoiDung_NEW.NguoiDung.IdCoCauToChuc}',
 
                                 IdNguoiSua = '{per.NguoiDung.IdNguoiDung}',
                                 NgaySua = '{DateTime.Now}'
-                            where MaDonViSuDung = '{per.DonViSuDung.MaDonViSuDung}' and IdNguoiDung = '{nguoiDung_NEW.IdNguoiDung}'
+                            where MaDonViSuDung = '{per.DonViSuDung.MaDonViSuDung}' and IdNguoiDung = '{nguoiDung_NEW.NguoiDung.IdNguoiDung}'
                             ";
                             db.Database.ExecuteSqlCommand(sql_capNhatNguoiDung);
                             // Cập nhật lại session
-                            if (nguoiDung_OLD.IdNguoiDung == per.NguoiDung.IdNguoiDung)
+                            if (nguoiDung_OLD.NguoiDung.IdNguoiDung == per.NguoiDung.IdNguoiDung)
                             {
                                 status = "logout";
                                 mess = "[Tài khoản đang sử dụng]";
-                                per.NguoiDung = nguoiDung_OLD;
-                            };
+                                per.NguoiDung = nguoiDung_OLD.NguoiDung;
+                            }
+                            ;
 
                             db.SaveChanges();
                             #region Gửi mail cập nhật
                             string mail()
                             {
-                                var model = new CapNhatTaiKhoanMailM<tbNguoiDungExtend>
+                                var model = new CapNhatTaiKhoanMail<tbNguoiDungExtend>
                                 {
                                     NguoiDung_OLD = nguoiDung_OLD,
                                     NguoiDung_NEW = nguoiDung_NEW,
@@ -414,15 +439,17 @@ namespace UserAccount.Controllers
                             string tieuDeMail = "[📣 GIAPTECH] - CẬP NHẬT THÔNG TIN TÀI KHOẢN❗";
                             string mailBody = mail();
                             // Gửi mail
-                            Public.Handle.SendEmail(sendTo: nguoiDung_OLD.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
-                            if (nguoiDung_NEW.Email != nguoiDung_OLD.Email)
+                            Public.Handle.SendEmail(sendTo: nguoiDung_OLD.NguoiDung.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
+                            if (nguoiDung_NEW.NguoiDung.Email != nguoiDung_OLD.NguoiDung.Email)
                             {
-                                Public.Handle.SendEmail(sendTo: nguoiDung_NEW.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
-                            };
+                                Public.Handle.SendEmail(sendTo: nguoiDung_NEW.NguoiDung.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
+                            }
+                            ;
                             #endregion
 
                             scope.Commit();
-                        };
+                        }
+                        ;
                     }
                 }
                 catch (Exception ex)
@@ -439,7 +466,7 @@ namespace UserAccount.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public ActionResult capNhat_MatKhau(string str_nguoiDung)
+        public ActionResult capNhat_MatKhau()
         {
             string status = "success";
             string mess = "Cập nhật bản ghi thành công";
@@ -450,7 +477,7 @@ namespace UserAccount.Controllers
                 {
                     string format = "dd/MM/yyyy";
                     IsoDateTimeConverter dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
-                    tbNguoiDungExtend nguoiDung_NEW = JsonConvert.DeserializeObject<tbNguoiDungExtend>(str_nguoiDung ?? "", dateTimeConverter);
+                    tbNguoiDungExtend nguoiDung_NEW = JsonConvert.DeserializeObject<tbNguoiDungExtend>(Request.Form["nguoiDung"] ?? "", dateTimeConverter);
                     if (nguoiDung_NEW == null)
                     {
                         status = "error";
@@ -458,7 +485,7 @@ namespace UserAccount.Controllers
                     }
                     else
                     {
-                        tbNguoiDung nguoiDung_OLD = db.tbNguoiDungs.FirstOrDefault(x => x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung && x.IdNguoiDung == nguoiDung_NEW.IdNguoiDung);
+                        tbNguoiDung nguoiDung_OLD = db.tbNguoiDungs.FirstOrDefault(x => x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung && x.IdNguoiDung == nguoiDung_NEW.NguoiDung.IdNguoiDung);
                         string matKhau_MD5 = Public.Handle.HashToMD5(nguoiDung_NEW.MatKhauMoi);
                         if (nguoiDung_OLD.MatKhau != matKhau_MD5)
                         {
@@ -473,7 +500,8 @@ namespace UserAccount.Controllers
                             foreach (var condition in conditions)
                             {
                                 if (!condition.Value.status) return Json(new { status = "warning", mess = condition.Value.error });
-                            };
+                            }
+                            ;
 
                             //if (nguoiDung_NEW.MatKhauMoi != nguoiDung_NEW.MatKhauMoi) return Json(new { mess = "Mật khẩu xác nhận chưa trùng khớp" });
 
@@ -484,13 +512,14 @@ namespace UserAccount.Controllers
                                 status = "logout";
                                 mess = "[Tài khoản đang sử dụng]";
                                 per.NguoiDung = nguoiDung_OLD;
-                            };
+                            }
+                            ;
 
                             db.SaveChanges();
                             #region Gửi mail
                             string mail()
                             {
-                                var model = new CapNhatTaiKhoanMailM<tbNguoiDungExtend>
+                                var model = new CapNhatTaiKhoanMail<tbNguoiDungExtend>
                                 {
                                     NguoiDung_NEW = nguoiDung_NEW,
                                     DonViSuDung = per.DonViSuDung,
@@ -505,14 +534,17 @@ namespace UserAccount.Controllers
                             string mailBody = mail();
                             // Gửi mail
                             Public.Handle.SendEmail(sendTo: nguoiDung_OLD.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
-                            if (nguoiDung_NEW.Email != nguoiDung_OLD.Email)
+                            if (nguoiDung_NEW.NguoiDung.Email != nguoiDung_OLD.Email)
                             {
-                                Public.Handle.SendEmail(sendTo: nguoiDung_NEW.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
-                            };
+                                Public.Handle.SendEmail(sendTo: nguoiDung_NEW.NguoiDung.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
+                            }
+                            ;
                             #endregion
                             scope.Commit();
-                        };
-                    };
+                        }
+                        ;
+                    }
+                    ;
                 }
                 catch (Exception ex)
                 {
@@ -612,13 +644,14 @@ namespace UserAccount.Controllers
              * Kiểu người dùng
              * Cơ cấu tổ chức
              */
-            if (kiemTra_NguoiDung(nguoiDung: nguoiDung))
+            if (kiemTra_NguoiDung(nguoiDung: nguoiDung.NguoiDung))
             {
                 ketQuas.Add("Tên đăng nhập đã tồn tại");
                 nguoiDung.KiemTraExcel.TrangThai = 0;
-            };
-            if (nguoiDung.TenNguoiDung == "" || nguoiDung.KichHoat == null || nguoiDung.TenDangNhap == "" ||
-                nguoiDung.MatKhau == "" || nguoiDung.GioiTinh == null || nguoiDung.Email == "" ||
+            }
+            ;
+            if (nguoiDung.NguoiDung.TenNguoiDung == "" || nguoiDung.NguoiDung.KichHoat == null || nguoiDung.NguoiDung.TenDangNhap == "" ||
+                nguoiDung.NguoiDung.MatKhau == "" || nguoiDung.NguoiDung.GioiTinh == null || nguoiDung.NguoiDung.Email == "" ||
                 nguoiDung.ChucVu.IdChucVu == Guid.Empty || nguoiDung.ChucVu.IdChucVu == null ||
                 nguoiDung.KieuNguoiDung.IdKieuNguoiDung == Guid.Empty || nguoiDung.KieuNguoiDung.IdKieuNguoiDung == null ||
                 nguoiDung.CoCauToChuc.IdCoCauToChuc == Guid.Empty || nguoiDung.CoCauToChuc.IdCoCauToChuc == null
@@ -626,7 +659,8 @@ namespace UserAccount.Controllers
             {
                 ketQuas.Add("Thiếu thông tin");
                 nguoiDung.KiemTraExcel.TrangThai = 0;
-            };
+            }
+            ;
             nguoiDung.KiemTraExcel.KetQua = string.Join(",", ketQuas);
             return nguoiDung;
         }
@@ -670,7 +704,8 @@ namespace UserAccount.Controllers
                                         if (ngaySinh != null)
                                         {
                                             NgaySinh = DateTime.ParseExact(row.Field("Ngày-sinh").GetString(), Public.Handle.DATETIMEFORMAT, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None);
-                                        };
+                                        }
+                                        ;
                                         tbNguoiDungExtend nguoiDung = new tbNguoiDungExtend();
 
                                         string tenKieuNguoiDung = row.Field("Tên-kiểu-người-dùng").GetString().Trim();
@@ -682,25 +717,30 @@ namespace UserAccount.Controllers
                                         string tenChucVu = row.Field("Tên-chức-vụ").GetString().Trim();
                                         nguoiDung.ChucVu = CHUCVUs.Where(x => x.TenChucVu.Contains(tenChucVu)).FirstOrDefault() ?? new default_tbChucVu();
 
-                                        nguoiDung.GioiTinh = row.Field("Giới-tính").GetString().Trim() == "Nam" ? true : false;
-                                        nguoiDung.KichHoat = row.Field("Kích-hoạt").GetString().Trim() == "Kích hoạt" ? true : false;
-                                        nguoiDung.TenNguoiDung = row.Field("Tên-người-dùng").GetString().Trim();
-                                        nguoiDung.TenDangNhap = row.Field("Tên-đăng-nhập").GetString().Trim();
-                                        nguoiDung.MatKhau = row.Field("Mật-khẩu").GetString().Trim();
-                                        nguoiDung.Email = row.Field("Email").GetString().Trim();
-                                        nguoiDung.SoDienThoai = row.Field("Số-điện-thoại").GetString().Trim();
-                                        nguoiDung.SoTaiKhoanNganHang = row.Field("Số-tài-khoản").GetString().Trim();
-                                        nguoiDung.GhiChu = row.Field("Ghi-chú").GetString().Trim();
-                                        nguoiDung.LinkLienHe = row.Field("Link-liên-hệ").GetString().Trim();
-                                        nguoiDung.NgaySinh = NgaySinh;
+                                        nguoiDung.NguoiDung.GioiTinh = row.Field("Giới-tính").GetString().Trim() == "Nam" ? true : false;
+                                        nguoiDung.NguoiDung.KichHoat = row.Field("Kích-hoạt").GetString().Trim() == "Kích hoạt" ? true : false;
+                                        nguoiDung.NguoiDung.TenNguoiDung = row.Field("Tên-người-dùng").GetString().Trim();
+                                        nguoiDung.NguoiDung.TenDangNhap = row.Field("Tên-đăng-nhập").GetString().Trim();
+                                        nguoiDung.NguoiDung.MatKhau = row.Field("Mật-khẩu").GetString().Trim();
+                                        nguoiDung.NguoiDung.Email = row.Field("Email").GetString().Trim();
+                                        nguoiDung.NguoiDung.SoDienThoai = row.Field("Số-điện-thoại").GetString().Trim();
+                                        nguoiDung.NguoiDung.SoTaiKhoanNganHang = row.Field("Số-tài-khoản").GetString().Trim();
+                                        nguoiDung.NguoiDung.GhiChu = row.Field("Ghi-chú").GetString().Trim();
+                                        nguoiDung.NguoiDung.LinkLienHe = row.Field("Link-liên-hệ").GetString().Trim();
+                                        nguoiDung.NguoiDung.NgaySinh = NgaySinh;
 
                                         EXCEL_NGUOIDUNGs_UPLOAD.Add(nguoiDung);
-                                    };
-                                };
-                            };
-                        };
+                                    }
+                                    ;
+                                }
+                                ;
+                            }
+                            ;
+                        }
+                        ;
                         #endregion
-                    };
+                    }
+                    ;
                 }
             }
             catch (Exception ex)
@@ -742,23 +782,24 @@ namespace UserAccount.Controllers
                 foreach (tbNguoiDungExtend nguoiDung in EXCEL_NGUOIDUNGs_DOWNLOAD)
                 {
                     tbNguoiDung.Rows.Add(
-                       nguoiDung.TenNguoiDung, // 1
-                       nguoiDung.TenDangNhap, // 2
-                       nguoiDung.MatKhau, // 3
-                       nguoiDung.Email, // 4
-                       nguoiDung.SoDienThoai, // 5
-                       nguoiDung.SoTaiKhoanNganHang, // 6
-                       nguoiDung.NgaySinh == null ? "01/01/2020" : nguoiDung.NgaySinh.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture), // 7
-                       nguoiDung.LinkLienHe, // 8
-                       nguoiDung.GhiChu, // 9
+                       nguoiDung.NguoiDung.TenNguoiDung, // 1
+                       nguoiDung.NguoiDung.TenDangNhap, // 2
+                       nguoiDung.NguoiDung.MatKhau, // 3
+                       nguoiDung.NguoiDung.Email, // 4
+                       nguoiDung.NguoiDung.SoDienThoai, // 5
+                       nguoiDung.NguoiDung.SoTaiKhoanNganHang, // 6
+                       nguoiDung.NguoiDung.NgaySinh == null ? "01/01/2020" : nguoiDung.NguoiDung.NgaySinh.Value.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture), // 7
+                       nguoiDung.NguoiDung.LinkLienHe, // 8
+                       nguoiDung.NguoiDung.GhiChu, // 9
 
-                       nguoiDung.GioiTinh.Value ? "Nam" : "Nữ", // 10
-                       nguoiDung.KichHoat.Value ? "Kích hoạt" : "Vô hiệu hóa", // 11
-                       CHUCVUs.Where(x => x.IdChucVu == nguoiDung.IdChucVu).FirstOrDefault().TenChucVu, // 12
-                       KIEUNGUOIDUNGs.Where(x => x.IdKieuNguoiDung == nguoiDung.IdKieuNguoiDung).FirstOrDefault().TenKieuNguoiDung, // 13
-                       COCAUTOCHUCs.Where(x => x.IdCoCauToChuc == nguoiDung.IdCoCauToChuc).FirstOrDefault().TenCoCauToChuc // 14
+                       nguoiDung.NguoiDung.GioiTinh.Value ? "Nam" : "Nữ", // 10
+                       nguoiDung.NguoiDung.KichHoat.Value ? "Kích hoạt" : "Vô hiệu hóa", // 11
+                       CHUCVUs.Where(x => x.IdChucVu == nguoiDung.NguoiDung.IdChucVu).FirstOrDefault().TenChucVu, // 12
+                       KIEUNGUOIDUNGs.Where(x => x.IdKieuNguoiDung == nguoiDung.NguoiDung.IdKieuNguoiDung).FirstOrDefault().TenKieuNguoiDung, // 13
+                       COCAUTOCHUCs.Where(x => x.IdCoCauToChuc == nguoiDung.NguoiDung.IdCoCauToChuc).FirstOrDefault().TenCoCauToChuc // 14
                        );
-                };
+                }
+                ;
                 #endregion
                 #endregion
                 #region Tạo sheet danh sách
@@ -783,7 +824,8 @@ namespace UserAccount.Controllers
                     if (tbDanhSach.Rows.Count <= i)
                         tbDanhSach.Rows.Add(tbDanhSach.NewRow());
                     tbDanhSach.Rows[i][0] = gioiTinhs[i];
-                };
+                }
+                ;
                 // Kích hoạt
                 string[] kichHoats = { "Kích hoạt", "Vô hiệu hóa" };
                 for (int i = 0; i < kichHoats.Length; i++)
@@ -791,7 +833,8 @@ namespace UserAccount.Controllers
                     if (tbDanhSach.Rows.Count <= i)
                         tbDanhSach.Rows.Add(tbDanhSach.NewRow());
                     tbDanhSach.Rows[i][1] = kichHoats[i];
-                };
+                }
+                ;
                 // Tên chức vụ
                 int tenChucVu_Count = CHUCVUs.Count();
                 for (int i = 0; i < tenChucVu_Count; i++)
@@ -799,7 +842,8 @@ namespace UserAccount.Controllers
                     if (tbDanhSach.Rows.Count <= i)
                         tbDanhSach.Rows.Add(tbDanhSach.NewRow());
                     tbDanhSach.Rows[i][2] = CHUCVUs[i].TenChucVu;
-                };
+                }
+                ;
                 // Tên kiểu người dùng
                 int tenKieuNguoiDung_Count = KIEUNGUOIDUNGs.Count();
                 for (int i = 0; i < tenKieuNguoiDung_Count; i++)
@@ -807,7 +851,8 @@ namespace UserAccount.Controllers
                     if (tbDanhSach.Rows.Count <= i)
                         tbDanhSach.Rows.Add(tbDanhSach.NewRow());
                     tbDanhSach.Rows[i][3] = KIEUNGUOIDUNGs[i].TenKieuNguoiDung;
-                };
+                }
+                ;
                 // Cơ cấu tổ chức
                 int tenCoCauToChuc_Count = COCAUTOCHUCs.Count();
                 for (int i = 0; i < tenCoCauToChuc_Count; i++)
@@ -815,7 +860,8 @@ namespace UserAccount.Controllers
                     if (tbDanhSach.Rows.Count <= i)
                         tbDanhSach.Rows.Add(tbDanhSach.NewRow());
                     tbDanhSach.Rows[i][4] = COCAUTOCHUCs[i].TenCoCauToChuc;
-                };
+                }
+                ;
                 #endregion
                 #endregion
                 #region Tạo file excel
@@ -831,7 +877,8 @@ namespace UserAccount.Controllers
                     workBook.Worksheets.First().Cell(i, 14).CreateDataValidation().List($"=OFFSET(DanhSach!$E$2,0,0,COUNTA(DanhSach!$E:$E),1)");
                     // Date
                     //workBook.Worksheets.First().Cell(i, 6).CreateDataValidation().Date.GreaterThan(new DateTime(1990, 1, 1));
-                };
+                }
+                ;
                 #endregion
                 #region Tải file excel về máy client
                 MemoryStream memoryStream = new MemoryStream();
@@ -862,7 +909,7 @@ namespace UserAccount.Controllers
                     {
                         foreach (tbNguoiDungExtend nguoiDung_NEW in EXCEL_NGUOIDUNGs_DOWNLOAD)
                         {
-                            nguoiDung_NEW.TenDangNhap = taoTenDangNhap(tenDangNhap: nguoiDung_NEW.TenDangNhap);
+                            nguoiDung_NEW.NguoiDung.TenDangNhap = taoTenDangNhap(tenDangNhap: nguoiDung_NEW.NguoiDung.TenDangNhap);
                             // Kiểm tra excel
                             tbNguoiDungExtend nguoiDung_KhongHopLe = kiemTra_Excel_NguoiDung(nguoiDung_NEW);
                             if (nguoiDung_KhongHopLe.KiemTraExcel.TrangThai == 0)
@@ -872,7 +919,7 @@ namespace UserAccount.Controllers
                             else
                             {
                                 // Kiểm tra tên biểu mẫu này đã được thêm ở bản ghi trước đó chưa
-                                if (nguoiDung_HopLes.Any(x => x.TenDangNhap == nguoiDung_NEW.TenDangNhap))
+                                if (nguoiDung_HopLes.Any(x => x.NguoiDung.TenDangNhap == nguoiDung_NEW.NguoiDung.TenDangNhap))
                                 {
                                     nguoiDung_NEW.KiemTraExcel.TrangThai = 2;
                                     nguoiDung_NEW.KiemTraExcel.KetQua = "Trùng tên đăng nhập";
@@ -881,27 +928,27 @@ namespace UserAccount.Controllers
                                 else
                                 {
                                     // Tạo người dùng
-                                    string matKhau = Public.Handle.HashToMD5(nguoiDung_NEW.MatKhau);
+                                    string matKhau = Public.Handle.HashToMD5(nguoiDung_NEW.NguoiDung.MatKhau);
                                     tbNguoiDung nguoiDung = new tbNguoiDung
                                     {
                                         IdNguoiDung = Guid.NewGuid(),
-                                        TenDangNhap = nguoiDung_NEW.TenDangNhap,
+                                        TenDangNhap = nguoiDung_NEW.NguoiDung.TenDangNhap,
                                         MatKhau = matKhau,
-                                        TenNguoiDung = nguoiDung_NEW.TenNguoiDung,
-                                        GioiTinh = nguoiDung_NEW.GioiTinh,
-                                        KichHoat = nguoiDung_NEW.KichHoat,
+                                        TenNguoiDung = nguoiDung_NEW.NguoiDung.TenNguoiDung,
+                                        GioiTinh = nguoiDung_NEW.NguoiDung.GioiTinh,
+                                        KichHoat = nguoiDung_NEW.NguoiDung.KichHoat,
                                         SoLanDangNhap = 0,
                                         Online = false,
                                         YeuCauDoiMatKhau = true,
-                                        Email = nguoiDung_NEW.Email,
-                                        SoDienThoai = nguoiDung_NEW.SoDienThoai,
-                                        SoTaiKhoanNganHang = nguoiDung_NEW.SoTaiKhoanNganHang,
-                                        NgaySinh = nguoiDung_NEW.NgaySinh,
-                                        GhiChu = nguoiDung_NEW.GhiChu,
-                                        LinkLienHe = nguoiDung_NEW.LinkLienHe,
-                                        IdChucVu = nguoiDung_NEW.IdChucVu,
-                                        IdKieuNguoiDung = nguoiDung_NEW.IdKieuNguoiDung,
-                                        IdCoCauToChuc = nguoiDung_NEW.IdCoCauToChuc,
+                                        Email = nguoiDung_NEW.NguoiDung.Email,
+                                        SoDienThoai = nguoiDung_NEW.NguoiDung.SoDienThoai,
+                                        SoTaiKhoanNganHang = nguoiDung_NEW.NguoiDung.SoTaiKhoanNganHang,
+                                        NgaySinh = nguoiDung_NEW.NguoiDung.NgaySinh,
+                                        GhiChu = nguoiDung_NEW.NguoiDung.GhiChu,
+                                        LinkLienHe = nguoiDung_NEW.NguoiDung.LinkLienHe,
+                                        IdChucVu = nguoiDung_NEW.NguoiDung.IdChucVu,
+                                        IdKieuNguoiDung = nguoiDung_NEW.NguoiDung.IdKieuNguoiDung,
+                                        IdCoCauToChuc = nguoiDung_NEW.NguoiDung.IdCoCauToChuc,
 
                                         TrangThai = 1,
                                         IdNguoiTao = per.NguoiDung.IdNguoiDung,
@@ -911,12 +958,15 @@ namespace UserAccount.Controllers
                                     db.tbNguoiDungs.Add(nguoiDung);
                                     db.SaveChanges();
                                     // Gửi mail
-                                    GuiMai(nguoiDung: nguoiDung, nguoiDung_NEW: nguoiDung_NEW);
+                                    GuiMai(nguoiDung: nguoiDung, nguoiDung_NEW: nguoiDung_NEW.NguoiDung);
 
                                     nguoiDung_HopLes.Add(nguoiDung_NEW);
-                                };
-                            };
-                        };
+                                }
+                                ;
+                            }
+                            ;
+                        }
+                        ;
                         if (nguoiDung_KhongHopLes.Count == 0)
                         { // Thêm bản ghi thành công và không tồn tại bản ghi không hợp lệ
                             status = "success";
@@ -939,7 +989,8 @@ namespace UserAccount.Controllers
 
                                 db.SaveChanges();
                                 scope.Commit();
-                            };
+                            }
+                            ;
                             // Trả lại danh sách bản ghi không hợp lệ
                             EXCEL_NGUOIDUNGs_UPLOAD = new List<tbNguoiDungExtend>();
                             EXCEL_NGUOIDUNGs_UPLOAD.AddRange(nguoiDung_KhongHopLes);
@@ -967,30 +1018,34 @@ namespace UserAccount.Controllers
             EXCEL_NGUOIDUNGs_DOWNLOAD = new List<tbNguoiDungExtend>();
             EXCEL_NGUOIDUNGs_DOWNLOAD.Add(new tbNguoiDungExtend
             {
-                TenNguoiDung = "Người dùng 1",
-                TenDangNhap = "nguoidung1",
-                MatKhau = "123456",
-                Email = "email@gmail.com",
-                SoDienThoai = "0359999999",
-                SoTaiKhoanNganHang = "0359999999 MB",
-                LinkLienHe = "",
-                GhiChu = "",
-                NgaySinh = DateTime.Now,
-                GioiTinh = true,
-                KichHoat = false,
-                IdChucVu = CHUCVUs.FirstOrDefault().IdChucVu,
+                NguoiDung = new tbNguoiDung
+                {
+                    TenNguoiDung = "Người dùng 1",
+                    TenDangNhap = "nguoidung1",
+                    MatKhau = "123456",
+                    Email = "email@gmail.com",
+                    SoDienThoai = "0359999999",
+                    SoTaiKhoanNganHang = "0359999999 MB",
+                    LinkLienHe = "",
+                    GhiChu = "",
+                    NgaySinh = DateTime.Now,
+                    GioiTinh = true,
+                    KichHoat = false,
+                    IdChucVu = CHUCVUs.FirstOrDefault().IdChucVu,
+                    IdKieuNguoiDung = KIEUNGUOIDUNGs.FirstOrDefault().IdKieuNguoiDung,
+                    IdCoCauToChuc = COCAUTOCHUCs.FirstOrDefault().IdCoCauToChuc,
+                },
+
                 ChucVu = new default_tbChucVu
                 {
                     IdChucVu = CHUCVUs.FirstOrDefault().IdChucVu,
                     TenChucVu = CHUCVUs.FirstOrDefault().TenChucVu
                 },
-                IdKieuNguoiDung = KIEUNGUOIDUNGs.FirstOrDefault().IdKieuNguoiDung,
                 KieuNguoiDung = new tbKieuNguoiDung
                 {
                     IdKieuNguoiDung = KIEUNGUOIDUNGs.FirstOrDefault().IdKieuNguoiDung,
                     TenKieuNguoiDung = KIEUNGUOIDUNGs.FirstOrDefault().TenKieuNguoiDung,
                 },
-                IdCoCauToChuc = COCAUTOCHUCs.FirstOrDefault().IdCoCauToChuc,
                 CoCauToChuc = new tbCoCauToChuc
                 {
                     IdCoCauToChuc = COCAUTOCHUCs.FirstOrDefault().IdCoCauToChuc,
@@ -1002,7 +1057,8 @@ namespace UserAccount.Controllers
                 string format = "dd/MM/yyyy";
                 IsoDateTimeConverter dateTimeConverter = new IsoDateTimeConverter { DateTimeFormat = format };
                 EXCEL_NGUOIDUNGs_DOWNLOAD = JsonConvert.DeserializeObject<List<tbNguoiDungExtend>>(str_nguoiDungs ?? "", dateTimeConverter) ?? new List<tbNguoiDungExtend>();
-            };
+            }
+            ;
         }
         public ActionResult getList_Excel_NguoiDung(string loai)
         {
@@ -1012,23 +1068,15 @@ namespace UserAccount.Controllers
         #endregion
 
         #region Private Methods
-        private void GuiMai(tbNguoiDung nguoiDung, tbNguoiDungExtend nguoiDung_NEW)
+        private void GuiMai(tbNguoiDung nguoiDung, tbNguoiDung nguoiDung_NEW)
         {
             string mail()
             {
-                var model = new CapNhatTaiKhoanMailM<tbNguoiDungExtend>
+                var model = new CapNhatTaiKhoanMail<tbNguoiDungExtend>
                 {
                     NguoiDung_NEW = new tbNguoiDungExtend
                     {
-                        TenDangNhap = nguoiDung_NEW.TenDangNhap,
-                        TenNguoiDung = nguoiDung_NEW.TenNguoiDung,
-                        GioiTinh = nguoiDung_NEW.GioiTinh,
-                        KichHoat = nguoiDung_NEW.KichHoat,
-                        MatKhau = nguoiDung_NEW.MatKhau,
-                        Email = nguoiDung_NEW.Email,
-                        SoDienThoai = nguoiDung_NEW.SoDienThoai,
-                        SoTaiKhoanNganHang = nguoiDung_NEW.SoTaiKhoanNganHang,
-                        NgaySinh = nguoiDung_NEW.NgaySinh,
+                        NguoiDung = nguoiDung_NEW,
 
                         KieuNguoiDung = KIEUNGUOIDUNGs.FirstOrDefault(x => x.IdKieuNguoiDung == nguoiDung_NEW.IdKieuNguoiDung) ?? new tbKieuNguoiDung(),
                         CoCauToChuc = COCAUTOCHUCs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung_NEW.IdCoCauToChuc) ?? new tbCoCauToChuc(),

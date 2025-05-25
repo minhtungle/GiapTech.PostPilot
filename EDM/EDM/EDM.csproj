@@ -191,7 +191,6 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\AccountInfoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\KiemTraNguoiDungHoatDongController.cs" />
     <Compile Include="Controllers\MessengerController.cs" />
@@ -7803,19 +7802,6 @@
     <Content Include="ViewerJS\text_layer_builder.js" />
     <Content Include="ViewerJS\ui_utils.js" />
     <Content Include="ViewerJS\webodf.js" />
-    <Content Include="Views\Admin\__Home\AccountInfo\accountinfo-getList.cshtml" />
-    <Content Include="Views\Admin\__Home\AccountInfo\accountinfo.cshtml" />
-    <Content Include="Views\Admin\__Home\Search\search.cshtml" />
-    <Content Include="Views\Admin\__Home\Search\search.thongtintaikhoan.cshtml" />
-    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\timkiemhoso-ketqua.cshtml" />
-    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\timkiemhoso-nangcao.cshtml" />
-    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\timkiemhoso.cshtml" />
-    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.cshtml" />
-    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.detail.cshtml" />
-    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.detail.truongdulieu.cshtml" />
-    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.getList.cshtml" />
-    <Content Include="Views\Admin\__Home\Search\search.timkiemhoso\vanban.thongtinhoso.cshtml" />
-    <Content Include="Views\Admin\__Home\Search\search.tinnhan.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\baidang-crud\baidang-crud.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\baidang-getList.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\baidang.cshtml" />
@@ -7861,9 +7847,6 @@
     <Content Include="Views\Admin\_SystemSetting\UserType\usertype-getList.cshtml" />
     <Content Include="Views\Admin\_SystemSetting\UserType\usertype.cshtml" />
     <Content Include="Views\Admin\_ViewStart.cshtml" />
-    <Content Include="Views\Admin\__Home\Messenger\messenger-homthu.cshtml" />
-    <Content Include="Views\Admin\__Home\Messenger\messenger-nhantin.cshtml" />
-    <Content Include="Views\Admin\__Home\Messenger\messenger.cshtml" />
     <Content Include="Views\Admin\__Home\TrangChu\muctieudoanhthu-crud.cshtml" />
     <Content Include="Views\Admin\__Home\TrangChu\quyenkinhdoanh\bangxephang-getList.cshtml" />
     <Content Include="Views\Admin\__Home\TrangChu\quyenkinhdoanh\chucmungsinhnhat.cshtml" />
