@@ -173,7 +173,7 @@
     <Compile Include="Controllers\StaticArgController.cs" />
     <Compile Include="Controllers\RouteConfigController.cs" />
     <Compile Include="Dtos\XemPDF_Output_Dto.cs" />
-    <Compile Include="Enums\TrangThaiDiemDanhEnum.cs" />
+    <Compile Include="Enums\TrangThaiDangBaiEnum.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

@@ -7810,11 +7810,7 @@
     <Content Include="Views\Admin\QuanLyChienDich\chiendich-crud.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\baidang-crud\form-thongtinchung.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\baidang-crud\form-lichdangbai.cshtml" />
-    <Content Include="Views\Admin\QuanLyBaiDang\useraccount-excel.nguoidung\excel.nguoidung-capnhattruong.cshtml" />
-    <Content Include="Views\Admin\QuanLyBaiDang\useraccount-excel.nguoidung\excel.nguoidung-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyBaiDang\useraccount-excel.nguoidung\excel.nguoidung.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\baidang-crud\form-addbaidang.cshtml" />
-    <Content Include="Views\Admin\QuanLyBaiDang\baidang-crud\baidang-crud - Copy.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\baidang-crud\baidang-crud-capnhattruong.cshtml" />
     <None Include="Views\User\TrangTaiLieu\404.cshtml" />
     <None Include="Views\User\TrangTaiLieu\about.cshtml" />

@@ -1,4 +1,6 @@
 ﻿@using Applications.QuanLyBaiDang.Models
+@using Public.Enums
+@using Public.Extensions
 @model List<tbBaiDangExtend>
 
 <div class="card-body">
@@ -41,19 +43,25 @@
                     <td class="text-left">@baidang.BaiDang.ThoiGian.Value</td>
                     <td class="text-center">
                         @{
-                            if (baidang.BaiDang.TrangThaiDangBai == 1)
+                            var status = (TrangThaiDangBaiEnum)baidang.BaiDang.TrangThaiDangBai;
+                            var description = status.GetDescription();
+
+                            string iconClass = "badge bg-primary";
+                            if (status == TrangThaiDangBaiEnum.Success)
                             {
-                                <span class="text-success"><i class="bi bi-check-circle-fill"></i> Đã đăng</span>
+                                iconClass = "badge bg-success";
                             }
-                            else if (baidang.BaiDang.TrangThaiDangBai == 2)
+                            else if (status == TrangThaiDangBaiEnum.WaitToPost)
                             {
-                                <span class="text-danger"><i class="bi bi-x-circle-fill"></i> Đăng thất bại</span>
+                                iconClass = "badge bg-primary";
                             }
-                            else
+                            else if (status == TrangThaiDangBaiEnum.Error)
                             {
-                                <span class="text-primary"><i class="bi bi-clock-fill"></i> Chờ xử lý</span>
+                                iconClass = "badge bg-danger";
                             }
+
                         }
+                        <span class="@iconClass">@description</span>
                     </td>
                     <td class="text-left">
                         <a href="@baidang.BaiDang.LienKetBaiDang_TrenNenTang" target="_blank" rel="noopener noreferrer">

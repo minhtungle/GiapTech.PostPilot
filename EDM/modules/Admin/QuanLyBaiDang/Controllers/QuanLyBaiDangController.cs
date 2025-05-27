@@ -10,6 +10,8 @@ using Google.Apis.Sheets.v4.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Public.Controllers;
+using Public.Enums;
+using Public.Extensions;
 using Public.Helpers;
 using Public.Models;
 using System;
@@ -210,7 +212,7 @@ namespace QuanLyBaiDang.Controllers
                                 ThoiGian = baiDang_NEW.BaiDang.ThoiGian,
                                 TuTaoAnhAI = baiDang_NEW.BaiDang.TuTaoAnhAI,
 
-                                TrangThaiDangBai = 0,
+                                TrangThaiDangBai = (int?)TrangThaiDangBaiEnum.WaitToPost,
                                 TrangThai = 1,
                                 IdNguoiTao = per.NguoiDung.IdNguoiDung,
                                 NgayTao = DateTime.Now,
@@ -348,7 +350,7 @@ namespace QuanLyBaiDang.Controllers
                                 ThoiGian = baiDang_NEW.BaiDang.ThoiGian,
                                 TuTaoAnhAI = baiDang_NEW.BaiDang.TuTaoAnhAI,
 
-                                TrangThaiDangBai = 0,
+                                TrangThaiDangBai = (int?)TrangThaiDangBaiEnum.WaitToPost,
                                 TrangThai = 1,
                                 IdNguoiTao = per.NguoiDung.IdNguoiDung,
                                 NgayTao = DateTime.Now,
@@ -561,7 +563,7 @@ namespace QuanLyBaiDang.Controllers
                             var baiDang_OLD = db.tbBaiDangs.Find(idBaiDang);
                             if (baiDang_OLD != null)
                             {
-                                baiDang_OLD.TrangThaiDangBai = 9; // Chờ xóa trên nền tảng
+                                baiDang_OLD.TrangThaiDangBai = (int?)TrangThaiDangBaiEnum.WaitToDelete; // Chờ xóa trên nền tảng
                                 baiDang_OLD.TrangThai = 0;
                                 baiDang_OLD.IdNguoiSua = per.NguoiDung.IdNguoiDung;
                                 baiDang_OLD.NgaySua = DateTime.Now;
