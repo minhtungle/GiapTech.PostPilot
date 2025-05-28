@@ -77,9 +77,11 @@
     <Compile Include="Caching\MemoryCacheManager.cs" />
     <Compile Include="Enums\CacheDuration.cs" />
     <Compile Include="Extensions\CacheDurationExtensions.cs" />
+    <Compile Include="Helpers\UserContext.cs" />
     <Compile Include="Interfaces\ICacheManager.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Interfaces\IUserContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EfRepository.cs" />
     <Compile Include="UnitOfWork\EfUnitOfWork.cs" />
@@ -93,9 +95,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\EDM_DB\EDM_DB.csproj">
       <Project>{4A2AA8B2-7FAF-4400-964E-B45818002093}</Project>

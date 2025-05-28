@@ -121,6 +121,9 @@
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tbAIBot.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
     <Compile Include="tbApiCredential.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>

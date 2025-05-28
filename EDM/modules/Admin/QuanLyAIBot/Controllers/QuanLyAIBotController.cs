@@ -1,5 +1,8 @@
-﻿using EDM_DB;
+﻿using Applications.QuanLyAIBot.Dtos;
+using Applications.QuanLyAIBot.Interfaces;
+using EDM_DB;
 using Newtonsoft.Json;
+using Public.Controllers;
 using Public.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +12,7 @@ using System.Web.Mvc;
 
 namespace QuanLyAIBot.Controllers
 {
-    public class QuanLyAIBotController : Controller
+    public class QuanLyAIBotController : RouteConfigController
     {
         #region Biến public để in hoa
         private readonly string VIEW_PATH = "~/Views/Admin/QuanLyAIBot";
@@ -35,32 +38,32 @@ namespace QuanLyAIBot.Controllers
                 Session["THAOTACs"] = value;
             }
         }
-
-        public QuanLyAIBotController()
+        public readonly IQuanLyAIBotAppService _quanLyAIBotAppService;
+        public QuanLyAIBotController(IQuanLyAIBotAppService quanLyAIBotAppService)
         {
-            //_openAIApiService = new OpenAIApiService(); // Hoặc inject bằng DI nếu bạn dùng Autofac
+            _quanLyAIBotAppService = quanLyAIBotAppService;
         }
         #endregion
 
-        //public ActionResult Index(Guid idChienDich)
-        //{
-        //    #region Lấy các danh sách
+        public ActionResult Index()
+        {
+            #region Lấy các danh sách
 
-        //    #region Thao tác
-        //    List<ChucNangs> kieuNguoiDung_IdChucNang = JsonConvert.DeserializeObject<List<ChucNangs>>(per.KieuNguoiDung.IdChucNang);
-        //    List<ThaoTac> thaoTacs = kieuNguoiDung_IdChucNang.FirstOrDefault(x => x.ChucNang.MaChucNang == "QuanLyAIBot").ThaoTacs ?? new List<ThaoTac>();
-        //    #endregion
+            #region Thao tác
+            List<ChucNangs> kieuNguoiDung_IdChucNang = JsonConvert.DeserializeObject<List<ChucNangs>>(per.KieuNguoiDung.IdChucNang);
+            List<ThaoTac> thaoTacs = kieuNguoiDung_IdChucNang.FirstOrDefault(x => x.ChucNang.MaChucNang == "QuanLyAIBot").ThaoTacs ?? new List<ThaoTac>();
+            #endregion
 
-        //    #endregion
+            #endregion
 
-        //    THAOTACs = thaoTacs;
-        //    var output = new IndexOutPut_Dto
-        //    {
-        //        ThaoTacs = thaoTacs,
-        //    };
-        //    //var a = _quanLyDangBaiAppService.GetListAsync();
-        //    return View($"{VIEW_PATH}/baidang.cshtml", output);
-        //}
+            THAOTACs = thaoTacs;
+            var output = new Index_OutPut_Dto
+            {
+                ThaoTacs = thaoTacs,
+            };
+            //var a = _quanLyDangBaiAppService.GetListAsync();
+            return View($"{VIEW_PATH}/baidang.cshtml", output);
+        }
 
         //[HttpGet]
         //public ActionResult getList_AIBot(Guid idChienDich)

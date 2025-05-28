@@ -43,6 +43,8 @@ public partial class EDM_DBEntities : DbContext
 
     public virtual DbSet<default_tbQuocGia> default_tbQuocGia { get; set; }
 
+    public virtual DbSet<tbAIBot> tbAIBots { get; set; }
+
     public virtual DbSet<tbApiCredential> tbApiCredentials { get; set; }
 
     public virtual DbSet<tbBaiDang> tbBaiDangs { get; set; }

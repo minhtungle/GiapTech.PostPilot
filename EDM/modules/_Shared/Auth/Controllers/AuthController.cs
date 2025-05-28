@@ -141,28 +141,32 @@ namespace Auth.Controllers
                                 CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung.IdCoCauToChuc) ?? new tbCoCauToChuc()
                             };
                             Session["Permission"] = per; // Phải set như này thì từ sau mới sử dụng được session
-                            //_cacheManager.Set(cacheKey, per, _cacheTimeOut); // Không cần session
+                                                         //_cacheManager.Set(cacheKey, per, _cacheTimeOut); // Không cần session
 
+
+                            #region Lưu claim
                             var claims = new List<Claim>
                             {
                                 new Claim(ClaimTypes.NameIdentifier, nguoiDung.IdNguoiDung.ToString()),
                                 new Claim(ClaimTypes.Name, nguoiDung.TenNguoiDung ?? ""),
                                 new Claim("MaDonViSuDung", nguoiDung.MaDonViSuDung.ToString()),
-                                new Claim("VaiTro", per.ChucVu?.TenChucVu ?? ""),
-                                new Claim("KieuNguoiDung", per.KieuNguoiDung?.TenKieuNguoiDung ?? "")
+                                new Claim("VaiTro", per.ChucVu.TenChucVu ?? ""),
+                                new Claim("KieuNguoiDung", per.KieuNguoiDung.TenKieuNguoiDung ?? "")
                             };
 
                             var identity = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
-                            var ctx = Request.GetOwinContext();
-                            var authManager = ctx.Authentication;
 
-                            // Sign in user
+                            var authManager = Request.GetOwinContext().Authentication;
+
                             authManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+
                             authManager.SignIn(new AuthenticationProperties
                             {
                                 IsPersistent = true,
                                 ExpiresUtc = DateTime.UtcNow.AddHours(8)
                             }, identity);
+
+                            #endregion
 
                             #region Gửi mail
                             HttpBrowserCapabilitiesBase browser = HttpContext.Request.Browser;

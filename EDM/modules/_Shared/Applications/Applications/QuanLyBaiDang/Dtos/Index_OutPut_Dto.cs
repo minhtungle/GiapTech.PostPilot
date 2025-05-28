@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Applications.QuanLyBaiDang.Dtos
 {
-    public class IndexOutPut_Dto
+    public class Index_OutPut_Dto
     {
         public List<ThaoTac> ThaoTacs { get; set; }
         public tbChienDich ChienDich { get; set; }

@@ -29,7 +29,8 @@ using System.Web.Mvc;
 
 namespace QuanLyBaiDang.Controllers
 {
-    public class QuanLyBaiDangController : RouteConfigController
+    [CustomAuthorize]
+    public class QuanLyBaiDangController : StaticArgController
     {
         #region Biến public để in hoa
         private readonly string VIEW_PATH = "~/Views/Admin/QuanLyBaiDang";
@@ -71,8 +72,8 @@ namespace QuanLyBaiDang.Controllers
         private readonly IQuanLyBaiDangAppService _baiDangService;
         public QuanLyBaiDangController(IQuanLyBaiDangAppService baiDangService)
         {
-            _baiDangService = baiDangService;
             _openAIApiService = new OpenAIApiService(); // Hoặc inject bằng DI nếu bạn dùng Autofac
+            _baiDangService = baiDangService;
         }
         #endregion
 
@@ -104,7 +105,7 @@ namespace QuanLyBaiDang.Controllers
 
             THAOTACs = thaoTacs;
             NENTANGs = nenTangs;
-            var output = new IndexOutPut_Dto
+            var output = new Index_OutPut_Dto
             {
                 ThaoTacs = thaoTacs,
                 ChienDich = chienDich,
@@ -114,29 +115,11 @@ namespace QuanLyBaiDang.Controllers
         }
 
         [HttpGet]
-        public ActionResult getList_BaiDang(Guid idChienDich)
+        public async Task<ActionResult> getList_BaiDang(Guid idChienDich)
         {
-            var baiDangs = getBaiDangs(loai: "all", idChienDich: idChienDich);
-            var _baiDangs = _baiDangService.GetBaiDangs(loai: "all", idChienDich: idChienDich);
+            //var baiDangs = getBaiDangs(loai: "all", idChienDich: idChienDich);
+            var baiDangs = await _baiDangService.GetBaiDangs(loai: "all", idChienDich: idChienDich);
             return PartialView($"{VIEW_PATH}/baidang-getList.cshtml", baiDangs);
-        }
-
-        public List<tbBaiDangExtend> getBaiDangs(Guid idChienDich, string loai = "all", List<Guid> idBaiDangs = null, LocThongTinDto locThongTin = null)
-        {
-            var baiDangRepo = db.tbBaiDangs.Where(x => x.IdChienDich == idChienDich &&
-            x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung).ToList()
-                ?? new List<tbBaiDang>();
-
-            var baiDangs = baiDangRepo
-                .Where(x => loai != "single" || idBaiDangs.Contains(x.IdBaiDang))
-                .Select(g => new tbBaiDangExtend
-                {
-                    BaiDang = g,
-                })
-                .OrderByDescending(x => x.BaiDang.ThoiGian)
-                .ToList() ?? new List<tbBaiDangExtend>();
-
-            return baiDangs;
         }
         [HttpPost]
         public ActionResult displayModal_CRUD_BaiDang(DisplayModel_CRUD_BaiDang_Input_Dto input)
@@ -684,6 +667,5 @@ namespace QuanLyBaiDang.Controllers
             //    throw new FileNotFoundException("The specified file does not exist.", jsonFilePath);
             //}
         }
-
     }
 }

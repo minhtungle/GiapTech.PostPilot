@@ -46,6 +46,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=6.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>packages\Autofac.6.4.0\lib\netstandard2.0\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=6.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>packages\Autofac.Mvc5.6.1.0\lib\net472\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
       <HintPath>packages\BouncyCastle.Cryptography.2.4.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
     </Reference>
@@ -102,15 +108,6 @@
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="SimpleInjector, Version=5.0.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>packages\SimpleInjector.5.5.0\lib\net461\SimpleInjector.dll</HintPath>
-    </Reference>
-    <Reference Include="SimpleInjector.Integration.Web, Version=5.0.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>packages\SimpleInjector.Integration.Web.5.5.0\lib\net45\SimpleInjector.Integration.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="SimpleInjector.Integration.Web.Mvc, Version=5.0.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>packages\SimpleInjector.Integration.Web.Mvc.5.5.0\lib\net45\SimpleInjector.Integration.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -208,6 +205,7 @@
     <Compile Include="App_Start\DependencyInjectionConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\KiemTraNguoiDungHoatDongController.cs" />
     <Compile Include="Controllers\MessengerController.cs" />
@@ -218,12 +216,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountInfoM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignalR\Chat\ChatHub.cs" />
     <Compile Include="SignalR\Chat\Models\ChatM.cs" />
     <Compile Include="SignalR\Chat\Models\ThongTinKiemTraM.cs" />
-    <Compile Include="SignalR\Startup.cs" />
     <Compile Include="FileUploadHandler.aspx.designer.cs">
       <DependentUpon>FileUploadHandler.aspx</DependentUpon>
     </Compile>
@@ -7829,6 +7825,21 @@
     <Content Include="Views\Admin\QuanLyBaiDang\baidang-crud\form-lichdangbai.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\baidang-crud\form-addbaidang.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\baidang-crud\baidang-crud-capnhattruong.cshtml" />
+    <Content Include="Views\Admin\QuanLyKhachHang\quanlykhachhang-crud.cshtml" />
+    <Content Include="Views\Admin\QuanLyKhachHang\quanlykhachhang-donhang\donhang-themdonhang.cshtml" />
+    <Content Include="Views\Admin\QuanLyKhachHang\quanlykhachhang-donhang\donhang.cshtml" />
+    <Content Include="Views\Admin\QuanLyKhachHang\quanlykhachhang-getList.cshtml" />
+    <Content Include="Views\Admin\QuanLyKhachHang\quanlykhachhang-timkiem\timkiem.cshtml" />
+    <Content Include="Views\Admin\QuanLyKhachHang\quanlykhachhang.cshtml" />
+    <Content Include="Views\Admin\QuanLyBaiDang\baidang-timkiem\timkiem.cshtml" />
+    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-crud.cshtml" />
+    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-chitiet\thongke-danhsachnvkd.cshtml" />
+    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-chitiet\thongke-thongtin.cshtml" />
+    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-chitiet\thongke.cshtml" />
+    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-sosanh\thongke.cshtml" />
+    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-tongquan\thongke.cshtml" />
+    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke.cshtml" />
+    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu.cshtml" />
     <None Include="Views\User\TrangTaiLieu\404.cshtml" />
     <None Include="Views\User\TrangTaiLieu\about.cshtml" />
     <None Include="Views\User\TrangTaiLieu\checkout.cshtml" />

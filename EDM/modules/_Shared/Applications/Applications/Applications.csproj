@@ -87,13 +87,21 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OpenAIApi\Dtos\LocThongTinDtos.cs" />
     <Compile Include="Organization\OrganizationAppService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OpenAIApi\AppServices\OpenAIApiService.cs" />
+    <Compile Include="QuanLyAIBot\Dtos\DisplayModel_CRUD_AIBot_Input_Dto.cs" />
+    <Compile Include="QuanLyAIBot\Dtos\DisplayModel_CRUD_AIBot_Output_Dto.cs" />
+    <Compile Include="QuanLyAIBot\Dtos\Index_OutPut_Dto.cs" />
+    <Compile Include="QuanLyAIBot\Dtos\LocThongTinDto.cs" />
+    <Compile Include="QuanLyAIBot\Interfaces\IQuanLyAIBotAppService.cs" />
+    <Compile Include="QuanLyAIBot\Models\tbAIBotExtend.cs" />
+    <Compile Include="QuanLyAIBot\Services\QuanLyAIBotAppService.cs" />
     <Compile Include="QuanLyBaiDang\Dtos\FormAddBaiDangDto.cs" />
-    <Compile Include="QuanLyBaiDang\Dtos\IndexOutPut_Dto.cs" />
+    <Compile Include="QuanLyBaiDang\Dtos\Index_OutPut_Dto.cs" />
     <Compile Include="QuanLyBaiDang\Interfaces\IQuanLyBaiDangAppService.cs" />
-    <Compile Include="QuanLyBaiDang\Serivices\QuanLyBaiDangAppService.cs" />
+    <Compile Include="QuanLyBaiDang\Services\QuanLyBaiDangAppService.cs" />
     <Compile Include="QuanLyChienDich\Dtos\DisplayModel_CRUD_ChienDich_Input_Dto.cs" />
     <Compile Include="QuanLyChienDich\Dtos\DisplayModel_CRUD_ChienDich_Output_Dto.cs" />
     <Compile Include="QuanLyChienDich\Dtos\LocThongTinDto.cs" />
@@ -121,6 +129,10 @@
       <Project>{4a2aa8b2-7faf-4400-964e-b45818002093}</Project>
       <Name>EDM_DB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj">
+      <Project>{05f09df5-caa9-4d04-b003-307b57842f48}</Project>
+      <Name>Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Public\Public.csproj">
       <Project>{6f03ef6a-8234-4d31-9570-3b2c0187c0a2}</Project>
       <Name>Public</Name>
@@ -128,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\" />
+    <Folder Include="OpenAIApi\Interfaces\" />
+    <Folder Include="OpenAIApi\Models\" />
+    <Folder Include="OpenAIApi\Services\" />
     <Folder Include="Organization\Validator\" />
     <Folder Include="UnitManage\" />
     <Folder Include="UserType\" />

@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppServices\BaseAppService.cs" />
+    <Compile Include="AppServices\PermissionCheckerAppService.cs" />
     <Compile Include="Controllers\StaticArgController.cs" />
     <Compile Include="Controllers\RouteConfigController.cs" />
     <Compile Include="Dtos\XemPDF_Output_Dto.cs" />
@@ -181,8 +182,9 @@
     </Compile>
     <Compile Include="Handle\Handle.cs" />
     <Compile Include="Helpers\CryptoHelper.cs" />
-    <Compile Include="Helpers\CurrentUserExtensions.cs" />
-    <Compile Include="Interfaces\IUserContext.cs" />
+    <Compile Include="Helpers\CustomAuthorizeAttribute.cs" />
+    <Compile Include="Interfaces\IPermissionCheckerAppService.cs" />
+    <Compile Include="Interfaces\ISoftDeleteAndTenant.cs" />
     <Compile Include="Mappers\UserAccountMapping.cs" />
     <Compile Include="Models\ChucNang.cs" />
     <Compile Include="Models\DuLieu_LichSu_ChiTiet.cs" />
@@ -215,6 +217,10 @@
     <ProjectReference Include="..\EDM_DB\EDM_DB.csproj">
       <Project>{4a2aa8b2-7faf-4400-964e-b45818002093}</Project>
       <Name>EDM_DB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
+      <Project>{05F09DF5-CAA9-4D04-B003-307B57842F48}</Project>
+      <Name>Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

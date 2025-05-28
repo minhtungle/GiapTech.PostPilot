@@ -1,16 +1,17 @@
-﻿using EDM_DB;
+﻿using Applications.QuanLyBaiDang.Interfaces;
+using Applications.QuanLyBaiDang.Serivices;
+using Autofac;
+using Autofac.Integration.Mvc;
+using EDM_DB;
 using Infrastructure.Caching;
+using Infrastructure.Helpers;
 using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
-using Infrastructure.UnitOfWork;
-using SimpleInjector;
-using SimpleInjector.Integration.Web.Mvc;
-using SimpleInjector.Lifestyles;
+using Public.AppServices;
+using Public.Interfaces;
+using QuanLyBaiDang.Controllers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Web;
+using System.Data.Entity;
 using System.Web.Mvc;
 
 namespace EDM.App_Start
@@ -19,25 +20,58 @@ namespace EDM.App_Start
     {
         public static void RegisterDependencies()
         {
-            var container = new Container();
-            // ⚠️ Cấu hình mặc định cho Scoped Lifestyle
-            container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+            var builder = new ContainerBuilder();
 
-            // 👉 Đăng ký các dependency
-            container.Register<EDM_DBEntities>(() => new EDM_DBEntities(), Lifestyle.Scoped);
-            container.Register<IUnitOfWork, EfUnitOfWork>(Lifestyle.Scoped);
 
-            container.Register(typeof(IRepository<,>), typeof(EfRepository<,>));
-            container.Register<ICacheManager, MemoryCacheManager>();
+            // Đăng ký PermissionCheckerAppService
+            builder.RegisterType<PermissionCheckerAppService>()
+                   .As<IPermissionCheckerAppService>()
+                   .InstancePerRequest(); // hoặc InstancePerLifetimeScope()
+            // ✅ Đăng ký các Controller MVC
+            //builder.RegisterControllers(Assembly.GetExecutingAssembly());
+            //builder.RegisterControllers(typeof(MvcApplication).Assembly);
+            builder.RegisterControllers(typeof(QuanLyBaiDangController).Assembly);
 
-            // ✅ Đăng ký tất cả các MVC controller
-            container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
+            builder.RegisterType<EfRepository<tbBaiDang, Guid>>()
+                   .As<IRepository<tbBaiDang, Guid>>()
+                   .InstancePerRequest();
 
-            // ✅ Xác minh cấu hình
-            container.Verify();
+            // ✅ Đăng ký DbContext (EF Designer with EDMX)
+            builder.RegisterType<EDM_DBEntities>()
+                   .As<DbContext>()
+                   .InstancePerRequest(); // hoặc InstancePerLifetimeScope()
 
-            // ⚙️ Gán DI resolver cho MVC
-            DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
+            // Đăng ký UserContext để Autofac biết cách tạo IUserContext
+            builder.RegisterType<UserContext>()
+                   .As<IUserContext>()
+                   .InstancePerRequest();
+
+            // ✅ Đăng ký UnitOfWork
+            builder.RegisterType<EfUnitOfWork>()
+                   .As<IUnitOfWork>()
+                   .InstancePerRequest();
+
+            // ✅ Đăng ký Generic Repository
+            builder.RegisterGeneric(typeof(EfRepository<,>))
+                   .As(typeof(IRepository<,>))
+                   .InstancePerRequest();
+
+            // ✅ Đăng ký Cache Manager
+            builder.RegisterType<MemoryCacheManager>()
+                   .As<ICacheManager>()
+                   .SingleInstance(); // hoặc InstancePerRequest nếu cần
+
+            // ✅ Đăng ký Application Services
+            builder.RegisterType<QuanLyBaiDangAppService>()
+                   .As<IQuanLyBaiDangAppService>()
+                   .InstancePerRequest();
+
+
+            // 🔨 Build container
+            var container = builder.Build();
+
+            // ✅ Gán Autofac làm Dependency Resolver cho MVC
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
     }
 }
