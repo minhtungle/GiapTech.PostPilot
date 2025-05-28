@@ -170,6 +170,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppServices\BaseAppService.cs" />
     <Compile Include="Controllers\StaticArgController.cs" />
     <Compile Include="Controllers\RouteConfigController.cs" />
     <Compile Include="Dtos\XemPDF_Output_Dto.cs" />
@@ -180,6 +181,8 @@
     </Compile>
     <Compile Include="Handle\Handle.cs" />
     <Compile Include="Helpers\CryptoHelper.cs" />
+    <Compile Include="Helpers\CurrentUserExtensions.cs" />
+    <Compile Include="Interfaces\IUserContext.cs" />
     <Compile Include="Mappers\UserAccountMapping.cs" />
     <Compile Include="Models\ChucNang.cs" />
     <Compile Include="Models\DuLieu_LichSu_ChiTiet.cs" />
@@ -202,7 +205,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Interfaces\" />
     <Folder Include="Localizations\" />
     <Folder Include="Validations\" />
   </ItemGroup>

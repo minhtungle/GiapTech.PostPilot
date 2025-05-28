@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.UI.WebControls;
-using Antlr.Runtime.Misc;
 using Auth.Models;
 using EDM_DB;
-using Microsoft.Ajax.Utilities;
+using Infrastructure.Enums;
 using Newtonsoft.Json;
 using Public.Models;
+using ICacheManager = Infrastructure.Interfaces.ICacheManager;
+using Infrastructure.Extentions;
+using System.Security.Claims;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
+using Microsoft.Owin;
 
 namespace Auth.Controllers
 {
@@ -42,10 +45,12 @@ namespace Auth.Controllers
             }
         }
         #endregion
+        private readonly int _cacheTimeOut;
         public AuthController()
         {
             db = new EDM_DBEntities();
         }
+
         #region VIEW
         public void LayQuyen()
         {
@@ -119,13 +124,15 @@ namespace Auth.Controllers
                         }
                         else
                         {
+                            //string cacheKey = $"Permission_{nguoiDung.IdNguoiDung}";
+
                             // Cập nhât số lần đăng nhập
                             nguoiDung.SoLanDangNhap = nguoiDung.SoLanDangNhap ?? 0;
                             nguoiDung.SoLanDangNhap += 1;
                             nguoiDung.Online = true;
                             db.SaveChanges();
                             // Lưu thông tin người dùng
-                            Permission per = new Permission
+                            var per = new Permission
                             {
                                 NguoiDung = nguoiDung,
                                 ChucVu = db.default_tbChucVu.FirstOrDefault(x => x.IdChucVu == nguoiDung.IdChucVu) ?? new default_tbChucVu(),
@@ -134,6 +141,28 @@ namespace Auth.Controllers
                                 CoCauToChuc = db.tbCoCauToChucs.FirstOrDefault(x => x.IdCoCauToChuc == nguoiDung.IdCoCauToChuc) ?? new tbCoCauToChuc()
                             };
                             Session["Permission"] = per; // Phải set như này thì từ sau mới sử dụng được session
+                            //_cacheManager.Set(cacheKey, per, _cacheTimeOut); // Không cần session
+
+                            var claims = new List<Claim>
+                            {
+                                new Claim(ClaimTypes.NameIdentifier, nguoiDung.IdNguoiDung.ToString()),
+                                new Claim(ClaimTypes.Name, nguoiDung.TenNguoiDung ?? ""),
+                                new Claim("MaDonViSuDung", nguoiDung.MaDonViSuDung.ToString()),
+                                new Claim("VaiTro", per.ChucVu?.TenChucVu ?? ""),
+                                new Claim("KieuNguoiDung", per.KieuNguoiDung?.TenKieuNguoiDung ?? "")
+                            };
+
+                            var identity = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
+                            var ctx = Request.GetOwinContext();
+                            var authManager = ctx.Authentication;
+
+                            // Sign in user
+                            authManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                            authManager.SignIn(new AuthenticationProperties
+                            {
+                                IsPersistent = true,
+                                ExpiresUtc = DateTime.UtcNow.AddHours(8)
+                            }, identity);
 
                             #region Gửi mail
                             HttpBrowserCapabilitiesBase browser = HttpContext.Request.Browser;
@@ -171,13 +200,15 @@ namespace Auth.Controllers
                                 {
                                     nguoiDung.ThongTinThietBi_TruyCap = JsonConvert.SerializeObject(thongTinThietBi); // Lưu thiết bị mới
                                     Public.Handle.SendEmail(sendTo: nguoiDung.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
-                                };
+                                }
+                                ;
                             }
                             else
                             {
                                 nguoiDung.ThongTinThietBi_TruyCap = JsonConvert.SerializeObject(thongTinThietBi); // Lưu thiết bị mới
                                 Public.Handle.SendEmail(sendTo: nguoiDung.Email, subject: tieuDeMail, body: mailBody, isHTML: true, donViSuDung: per.DonViSuDung);
-                            };
+                            }
+                            ;
                             #endregion
                             // Gán vào danh sách người dùng đang hoạt động
                             //QuanLyNguoiDung_DangHoatDong.NguoiDung_DangHoatDong.Add(nguoiDung);
@@ -188,7 +219,8 @@ namespace Auth.Controllers
                             status = 1;
                             mess = $"Xin chào {nguoiDung.TenNguoiDung}, ngày hôm nay của bạn thế nào 🥰";
                             action = "/Home/Index";
-                        };
+                        }
+                        ;
                     }
                     else
                     {
@@ -243,7 +275,8 @@ namespace Auth.Controllers
                             foreach (var condition in conditions)
                             {
                                 if (!condition.Value.status) return Json(new { status = "warning", mess = condition.Value.error });
-                            };
+                            }
+                            ;
 
                             //if (nguoiDung_NEW.MatKhauMoi != nguoiDung_NEW.MatKhauMoi) return Json(new { mess = "Mật khẩu xác nhận chưa trùng khớp" });
 
@@ -256,16 +289,20 @@ namespace Auth.Controllers
 
                             db.SaveChanges();
                             scope.Commit();
-                        };
-                    };
+                        }
+                        ;
+                    }
+                    ;
                 }
                 catch (Exception ex)
                 {
                     status = 0;
                     mess = ex.Message;
                     scope.Rollback();
-                };
-            };
+                }
+                ;
+            }
+            ;
             return Json(new
             {
                 status,
@@ -302,7 +339,8 @@ namespace Auth.Controllers
                     // Gọi phương thức RenderViewToString() để chuyển đổi view thành chuỗi
                     string viewAsString = Public.Handle.RenderViewToString(this, $"{VIEW_PATH}/auth.forgot-mail.cshtml", model);
                     Public.Handle.SendEmail(sendTo: nguoiDung.Email, subject: tieuDeMail, body: viewAsString, isHTML: true, donViSuDung: per.DonViSuDung);
-                };
+                }
+                ;
                 guiMail();
                 #endregion
                 return Json(new
@@ -311,7 +349,8 @@ namespace Auth.Controllers
                     mess = "Mã xác thực đã được gửi vào [Email] bạn cung cấp, vui lòng kiểm tra và tiếp tục",
                     maXacThuc = maXacThuc,
                 });
-            };
+            }
+            ;
             return Json(new
             {
                 status = 0,
@@ -339,7 +378,8 @@ namespace Auth.Controllers
                     foreach (var condition in conditions)
                     {
                         if (!condition.Value.status) return Json(new { mess = condition.Value.error });
-                    };
+                    }
+                    ;
 
                     if (matKhauMoi != matKhauMoi_XacNhan) return Json(new { mess = "Mật khẩu xác nhận chưa trùng khớp" });
 
@@ -356,15 +396,18 @@ namespace Auth.Controllers
 
                         db.SaveChanges();
                         scope.Commit();
-                    };
+                    }
+                    ;
                 }
                 catch (Exception ex)
                 {
                     status = 0;
                     mess = ex.Message;
                     scope.Rollback();
-                };
-            };
+                }
+                ;
+            }
+            ;
             return Json(new
             {
                 status,
@@ -400,7 +443,8 @@ namespace Auth.Controllers
                     // Gọi phương thức RenderViewToString() để chuyển đổi view thành chuỗi
                     string viewAsString = Public.Handle.RenderViewToString(this, $"{VIEW_PATH}/auth.forgot-mail.cshtml", model);
                     Public.Handle.SendEmail(sendTo: nguoiDung.Email, subject: tieuDeMail, body: viewAsString, isHTML: true, donViSuDung: per.DonViSuDung);
-                };
+                }
+                ;
                 guiMail();
                 #endregion
                 return Json(new
@@ -409,7 +453,8 @@ namespace Auth.Controllers
                     mess = "Mã xác thực đã được gửi vào [Email] bạn cung cấp, vui lòng kiểm tra và tiếp tục",
                     maXacThuc = maXacThuc,
                 });
-            };
+            }
+            ;
             return Json(new
             {
                 status = 0,

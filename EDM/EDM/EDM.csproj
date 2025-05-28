@@ -66,6 +66,9 @@
     <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
       <HintPath>packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.AspNet.SignalR.Core.2.4.3\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -88,6 +91,9 @@
     <Reference Include="Microsoft.Owin.Security, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Owin.Security.4.2.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Owin.Security.Cookies.4.2.2\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -96,6 +102,15 @@
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector, Version=5.0.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>packages\SimpleInjector.5.5.0\lib\net461\SimpleInjector.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.Web, Version=5.0.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>packages\SimpleInjector.Integration.Web.5.5.0\lib\net45\SimpleInjector.Integration.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.Web.Mvc, Version=5.0.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>packages\SimpleInjector.Integration.Web.Mvc.5.5.0\lib\net45\SimpleInjector.Integration.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -189,6 +204,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\ConfigureAuth.cs" />
+    <Compile Include="App_Start\DependencyInjectionConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -8169,6 +8186,10 @@
       <Project>{4cc2c0b9-fb34-429c-a18e-7994e3dcc7b9}</Project>
       <Name>Organization</Name>
     </ProjectReference>
+    <ProjectReference Include="..\modules\Admin\QuanLyAIBot\QuanLyAIBot.csproj">
+      <Project>{40751eea-a8d5-4a2c-bb5f-ce96b08f1bf3}</Project>
+      <Name>QuanLyAIBot</Name>
+    </ProjectReference>
     <ProjectReference Include="..\modules\Admin\QuanLyBaiDang\QuanLyBaiDang.csproj">
       <Project>{e0819784-65d2-4def-80e4-072cd922d8cf}</Project>
       <Name>QuanLyBaiDang</Name>
@@ -8176,6 +8197,10 @@
     <ProjectReference Include="..\modules\Admin\QuanLyChienDich\QuanLyChienDich.csproj">
       <Project>{cf9a795e-718c-41d5-90e1-8300fd63b601}</Project>
       <Name>QuanLyChienDich</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\modules\Admin\QuanLyDichVu\QuanLyDichVu.csproj">
+      <Project>{026d4dd8-af19-44fd-bad9-c72334392d2e}</Project>
+      <Name>QuanLyDichVu</Name>
     </ProjectReference>
     <ProjectReference Include="..\modules\Admin\UnitManage\UnitManage.csproj">
       <Project>{2946ed6e-1ef8-405d-b7f9-8d14f0ecd06b}</Project>
@@ -8204,6 +8229,10 @@
     <ProjectReference Include="..\modules\_Shared\EDM_DB\EDM_DB.csproj">
       <Project>{4a2aa8b2-7faf-4400-964e-b45818002093}</Project>
       <Name>EDM_DB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\modules\_Shared\Infrastructure\Infrastructure.csproj">
+      <Project>{05F09DF5-CAA9-4D04-B003-307B57842F48}</Project>
+      <Name>Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\modules\_Shared\Public\Public.csproj">
       <Project>{6f03ef6a-8234-4d31-9570-3b2c0187c0a2}</Project>

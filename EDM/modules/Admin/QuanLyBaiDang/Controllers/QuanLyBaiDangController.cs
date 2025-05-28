@@ -1,6 +1,8 @@
 ﻿using Applications.OpenAIApi.AppServices;
 using Applications.QuanLyBaiDang.Dtos;
+using Applications.QuanLyBaiDang.Interfaces;
 using Applications.QuanLyBaiDang.Models;
+using Applications.QuanLyBaiDang.Serivices;
 using Applications.QuanLyChienDich.Models;
 using EDM_DB;
 using Google.Apis.Auth.OAuth2;
@@ -65,20 +67,13 @@ namespace QuanLyBaiDang.Controllers
             }
         }
         // GET: Default
-        static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
-        static readonly string ApplicationName = "n8n test";
-
-        // Google Sheet ID (lấy từ link bạn cung cấp)
-        static readonly string spreadsheetId = "1ONCqKxCJBwGHyeDY0AZ55ydzOtnypNVQcG4-7vTb7UA";
-
-        // Tên sheet/tab (mặc định thường là "Sheet1")
-        static readonly string sheetName = "Sheet1";
-
-        public QuanLyBaiDangController()
+        private readonly OpenAIApiService _openAIApiService;
+        private readonly IQuanLyBaiDangAppService _baiDangService;
+        public QuanLyBaiDangController(IQuanLyBaiDangAppService baiDangService)
         {
+            _baiDangService = baiDangService;
             _openAIApiService = new OpenAIApiService(); // Hoặc inject bằng DI nếu bạn dùng Autofac
         }
-        private readonly OpenAIApiService _openAIApiService;
         #endregion
 
         public ActionResult Index(Guid idChienDich)
@@ -121,7 +116,8 @@ namespace QuanLyBaiDang.Controllers
         [HttpGet]
         public ActionResult getList_BaiDang(Guid idChienDich)
         {
-            List<tbBaiDangExtend> baiDangs = getBaiDangs(loai: "all", idChienDich: idChienDich);
+            var baiDangs = getBaiDangs(loai: "all", idChienDich: idChienDich);
+            var _baiDangs = _baiDangService.GetBaiDangs(loai: "all", idChienDich: idChienDich);
             return PartialView($"{VIEW_PATH}/baidang-getList.cshtml", baiDangs);
         }
 
