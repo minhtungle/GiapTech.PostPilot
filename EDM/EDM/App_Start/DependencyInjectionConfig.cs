@@ -12,6 +12,7 @@ using Public.Interfaces;
 using QuanLyBaiDang.Controllers;
 using System;
 using System.Data.Entity;
+using System.Reflection;
 using System.Web.Mvc;
 
 namespace EDM.App_Start
@@ -21,21 +22,14 @@ namespace EDM.App_Start
         public static void RegisterDependencies()
         {
             var builder = new ContainerBuilder();
-
-
-            // Đăng ký PermissionCheckerAppService
-            builder.RegisterType<PermissionCheckerAppService>()
-                   .As<IPermissionCheckerAppService>()
-                   .InstancePerRequest(); // hoặc InstancePerLifetimeScope()
-            // ✅ Đăng ký các Controller MVC
+          
+            #region ✅ Đăng ký các Controller MVC
             //builder.RegisterControllers(Assembly.GetExecutingAssembly());
             //builder.RegisterControllers(typeof(MvcApplication).Assembly);
             builder.RegisterControllers(typeof(QuanLyBaiDangController).Assembly);
+            #endregion
 
-            builder.RegisterType<EfRepository<tbBaiDang, Guid>>()
-                   .As<IRepository<tbBaiDang, Guid>>()
-                   .InstancePerRequest();
-
+            #region Đăng ký Infrastructure
             // ✅ Đăng ký DbContext (EF Designer with EDMX)
             builder.RegisterType<EDM_DBEntities>()
                    .As<DbContext>()
@@ -60,12 +54,30 @@ namespace EDM.App_Start
             builder.RegisterType<MemoryCacheManager>()
                    .As<ICacheManager>()
                    .SingleInstance(); // hoặc InstancePerRequest nếu cần
+            #endregion
 
-            // ✅ Đăng ký Application Services
+            #region ✅ Đăng ký Application Services
+            // Đăng ký PermissionCheckerAppService
+            builder.RegisterType<PermissionCheckerAppService>()
+                   .As<IPermissionCheckerAppService>()
+                   .InstancePerRequest(); // hoặc InstancePerLifetimeScope()
+
             builder.RegisterType<QuanLyBaiDangAppService>()
                    .As<IQuanLyBaiDangAppService>()
                    .InstancePerRequest();
+            #endregion
 
+            #region Đăng ký IRepository
+            builder.RegisterType<EfRepository<tbBaiDang, Guid>>()
+                   .As<IRepository<tbBaiDang, Guid>>()
+                   .InstancePerRequest();
+            builder.RegisterType<EfRepository<tbNguoiDung, Guid>>()
+                   .As<IRepository<tbNguoiDung, Guid>>()
+                   .InstancePerRequest();
+            builder.RegisterType<EfRepository<tbKieuNguoiDung, Guid>>()
+                   .As<IRepository<tbKieuNguoiDung, Guid>>()
+                   .InstancePerRequest();
+            #endregion
 
             // 🔨 Build container
             var container = builder.Build();

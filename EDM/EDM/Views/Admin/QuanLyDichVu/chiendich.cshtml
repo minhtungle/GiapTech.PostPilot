@@ -1,0 +1,56 @@
+﻿@using Public.Models
+@{
+    ViewBag.Title = "Quản lý chiến dịch";
+    var thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Quản lý chiến dịch</li>
+}
+@section styles {
+    @*<link href="~/Content/Admin/QuanLyChienDich/quanlychiendich.css" rel="stylesheet" />*@
+}
+@section scripts {
+    <script src="~/Content/Admin/QuanLyChienDich/quanlychiendich.js"></script>
+    <script>
+        var quanLyChienDich = new QuanLyChienDich();
+        quanLyChienDich.init();
+    </script>
+}
+<section class="section" page-group="page-group-quanlychiendich" id="page-quanlychiendich" data-aos="fade-up">
+    <div class="card" intro-container="thanhtacvu">
+        <div class="card-content">
+            <div class="card-body" intro-container="thaotac-coban">
+                <div class="btn-group btn-group-sm" role="group">
+                    @{
+                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlychiendich-themmoi"))
+                        {
+                            <!--Thêm mới-->
+                            <a class="btn btn-success"><i class="bi bi-plus-circle-fill"></i></a>
+                            <a class="btn btn-light-secondary"
+                               onclick="quanLyChienDich.chienDich.displayModal_CRUD('create')">
+                                Thêm mới
+                            </a>
+                        }
+                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlychiendich-xoabo"))
+                        {
+                            <!--Xóa bỏ-->
+                            <a class="btn btn-primary"><i class="bi bi-trash3-fill"></i></a>
+                            <a class="btn btn-light-secondary"
+                               onclick="quanLyChienDich.chienDich.delete('multiple')">
+                                Xóa bỏ
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" id="chiendich-getList-container"></div>
+</section>
+<!--chiendich-crud-->
+<div class="modal fade text-left" id="chiendich-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>

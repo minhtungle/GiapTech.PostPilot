@@ -67,6 +67,8 @@ public partial class EDM_DBEntities : DbContext
 
     public virtual DbSet<tbLichSuDangBai> tbLichSuDangBais { get; set; }
 
+    public virtual DbSet<tbLoaiAIBot> tbLoaiAIBots { get; set; }
+
     public virtual DbSet<tbNenTang> tbNenTangs { get; set; }
 
     public virtual DbSet<tbNguoiDung> tbNguoiDungs { get; set; }

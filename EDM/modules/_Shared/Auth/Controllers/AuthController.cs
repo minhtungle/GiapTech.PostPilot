@@ -143,15 +143,18 @@ namespace Auth.Controllers
                             Session["Permission"] = per; // Phải set như này thì từ sau mới sử dụng được session
                                                          //_cacheManager.Set(cacheKey, per, _cacheTimeOut); // Không cần session
 
-
                             #region Lưu claim
                             var claims = new List<Claim>
                             {
                                 new Claim(ClaimTypes.NameIdentifier, nguoiDung.IdNguoiDung.ToString()),
                                 new Claim(ClaimTypes.Name, nguoiDung.TenNguoiDung ?? ""),
                                 new Claim("MaDonViSuDung", nguoiDung.MaDonViSuDung.ToString()),
-                                new Claim("VaiTro", per.ChucVu.TenChucVu ?? ""),
-                                new Claim("KieuNguoiDung", per.KieuNguoiDung.TenKieuNguoiDung ?? "")
+
+                                new Claim("NguoiDung", JsonConvert.SerializeObject(per.NguoiDung)),
+                                new Claim("DonViSuDung", JsonConvert.SerializeObject(per.DonViSuDung)),
+                                new Claim("ChucVu", JsonConvert.SerializeObject(per.ChucVu)),
+                                new Claim("KieuNguoiDung", JsonConvert.SerializeObject(per.KieuNguoiDung)),
+                                new Claim("CoCauToChuc", JsonConvert.SerializeObject(per.CoCauToChuc))
                             };
 
                             var identity = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
@@ -189,7 +192,7 @@ namespace Auth.Controllers
                                 // Trả về chuỗi đã được tạo ra từ view
                                 return viewAsString;
                             }
-                            string tieuDeMail = "[📣 GIAPTECH] - CẢNH BÁO THIẾT BỊ LẠ ĐĂNG NHẬP❗";
+                            string tieuDeMail = "[📣 PostPilot] - CẢNH BÁO THIẾT BỊ LẠ ĐĂNG NHẬP❗";
                             string mailBody = mail();
 
                             if (nguoiDung.ThongTinThietBi_TruyCap != null) // Kiểm tra thiết bị mới hay cũ
@@ -328,7 +331,7 @@ namespace Auth.Controllers
             {
                 NGUOIDUNG = nguoiDung;
                 #region Gửi mail
-                string tieuDeMail = "[📣 GIAPTECH] - LẤY LẠI THÔNG TIN TÀI KHOẢN 🔑";
+                string tieuDeMail = "[📣 PostPilot] - LẤY LẠI THÔNG TIN TÀI KHOẢN 🔑";
                 void guiMail()
                 {
                     Uri uri = new Uri(HttpContext.Request.Url.AbsoluteUri);
@@ -432,7 +435,7 @@ namespace Auth.Controllers
             if (nguoiDung != null)
             {
                 #region Gửi mail
-                string tieuDeMail = "[📣 GIAPTECH] - LẤY LẠI THÔNG TIN TÀI KHOẢN 🔑";
+                string tieuDeMail = "[📣 PostPilot] - LẤY LẠI THÔNG TIN TÀI KHOẢN 🔑";
                 void guiMail()
                 {
                     Uri uri = new Uri(HttpContext.Request.Url.AbsoluteUri);

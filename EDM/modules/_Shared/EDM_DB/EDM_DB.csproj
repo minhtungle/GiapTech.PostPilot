@@ -157,6 +157,9 @@
     <Compile Include="tbLichSuDangBai.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
+    <Compile Include="tbLoaiAIBot.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
     <Compile Include="tbNenTang.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>

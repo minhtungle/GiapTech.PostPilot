@@ -2,8 +2,8 @@
 @model Applications.QuanLyBaiDang.Dtos.Index_OutPut_Dto
 @{
     ViewBag.Title = "Quản lý bài đăng";
-    var thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
     Layout = "~/Views/_Shared/Admin/admin.cshtml";
+    var thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
 }
 @section hTitle {}
 @section hBreadcrumb {

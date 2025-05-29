@@ -1914,7 +1914,7 @@
     <Content Include="Assets\TrangTaiLieu\assets\js\wow.min.js" />
     <Content Include="Assets\TrangTaiLieu\assets\webfonts\icomoon.svg" />
     <Content Include="Content\Admin\admin.js" />
-    <Content Include="Content\Admin\QuanLyBaiDang\JavaScript.js" />
+    <Content Include="Content\Admin\QuanLyAIBot\quanlyaibot.js" />
     <Content Include="Content\Admin\QuanLyChienDich\quanlychiendich.js" />
     <Content Include="Content\Admin\QuanLyBaiDang\quanlybaidang.js" />
     <Content Include="Content\Admin\UnitManage\unitmanage.js" />
@@ -7840,6 +7840,12 @@
     <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-tongquan\thongke.cshtml" />
     <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke.cshtml" />
     <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu.cshtml" />
+    <Content Include="Views\Admin\QuanLyAIBot\aibot-crud.cshtml" />
+    <Content Include="Views\Admin\QuanLyAIBot\aibot-getList.cshtml" />
+    <Content Include="Views\Admin\QuanLyAIBot\aibot.cshtml" />
+    <Content Include="Views\Admin\QuanLyDichVu\chiendich-crud.cshtml" />
+    <Content Include="Views\Admin\QuanLyDichVu\chiendich-getList.cshtml" />
+    <Content Include="Views\Admin\QuanLyDichVu\chiendich.cshtml" />
     <None Include="Views\User\TrangTaiLieu\404.cshtml" />
     <None Include="Views\User\TrangTaiLieu\about.cshtml" />
     <None Include="Views\User\TrangTaiLieu\checkout.cshtml" />

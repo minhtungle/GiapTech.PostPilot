@@ -5,6 +5,7 @@ using EDM_DB;
 using Infrastructure.Interfaces;
 using Public.AppServices;
 using Public.Interfaces;
+using Public.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -23,7 +24,8 @@ namespace Applications.QuanLyAIBot.Services
             _AIBotRepo = AIBotRepo;
         }
 
-        public async Task<IEnumerable<tbAIBotExtend>> GetAIBots(
+        public List<ThaoTac> GetThaoTacs(string maChucNang) => GetThaoTacByIdChucNang(maChucNang);
+        public async Task<List<tbAIBotExtend>> GetAIBots(
             string loai = "all",
             List<Guid> idAIBot = null,
             LocThongTinDto locThongTin = null)

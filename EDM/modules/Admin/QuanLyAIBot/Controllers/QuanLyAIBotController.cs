@@ -3,16 +3,19 @@ using Applications.QuanLyAIBot.Interfaces;
 using EDM_DB;
 using Newtonsoft.Json;
 using Public.Controllers;
+using Public.Helpers;
 using Public.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
 namespace QuanLyAIBot.Controllers
 {
-    public class QuanLyAIBotController : RouteConfigController
+    [CustomAuthorize]
+    public class QuanLyAIBotController : StaticArgController
     {
         #region Biến public để in hoa
         private readonly string VIEW_PATH = "~/Views/Admin/QuanLyAIBot";
@@ -50,8 +53,7 @@ namespace QuanLyAIBot.Controllers
             #region Lấy các danh sách
 
             #region Thao tác
-            List<ChucNangs> kieuNguoiDung_IdChucNang = JsonConvert.DeserializeObject<List<ChucNangs>>(per.KieuNguoiDung.IdChucNang);
-            List<ThaoTac> thaoTacs = kieuNguoiDung_IdChucNang.FirstOrDefault(x => x.ChucNang.MaChucNang == "QuanLyAIBot").ThaoTacs ?? new List<ThaoTac>();
+            var thaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyAIBot").ToList();
             #endregion
 
             #endregion
@@ -61,33 +63,25 @@ namespace QuanLyAIBot.Controllers
             {
                 ThaoTacs = thaoTacs,
             };
-            //var a = _quanLyDangBaiAppService.GetListAsync();
             return View($"{VIEW_PATH}/baidang.cshtml", output);
         }
 
-        //[HttpGet]
-        //public ActionResult getList_AIBot(Guid idChienDich)
-        //{
-        //    List<tbAIBotExtend> baiDangs = getAIBots(loai: "all", idChienDich: idChienDich);
-        //    return PartialView($"{VIEW_PATH}/baidang-getList.cshtml", baiDangs);
-        //}
-
-        //public List<tbAIBotExtend> getAIBots(Guid idChienDich, string loai = "all", List<Guid> idAIBots = null, LocThongTinDto locThongTin = null)
-        //{
-        //    var baiDangRepo = db.tbAIBots.Where(x => x.IdChienDich == idChienDich &&
-        //    x.TrangThai != 0 && x.MaDonViSuDung == per.DonViSuDung.MaDonViSuDung).ToList()
-        //        ?? new List<tbAIBot>();
-
-        //    var baiDangs = baiDangRepo
-        //        .Where(x => loai != "single" || idAIBots.Contains(x.IdAIBot))
-        //        .Select(g => new tbAIBotExtend
-        //        {
-        //            AIBot = g,
-        //        })
-        //        .OrderByDescending(x => x.AIBot.ThoiGian)
-        //        .ToList() ?? new List<tbAIBotExtend>();
-
-        //    return baiDangs;
-        //}
+        [HttpGet]
+        public async Task<ActionResult> getList_AIBot()
+        {
+            var data = await _quanLyAIBotAppService.GetAIBots(loai: "all");
+            return PartialView($"{VIEW_PATH}/aibot-getList.cshtml", data);
+        }
+        [HttpPost]
+        public async Task<ActionResult> displayModal_CRUD_BaiDang(DisplayModel_CRUD_AIBot_Input_Dto input)
+        {
+            var rs = await _quanLyAIBotAppService.GetAIBots(loai: "single", idAIBot: new List<Guid> { input.IdAIBot });
+            var output = new DisplayModel_CRUD_AIBot_Output_Dto
+            {
+                Loai = input.Loai,
+                AIBot = rs.FirstOrDefault(),
+            };
+            return PartialView($"{VIEW_PATH}/aibot-crud.cshtml", output);
+        }
     }
 }

@@ -1,0 +1,55 @@
+﻿@using EDM_DB
+@model Applications.QuanLyAIBot.Dtos.DisplayModel_CRUD_AIBot_Output_Dto
+@{
+    var aiBot = Model.AIBot.AIBot;
+    var loai = Model.Loai;
+    List<string> loaiThaoTac_Disabled = new List<string> { "read" };
+}
+
+<div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title col-md-6 col-sm-12 my-2">
+                @(Model.Loai == "create" ? "Thêm mới" : Model.Loai  == "update" ? "Cập nhật" : "Xem chi tiết")
+            </h5>
+            <div class="list-group list-group-horizontal mb-1 text-center col-md-6 col-sm-12 justify-content-sm-end justify-content-center" id="" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="thongtin-list"
+                   data-bs-toggle="list" href="#thongtin" role="tab">Thông tin AI Bot</a>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="tab-content text-justify">
+                <div class="tab-pane fade show active" id="thongtin" role="tabpanel"
+                     aria-labelledby="thongtin-list">
+                    <div class="row" intro-container="thongtin-chung">
+                        <!--Id-->
+                        <input id="input-idaibot" value="@Guid.Empty" hidden />
+
+                        <!--Tên AI Bot-->
+                        <div class="col-12 col-sm-12 col-md-12">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="required" for="input-tenaibot">Tên AI Bot</label>
+                                    <input class="form-control" id="input-tenaibot"
+                                           placeholder="Nhập nội dung ..."
+                                           value="@(aiBot.TenAIBot ?? "")"
+                                           @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>
+                                    <div class="invalid-feedback feedback" for="input-tenaibot">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary ml-1" onclick="quanLyChienDich.chienDich.save(@string.Format("'{0}'", "create"))">
+                <span class="">Lưu</span>
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <span class="">Đóng</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -4,6 +4,7 @@ using Applications.QuanLyBaiDang.Interfaces;
 using Applications.QuanLyBaiDang.Models;
 using Applications.QuanLyBaiDang.Serivices;
 using Applications.QuanLyChienDich.Models;
+using Applications.UserType.Interfaces;
 using EDM_DB;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
@@ -82,8 +83,7 @@ namespace QuanLyBaiDang.Controllers
             #region Lấy các danh sách
 
             #region Thao tác
-            List<ChucNangs> kieuNguoiDung_IdChucNang = JsonConvert.DeserializeObject<List<ChucNangs>>(per.KieuNguoiDung.IdChucNang);
-            List<ThaoTac> thaoTacs = kieuNguoiDung_IdChucNang.FirstOrDefault(x => x.ChucNang.MaChucNang == "QuanLyBaiDang").ThaoTacs ?? new List<ThaoTac>();
+            var thaoTacs = _baiDangService.GetThaoTacs(maChucNang: "QuanLyBaiDang").ToList();
             #endregion
 
             #region Chiến dịch
@@ -110,14 +110,12 @@ namespace QuanLyBaiDang.Controllers
                 ThaoTacs = thaoTacs,
                 ChienDich = chienDich,
             };
-            //var a = _quanLyDangBaiAppService.GetListAsync();
             return View($"{VIEW_PATH}/baidang.cshtml", output);
         }
 
         [HttpGet]
         public async Task<ActionResult> getList_BaiDang(Guid idChienDich)
         {
-            //var baiDangs = getBaiDangs(loai: "all", idChienDich: idChienDich);
             var baiDangs = await _baiDangService.GetBaiDangs(loai: "all", idChienDich: idChienDich);
             return PartialView($"{VIEW_PATH}/baidang-getList.cshtml", baiDangs);
         }

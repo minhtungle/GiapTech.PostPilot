@@ -1,0 +1,71 @@
+﻿@using Applications.QuanLyChienDich.Models
+@model List<tbChienDichExtend>
+
+<div class="card-body">
+    <table class="table table-hover table-bordered table-sticky w-100" id="chiendich-getList" data-page-length="10">
+        <thead class="nowrap" style="white-space: nowrap !important">
+            <tr>
+                <th class="text-center" data-orderable="false"></th>
+
+                <th class="text-center">Id chiến dịch</th>
+                <th class="text-center">Tên chiến dịch</th>
+                <th class="text-center">Thời gian</th>
+                <th class="text-center">Trạng thái</th>
+
+                @*    <th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>*@
+            </tr>
+        </thead>
+        <tfoot class="show-footer-above">
+            <tr>
+                <th class="text-center"><input class="form-check-input checkAll-chiendich-getList" type="checkbox" title="Chọn tất cả" /></th>
+
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+
+                @*  <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>*@
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var chienDich in Model)
+            {
+                <tr id="@chienDich.ChienDich.IdChienDich">
+                    <td class="text-center"><input class="form-check-input checkRow-chiendich-getList" type="checkbox" /></td>
+
+                    <td class="text-left">@chienDich.ChienDich.IdChienDich</td>
+                    <td class="text-left">
+                        <a class="c-pointer" href="~/QuanLyBaiDang/Index?idChienDich=@chienDich.ChienDich.IdChienDich">
+                            <i class="bi bi-eye-fill"></i> @chienDich.ChienDich.TenChienDich
+                        </a>
+                    </td>
+                    <td class="text-left">@chienDich.ChienDich.NgayTao</td>
+                    <td class="text-center">
+                        @{
+                            if (chienDich.ChienDich.TrangThaiHoatDong == -1)
+                            {
+                                <span class="text-danger"><i class="bi bi-flag-fill"></i> Đã kết thúc</span>
+                            }
+                            else if (chienDich.ChienDich.TrangThaiHoatDong == 1)
+                            {
+                                <span class="text-success"><i class="bi bi-arrow-clockwise"></i> Đang tiến hành</span>@*<span class="text-success"><i class="bi bi-check-circle-fill"></i> Đã kết thúc</span>*@
+                            }
+                            else
+                            {
+                                @*<span class="text-success"><i class="bi bi-check-circle-fill"></i> Đã kết thúc</span>*@
+                            }
+                        }
+                    </td>
+                    @*<td class="text-center">
+                            <div style="white-space: nowrap">
+                                <a class="btn btn-sm btn-light-secondary" title="Xem chi tiết"
+                                   onclick="quanLyChienDich.chienDich.xemChiTiet(@string.Format("'{0}'", chienDich.ChienDich.IdChienDich))">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+                            </div>
+                        </td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

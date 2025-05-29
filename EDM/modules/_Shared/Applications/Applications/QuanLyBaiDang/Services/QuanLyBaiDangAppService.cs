@@ -5,6 +5,7 @@ using EDM_DB;
 using Infrastructure.Interfaces;
 using Public.AppServices;
 using Public.Interfaces;
+using Public.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -22,7 +23,7 @@ namespace Applications.QuanLyBaiDang.Serivices
         {
             _baiDangRepo = baiDangRepo;
         }
-
+        public List<ThaoTac> GetThaoTacs(string maChucNang) => GetThaoTacByIdChucNang(maChucNang);
         public async Task<IEnumerable<tbBaiDangExtend>> GetBaiDangs(
             Guid idChienDich, 
             string loai = "all", 

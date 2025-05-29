@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EDM_DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,11 @@ namespace Infrastructure.Interfaces
     {
         Guid UserId { get; }
         Guid DonViId { get; }
+
+        tbNguoiDung NguoiDung { get; }
+        tbDonViSuDung DonViSuDung { get; }
+        default_tbChucVu ChucVu { get; }
+        tbKieuNguoiDung KieuNguoiDung { get; }
+        tbCoCauToChuc CoCauToChuc { get; }
     }
 }

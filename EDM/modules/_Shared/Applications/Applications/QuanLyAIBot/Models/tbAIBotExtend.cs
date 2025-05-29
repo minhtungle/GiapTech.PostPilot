@@ -9,5 +9,6 @@ namespace Applications.QuanLyAIBot.Models
     public class tbAIBotExtend
     {
         public tbAIBot AIBot { get; set; }
+        public List<tbLoaiAIBot> LoaiAIBots { get; set; }
     }
 }
