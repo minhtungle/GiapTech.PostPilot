@@ -1,14 +1,14 @@
 ﻿@using Public.Models
 @model Applications.QuanLyAIBot.Dtos.Index_OutPut_Dto
 @{
-    ViewBag.Title = "Quản lý ai bot";
+    ViewBag.Title = "Quản lý AI Bot";
     Layout = "~/Views/_Shared/Admin/admin.cshtml";
     var thaoTacs = Model.ThaoTacs;
 }
 @section hTitle {}
 @section hBreadcrumb {
     <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Quản lý ai bot</li>
+    <li class="breadcrumb-item active" aria-current="page">Quản lý AI Bot</li>
 }
 @section styles {
     @*<link href="~/Content/Admin/QuanLyAIBot/quanlyaibot.css" rel="stylesheet" />*@
@@ -21,37 +21,15 @@
     </script>
 }
 <section class="section" page-group="page-group-quanlyaibot" id="page-quanlyaibot" data-aos="fade-up">
-    <div class="card" intro-container="thanhtacvu">
-        <div class="card-content">
-            <div class="card-body" intro-container="thaotac-coban">
-                <div class="btn-group btn-group-sm" role="group">
-                    @{
-                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlyaibot-themmoi"))
-                        {
-                            <!--Thêm mới-->
-                            <a class="btn btn-success"><i class="bi bi-plus-circle-fill"></i></a>
-                            <a class="btn btn-light-secondary"
-                               onclick="quanLyAIBot.aiBot.displayModal_CRUD('create')">
-                                Thêm mới
-                            </a>
-                        }
-                        if (thaoTacs.Exists(x => x.MaThaoTac == "quanlyaibot-xoabo"))
-                        {
-                            <!--Xóa bỏ-->
-                            <a class="btn btn-primary"><i class="bi bi-trash3-fill"></i></a>
-                            <a class="btn btn-light-secondary"
-                               onclick="quanLyAIBot.aiBot.delete('multiple')">
-                                Xóa bỏ
-                            </a>
-                        }
-                    }
-                </div>
-            </div>
+    <div class="card">
+        <div class="card-body">
+            @Html.Partial("~/Views/Admin/QuanLyAIBot/quanlyaibot-tab/tab.cshtml")
         </div>
     </div>
-
-    <div class="card" id="aibot-getList-container"></div>
 </section>
 <!--aibot-crud-->
 <div class="modal fade text-left" id="aibot-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--loaiaibot-crud-->
+<div class="modal fade text-left" id="loaiaibot-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
 </div>

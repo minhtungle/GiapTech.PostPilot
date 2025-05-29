@@ -1,4 +1,6 @@
-﻿using Applications.QuanLyBaiDang.Interfaces;
+﻿using Applications.QuanLyAIBot.Interfaces;
+using Applications.QuanLyAIBot.Services;
+using Applications.QuanLyBaiDang.Interfaces;
 using Applications.QuanLyBaiDang.Serivices;
 using Autofac;
 using Autofac.Integration.Mvc;
@@ -9,10 +11,10 @@ using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
 using Public.AppServices;
 using Public.Interfaces;
+using QuanLyAIBot.Controllers;
 using QuanLyBaiDang.Controllers;
 using System;
 using System.Data.Entity;
-using System.Reflection;
 using System.Web.Mvc;
 
 namespace EDM.App_Start
@@ -27,6 +29,7 @@ namespace EDM.App_Start
             //builder.RegisterControllers(Assembly.GetExecutingAssembly());
             //builder.RegisterControllers(typeof(MvcApplication).Assembly);
             builder.RegisterControllers(typeof(QuanLyBaiDangController).Assembly);
+            builder.RegisterControllers(typeof(QuanLyAIBotController).Assembly);
             #endregion
 
             #region Đăng ký Infrastructure
@@ -56,7 +59,7 @@ namespace EDM.App_Start
                    .SingleInstance(); // hoặc InstancePerRequest nếu cần
             #endregion
 
-            #region ✅ Đăng ký Application Services
+            #region ✅ Đăng ký AppServices
             // Đăng ký PermissionCheckerAppService
             builder.RegisterType<PermissionCheckerAppService>()
                    .As<IPermissionCheckerAppService>()
@@ -65,12 +68,19 @@ namespace EDM.App_Start
             builder.RegisterType<QuanLyBaiDangAppService>()
                    .As<IQuanLyBaiDangAppService>()
                    .InstancePerRequest();
+         
+            builder.RegisterType<QuanLyAIBotAppService>()
+                   .As<IQuanLyAIBotAppService>()
+                   .InstancePerRequest();
             #endregion
 
-            #region Đăng ký IRepository
+            #region Đăng ký IRepositories
             builder.RegisterType<EfRepository<tbBaiDang, Guid>>()
                    .As<IRepository<tbBaiDang, Guid>>()
                    .InstancePerRequest();
+            builder.RegisterType<EfRepository<tbAIBot, Guid>>()
+                  .As<IRepository<tbAIBot, Guid>>()
+                  .InstancePerRequest();
             builder.RegisterType<EfRepository<tbNguoiDung, Guid>>()
                    .As<IRepository<tbNguoiDung, Guid>>()
                    .InstancePerRequest();

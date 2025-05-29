@@ -10,8 +10,19 @@ namespace Infrastructure.Interfaces
     {
         IRepository<TEntity, TKey> Repository<TEntity, TKey>() where TEntity : class;
 
-        int SaveChanges();               // Sync
-        Task<int> SaveChangesAsync();   // Async
-    }
+        // Save changes
+        int SaveChanges();
+        Task<int> SaveChangesAsync();
 
+        // Async CRUD helpers
+        Task InsertAsync<TEntity, TKey>(TEntity entity) where TEntity : class;
+        Task UpdateAsync<TEntity, TKey>(TEntity entity) where TEntity : class;
+        Task DeleteAsync<TEntity, TKey>(TEntity entity) where TEntity : class;
+
+        // Transaction
+        Task BeginTransactionAsync();
+        Task CommitAsync();
+        Task RollbackAsync();
+        Task ExecuteInTransaction(Func<Task> action);
+    }
 }

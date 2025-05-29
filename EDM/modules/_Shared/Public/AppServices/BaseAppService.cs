@@ -11,12 +11,13 @@ namespace Public.AppServices
     public abstract class BaseAppService
     {
         protected readonly IUserContext _userContext;
+        protected readonly IUnitOfWork _unitOfWork;
 
-        protected BaseAppService(IUserContext userContext)
+        protected BaseAppService(IUserContext userContext, IUnitOfWork unitOfWork)
         {
             _userContext = userContext;
+            _unitOfWork = unitOfWork;
         }
-
         protected Guid CurrentUserId => _userContext.UserId;
         protected Guid CurrentDonViId => _userContext.DonViId;
 
@@ -31,7 +32,7 @@ namespace Public.AppServices
             var kieuNguoiDung_IdChucNang = JsonConvert.DeserializeObject<List<ChucNangs>>(CurrentKieuNguoiDung.IdChucNang);
             var thaoTacs = kieuNguoiDung_IdChucNang
                 .FirstOrDefault(x => x.ChucNang.MaChucNang == maChucNang)
-                .ThaoTacs ?? new List<ThaoTac>();
+                ?.ThaoTacs ?? new List<ThaoTac>();
 
             return thaoTacs;
         }

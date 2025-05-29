@@ -28,6 +28,8 @@ public partial class tbAIBot
 
     public string APIKey { get; set; }
 
+    public string GhiChu { get; set; }
+
     public Nullable<int> TrangThai { get; set; }
 
     public Nullable<System.Guid> MaDonViSuDung { get; set; }

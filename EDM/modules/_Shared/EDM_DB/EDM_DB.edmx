@@ -80,6 +80,7 @@
           <Property Name="TenAIBot" Type="nvarchar(max)" />
           <Property Name="Prompt" Type="nvarchar(max)" />
           <Property Name="APIKey" Type="nvarchar(max)" />
+          <Property Name="GhiChu" Type="nvarchar(max)" />
           <Property Name="TrangThai" Type="int" />
           <Property Name="MaDonViSuDung" Type="uniqueidentifier" />
           <Property Name="NgayTao" Type="datetime" />
@@ -512,6 +513,7 @@
           <Property Name="TenAIBot" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Prompt" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="APIKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GhiChu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TrangThai" Type="Int32" />
           <Property Name="MaDonViSuDung" Type="Guid" />
           <Property Name="NgayTao" Type="DateTime" Precision="3" />
@@ -894,6 +896,7 @@
                 <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
                 <ScalarProperty Name="MaDonViSuDung" ColumnName="MaDonViSuDung" />
                 <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
+                <ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
                 <ScalarProperty Name="APIKey" ColumnName="APIKey" />
                 <ScalarProperty Name="Prompt" ColumnName="Prompt" />
                 <ScalarProperty Name="TenAIBot" ColumnName="TenAIBot" />

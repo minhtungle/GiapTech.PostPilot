@@ -123,9 +123,178 @@ class QuanLyAIBot {
                     sys.alert({ mess: "Bạn chưa chọn bản ghi nào", status: "warning", timeout: 1500 })
                 }
             },
+        };
+        quanLyAIBot.loaiAiBot = {
+            ...quanLyAIBot.loaiAiBot,
+            dataTable: null,
+            getList: function () {
+                $.ajax({
+                    ...ajaxDefaultProps({
+                        url: "/QuanLyAIBot/getList_LoaiAIBot",
+                        type: "GET", // Phải là POST để gửi JSON
+                        //contentType: "application/json; charset=utf-8",  // Định dạng JSON
+                        //dataType: "json",
+                    }),
+                    //contentType: false,
+                    //processData: false,
+                    success: function (res) {
+                        $("#loaiaibot-getList-container").html(res);
+                        quanLyAIBot.loaiAiBot.dataTable = new DataTableCustom({
+                            name: "loaiaibot-getList",
+                            table: $("#loaiaibot-getList"),
+                            props: {
+                                dom: `
+                                <'row'<'col-sm-12'rt>>
+                                <'row'<'col-sm-12 col-md-6 text-left'i><'col-sm-12 col-md-6 pt-2'p>>`,
+                                lengthMenu: [
+                                    [5, 10],
+                                    [5, 10],
+                                ],
+                            }
+                        }).dataTable;
+                    }
+                });
+            },
 
+            displayModal_CRUD: function (loai = "", idLoaiAIBot = '00000000-0000-0000-0000-000000000000') {
+                if (loai == "update") {
+                    var idLoaiAIBots = [];
+                    quanLyAIBot.loaiAiBot.dataTable.rows().iterator('row', function (context, index) {
+                        var $row = $(this.row(index).node());
+                        if ($row.has("input.checkRow-aibot-getList:checked").length > 0) {
+                            idLoaiAIBots.push($row.attr('id'));
+                        };
+                    });
+                    if (idLoaiAIBots.length != 1) {
+                        sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
+                        return;
+                    }
+                    else idLoaiAIBot = idLoaiAIBots[0];
+                };
+                var input = {
+                    Loai: loai,
+                    IdLoaiAIBot: idLoaiAIBot,
+                };
+                $.ajax({
+                    ...ajaxDefaultProps({
+                        url: "/QuanLyAIBot/displayModal_CRUD_LoaiAIBot",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            input
+                        },
+                    }),
+                    success: function (res) {
+                        $("#loaiaibot-crud").html(res);
+                        /**
+                          * Gán các thuộc tính
+                          */
+                        sys.displayModal({
+                            name: '#loaiaibot-crud'
+                        });
+                    }
+                })
+            },
+            save: function (loai) {
+                var modalValidtion = htmlEl.activeValidationStates("#aibot-crud");
+                if (modalValidtion) {
+                    let $modal = $("#aibot-crud");
+                    let aiBot = {
+                        AIBot: {
+                            IdAIBot: $("#input-idaibot", $modal).val(),
+                            TenAIBot: $("#select-tenaibot", $modal).val().trim(),
+                            Prompt: $("#input-prompt", $modal).val().trim(),
+                            GhiChu: $("#input-ghichu", $modal).val().trim(),
+                        },
+                    };
+                    let loaiAIBots= $("#select-loaiaibot", $modal).val();
+                    sys.confirmDialog({
+                        mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
+                        callback: function () {
+                            var formData = new FormData();
+                            formData.append("aiBot", JSON.stringify(aiBot));
+                            formData.append("loaiAIBots", JSON.stringify(loaiAIBots));
+
+                            $.ajax({
+                                ...ajaxDefaultProps({
+                                    url: loai == "create" ? "/QuanLyAIBot/create_AIBot" : "/QuanLyAIBot/update_AIBot",
+                                    type: "POST",
+                                    data: formData,
+                                }),
+                                //contentType: "application/json; charset=utf-8",  // Chỉ định kiểu nội dung là JSON
+                                contentType: false,
+                                processData: false,
+                                success: function (res) {
+                                    if (res.status == "success") {
+                                        quanLyAIBot.aiBot.getList();
+                                        sys.displayModal({
+                                            name: '#aibot-crud',
+                                            displayStatus: "hide"
+                                        });
+                                        sys.alert({ status: res.status, mess: res.mess });
+                                    } else {
+                                        if (res.status == "warning") {
+                                            htmlEl.inputValidationStates(
+                                                $("#input-tenaibot"),
+                                                "#aibot-crud",
+                                                res.mess,
+                                                {
+                                                    status: true,
+                                                    isvalid: false
+                                                }
+                                            )
+                                        };
+                                        sys.alert({ status: res.status, mess: res.mess });
+                                    };
+                                }
+                            });
+                        }
+                    });
+
+                };
+            },
+            delete: function (loai, idLoaiAIBot = '00000000-0000-0000-0000-000000000000') {
+                var idLoaiAIBots = [];
+                // Lấy id
+                if (loai == "single") {
+                    idLoaiAIBots.push(idLoaiAIBot)
+                } else {
+                    quanLyAIBot.aiBot.dataTable.rows().iterator('row', function (context, index) {
+                        var $row = $(this.row(index).node());
+                        if ($row.has("input.checkRow-aibot-getList:checked").length > 0) {
+                            idLoaiAIBots.push($row.attr('id'));
+                        };
+                    });
+                };
+                // Kiểm tra id
+                if (idLoaiAIBots.length > 0) {
+                    var f = new FormData();
+                    f.append("idAIBots", JSON.stringify(idLoaiAIBots));
+                    sys.confirmDialog({
+                        mess: `Bạn có thực sự muốn xóa bản ghi này hay không ?`,
+                        callback: function () {
+                            $.ajax({
+                                ...ajaxDefaultProps({
+                                    url: "/QuanLyAIBot/delete_LoaiAIBots",
+                                    type: "POST",
+                                    data: f,
+                                }),
+                                contentType: false,
+                                processData: false,
+                                success: function (res) {
+                                    sys.alert({ status: res.status, mess: res.mess })
+                                    quanLyAIBot.loaiAiBot.getList();
+                                }
+                            })
+                        }
+                    })
+                } else {
+                    sys.alert({ mess: "Bạn chưa chọn bản ghi nào", status: "warning", timeout: 1500 })
+                }
+            },
         };
         quanLyAIBot.aiBot.getList();
+        quanLyAIBot.loaiAiBot.getList();
         sys.activePage({
             page: quanLyAIBot.page.attr("id"),
             pageGroup: quanLyAIBot.pageGroup

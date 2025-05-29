@@ -63,6 +63,14 @@ namespace EDM.Controllers
         public ActionResult Index()
         {
             string view = "";
+
+            #region Lấy thông tin chung
+            #region Quốc gia
+            List<default_tbQuocGia> quocGias = db.default_tbQuocGia.Where(x => x.TrangThai != 0).ToList() ?? new List<default_tbQuocGia>();
+            QUOCGIAs = quocGias;
+            #endregion
+            #endregion
+
             // Kiểm tra quyền truy cập
             if (per.NguoiDung.IdNguoiDung == Guid.Empty)
             {
@@ -75,24 +83,19 @@ namespace EDM.Controllers
                 Session["Permission"] = per; // Phải set như này thì từ sau mới sử dụng được session
                 view = "~/Views/Auth/auth.login.cshtml";
                 if (per.DonViSuDung.SuDungTrangNguoiDung.Value) view = "~/Views/User/TrangKhoaHoc/__Home/home.cshtml";
+                return View(view);
             }
             else
             {
                 per.Role = "ADMIN";
-                CHUCNANGS_HTML = getSideBarMenu();
                 view = $"{VIEW_PATH}/trangchu.cshtml";
+                ViewBag.CHUCNANGS_HTML = taoHTMLChucNang_TrangChu();
                 // Khởi tạo timer khi admin được tạo
                 //kiemTraNguoiDungHoatDongController.TienHanhKiemTra(per: per);
-            };
+                return View(view);
+            }
+            ;
 
-            #region Lấy thông tin chung
-            #region Quốc gia
-            List<default_tbQuocGia> quocGias = db.default_tbQuocGia.Where(x => x.TrangThai != 0).ToList() ?? new List<default_tbQuocGia>();
-            #endregion
-            #endregion
-
-            QUOCGIAs = quocGias;
-            return View(view);
         }
 
         #region Admin
@@ -123,9 +126,63 @@ namespace EDM.Controllers
             foreach (var _chucNang in chucNangs)
             {
                 get_ChucNangs(_chucNang);
-            };
+            }
+            ;
             chucNang.ChucNangs = chucNangs;
             return chucNang;
+        }
+        [HttpGet]
+        public string taoHTMLChucNang_TrangChu()
+        {
+            if (CHUCNANGS_HTML == "")
+            {
+                default_tbChucNangExtend chucNang = get_ChucNangs(new default_tbChucNangExtend());
+                string taoTree(List<default_tbChucNangExtend> ChucNangs)
+                {
+                    string HTML = string.Empty;
+                    foreach (var _chucNang in ChucNangs)
+                    {
+                        int soLuongChilds = _chucNang.ChucNangs.Count;
+                        //if (soLuongChilds > 0)
+                        //{
+                        //    HTML += $"<div class=\"row\">{taoTree(_chucNang.ChucNangs)}</div>";
+                        //}
+                        //else
+                        //{
+                        //    HTML +=
+                        //    $"<!--{_chucNang.TenChucNang}-->" +
+                        //    $"   <div class=\"col-sm-12 col-md-4 animate-hover-container\">" +
+                        //    $"       <a class=\"card text-center animate-hover\" href=\"~/{_chucNang.MaChucNang}/Index\">" +
+                        //    $"           <div class=\"card-body\">" +
+                        //    $"               <i class=\"{_chucNang.Icon} fs-1\"></i>" +
+                        //    $"           </div>" +
+                        //    $"           <div class=\"card-footer\">" +
+                        //    $"               <h4 class=\"card-title\"><i class=\"bi bi-calendar-range-fill\"></i> {_chucNang.TenChucNang}</h4>" +
+                        //    $"           </div>" +
+                        //    $"       </a>" +
+                        //    $"   </div>";
+                        //}
+                        //;
+
+                        HTML +=
+                        (soLuongChilds > 0 ? taoTree(_chucNang.ChucNangs) :
+                        $"<!--{_chucNang.TenChucNang}-->" +
+                        $"   <div class=\"col-sm-12 col-md-4 animate-hover-container\">" +
+                        $"       <a class=\"card text-center animate-hover\" href=\"/{_chucNang.MaChucNang}/Index\">" +
+                        $"           <div class=\"card-body\">" +
+                        $"               <i class=\"{_chucNang.Icon} fs-1\"></i>" +
+                        $"           </div>" +
+                        $"           <div class=\"card-footer\">" +
+                        $"               <h4 class=\"card-title\"><i class=\"bi bi-calendar-range-fill\"></i> {_chucNang.TenChucNang}</h4>" +
+                        $"           </div>" +
+                        $"       </a>" +
+                        $"   </div>");
+                    }
+                    return HTML;
+                }
+                return taoTree(chucNang.ChucNangs);
+            }
+            return CHUCNANGS_HTML;
         }
         [HttpGet]
         public string getSideBarMenu()

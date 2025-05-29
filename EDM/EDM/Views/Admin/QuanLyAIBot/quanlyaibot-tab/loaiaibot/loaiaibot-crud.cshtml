@@ -1,7 +1,7 @@
 ﻿@using EDM_DB
-@model Applications.QuanLyAIBot.Dtos.DisplayModel_CRUD_AIBot_Output_Dto
+@model Applications.QuanLyAIBot.Dtos.DisplayModel_CRUD_LoaiAIBot_Output_Dto
 @{
-    var aiBot = Model.AIBot.AIBot;
+    var loaiAiBot = Model.LoaiAIBot;
     var loai = Model.Loai;
     List<string> loaiThaoTac_Disabled = new List<string> { "read" };
 }
@@ -14,7 +14,7 @@
             </h5>
             <div class="list-group list-group-horizontal mb-1 text-center col-md-6 col-sm-12 justify-content-sm-end justify-content-center" id="" role="tablist">
                 <a class="list-group-item list-group-item-action active" id="thongtin-list"
-                   data-bs-toggle="list" href="#thongtin" role="tab">Thông tin AI Bot</a>
+                   data-bs-toggle="list" href="#thongtin" role="tab">Thông tin Loại AI Bot</a>
             </div>
         </div>
         <div class="modal-body">
@@ -23,18 +23,31 @@
                      aria-labelledby="thongtin-list">
                     <div class="row" intro-container="thongtin-chung">
                         <!--Id-->
-                        <input id="input-idaibot" value="@Guid.Empty" hidden />
+                        <input id="input-idloaiaibot" value="@Guid.Empty" hidden />
 
-                        <!--Tên AI Bot-->
+                        <!--Tên Loại AI Bot-->
                         <div class="col-12 col-sm-12 col-md-12">
                             <div class="position-relative">
                                 <div class="form-group mb-3">
-                                    <label class="required" for="input-tenaibot">Tên AI Bot</label>
-                                    <input class="form-control" id="input-tenaibot"
-                                           placeholder="Nhập nội dung ..."
-                                           value="@(aiBot.TenAIBot ?? "")"
+                                    <label class="required" for="input-tenloaiaibot">Tên Loại AI Bot</label>
+                                    <input class="form-control" id="input-tenloaiaibot"
+                                           placeholder="Nhập thông tin ..."
+                                           value="@(loaiAiBot.TenLoaiAIBot ?? "")"
                                            @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>
-                                    <div class="invalid-feedback feedback" for="input-tenaibot">Không được để trống</div>
+                                    <div class="invalid-feedback feedback" for="input-tenloaiaibot">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Ghi chú-->
+                        <div class="col-12 col-sm-12 col-md-12">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label for="input-ghichu">Ghi chú</label>
+                                    <textarea class="form-control min-h-50 max-h-100" id="input-ghichu" rows="2"
+                                              placeholder="Nhập thông tin ..."
+                                              value="@(loaiAiBot.GhiChu ?? "")"
+                                              @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")>@(loaiAiBot.GhiChu ?? "")</textarea>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -44,7 +57,7 @@
 
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary ml-1" onclick="quanLyChienDich.chienDich.save(@string.Format("'{0}'", "create"))">
+            <button type="button" class="btn btn-primary ml-1" onclick="quanLyAIBot.loaiAiBot.save(@string.Format("'{0}'", "create"))">
                 <span class="">Lưu</span>
             </button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
