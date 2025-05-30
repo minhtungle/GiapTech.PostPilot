@@ -1,5 +1,7 @@
 ﻿using Applications.QuanLyAIBot.Interfaces;
 using Applications.QuanLyAIBot.Services;
+using Applications.QuanLyAITool.Interfaces;
+using Applications.QuanLyAITool.Services;
 using Applications.QuanLyBaiDang.Interfaces;
 using Applications.QuanLyBaiDang.Serivices;
 using Autofac;
@@ -12,6 +14,7 @@ using Infrastructure.Repositories;
 using Public.AppServices;
 using Public.Interfaces;
 using QuanLyAIBot.Controllers;
+using QuanLyAITool.Controllers;
 using QuanLyBaiDang.Controllers;
 using System;
 using System.Data.Entity;
@@ -30,6 +33,7 @@ namespace EDM.App_Start
             //builder.RegisterControllers(typeof(MvcApplication).Assembly);
             builder.RegisterControllers(typeof(QuanLyBaiDangController).Assembly);
             builder.RegisterControllers(typeof(QuanLyAIBotController).Assembly);
+            builder.RegisterControllers(typeof(QuanLyAIToolController).Assembly);
             #endregion
 
             #region Đăng ký Infrastructure
@@ -64,13 +68,14 @@ namespace EDM.App_Start
             builder.RegisterType<PermissionCheckerAppService>()
                    .As<IPermissionCheckerAppService>()
                    .InstancePerRequest(); // hoặc InstancePerLifetimeScope()
-
             builder.RegisterType<QuanLyBaiDangAppService>()
                    .As<IQuanLyBaiDangAppService>()
                    .InstancePerRequest();
-         
             builder.RegisterType<QuanLyAIBotAppService>()
                    .As<IQuanLyAIBotAppService>()
+                   .InstancePerRequest();
+            builder.RegisterType<QuanLyAIToolAppService>()
+                   .As<IQuanLyAIToolAppService>()
                    .InstancePerRequest();
             #endregion
 
@@ -78,15 +83,21 @@ namespace EDM.App_Start
             builder.RegisterType<EfRepository<tbBaiDang, Guid>>()
                    .As<IRepository<tbBaiDang, Guid>>()
                    .InstancePerRequest();
-            builder.RegisterType<EfRepository<tbAIBot, Guid>>()
-                  .As<IRepository<tbAIBot, Guid>>()
-                  .InstancePerRequest();
             builder.RegisterType<EfRepository<tbNguoiDung, Guid>>()
                    .As<IRepository<tbNguoiDung, Guid>>()
                    .InstancePerRequest();
             builder.RegisterType<EfRepository<tbKieuNguoiDung, Guid>>()
                    .As<IRepository<tbKieuNguoiDung, Guid>>()
                    .InstancePerRequest();
+            builder.RegisterType<EfRepository<tbAIBot, Guid>>()
+                  .As<IRepository<tbAIBot, Guid>>()
+                  .InstancePerRequest();
+            builder.RegisterType<EfRepository<tbLoaiAIBot, Guid>>()
+                  .As<IRepository<tbLoaiAIBot, Guid>>()
+                  .InstancePerRequest();
+            builder.RegisterType<EfRepository<tbAITool, Guid>>()
+                  .As<IRepository<tbAITool, Guid>>()
+                  .InstancePerRequest();
             #endregion
 
             // 🔨 Build container

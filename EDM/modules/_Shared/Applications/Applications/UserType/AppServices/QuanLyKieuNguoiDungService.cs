@@ -16,8 +16,11 @@ namespace Applications.UserType.AppServices
     public class QuanLyKieuNguoiDungService : BaseAppService, IQuanLyKieuNguoiDungAppService
     {
         private readonly IRepository<tbKieuNguoiDung, Guid> _kieuNguoiDungRepo;
-        public QuanLyKieuNguoiDungService(IUserContext userContext, IRepository<tbKieuNguoiDung, Guid> kieuNguoiDungRepo)
-          : base(userContext)
+        public QuanLyKieuNguoiDungService(
+            IUserContext userContext,
+            IUnitOfWork unitOfWork,
+            IRepository<tbKieuNguoiDung, Guid> kieuNguoiDungRepo)
+          : base(userContext, unitOfWork)
         {
             _kieuNguoiDungRepo = kieuNguoiDungRepo;
         }

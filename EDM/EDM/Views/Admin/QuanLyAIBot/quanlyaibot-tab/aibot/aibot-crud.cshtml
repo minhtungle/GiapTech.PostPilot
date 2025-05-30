@@ -57,6 +57,23 @@
                                 </div>
                             </div>
                         </div>
+                        <!--Loại AI Tool-->
+                        <div class="col-sm-12 col-md-12">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="select-loaiaitool">AI Tool</label>
+                                    <select class="form-control form-select2"
+                                            id="select-loaiaitool" name="select-loaiaitool">
+                                        <option disabled @(loaiAIBots.Count > 0 ? "" : "")>Chọn thông tin</option>
+                                        @foreach (var loaiAIBot in loaiAIBots)
+                                        {
+                                            <option value="@loaiAIBot.IdLoaiAIBot">@loaiAIBot.TenLoaiAIBot</option>
+                                        }
+                                    </select>
+                                    <div class="invalid-feedback feedback" for="select-loaiaitool">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
                         <!--Prompt-->
                         <div class="col-12 col-sm-12 col-md-6">
                             <div class="position-relative">
@@ -95,7 +112,7 @@ Cho tôi bài viết về ... dựa theo dữ liệu cung cấp trong
                                         var plh2 = $@"Tiền bạc, động lực, giá trị";
                                     }
                                     <textarea class="form-control min-h-100 max-h-300" id="input-keywords" rows="10"
-                                              placeholder="@plh2" title="@plh2" readonly></textarea>
+                                              placeholder="@plh2" title="@plh2"></textarea>
                                     <div class="invalid-feedback feedback" for="input-keywords">Không được để trống</div>
                                 </div>
                             </div>

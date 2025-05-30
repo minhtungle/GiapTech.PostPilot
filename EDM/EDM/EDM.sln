@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuanLyAIBot", "..\modules\A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "..\modules\_Shared\Infrastructure\Infrastructure.csproj", "{05F09DF5-CAA9-4D04-B003-307B57842F48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuanLyAITool", "..\modules\Admin\QuanLyAITool\QuanLyAITool.csproj", "{E985E186-0D7C-4441-AEA4-2A1D5895D761}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{05F09DF5-CAA9-4D04-B003-307B57842F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05F09DF5-CAA9-4D04-B003-307B57842F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05F09DF5-CAA9-4D04-B003-307B57842F48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E985E186-0D7C-4441-AEA4-2A1D5895D761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E985E186-0D7C-4441-AEA4-2A1D5895D761}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E985E186-0D7C-4441-AEA4-2A1D5895D761}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E985E186-0D7C-4441-AEA4-2A1D5895D761}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,6 +129,7 @@ Global
 		{026D4DD8-AF19-44FD-BAD9-C72334392D2E} = {CA9E4AD5-3695-4915-A17F-0A6CD85BB6E2}
 		{40751EEA-A8D5-4A2C-BB5F-CE96B08F1BF3} = {CA9E4AD5-3695-4915-A17F-0A6CD85BB6E2}
 		{05F09DF5-CAA9-4D04-B003-307B57842F48} = {6A1226BC-83CB-4412-8A72-04B3D05C3DE7}
+		{E985E186-0D7C-4441-AEA4-2A1D5895D761} = {CA9E4AD5-3695-4915-A17F-0A6CD85BB6E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {323B6BFE-3FBF-4BD3-987B-F7DC6F2FB66D}

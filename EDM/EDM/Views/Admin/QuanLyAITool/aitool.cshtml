@@ -1,0 +1,31 @@
+﻿@using Public.Models
+@model Applications.QuanLyAITool.Dtos.Index_OutPut_Dto
+@{
+    ViewBag.Title = "Quản lý AI Tool";
+    Layout = "~/Views/_Shared/Admin/admin.cshtml";
+    var thaoTacs = Model.ThaoTacs;
+}
+@section hTitle {}
+@section hBreadcrumb {
+    <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Quản lý AI Tool</li>
+}
+@section styles {
+    @*<link href="~/Content/Admin/QuanLyAITool/quanlyaitool.css" rel="stylesheet" />*@
+}
+@section scripts {
+    <script src="~/Content/Admin/QuanLyAITool/quanlyaitool.js"></script>
+    <script>
+        var quanLyAITool = new QuanLyAITool();
+        quanLyAITool.init();
+    </script>
+}
+<section class="section" page-group="page-group-quanlyaitool" id="page-quanlyaitool" data-aos="fade-up">
+    <div class="card">
+        <div class="card-body" id="aitool-getList-container">
+        </div>
+    </div>
+</section>
+<!--aitool-crud-->
+<div class="modal fade text-left" id="aitool-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>

@@ -1,7 +1,8 @@
 ﻿@using EDM_DB
+@model Applications.UserAccount.Dtos.DisplayModel_CRUD_NguoiDung_Output_Dto
 @{
-    string loai = ViewBag.loai;
-    tbNguoiDung nguoiDung = ViewBag.nguoiDung;
+    string loai = Model.Loai;
+    var nguoiDung = Model.NguoiDung.NguoiDung;
     string ngaySinh = nguoiDung.NgaySinh == null ? "" : nguoiDung.NgaySinh.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
     var COCAUTOCHUCs = Session["COCAUTOCHUCs"] as List<tbCoCauToChuc>;
     var KIEUNGUOIDUNGs = Session["KIEUNGUOIDUNGs"] as List<tbKieuNguoiDung>;

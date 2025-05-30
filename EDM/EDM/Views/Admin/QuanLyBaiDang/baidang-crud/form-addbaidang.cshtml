@@ -8,7 +8,7 @@
         onclick="quanLyBaiDang.handleModal_CRUD.readRow(this)">
         <td class="text-center"><input class="form-check-input checkRow-baidang-getList" type="checkbox" /></td>
         <td class="w-70" style="vertical-align: top;">
-            <span data-tentruong="NoiDung">@Model.BaiDang.RowNumber</span>
+            <span data-tentruong="NoiDung">@Public.Handle.TruncateString(input: Model.BaiDang.RowNumber.ToString(), maxLength: 12)</span>
         </td>
     </tr>
 }

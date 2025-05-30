@@ -124,6 +124,9 @@
     <Compile Include="tbAIBot.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
+    <Compile Include="tbAITool.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
     <Compile Include="tbApiCredential.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
@@ -143,6 +146,15 @@
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
     <Compile Include="tbDonViTien.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tbGoiDichVu.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tbGoiDichVuAIBot.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tbGoiDichVuAITool.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
     <Compile Include="tbKieuNguoiDung.cs">

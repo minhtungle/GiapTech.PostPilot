@@ -18,8 +18,11 @@ namespace Applications.QuanLyBaiDang.Serivices
     {
         private readonly IRepository<tbBaiDang, Guid> _baiDangRepo;
 
-        public QuanLyBaiDangAppService(IUserContext userContext, IRepository<tbBaiDang, Guid> baiDangRepo)
-            : base(userContext)
+        public QuanLyBaiDangAppService(
+            IUserContext userContext,
+            IUnitOfWork unitOfWork,
+            IRepository<tbBaiDang, Guid> baiDangRepo)
+            : base(userContext, unitOfWork)
         {
             _baiDangRepo = baiDangRepo;
         }

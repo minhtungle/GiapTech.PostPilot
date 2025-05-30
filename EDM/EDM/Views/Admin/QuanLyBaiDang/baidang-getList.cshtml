@@ -59,9 +59,11 @@
             {
                 <tr id="@baidang.BaiDang.IdBaiDang">
                     <td class="text-center"><input class="form-check-input checkRow-baidang-getList" type="checkbox" /></td>
-                    <td class="text-left">@baidang.BaiDang.IdBaiDang</td>
+                    <td class="text-left">
+                        @Public.Handle.TruncateString(maxLength: 10, input: baidang.BaiDang.IdBaiDang.ToString())
+                    </td>
                     <td class="text-left" title="@baidang.BaiDang.NoiDung">
-                        @Public.Handle.TruncateString(maxLength: 40, input: baidang.BaiDang.NoiDung)
+                        @Public.Handle.TruncateString(maxLength: 28, input: baidang.BaiDang.NoiDung)
                     </td>
                     <td class="text-left">@baidang.BaiDang.ThoiGian.Value</td>
                     <td class="text-center">
@@ -88,7 +90,7 @@
                     </td>
                     <td class="text-left">
                         <a href="@baidang.BaiDang.LienKetBaiDang_TrenNenTang" target="_blank" rel="noopener noreferrer">
-                            @Public.Handle.TruncateString(maxLength: 40, input: baidang.BaiDang.LienKetBaiDang_TrenNenTang)
+                            @Public.Handle.TruncateString(maxLength: 28, input: baidang.BaiDang.LienKetBaiDang_TrenNenTang)
                         </a>
                     </td>
                 </tr>

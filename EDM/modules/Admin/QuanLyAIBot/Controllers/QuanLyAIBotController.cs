@@ -1,7 +1,6 @@
 ﻿using Applications.QuanLyAIBot.Dtos;
 using Applications.QuanLyAIBot.Interfaces;
 using Applications.QuanLyAIBot.Models;
-using Applications.QuanLyBaiDang.Models;
 using EDM_DB;
 using Newtonsoft.Json;
 using Public.Controllers;
@@ -24,17 +23,6 @@ namespace QuanLyAIBot.Controllers
     {
         #region Biến public để in hoa
         private readonly string VIEW_PATH = "~/Views/Admin/QuanLyAIBot";
-        private List<default_tbChucNang> CHUCNANGs
-        {
-            get
-            {
-                return Session["CHUCNANGs"] as List<default_tbChucNang> ?? new List<default_tbChucNang>();
-            }
-            set
-            {
-                Session["CHUCNANGs"] = value;
-            }
-        }
         private List<ThaoTac> THAOTACs
         {
             get
@@ -108,7 +96,7 @@ namespace QuanLyAIBot.Controllers
                 Loai = input.Loai,
                 LoaiAIBot = loaiAIBot.FirstOrDefault() ?? new tbLoaiAIBot()
             };
-            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/aibot/aibot-crud.cshtml", output);
+            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/loaiaibot/loaiaibot-crud.cshtml", output);
         }
         [HttpPost]
         public async Task<ActionResult> create_AIBot()
@@ -124,6 +112,28 @@ namespace QuanLyAIBot.Controllers
                     return Json(new { status = "error", mess = "Tên đã tồn tại" }, JsonRequestBehavior.AllowGet);
 
                 await _quanLyAIBotAppService.Create_AIBot(aiBot: aiBot_NEW);
+                return Json(new { status = "success", mess = "Thêm mới thành công" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error", mess = "Đã xảy ra lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+            ;
+        }
+        [HttpPost]
+        public async Task<ActionResult> create_LoaiAIBot()
+        {
+            try
+            {
+                var loaiAiBot_NEW = JsonConvert.DeserializeObject<tbLoaiAIBot>(Request.Form["loaiAiBot"]);
+                if (loaiAiBot_NEW == null)
+                    return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
+
+                var isExisted = await _quanLyAIBotAppService.IsExisted_LoaiAIBot(loaiAIBot: loaiAiBot_NEW);
+                if (isExisted)
+                    return Json(new { status = "error", mess = "Tên đã tồn tại" }, JsonRequestBehavior.AllowGet);
+
+                await _quanLyAIBotAppService.Create_LoaiAIBot(loaiAIBot: loaiAiBot_NEW);
                 return Json(new { status = "success", mess = "Thêm mới thành công" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

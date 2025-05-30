@@ -84,6 +84,64 @@ class QuanLyAIBot {
                     }
                 })
             },
+            save: function (loai) {
+                var modalValidtion = htmlEl.activeValidationStates("#aibot-crud");
+                if (modalValidtion) {
+                    let $modal = $("#aibot-crud");
+                    let aiBot = {
+                        AIBot: {
+                            IdAIBot: $("#input-idaibot", $modal).val(),
+                            TenAIBot: $("#input-tenaibot", $modal).val().trim(),
+                            Prompt: $("#input-prompt", $modal).val().trim(),
+                            GhiChu: $("#input-ghichu", $modal).val().trim(),
+                        },
+                    };
+                    let loaiAIBots = $("#select-loaiaibot", $modal).val();
+                    sys.confirmDialog({
+                        mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
+                        callback: function () {
+                            var formData = new FormData();
+                            formData.append("aiBot", JSON.stringify(aiBot));
+                            formData.append("loaiAIBots", JSON.stringify(loaiAIBots));
+
+                            $.ajax({
+                                ...ajaxDefaultProps({
+                                    url: loai == "create" ? "/QuanLyAIBot/create_AIBot" : "/QuanLyAIBot/update_AIBot",
+                                    type: "POST",
+                                    data: formData,
+                                }),
+                                //contentType: "application/json; charset=utf-8",  // Chỉ định kiểu nội dung là JSON
+                                contentType: false,
+                                processData: false,
+                                success: function (res) {
+                                    if (res.status == "success") {
+                                        quanLyAIBot.aiBot.getList();
+                                        sys.displayModal({
+                                            name: '#aibot-crud',
+                                            displayStatus: "hide"
+                                        });
+                                        sys.alert({ status: res.status, mess: res.mess });
+                                    } else {
+                                        if (res.status == "warning") {
+                                            htmlEl.inputValidationStates(
+                                                $("#input-tenaibot"),
+                                                "#aibot-crud",
+                                                res.mess,
+                                                {
+                                                    status: true,
+                                                    isvalid: false
+                                                }
+                                            )
+                                        };
+                                        sys.alert({ status: res.status, mess: res.mess });
+                                    };
+                                }
+                            });
+                        }
+                    });
+
+                };
+            },
             delete: function (loai, idAIBot = '00000000-0000-0000-0000-000000000000') {
                 var idAIBots = [];
                 // Lấy id
@@ -196,28 +254,23 @@ class QuanLyAIBot {
                 })
             },
             save: function (loai) {
-                var modalValidtion = htmlEl.activeValidationStates("#aibot-crud");
+                var modalValidtion = htmlEl.activeValidationStates("#loaiaibot-crud");
                 if (modalValidtion) {
-                    let $modal = $("#aibot-crud");
-                    let aiBot = {
-                        AIBot: {
-                            IdAIBot: $("#input-idaibot", $modal).val(),
-                            TenAIBot: $("#select-tenaibot", $modal).val().trim(),
-                            Prompt: $("#input-prompt", $modal).val().trim(),
-                            GhiChu: $("#input-ghichu", $modal).val().trim(),
-                        },
+                    let $modal = $("#loaiaibot-crud");
+                    let loaiAiBot = {
+                        IdLoaiAIBot: $("#input-idloaiaibot", $modal).val(),
+                        TenLoaiAIBot: $("#input-tenloaiaibot", $modal).val().trim(),
+                        GhiChu: $("#input-ghichu", $modal).val().trim(),
                     };
-                    let loaiAIBots= $("#select-loaiaibot", $modal).val();
                     sys.confirmDialog({
                         mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
                         callback: function () {
                             var formData = new FormData();
-                            formData.append("aiBot", JSON.stringify(aiBot));
-                            formData.append("loaiAIBots", JSON.stringify(loaiAIBots));
+                            formData.append("loaiAiBot", JSON.stringify(loaiAiBot));
 
                             $.ajax({
                                 ...ajaxDefaultProps({
-                                    url: loai == "create" ? "/QuanLyAIBot/create_AIBot" : "/QuanLyAIBot/update_AIBot",
+                                    url: loai == "create" ? "/QuanLyAIBot/create_LoaiAIBot" : "/QuanLyAIBot/update_LoaiAIBot",
                                     type: "POST",
                                     data: formData,
                                 }),
@@ -226,26 +279,23 @@ class QuanLyAIBot {
                                 processData: false,
                                 success: function (res) {
                                     if (res.status == "success") {
-                                        quanLyAIBot.aiBot.getList();
+                                        quanLyAIBot.loaiAiBot.getList();
                                         sys.displayModal({
-                                            name: '#aibot-crud',
+                                            name: '#loaiaibot-crud',
                                             displayStatus: "hide"
                                         });
-                                        sys.alert({ status: res.status, mess: res.mess });
-                                    } else {
-                                        if (res.status == "warning") {
-                                            htmlEl.inputValidationStates(
-                                                $("#input-tenaibot"),
-                                                "#aibot-crud",
-                                                res.mess,
-                                                {
-                                                    status: true,
-                                                    isvalid: false
-                                                }
-                                            )
-                                        };
-                                        sys.alert({ status: res.status, mess: res.mess });
+                                    } else if (res.status == "warning") {
+                                        htmlEl.inputValidationStates(
+                                            $("#input-tenloaiaibot"),
+                                            "#loaiaibot-crud",
+                                            res.mess,
+                                            {
+                                                status: true,
+                                                isvalid: false
+                                            }
+                                        )
                                     };
+                                    sys.alert({ status: res.status, mess: res.mess });
                                 }
                             });
                         }

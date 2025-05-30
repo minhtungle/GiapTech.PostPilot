@@ -23,6 +23,7 @@ using System.EnterpriseServices.Internal;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -154,11 +155,53 @@ namespace QuanLyBaiDang.Controllers
             };
             return Json(output, JsonRequestBehavior.AllowGet);
         }
-        [HttpPost]
-        public async Task<ActionResult> create_BaiDang(HttpPostedFileBase[] files, Guid[] rowNumbers, HttpClient httpClient)
+        public async Task<FreeImageUploadResponse> UploadToFreeImageHost(HttpPostedFileBase file)
         {
-            string status = "success";
-            string mess = "Thêm mới bản ghi thành công";
+            if (file == null || file.ContentLength == 0)
+                return null;
+
+            var _apiKey = GetDecryptedCredential("FreeImage", "ApiKey");
+
+            using (var ms = new MemoryStream())
+            {
+                if (file.InputStream.CanSeek)
+                    file.InputStream.Position = 0;
+
+                file.InputStream.CopyTo(ms);
+                ms.Position = 0;
+
+                using (var httpClient = new HttpClient())
+                using (var formData = new MultipartFormDataContent())
+                using (var streamContent = new StreamContent(ms))
+                {
+                    streamContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+                    formData.Add(streamContent, "source", file.FileName);
+                    formData.Add(new StringContent("upload"), "action");
+                    formData.Add(new StringContent(_apiKey), "key");
+
+                    var response = await httpClient.PostAsync("https://freeimage.host/api/1/upload", formData);
+                    var json = await response.Content.ReadAsStringAsync();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        dynamic result = JsonConvert.DeserializeObject<FreeImageUploadResponse>(json);
+                        //return JObject.Parse(json);
+                        return result;
+                    }
+                    else
+                    {
+                        dynamic errorResult = JsonConvert.DeserializeObject<FreeImageUploadResponse>(json);
+                        //return JObject.Parse(json);
+                        return errorResult; // Hoặc trả về null, hoặc ném exception tùy nhu cầu
+                    }
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> create_BaiDang(HttpPostedFileBase[] files, Guid[] rowNumbers)
+        {
             using (var scope = db.Database.BeginTransaction())
             {
                 try
@@ -167,131 +210,90 @@ namespace QuanLyBaiDang.Controllers
 
                     if (baiDang_NEWs == null)
                     {
-                        status = "error";
-                        mess = "Chưa có bản ghi nào";
+                        return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
                     }
-                    else
+
+                    foreach (var baiDang_NEW in baiDang_NEWs)
                     {
-                        foreach (var baiDang_NEW in baiDang_NEWs)
+                        var baiDang = new tbBaiDang
                         {
-                            List<string> _linkTeps = new List<string>();
+                            IdBaiDang = Guid.NewGuid(),
+                            IdChienDich = baiDang_NEW.BaiDang.IdChienDich,
+                            IdNenTang = baiDang_NEW.BaiDang.IdNenTang,
+                            Prompt = baiDang_NEW.BaiDang.Prompt,
+                            NoiDung = baiDang_NEW.BaiDang.NoiDung,
+                            ThoiGian = baiDang_NEW.BaiDang.ThoiGian,
+                            TuTaoAnhAI = baiDang_NEW.BaiDang.TuTaoAnhAI,
+                            TrangThaiDangBai = (int?)TrangThaiDangBaiEnum.WaitToPost,
+                            TrangThai = 1,
+                            IdNguoiTao = per.NguoiDung.IdNguoiDung,
+                            NgayTao = DateTime.Now,
+                            MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
+                        };
+                        db.tbBaiDangs.Add(baiDang);
 
-                            #region Lưu db
-
-                            // Thêm mới
-                            var baiDang = new tbBaiDang
+                        if (files != null && (baiDang_NEW.BaiDang.TuTaoAnhAI.HasValue && !baiDang_NEW.BaiDang.TuTaoAnhAI.Value))
+                        {
+                            for (int i = 0; i < files.Length; i++)
                             {
-                                IdBaiDang = Guid.NewGuid(),
-                                IdChienDich = baiDang_NEW.BaiDang.IdChienDich,
-                                IdNenTang = baiDang_NEW.BaiDang.IdNenTang,
-                                Prompt = baiDang_NEW.BaiDang.Prompt,
-                                NoiDung = baiDang_NEW.BaiDang.NoiDung,
-                                ThoiGian = baiDang_NEW.BaiDang.ThoiGian,
-                                TuTaoAnhAI = baiDang_NEW.BaiDang.TuTaoAnhAI,
-
-                                TrangThaiDangBai = (int?)TrangThaiDangBaiEnum.WaitToPost,
-                                TrangThai = 1,
-                                IdNguoiTao = per.NguoiDung.IdNguoiDung,
-                                NgayTao = DateTime.Now,
-                                MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
-                            };
-                            db.tbBaiDangs.Add(baiDang);
-
-                            if (files != null && (baiDang_NEW.BaiDang.TuTaoAnhAI.HasValue && !baiDang_NEW.BaiDang.TuTaoAnhAI.Value))
-                            {
-                                for (int i = 0; i < files.Length; i++)
+                                var rowNumber = rowNumbers[i];
+                                if (baiDang_NEW.RowNumber == rowNumber)
                                 {
-                                    var rowNumber = rowNumbers[i];
-                                    // Lấy ảnh của bài đăng
-                                    if (baiDang_NEW.RowNumber == rowNumber)
+                                    var file = files[i];
+                                    if (file == null || file.ContentLength <= 0)
                                     {
-                                        var file = files[i];
-
-                                        if (file == null || file.ContentLength <= 0)
-                                        {
-                                            status = "error";
-                                            mess = "Chưa có file nào được chọn";
-                                            return Json(new
-                                            {
-                                                status,
-                                                mess
-                                            }, JsonRequestBehavior.AllowGet);
-                                        }
-
-                                        using (var ms = new MemoryStream())
-                                        {
-                                            file.InputStream.CopyTo(ms);
-                                            var fileBytes = ms.ToArray();
-                                            var base64Image = Convert.ToBase64String(fileBytes);
-
-                                            //string apiKey = "1e400d7c7e3474f17176880df3027c34";
-                                            string _apiKey = GetDecryptedCredential("Imgbb", "ApiKey");
-                                            var formData = new MultipartFormDataContent();
-                                            formData.Add(new StringContent(_apiKey), "key");
-                                            formData.Add(new StringContent(base64Image), "image");
-
-                                            var response = await httpClient.PostAsync("https://api.imgbb.com/1/upload", formData);
-                                            if (response.IsSuccessStatusCode)
-                                            {
-                                                var jsonString = await response.Content.ReadAsStringAsync();
-                                                dynamic result = JsonConvert.DeserializeObject(jsonString);
-                                                string imageUrl = result.data.url;
-
-                                                var tepDinhKem = new tbTepDinhKem
-                                                {
-                                                    IdTep = Guid.NewGuid(),
-                                                    FileName = Path.GetFileNameWithoutExtension(file.FileName),
-                                                    DuongDanTepOnline = imageUrl,
-
-                                                    TrangThai = 1,
-                                                    IdNguoiTao = per.NguoiDung.IdNguoiDung,
-                                                    NgayTao = DateTime.Now,
-                                                    MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
-                                                };
-
-                                                db.tbTepDinhKems.Add(tepDinhKem);
-
-                                                var baiDangTepDinhKem = new tbBaiDangTepDinhKem
-                                                {
-                                                    IdBaiDangTepDinhKem = Guid.NewGuid(),
-                                                    IdBaiDang = baiDang.IdBaiDang,
-                                                    IdTepDinhKem = tepDinhKem.IdTep,
-                                                };
-
-                                                db.tbBaiDangTepDinhKems.Add(baiDangTepDinhKem);
-                                            }
-                                            else
-                                            {
-                                                // Xử lý lỗi nếu cần
-                                                ModelState.AddModelError("", "Upload ảnh thất bại.");
-                                            }
-                                        };
+                                        return Json(new { status = "error", mess = "Chưa có file nào được chọn" }, JsonRequestBehavior.AllowGet);
                                     }
-                                    ;
+
+                                    var result = await UploadToFreeImageHost(file);
+
+                                    if (result == null)
+                                    {
+                                        return Json(new { status = "error", mess = "Không nhận được phản hồi từ server." }, JsonRequestBehavior.AllowGet);
+                                    }
+
+                                    if (result.StatusCode != 200)
+                                    {
+                                        return Json(new { status = "error", mess = "Upload thất bại: " + (result.StatusText ?? "Lỗi không xác định") }, JsonRequestBehavior.AllowGet);
+                                    }
+
+                                    string imageUrl = result.Image.Url;
+                                    var tepDinhKem = new tbTepDinhKem
+                                    {
+                                        IdTep = Guid.NewGuid(),
+                                        FileName = Path.GetFileNameWithoutExtension(file.FileName),
+                                        DuongDanTepOnline = imageUrl,
+                                        TrangThai = 1,
+                                        IdNguoiTao = per.NguoiDung.IdNguoiDung,
+                                        NgayTao = DateTime.Now,
+                                        MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
+                                    };
+                                    db.tbTepDinhKems.Add(tepDinhKem);
+
+                                    var baiDangTepDinhKem = new tbBaiDangTepDinhKem
+                                    {
+                                        IdBaiDangTepDinhKem = Guid.NewGuid(),
+                                        IdBaiDang = baiDang.IdBaiDang,
+                                        IdTepDinhKem = tepDinhKem.IdTep,
+                                    };
+                                    db.tbBaiDangTepDinhKems.Add(baiDangTepDinhKem);
                                 }
                             }
-                ;
-                            #endregion
                         }
-                        ;
-
-                        db.SaveChanges();
-                        scope.Commit();
                     }
-                    ;
+
+                    db.SaveChanges();
+                    scope.Commit();
+
+                    return Json(new { status = "success", mess = "Thêm mới bản ghi thành công" }, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
-                    status = "error";
-                    mess = ex.Message;
+                    return Json(new { status = "error", mess = ex.Message }, JsonRequestBehavior.AllowGet);
                 }
             }
-            return Json(new
-            {
-                status,
-                mess
-            }, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
         public async Task<ActionResult> create_BaiDangAsync(HttpPostedFileBase[] files, Guid[] rowNumbers, HttpClient httpClient)
         {
@@ -632,26 +634,33 @@ namespace QuanLyBaiDang.Controllers
         public void SaveEncryptedCredential(string serviceName, string credentialType, string rawKeyJson, Guid? userId = null)
         {
             var encrypted = CryptoHelper.Encrypt(rawKeyJson);
-
-            var newCred = new tbApiCredential
+            var oldCred = db.tbApiCredentials.FirstOrDefault(x => x.ServiceName == serviceName);
+            if (oldCred == null)
             {
-                IdApiCredentials = Guid.NewGuid(),
-                IdNguoiDung = Guid.Empty,
-                ServiceName = serviceName,
-                CredentialType = credentialType,
-                KeyJson = encrypted,
-                TrangThai = 1,
-                NgayTao = DateTime.Now,
-                IdNguoiTao = userId
-            };
-
-            db.tbApiCredentials.Add(newCred);
+                var newCred = new tbApiCredential
+                {
+                    IdApiCredentials = Guid.NewGuid(),
+                    IdNguoiDung = Guid.Empty,
+                    ServiceName = serviceName,
+                    CredentialType = credentialType,
+                    KeyJson = encrypted,
+                    TrangThai = 1,
+                    NgayTao = DateTime.Now,
+                    IdNguoiTao = userId
+                };
+                db.tbApiCredentials.Add(newCred);
+            }
+            else
+            {
+                oldCred.KeyJson = encrypted;
+            }
             db.SaveChanges();
         }
         public void SaveEncryptedKeys()
         {
             // OpenAI Key
-            SaveEncryptedCredential("Imgbb", "ApiKey", "1e400d7c7e3474f17176880df3027c34");
+            //SaveEncryptedCredential("Imgbb", "ApiKey", "1e400d7c7e3474f17176880df3027c34");
+            SaveEncryptedCredential("FreeImage", "ApiKey", "6d207e02198a847aa98d0a2a901485a5");
 
             // Google JSON (nội dung file)
             //string jsonFilePath = Server.MapPath("~/App_Data/ggc-drive.json");

@@ -103,17 +103,37 @@ namespace Applications.QuanLyAIBot.Services
                 var entity = new tbAIBot
                 {
                     IdAIBot = Guid.NewGuid(),
-                    MaDonViSuDung = CurrentDonViId,
-                    NgayTao = DateTime.Now,
-                    IdNguoiTao = CurrentUserId,
-                    TrangThai = 1,
-
                     TenAIBot = aiBot.AIBot.TenAIBot,
                     GhiChu = aiBot.AIBot.GhiChu,
+
+                    TrangThai = 1,
+                    MaDonViSuDung = CurrentDonViSuDung.MaDonViSuDung,
+                    IdNguoiTao = CurrentNguoiDung.IdNguoiDung,
+                    NgayTao = DateTime.Now,
                     // Thêm các trường khác nếu có
                 };
 
                 await _unitOfWork.InsertAsync<tbAIBot, Guid>(entity);
+                // Thêm các thao tác async khác
+            });
+        }
+        public async Task Create_LoaiAIBot(tbLoaiAIBot loaiAIBot)
+        {
+            await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                var entity = new tbLoaiAIBot
+                {
+                    IdLoaiAIBot = Guid.NewGuid(),
+                    TenLoaiAIBot = loaiAIBot.TenLoaiAIBot,
+                    GhiChu = loaiAIBot.GhiChu,
+                    
+                    TrangThai = 1,
+                    MaDonViSuDung = CurrentDonViSuDung.MaDonViSuDung,
+                    IdNguoiTao = CurrentNguoiDung.IdNguoiDung,
+                    NgayTao = DateTime.Now,
+                    // Thêm các trường khác nếu có
+                };
+                await _unitOfWork.InsertAsync<tbLoaiAIBot, Guid>(entity);
                 // Thêm các thao tác async khác
             });
         }

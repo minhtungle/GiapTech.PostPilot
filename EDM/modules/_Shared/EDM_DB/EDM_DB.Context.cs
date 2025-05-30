@@ -45,6 +45,8 @@ public partial class EDM_DBEntities : DbContext
 
     public virtual DbSet<tbAIBot> tbAIBots { get; set; }
 
+    public virtual DbSet<tbAITool> tbAITools { get; set; }
+
     public virtual DbSet<tbApiCredential> tbApiCredentials { get; set; }
 
     public virtual DbSet<tbBaiDang> tbBaiDangs { get; set; }
@@ -58,6 +60,12 @@ public partial class EDM_DBEntities : DbContext
     public virtual DbSet<tbDonViSuDung> tbDonViSuDungs { get; set; }
 
     public virtual DbSet<tbDonViTien> tbDonViTiens { get; set; }
+
+    public virtual DbSet<tbGoiDichVu> tbGoiDichVus { get; set; }
+
+    public virtual DbSet<tbGoiDichVuAIBot> tbGoiDichVuAIBots { get; set; }
+
+    public virtual DbSet<tbGoiDichVuAITool> tbGoiDichVuAITools { get; set; }
 
     public virtual DbSet<tbKieuNguoiDung> tbKieuNguoiDungs { get; set; }
 

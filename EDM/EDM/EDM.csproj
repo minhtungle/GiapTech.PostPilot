@@ -1914,6 +1914,7 @@
     <Content Include="Assets\TrangTaiLieu\assets\js\wow.min.js" />
     <Content Include="Assets\TrangTaiLieu\assets\webfonts\icomoon.svg" />
     <Content Include="Content\Admin\admin.js" />
+    <Content Include="Content\Admin\QuanLyAITool\quanlyaitool.js" />
     <Content Include="Content\Admin\QuanLyAIBot\quanlyaibot.js" />
     <Content Include="Content\Admin\QuanLyChienDich\quanlychiendich.js" />
     <Content Include="Content\Admin\QuanLyBaiDang\quanlybaidang.js" />
@@ -7826,14 +7827,6 @@
     <Content Include="Views\Admin\QuanLyBaiDang\baidang-crud\form-addbaidang.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\baidang-crud\baidang-crud-capnhattruong.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\baidang-timkiem\timkiem.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-chitiet\thongke-danhsachnvkd.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-chitiet\thongke-thongtin.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-chitiet\thongke.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-sosanh\thongke.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke-tongquan\thongke.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu-thongke\thongke.cshtml" />
-    <Content Include="Views\Admin\QuanLyDoanhThu\quanlydoanhthu.cshtml" />
     <Content Include="Views\Admin\QuanLyAIBot\quanlyaibot-tab\aibot\aibot-crud.cshtml" />
     <Content Include="Views\Admin\QuanLyAIBot\quanlyaibot-tab\aibot\aibot-getList.cshtml" />
     <Content Include="Views\Admin\QuanLyAIBot\aibot.cshtml" />
@@ -7843,29 +7836,14 @@
     <Content Include="Views\Admin\QuanLyAIBot\quanlyaibot-tab\tab.cshtml" />
     <Content Include="Views\Admin\QuanLyAIBot\quanlyaibot-tab\loaiaibot\loaiaibot-crud.cshtml" />
     <Content Include="Views\Admin\QuanLyAIBot\quanlyaibot-tab\loaiaibot\loaiaibot-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\giaovien\buoihocsaptoi\buoihocsaptoi-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\giaovien\getList-tab.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\giaovien\lophocthamgia\lophocthamgia-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\khachhang\khachhang-xemchitiet.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\mail\quanlylophoc-mail.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-buoihoc\buoihoc-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lichhoc\donhang-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lichhoc\lichhoc-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lichhoc\lichhoc-taolichhoc.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lichhoc\lichhoc-xemlichhoc.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-crud-tab.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-crud.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-getList\choxeplop\choxeplop-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-getList\choxeplop\choxeplop-timkiem.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-getList\daxepLop\daxeplop-getList.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-getList\daxepLop\daxeplop-timkiem.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\test\quanlylophoc-lophoc\lophoc-getList\getList-tab.cshtml" />
+    <Content Include="Views\Admin\QuanLyAITool\aitool.cshtml" />
+    <Content Include="Views\Admin\QuanLyAITool\aitool-crud.cshtml" />
+    <Content Include="Views\Admin\QuanLyAITool\aitool-getList.cshtml" />
     <None Include="Views\User\TrangTaiLieu\404.cshtml" />
     <None Include="Views\User\TrangTaiLieu\about.cshtml" />
     <None Include="Views\User\TrangTaiLieu\checkout.cshtml" />
     <None Include="Views\User\TrangTaiLieu\contact.cshtml" />
     <None Include="Views\User\TrangTaiLieu\faq.cshtml" />
-    <Content Include="Views\Admin\QuanLyLopHoc\quanlylophoc.cshtml" />
     <Content Include="Views\Admin\UnitManage\unitmanage-donvisudung.getList.cshtml" />
     <Content Include="Views\Admin\UnitManage\unitmanage.cshtml" />
     <Content Include="Views\Admin\_SystemSetting\Organization\organization-crud.cshtml" />
@@ -8221,6 +8199,10 @@
     <ProjectReference Include="..\modules\Admin\QuanLyAIBot\QuanLyAIBot.csproj">
       <Project>{40751eea-a8d5-4a2c-bb5f-ce96b08f1bf3}</Project>
       <Name>QuanLyAIBot</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\modules\Admin\QuanLyAITool\QuanLyAITool.csproj">
+      <Project>{e985e186-0d7c-4441-aea4-2a1d5895d761}</Project>
+      <Name>QuanLyAITool</Name>
     </ProjectReference>
     <ProjectReference Include="..\modules\Admin\QuanLyBaiDang\QuanLyBaiDang.csproj">
       <Project>{e0819784-65d2-4def-80e4-072cd922d8cf}</Project>

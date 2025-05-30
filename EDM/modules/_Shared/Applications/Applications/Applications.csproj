@@ -100,8 +100,16 @@
     <Compile Include="QuanLyAIBot\Interfaces\IQuanLyAIBotAppService.cs" />
     <Compile Include="QuanLyAIBot\Models\tbAIBotExtend.cs" />
     <Compile Include="QuanLyAIBot\Services\QuanLyAIBotAppService.cs" />
+    <Compile Include="QuanLyAITool\Dtos\DisplayModel_CRUD_AITool_Input_Dto.cs" />
+    <Compile Include="QuanLyAITool\Dtos\DisplayModel_CRUD_AITool_Output_Dto.cs" />
+    <Compile Include="QuanLyAITool\Dtos\Index_OutPut_Dto.cs" />
+    <Compile Include="QuanLyAITool\Dtos\LocThongTinDto.cs" />
+    <Compile Include="QuanLyAITool\Interfaces\IQuanLyAIToolAppService.cs" />
+    <Compile Include="QuanLyAITool\Services\QuanLyAIBotAppService.cs" />
     <Compile Include="QuanLyBaiDang\Dtos\FormAddBaiDangDto.cs" />
     <Compile Include="QuanLyBaiDang\Dtos\Index_OutPut_Dto.cs" />
+    <Compile Include="UserAccount\Dtos\DisplayModel_CRUD_NguoiDung_Output_Dto.cs" />
+    <Compile Include="UserAccount\Dtos\DisplayModel_CRUD_NguoiDung_Input_Dto.cs" />
     <Compile Include="UserType\AppServices\QuanLyKieuNguoiDungService.cs" />
     <Compile Include="QuanLyBaiDang\Interfaces\IQuanLyBaiDangAppService.cs" />
     <Compile Include="QuanLyBaiDang\Services\QuanLyBaiDangAppService.cs" />
@@ -148,6 +156,7 @@
     <Folder Include="OpenAIApi\Models\" />
     <Folder Include="OpenAIApi\Services\" />
     <Folder Include="Organization\Validator\" />
+    <Folder Include="QuanLyAITool\Models\" />
     <Folder Include="UnitManage\" />
     <Folder Include="UserType\Dtos\" />
     <Folder Include="UserType\Models\" />

@@ -24,6 +24,7 @@ using System.Management;
 using ObjectQuery = System.Management.ObjectQuery;
 using System.Runtime.InteropServices;
 using Applications.UserAccount.Models;
+using Applications.UserAccount.Dtos;
 
 namespace UserAccount.Controllers
 {
@@ -237,12 +238,15 @@ namespace UserAccount.Controllers
         [HttpPost]
         public ActionResult displayModal_CRUD(string loai, Guid idNguoiDung)
         {
-            tbNguoiDungExtend nguoiDung = new tbNguoiDungExtend();
+            var nguoiDung = new tbNguoiDungExtend();
             if (loai != "create" && idNguoiDung != Guid.Empty)
                 nguoiDung = get_NguoiDungs(loai: "single", idNguoiDungs: new List<Guid>{ idNguoiDung}).FirstOrDefault();
-            ViewBag.nguoiDung = nguoiDung;
-            ViewBag.loai = loai;
-            return PartialView($"{VIEW_PATH}/useraccount-crud.cshtml");
+            var output = new DisplayModel_CRUD_NguoiDung_Output_Dto
+            {
+                Loai = loai,
+                NguoiDung = nguoiDung ?? new tbNguoiDungExtend(),
+            };
+            return PartialView($"{VIEW_PATH}/useraccount-crud.cshtml", output);
         }
         [HttpPost]
         public ActionResult displayModal_Delete()
