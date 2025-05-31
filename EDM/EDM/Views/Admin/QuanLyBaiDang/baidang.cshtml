@@ -22,10 +22,16 @@
     </script>
 }
 <section class="section" page-group="page-group-quanlybaidang" id="page-quanlybaidang" data-aos="fade-up">
-    <input id="input-idchiendich" value="@Model.ChienDich.IdChienDich" hidden />
-    <div class="card" id="baidang-getList-container"></div>
+    <div class="card">
+        <div class="card-body">
+            @Html.Partial("~/Views/Admin/QuanLyBaiDang/quanlybaidang-tab/tab.cshtml")
+        </div>
+    </div>
 </section>
 <!--baidang-crud-->
 <div class="modal fade text-left" id="baidang-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
+</div>
+<!--chiendich-crud-->
+<div class="modal fade text-left" id="chiendich-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
 </div>
 @Html.Partial("~/Views/Admin/QuanLyBaiDang/baidang-crud/baidang-crud-capnhattruong.cshtml")

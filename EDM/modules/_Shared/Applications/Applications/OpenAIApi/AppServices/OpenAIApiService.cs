@@ -30,9 +30,7 @@ namespace Applications.OpenAIApi.AppServices
                 {
                     model = "gpt-3.5-turbo",
                     messages = new[]
-                    {
-                    new { role = "user", content = prompt }
-                }
+                    { new { role = "user", content = prompt } }
                 };
 
                 var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");

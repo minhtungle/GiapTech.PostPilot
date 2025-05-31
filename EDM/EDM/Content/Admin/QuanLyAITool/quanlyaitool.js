@@ -48,17 +48,19 @@ class QuanLyAITool {
             displayModal_CRUD: function (loai = "", idAITool = '00000000-0000-0000-0000-000000000000') {
                 if (loai == "update") {
                     var idAITools = [];
-                    quanLyAITool.aiTool.dataTable.rows().iterator('row', function (context, index) {
-                        var $row = $(this.row(index).node());
-                        if ($row.has("input.checkRow-aitool-getList:checked").length > 0) {
-                            idAITools.push($row.attr('id'));
-                        };
-                    });
-                    if (idAITools.length != 1) {
-                        sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
-                        return;
+                    if (idAITool == '00000000-0000-0000-0000-000000000000') {
+                        quanLyAITool.aiTool.dataTable.rows().iterator('row', function (context, index) {
+                            var $row = $(this.row(index).node());
+                            if ($row.has("input.checkRow-aitool-getList:checked").length > 0) {
+                                idAITools.push($row.attr('id'));
+                            };
+                        });
+                        if (idAITools.length != 1) {
+                            sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
+                            return;
+                        }
+                        else idAITool = idAITools[0];
                     }
-                    else idAITool = idAITools[0];
                 };
                 var input = {
                     Loai: loai,
@@ -89,24 +91,21 @@ class QuanLyAITool {
                 if (modalValidtion) {
                     let $modal = $("#aitool-crud");
                     let aiTool = {
-                        AITool: {
-                            IdAITool: $("#input-idaitool", $modal).val(),
-                            TenAITool: $("#input-tenaitool", $modal).val().trim(),
-                            ApiEndpoint: $("#input-apiendpoint", $modal).val().trim(),
-                            Model: $("#input-model", $modal).val().trim(),
-                            APIKey: $("#input-apikey", $modal).val().trim(),
-                            AdditionalHeaders: $("#input-additionalheaders", $modal).val().trim(),
-                            RequestBodyTemplate: $("#input-requestbodytemplate", $modal).val().trim(),
-                            GhiChu: $("#input-ghichu", $modal).val().trim(),
-                        },
+                        IdAITool: $("#input-idaitool", $modal).val(),
+                        ToolCode: $("#input-toolcode", $modal).val().trim(),
+                        ToolName: $("#input-toolname", $modal).val().trim(),
+                        ApiEndpoint: $("#input-apiendpoint", $modal).val().trim(),
+                        Model: $("#input-model", $modal).val().trim(),
+                        APIKey: $("#input-apikey", $modal).val().trim(),
+                        AdditionalHeaders: $("#input-additionalheaders", $modal).val().trim(),
+                        RequestBodyTemplate: $("#input-requestbodytemplate", $modal).val().trim(),
+                        GhiChu: $("#input-ghichu", $modal).val().trim(),
                     };
-                    let loaiAITools = $("#select-loaiaitool", $modal).val();
                     sys.confirmDialog({
                         mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
                         callback: function () {
                             var formData = new FormData();
                             formData.append("aiTool", JSON.stringify(aiTool));
-                            formData.append("loaiAITools", JSON.stringify(loaiAITools));
 
                             $.ajax({
                                 ...ajaxDefaultProps({

@@ -1,6 +1,6 @@
 ﻿@using Applications.QuanLyBaiDang.Models
 @using Public.Enums
-@using Public.Extensions
+@using Public.Helpers
 @model IEnumerable<tbBaiDangExtend>
 @using Public.Models
 @{
@@ -59,7 +59,10 @@
             {
                 <tr id="@baidang.BaiDang.IdBaiDang">
                     <td class="text-center"><input class="form-check-input checkRow-baidang-getList" type="checkbox" /></td>
-                    <td class="text-left">
+                    <td class="text-left c-pointer"
+                        onclick="copyTextFromElement(this)"
+                        title="Click để sao chép"
+                        data-copy="@baidang.BaiDang.IdBaiDang.ToString()">
                         @Public.Handle.TruncateString(maxLength: 10, input: baidang.BaiDang.IdBaiDang.ToString())
                     </td>
                     <td class="text-left" title="@baidang.BaiDang.NoiDung">
@@ -84,7 +87,6 @@
                             {
                                 iconClass = "badge bg-danger";
                             }
-
                         }
                         <span class="@iconClass">@description</span>
                     </td>

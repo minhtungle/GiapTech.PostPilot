@@ -22,7 +22,9 @@ public partial class tbAITool
 
     public System.Guid IdAITool { get; set; }
 
-    public string TenAITool { get; set; }
+    public string ToolCode { get; set; }
+
+    public string ToolName { get; set; }
 
     public string ApiEndpoint { get; set; }
 
@@ -30,11 +32,11 @@ public partial class tbAITool
 
     public string APIKey { get; set; }
 
-    public Nullable<bool> IsEncrypted { get; set; }
-
     public string AdditionalHeaders { get; set; }
 
     public string RequestBodyTemplate { get; set; }
+
+    public Nullable<bool> IsEncrypted { get; set; }
 
     public string GhiChu { get; set; }
 

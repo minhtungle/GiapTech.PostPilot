@@ -11,25 +11,25 @@
         <EntityTypeShape EntityType="EDM_DBModel.default_tbQuocGia" Width="1.5" PointX="2.75" PointY="4.75" />
         <EntityTypeShape EntityType="EDM_DBModel.tbAIBot" Width="1.5" PointX="4.75" PointY="4.75" />
         <EntityTypeShape EntityType="EDM_DBModel.tbAITool" Width="1.5" PointX="6.75" PointY="0.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbApiCredential" Width="1.5" PointX="6.75" PointY="5.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbApiCredential" Width="1.5" PointX="6.75" PointY="6.75" />
         <EntityTypeShape EntityType="EDM_DBModel.tbBaiDang" Width="1.5" PointX="8.75" PointY="0.75" />
         <EntityTypeShape EntityType="EDM_DBModel.tbBaiDangTepDinhKem" Width="1.5" PointX="0.75" PointY="8.75" />
         <EntityTypeShape EntityType="EDM_DBModel.tbChienDich" Width="1.5" PointX="8.75" PointY="6.75" />
         <EntityTypeShape EntityType="EDM_DBModel.tbCoCauToChuc" Width="1.5" PointX="2.75" PointY="9.75" />
         <EntityTypeShape EntityType="EDM_DBModel.tbDonViSuDung" Width="1.5" PointX="10.75" PointY="0.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbDonViTien" Width="1.5" PointX="4.75" PointY="10.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbGoiDichVu" Width="1.5" PointX="10.75" PointY="6.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbGoiDichVuAIBot" Width="1.5" PointX="6.75" PointY="10.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbGoiDichVuAITool" Width="1.5" PointX="8.75" PointY="10.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbKieuNguoiDung" Width="1.5" PointX="10.75" PointY="10.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbLichDangBai" Width="1.5" PointX="12.75" PointY="0.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbLichDangBaiChiTiet" Width="1.5" PointX="12.75" PointY="4.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbLichSuDangBai" Width="1.5" PointX="12.75" PointY="8.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbLoaiAIBot" Width="1.5" PointX="12.75" PointY="12.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbNenTang" Width="1.5" PointX="14.75" PointY="0.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbNguoiDung" Width="1.5" PointX="0.75" PointY="14.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbNoiDung" Width="1.5" PointX="2.75" PointY="14.75" />
-        <EntityTypeShape EntityType="EDM_DBModel.tbTepDinhKem" Width="1.5" PointX="14.75" PointY="4.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbDonViTien" Width="1.5" PointX="10.75" PointY="6.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbGoiDichVu" Width="1.5" PointX="8.75" PointY="10.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbGoiDichVuAIBot" Width="1.5" PointX="10.75" PointY="10.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbGoiDichVuAITool" Width="1.5" PointX="4.75" PointY="11.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbKieuNguoiDung" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbLichDangBai" Width="1.5" PointX="12.75" PointY="5.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbLichDangBaiChiTiet" Width="1.5" PointX="12.75" PointY="9.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbLichSuDangBai" Width="1.5" PointX="12.75" PointY="13.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbLoaiAIBot" Width="1.5" PointX="14.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbNenTang" Width="1.5" PointX="0.75" PointY="14.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbNguoiDung" Width="1.5" PointX="14.75" PointY="4.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbNoiDung" Width="1.5" PointX="6.75" PointY="14.75" />
+        <EntityTypeShape EntityType="EDM_DBModel.tbTepDinhKem" Width="1.5" PointX="8.75" PointY="14.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

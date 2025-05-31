@@ -1,8 +1,5 @@
 ﻿@using EDM_DB
 @model Applications.QuanLyBaiDang.Dtos.FormAddBaiDangDto
-@{
-    var NENTANGs = Session["NENTANGs"] as List<tbNenTang>;
-}
 
 <div class="row" intro-container="thongtin-chung">
     <!--Id-->
@@ -103,10 +100,11 @@ Yêu cầu:
         <div class="position-relative">
             <div class="form-group mb-3">
                 <label class="required" for="select-nentang">Nền tảng</label>
-                <select class="form-control"
-                        id="select-nentang" name="select-nentang" required>
-                    <option disabled @(NENTANGs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
-                    @foreach (var nenTang in NENTANGs)
+                <select class="form-control form-select2"
+                        id="select-nentang" name="select-nentang" 
+                        multiple required>
+                    <option disabled @(Model.NenTangs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                    @foreach (var nenTang in Model.NenTangs)
                     {
                         <option value="@nenTang.IdNenTang">@nenTang.TenNenTang</option>
                     }

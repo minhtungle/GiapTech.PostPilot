@@ -889,6 +889,17 @@ class System {
             return v.toString(16);
         });
     }
+    copyTextFromElement(element) {
+        const text = element.getAttribute("data-copy");
+        if (!text) return;
+
+        navigator.clipboard.writeText(text).then(() => {
+            // Hiển thị thông báo đơn giản (tuỳ chỉnh nếu cần)
+            sys.alert({ status: "success", mess: "Đã sao chép" });
+        }).catch(err => {
+            console.error("Lỗi khi sao chép: ", err);
+        });
+    }
 }
 //var sys = new System();
 /**

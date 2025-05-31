@@ -10,6 +10,5 @@ namespace Applications.QuanLyBaiDang.Dtos
     public class Index_OutPut_Dto
     {
         public List<ThaoTac> ThaoTacs { get; set; }
-        public tbChienDich ChienDich { get; set; }
     }
 }

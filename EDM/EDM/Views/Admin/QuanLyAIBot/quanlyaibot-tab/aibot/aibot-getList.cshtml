@@ -55,7 +55,12 @@
             <tr id="@aiBot.AIBot.IdAIBot">
                 <td class="text-center"><input class="form-check-input checkRow-aibot-getList" type="checkbox" /></td>
 
-                <td class="text-center">@aiBot.AIBot.IdAIBot</td>
+                <td class="text-left c-pointer"
+                    onclick="sys.copyTextFromElement(this)"
+                    title="Click để sao chép"
+                    data-copy="@aiBot.AIBot.IdAIBot.ToString()">
+                    <a href="#"><i class="bi bi-copy"></i> @Public.Handle.TruncateString(maxLength: 10, input: aiBot.AIBot.IdAIBot.ToString())</a>
+                </td>
                 <td class="text-left">
                     <a class="c-pointer" onclick="quanLyAIBot.aiBot.chayThuNghiem('@aiBot.AIBot.IdAIBot')">
                         <i class="bi bi-gear-fill"></i>

@@ -176,13 +176,13 @@
     <Compile Include="Controllers\RouteConfigController.cs" />
     <Compile Include="Dtos\XemPDF_Output_Dto.cs" />
     <Compile Include="Enums\TrangThaiDangBaiEnum.cs" />
-    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Handle\Handle.cs" />
     <Compile Include="Helpers\CryptoHelper.cs" />
     <Compile Include="Helpers\CustomAuthorizeAttribute.cs" />
+    <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Interfaces\IPermissionCheckerAppService.cs" />
     <Compile Include="Interfaces\ISoftDeleteAndTenant.cs" />
     <Compile Include="Mappers\UserAccountMapping.cs" />
@@ -208,6 +208,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Extensions\" />
     <Folder Include="Localizations\" />
     <Folder Include="Validations\" />
   </ItemGroup>

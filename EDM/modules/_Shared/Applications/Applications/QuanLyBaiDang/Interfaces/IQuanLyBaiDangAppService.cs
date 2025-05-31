@@ -4,6 +4,7 @@ using Public.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Applications.QuanLyBaiDang.Interfaces
 {
@@ -11,9 +12,16 @@ namespace Applications.QuanLyBaiDang.Interfaces
     {
         List<ThaoTac> GetThaoTacs(string maChucNang);
         Task<IEnumerable<tbBaiDangExtend>> GetBaiDangs
-           (Guid idChienDich,
-           string loai = "all",
+           (string loai = "all",
            List<Guid> idBaiDangs = null,
            LocThongTinDto locThongTin = null);
+        Task<FreeImageUploadResponse> UploadToFreeImageHost(
+            HttpPostedFileBase file);
+        Task Create_BaiDang(
+            List<tbBaiDangExtend> baiDangs,
+            HttpPostedFileBase[] files, 
+            Guid[] rowNumbers);
+        Task Delete_BaiDangs(
+            List<Guid> idBaiDangs);
     }
 }

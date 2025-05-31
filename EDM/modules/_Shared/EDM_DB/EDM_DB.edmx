@@ -94,13 +94,14 @@
           </Key>
           <Property Name="Stt" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdAITool" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="TenAITool" Type="nvarchar(max)" />
+          <Property Name="ToolCode" Type="nvarchar(max)" />
+          <Property Name="ToolName" Type="nvarchar(max)" />
           <Property Name="ApiEndpoint" Type="nvarchar(max)" />
           <Property Name="Model" Type="nvarchar(max)" />
           <Property Name="APIKey" Type="nvarchar(max)" />
-          <Property Name="IsEncrypted" Type="bit" />
           <Property Name="AdditionalHeaders" Type="nvarchar(max)" />
           <Property Name="RequestBodyTemplate" Type="nvarchar(max)" />
+          <Property Name="IsEncrypted" Type="bit" />
           <Property Name="GhiChu" Type="nvarchar(max)" />
           <Property Name="TrangThai" Type="int" />
           <Property Name="MaDonViSuDung" Type="uniqueidentifier" />
@@ -601,13 +602,14 @@
           </Key>
           <Property Name="Stt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IdAITool" Type="Guid" Nullable="false" />
-          <Property Name="TenAITool" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ToolCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ToolName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ApiEndpoint" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Model" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="APIKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsEncrypted" Type="Boolean" />
           <Property Name="AdditionalHeaders" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="RequestBodyTemplate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsEncrypted" Type="Boolean" />
           <Property Name="GhiChu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TrangThai" Type="Int32" />
           <Property Name="MaDonViSuDung" Type="Guid" />
@@ -1055,13 +1057,14 @@
                 <ScalarProperty Name="MaDonViSuDung" ColumnName="MaDonViSuDung" />
                 <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
                 <ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
+                <ScalarProperty Name="IsEncrypted" ColumnName="IsEncrypted" />
                 <ScalarProperty Name="RequestBodyTemplate" ColumnName="RequestBodyTemplate" />
                 <ScalarProperty Name="AdditionalHeaders" ColumnName="AdditionalHeaders" />
-                <ScalarProperty Name="IsEncrypted" ColumnName="IsEncrypted" />
                 <ScalarProperty Name="APIKey" ColumnName="APIKey" />
                 <ScalarProperty Name="Model" ColumnName="Model" />
                 <ScalarProperty Name="ApiEndpoint" ColumnName="ApiEndpoint" />
-                <ScalarProperty Name="TenAITool" ColumnName="TenAITool" />
+                <ScalarProperty Name="ToolName" ColumnName="ToolName" />
+                <ScalarProperty Name="ToolCode" ColumnName="ToolCode" />
                 <ScalarProperty Name="IdAITool" ColumnName="IdAITool" />
                 <ScalarProperty Name="Stt" ColumnName="Stt" />
               </MappingFragment>

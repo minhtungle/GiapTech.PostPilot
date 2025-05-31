@@ -53,7 +53,12 @@
             <tr id="@loaiAiBot.IdLoaiAIBot">
                 <td class="text-center"><input class="form-check-input checkRow-loaiaibot-getList" type="checkbox" /></td>
 
-                <td class="text-left">@loaiAiBot.IdLoaiAIBot</td>
+                <td class="text-left c-pointer"
+                    onclick="sys.copyTextFromElement(this)"
+                    title="Click để sao chép"
+                    data-copy="@loaiAiBot.IdLoaiAIBot.ToString()">
+                    <a href="#"><i class="bi bi-copy"></i> @Public.Handle.TruncateString(maxLength: 10, input: loaiAiBot.IdLoaiAIBot.ToString())</a>
+                </td>
                 <td class="text-left">@loaiAiBot.TenLoaiAIBot</td>
                 <td class="text-left">@loaiAiBot.NgayTao</td>
                 @*<td class="text-center">

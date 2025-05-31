@@ -2,6 +2,7 @@
 using Applications.QuanLyAITool.Interfaces;
 using EDM_DB;
 using Newtonsoft.Json;
+using Public.Helpers;
 using Public.Models;
 using System;
 using System.Collections.Generic;
@@ -63,12 +64,16 @@ namespace QuanLyAITool.Controllers
         public async Task<ActionResult> displayModal_CRUD_AITool(DisplayModel_CRUD_AITool_Input_Dto input)
         {
             var aiTool = await _quanLyAIToolAppService.GetAITools(loai: "single", idAITool: new List<Guid> { input.IdAITool });
-            var loaiAITool = await _quanLyAIToolAppService.GetAITools(loai: "all");
+          
             var output = new DisplayModel_CRUD_AITool_Output_Dto
             {
                 Loai = input.Loai,
                 AITool = aiTool.FirstOrDefault() ?? new tbAITool(),
             };
+            if (input.Loai != "create")
+            {
+                output.AITool.APIKey = (output.AITool.IsEncrypted.HasValue && output.AITool.IsEncrypted.Value) ? CryptoHelper.Decrypt(output.AITool.APIKey) : output.AITool.APIKey;
+            }
             return PartialView($"{VIEW_PATH}/aitool-crud.cshtml", output);
         }
        
