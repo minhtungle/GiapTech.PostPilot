@@ -10,61 +10,56 @@
             <div class="modal-body">
                 <div class="row">
                     <p class="text-danger">Lưu ý: Tích chọn các bản ghi trước khi cập nhật</p>
+                    <!--Loại AI Tool-->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="required" for="select-aitool">AI Tool</label>
+                                <select class="form-control form-select2"
+                                        id="select-aitool" name="select-aitool" required>
+                                    <option disabled @(Model.AITools.Count > 0 ? "" : "")>Chọn thông tin</option>
+                                    @foreach (var aiTool in Model.AITools)
+                                    {
+                                        <option value="@aiTool.IdAITool">@aiTool.ToolName</option>
+                                    }
+                                </select>
+                                <div class="invalid-feedback feedback" for="select-loaiaitool">Không được để trống</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Loại AI Bot-->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="position-relative">
+                            <div class="form-group mb-3">
+                                <label class="required" for="select-aibot">AI Bot</label>
+                                <select class="form-control form-select2"
+                                        id="select-aibot" name="select-aibot"
+                                        required>
+                                    <option value="">Chọn thông tin</option>
+                                    @foreach (var aiBot in Model.AIBots)
+                                    {
+                                        <option value="@aiBot.IdAIBot">@aiBot.TenAIBot</option>
+                                    }
+                                </select>
+                                <div class="invalid-feedback feedback" for="select-aibot">Không được để trống</div>
+                            </div>
+                        </div>
+                    </div>
                     <!--Nền tảng-->
                     <div class="col-sm-12 col-md-12">
                         <div class="position-relative">
                             <div class="form-group mb-3">
-                                <label class="required" for="select-nentang">Nền tảng</label>
-                                <select class="form-control"
-                                        id="select-nentang" name="select-nentang" required>
+                                <label class="required" for="select-nentang-capnhattruong">Nền tảng</label>
+                                <select class="form-control form-select2"
+                                        id="select-nentang-capnhattruong" name="select-nentang-capnhattruong"
+                                        multiple required>
                                     <option disabled @(Model.NenTangs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
                                     @foreach (var nenTang in Model.NenTangs)
                                     {
                                         <option value="@nenTang.IdNenTang">@nenTang.TenNenTang</option>
                                     }
                                 </select>
-                                <div class="invalid-feedback feedback" for="select-nentang">Không được để trống</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Prompt-->
-                    <div class="col-12 col-sm-12 col-md-12">
-                        <div class="position-relative">
-                            <div class="form-group mb-3">
-                                <label class="" for="input-prompt">Prompt</label>
-                                @{
-                                    var email = "email@gmail.com";
-                                    var website = "https://postpilot.com";
-                                    var diaChi = "Hà Nội, Việt Nam";
-                                    var chuDe = "Thời trang, Mỹ phẩm";
-                                    var prompt = $@"
-Viết một bài đăng fanpage chất lượng cao theo phong cách sau:
-
-1. **Tiêu đề ngắn gọn, mạnh mẽ và thu hút**, có thể dùng biểu tượng cảm xúc (emoji) phù hợp.
-2. **Feedback thực tế hoặc câu chuyện truyền cảm hứng** từ khách hàng hoặc học viên (dạng lời kể, dẫn chứng).
-3. **Danh sách gạch đầu dòng** các lợi ích, kết quả cụ thể mà người dùng đạt được.
-4. **Lý do tại sao người khác cũng nên lựa chọn dịch vụ/sản phẩm này** (USP – điểm mạnh, cam kết...).
-5. **Kêu gọi hành động rõ ràng**: inbox, bình luận, hoặc để lại thông tin để được tư vấn.
-6. **Thông tin liên hệ**, bao gồm:
-7. **Hashtag liên quan ở cuối bài viết** (4–6 hashtag)
-                                                                           - Email: {email}
-                                                                           - Website: {website}
-                                                                           - Địa chỉ: {diaChi}
-
-Nội dung bài viết nói về: ""{chuDe}""
-
-Yêu cầu:
-- Viết bằng tiếng Việt
-- Văn phong thuyết phục, tự nhiên, gần gũi, hướng đến hành động, dành cho fanpage
-- Có thể sử dụng emoji để làm nổi bật
-- Toàn bộ nội dung không quá 500 từ
-";
-                                    var title = $@"Viết prompt của bạn để AI hỗ trợ tạo nội dung phù hợp";
-                                }
-                                <textarea class="form-control min-h-100 max-h-300" id="input-prompt" rows="10"
-                                          title="@title"
-                                          placeholder="Nhập nội dung prompt ...">@prompt</textarea>
-                                <div class="invalid-feedback feedback" for="input-prompt">Không được để trống</div>
+                                <div class="invalid-feedback feedback" for="select-nentang-capnhattruong">Không được để trống</div>
                             </div>
                         </div>
                     </div>

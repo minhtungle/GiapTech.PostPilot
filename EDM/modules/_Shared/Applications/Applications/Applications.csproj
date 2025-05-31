@@ -104,12 +104,15 @@
     <Compile Include="QuanLyAITool\Dtos\DisplayModel_CRUD_AITool_Output_Dto.cs" />
     <Compile Include="QuanLyAITool\Dtos\Index_OutPut_Dto.cs" />
     <Compile Include="QuanLyAITool\Dtos\LocThongTinDto.cs" />
+    <Compile Include="QuanLyAIBot\Dtos\TaoNoiDungAI_Input_Dto.cs" />
+    <Compile Include="QuanLyAITool\Dtos\WorkWithAITool_Input_Dto.cs" />
     <Compile Include="QuanLyAITool\Enum\AIToolTypeEnum.cs" />
     <Compile Include="QuanLyAITool\Extensions\AIToolTemplates.cs" />
     <Compile Include="QuanLyAITool\Interfaces\IQuanLyAIToolAppService.cs" />
     <Compile Include="QuanLyAITool\Services\QuanLyAIToolAppService.cs" />
     <Compile Include="QuanLyBaiDang\Dtos\FormAddBaiDangDto.cs" />
     <Compile Include="QuanLyBaiDang\Dtos\Index_OutPut_Dto.cs" />
+    <Compile Include="QuanLyBaiDang\Dtos\TaoNoiDungAI_Input_Dto.cs" />
     <Compile Include="UserAccount\Dtos\DisplayModel_CRUD_NguoiDung_Output_Dto.cs" />
     <Compile Include="UserAccount\Dtos\DisplayModel_CRUD_NguoiDung_Input_Dto.cs" />
     <Compile Include="UserType\AppServices\QuanLyKieuNguoiDungService.cs" />

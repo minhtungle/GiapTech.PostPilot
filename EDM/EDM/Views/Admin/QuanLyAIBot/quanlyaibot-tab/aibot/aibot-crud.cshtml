@@ -2,8 +2,6 @@
 @model Applications.QuanLyAIBot.Dtos.DisplayModel_CRUD_AIBot_Output_Dto
 @{
     var aiBot = Model.AIBot.AIBot;
-    var loaiAIBots = Model.LoaiAIBot;
-    var loai = Model.Loai;
     List<string> loaiThaoTac_Disabled = new List<string> { "read" };
 }
 
@@ -34,7 +32,7 @@
                                     <input class="form-control" id="input-tenaibot"
                                            placeholder="Nhập nội dung ..."
                                            value="@(aiBot.TenAIBot ?? "")"
-                                           @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>
+                                           @(loaiThaoTac_Disabled.Contains(Model.Loai) ? "disabled" : "") required>
                                     <div class="invalid-feedback feedback" for="input-tenaibot">Không được để trống</div>
                                 </div>
                             </div>
@@ -47,8 +45,8 @@
                                     <select class="form-control form-select2"
                                             id="select-loaiaibot" name="select-loaiaibot"
                                             multiple>
-                                        <option disabled @(loaiAIBots.Count > 0 ? "" : "")>Chọn thông tin</option>
-                                        @foreach (var loaiAIBot in loaiAIBots)
+                                        <option disabled @(Model.LoaiAIBot.Count > 0 ? "" : "")>Chọn thông tin</option>
+                                        @foreach (var loaiAIBot in Model.LoaiAIBot)
                                         {
                                             <option value="@loaiAIBot.IdLoaiAIBot">@loaiAIBot.TenLoaiAIBot</option>
                                         }
@@ -57,17 +55,17 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Loại AI Tool-->
+                        <!--AI Tool-->
                         <div class="col-sm-12 col-md-12">
                             <div class="position-relative">
                                 <div class="form-group mb-3">
-                                    <label class="" for="select-loaiaitool">AI Tool</label>
+                                    <label class="required" for="select-aitool">AI Tool</label>
                                     <select class="form-control form-select2"
-                                            id="select-loaiaitool" name="select-loaiaitool">
-                                        <option disabled @(loaiAIBots.Count > 0 ? "" : "")>Chọn thông tin</option>
-                                        @foreach (var loaiAIBot in loaiAIBots)
+                                            id="select-aitool" name="select-aitool" required>
+                                        <option disabled @(Model.AITools.Count > 0 ? "" : "")>Chọn thông tin</option>
+                                        @foreach (var aiTool in Model.AITools)
                                         {
-                                            <option value="@loaiAIBot.IdLoaiAIBot">@loaiAIBot.TenLoaiAIBot</option>
+                                            <option value="@aiTool.IdAITool">@aiTool.ToolName</option>
                                         }
                                     </select>
                                     <div class="invalid-feedback feedback" for="select-loaiaitool">Không được để trống</div>
@@ -80,20 +78,52 @@
                                 <div class="form-group mb-3">
                                     <label class="required" for="input-prompt">Prompt</label>
                                     @{
-                                        var plh1 = $@"1. Chọn một AI Tool
+                                        var plh1 = $@"1. Chọn AI Tool
 2. Nhập mẫu prompt
 3. Nhập keywords yêu cầu (nếu có)
+- Keywords sẽ được tự động thêm vào cuối prompt
 4. Nhấn mũi tên để tạo nội dung
 VD:
-Cho tôi bài viết về ... dựa theo dữ liệu cung cấp trong
-[*Thay thế keywords tại đây*]
+[ROLE]
+Bạn là Chuyên gia Content Thương mại điện tử, viết bài Facebook như một chủ shop thân thiện đang trò chuyện với khách hàng.
+
+[TASK]
+Tạo bài đăng Facebook giới thiệu sản phẩm bán lẻ trực tuyến (trên sàn TMĐT), độ dài khoảng 250–300 từ, giọng tự nhiên, gần gũi, xưng “shop/tui/mình” tùy hoàn cảnh.
+
+[YÊU CẦU CỤ THỂ]
+
+Mở bài: 2–3 câu bắt chuyện, đánh trúng nỗi đau hoặc gợi sự quan tâm.
+
+Nội dung chính:
+- Giới thiệu sản phẩm như một giải pháp cho khách.
+- Bullet ngắn mô tả 3–4 tính năng/lợi ích nổi bật.
+- Chèn storytelling ngắn hoặc cảm nhận thật (1–2 câu).
+- Dùng emoji vừa phải để tăng cảm xúc, không lạm dụng.
+
+Giá & Ưu đãi: Nêu rõ giá đã giảm, phần trăm khuyến mãi hoặc ưu đãi hiện tại nếu có. Nếu không có thì bỏ qua.
+
+Livestream / Minigame (nếu có): Mô tả ngắn cách tham gia và phần thưởng.
+
+CTA: Kết thúc bằng 1 câu thúc giục hành động rõ ràng (comment, inbox, click link…).
+
+Định dạng: Ngắt dòng hợp lý, dễ đọc trên điện thoại.
+
+Ngôn ngữ: Thân thiện, gần gũi, tránh dùng từ ngữ gây hiểu nhầm hoặc vi phạm chính sách Facebook.
+
+[LƯU Ý]
+
+Chỉ xuất bài đăng hoàn chỉnh, không thêm giải thích.
+
+Thiếu dữ liệu thì chèn “___” để chờ bổ sung.
+
+Tuân thủ chính sách quảng cáo Facebook (không cam kết sai, tránh từ cấm).
 ";
                                     }
                                     <textarea class="form-control min-h-100 max-h-300" id="input-prompt" rows="10"
                                               placeholder="@plh1"
                                               title="@plh1"
                                               value="@(aiBot.Prompt ?? "")"
-                                              @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "") required>@(aiBot.Prompt ?? "")</textarea>
+                                              @(loaiThaoTac_Disabled.Contains(Model.Loai) ? "disabled" : "") required>@(aiBot.Prompt ?? "")</textarea>
                                     <a class="btn btn-sm btn-success" id="btn-taonoidung-ai"
                                        style="position: absolute; z-index: 1; right: .6rem; top: 2rem;"
                                        onclick="quanLyAIBot.aiBot.handleAI.taoNoiDungAI()">
@@ -109,7 +139,12 @@ Cho tôi bài viết về ... dựa theo dữ liệu cung cấp trong
                                 <div class="form-group mb-3">
                                     <label class="" for="input-keywords">Keywords</label>
                                     @{
-                                        var plh2 = $@"Tiền bạc, động lực, giá trị";
+                                        var plh2 = $@"Tên sản phẩm
+Tính năng / Lợi ích nổi bật
+Giá & Ưu đãi
+Link mua
+Thời gian ưu đãi / Livestream (nếu cần)
+Khách hàng mục tiêu (nếu cần)";
                                     }
                                     <textarea class="form-control min-h-100 max-h-300" id="input-keywords" rows="10"
                                               placeholder="@plh2" title="@plh2"></textarea>
@@ -121,7 +156,9 @@ Cho tôi bài viết về ... dựa theo dữ liệu cung cấp trong
                         <div class="col-12 col-sm-12 col-md-12">
                             <div class="position-relative">
                                 <div class="form-group mb-3">
-                                    <label class="" for="input-noidung-ai">Kết quả</label>
+                                    <label class="" for="input-noidung-ai">
+                                        Nội dung <small class="text-danger fst-italic">(Kiểm tra kết quả)</small>
+                                    </label>
                                     <textarea class="form-control min-h-100 max-h-300" id="input-noidung-ai" rows="10" readonly></textarea>
                                     <div class="invalid-feedback feedback" for="input-noidung-ai">Không được để trống</div>
                                 </div>
@@ -135,8 +172,7 @@ Cho tôi bài viết về ... dựa theo dữ liệu cung cấp trong
                                     <textarea class="form-control min-h-50 max-h-100" id="input-ghichu" rows="2"
                                               placeholder="Nhập thông tin ..."
                                               value="@(aiBot.GhiChu ?? "")"
-                                              @(loaiThaoTac_Disabled.Contains(loai) ? "disabled" : "")>@(aiBot.GhiChu ?? "")</textarea>
-                                    }
+                                              @(loaiThaoTac_Disabled.Contains(Model.Loai) ? "disabled" : "")>@(aiBot.GhiChu ?? "")</textarea>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +182,7 @@ Cho tôi bài viết về ... dựa theo dữ liệu cung cấp trong
 
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary ml-1" onclick="quanLyChienDich.chienDich.save(@string.Format("'{0}'", "create"))">
+            <button type="button" class="btn btn-primary ml-1" onclick="quanLyAIBot.aiBot.save(@string.Format("'{0}'", "create"))">
                 <span class="">Lưu</span>
             </button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

@@ -141,29 +141,56 @@ class QuanLyBaiDang {
                 },
             },
             handleAI: {
-                taoNoiDungAI: function (rowNumber) {
+                chonLoaiAIBot: function (rowNumber) {
                     var $modal = $("#baidang-crud");
 
-                    var prompt = $(`.baidang-read[row='${rowNumber}'] #input-prompt`, $modal).val().trim();
+                    var idAIBot = $(`.baidang-read[row='${rowNumber}'] #select-aibot`, $modal).val();
 
-                    prompt && $.ajax({
+                    idAIBot && $.ajax({
                         ...ajaxDefaultProps({
-                            url: "/QuanLyBaiDang/taoNoiDungAI",
+                            url: "/QuanLyBaiDang/chonLoaiAIBot",
                             type: "POST",
                             contentType: "application/json; charset=utf-8",
                             data: {
-                                prompt
+                                idAIBot
                             },
                         }),
                         success: function (res) {
                             if (res.status == "success") {
-                                $(`.baidang-read[row='${rowNumber}'] #input-noidung-ai`, $modal).text(res.NoiDung);
-                                $(`.baidang-read[row='${rowNumber}'] #input-noidung-ai`, $modal).val(res.NoiDung);
-                                $(`.baidang-read[row='${rowNumber}'] #input-noidung-ai`, $modal).change();
+                                $(`.baidang-read[row='${rowNumber}'] #input-keywords`, $modal).text(res.Keywords);
+                                $(`.baidang-read[row='${rowNumber}'] #input-keywords`, $modal).val(res.Keywords);
+                                $(`.baidang-read[row='${rowNumber}'] #input-keywords`, $modal).change();
                             };
                             sys.alert({ mess: res.mess, status: res.status, timeout: 1500 });
                         }
                     })
+                },
+                taoNoiDungAI: function (rowNumber) {
+                    var $modal = $("#baidang-crud");
+
+                    var input = {
+                        IdAITool: $(`.baidang-read[row='${rowNumber}'] #select-aitool`, $modal).val(),
+                        IdAIBot: $(`.baidang-read[row='${rowNumber}'] #select-aibot`, $modal).val(),
+                        Keywords: $(`.baidang-read[row='${rowNumber}'] #input-keywords-danhap`, $modal).val().trim(),
+                    };
+
+                    (input.IdAITool && input.IdAIBot)
+                        && $.ajax({
+                            ...ajaxDefaultProps({
+                                url: "/QuanLyBaiDang/taoNoiDungAI",
+                                type: "POST",
+                                contentType: "application/json; charset=utf-8",
+                                data: { input },
+                            }),
+                            success: function (res) {
+                                if (res.status == "success") {
+                                    $(`.baidang-read[row='${rowNumber}'] #input-noidung-ai`, $modal).text(res.NoiDung);
+                                    $(`.baidang-read[row='${rowNumber}'] #input-noidung-ai`, $modal).val(res.NoiDung);
+                                    $(`.baidang-read[row='${rowNumber}'] #input-noidung-ai`, $modal).change();
+                                };
+                                sys.alert({ mess: res.mess, status: res.status, timeout: 1500 });
+                            }
+                        })
                 },
                 taoNoiDungAI_Multiple: function () {
                     var $modal = $("#baidang-crud");
@@ -178,26 +205,31 @@ class QuanLyBaiDang {
                                 rowNumber = $rowCheck.attr("row"),
                                 $div = $(`.baidang-read[row=${rowNumber}]`, $modal);
 
-                            var prompt = $(`.baidang-read[row='${rowNumber}'] #input-prompt`, $modal).val().trim();
+                            var input = {
+                                IdAITool: $(`.baidang-read[row='${rowNumber}'] #select-aitool`, $modal).val(),
+                                IdAIBot: $(`.baidang-read[row='${rowNumber}'] #select-aibot`, $modal).val(),
+                                Keywords: $(`.baidang-read[row='${rowNumber}'] #input-keywords-danhap`, $modal).val().trim(),
+                            };
 
-                            prompt && $.ajax({
-                                ...ajaxDefaultProps({
-                                    url: "/QuanLyBaiDang/taoNoiDungAI",
-                                    type: "POST",
-                                    contentType: "application/json; charset=utf-8",
-                                    data: {
-                                        prompt
-                                    },
-                                }),
-                                success: function (res) {
-                                    if (res.status == "success") {
-                                        $(`#input-noidung-ai`, $div).text(res.NoiDung);
-                                        $(`#input-noidung-ai`, $div).val(res.NoiDung);
-                                        $(`#input-noidung-ai`, $div).change();
-                                    };
-                                    sys.alert({ mess: res.mess, status: res.status, timeout: 1500 });
-                                }
-                            })
+                            (input.IdAITool && input.IdAIBot)
+                                && $.ajax({
+                                    ...ajaxDefaultProps({
+                                        url: "/QuanLyBaiDang/taoNoiDungAI",
+                                        type: "POST",
+                                        contentType: "application/json; charset=utf-8",
+                                        data: {
+                                            prompt
+                                        },
+                                    }),
+                                    success: function (res) {
+                                        if (res.status == "success") {
+                                            $(`#input-noidung-ai`, $div).text(res.NoiDung);
+                                            $(`#input-noidung-ai`, $div).val(res.NoiDung);
+                                            $(`#input-noidung-ai`, $div).change();
+                                        };
+                                        sys.alert({ mess: res.mess, status: res.status, timeout: 1500 });
+                                    }
+                                })
                         });
                     };
                 },
@@ -391,8 +423,9 @@ class QuanLyBaiDang {
                 var $modal = $("#baidang-crud");
                 var $modal_CapNhatTruong = $("#baidang-crud-capnhattruong");
 
-                var idNenTang = $("#select-nentang", $modal_CapNhatTruong).val(),
-                    prompt = $("#input-prompt", $modal_CapNhatTruong).val();
+                var idNenTang = $("#select-nentang-capnhattruong", $modal_CapNhatTruong).val(),
+                    idAITool = $("#select-aitool", $modal_CapNhatTruong).val(),
+                    idAIBot = $("#select-aibot", $modal_CapNhatTruong).val();
                 var rows = quanLyBaiDang.handleModal_CRUD.dataTable.rows().nodes().toArray(),
                     $rowChecks = $(`.checkRow-baidang-getList:checked`, rows);
                 if ($rowChecks.length == 0) {
@@ -404,8 +437,8 @@ class QuanLyBaiDang {
                             $div = $(`.baidang-read[row=${rowNumber}]`, $modal);
                         // Thay đổi value cho những dòng được chọn
                         $("#select-nentang", $div).val(idNenTang); $("#select-nentang", $div).trigger("change");
-                        $("#input-prompt", $div).val(prompt); $("#input-prompt", $div).trigger("change");
-                        $("#input-prompt", $div).text(prompt); $("#input-prompt", $div).trigger("change");
+                        $("#select-aitool", $div).val(idAITool); $("#select-aitool", $div).trigger("change");
+                        $("#select-aibot", $div).val(idAIBot); $("#select-aibot", $div).trigger("change");
                     });
 
                     sys.alert({ status: "success", mess: "Cập nhật trường dữ liệu thành công" })
@@ -460,6 +493,7 @@ class QuanLyBaiDang {
                             htmlEl.validationStates($div);
                             htmlEl.inputMask();
                             var modalValidtion = htmlEl.activeValidationStates($div);
+                            //quanLyBaiDang.baiDang.handleAI.chonLoaiAIBot(rowNumber);
                         });
                         //quanLyBaiDang.handleModal_CRUD.readRow(res.idBaiDang);
                         /**
@@ -537,20 +571,21 @@ class QuanLyBaiDang {
                 $.each($(".baidang-read", $("#baidang-crud")), function () {
                     var $div = $(this),
                         rowNumber = $div.attr("row");
-                    var baiDang = {
-                        RowNumber: rowNumber,
-                        BaiDang: {
-                            IdBaiDang: $("#input-idbaidang", $div).val(),
-                            IdNenTang: $("#select-nentang", $div).val(),
-                            IdChienDich: $("#select-chiendich", $div).val(),
-                            Prompt: $("#input-prompt", $div).val().trim(),
-                            NoiDung: $("#input-noidung-ai", $div).val().trim(),
-                            ThoiGian: $("#input-thoigian", $div).val(),
-                            TuTaoAnhAI: $("#checkbox-sudunganh-ai", $div).is(":checked"),
-                        },
-                        TepDinhKems: []
-                    };
-                    baiDangs.push(baiDang);
+                    var idNenTangs = $("#select-nentang", $div).val();
+                    $.each(idNenTangs, function (i, idNenTang) {
+                        var baiDang = {
+                            RowNumber: rowNumber,
+                            BaiDang: {
+                                IdBaiDang: $("#input-idbaidang", $div).val(),
+                                IdNenTang: idNenTang,
+                                IdChienDich: $("#select-chiendich", $div).val(),
+                                NoiDung: $("#input-noidung-ai", $div).val().trim(),
+                                ThoiGian: $("#input-thoigian", $div).val(),
+                                TuTaoAnhAI: $("#checkbox-sudunganh-ai", $div).is(":checked"),
+                            },
+                        };
+                        baiDangs.push(baiDang);
+                    })
                 });
 
                 sys.confirmDialog({

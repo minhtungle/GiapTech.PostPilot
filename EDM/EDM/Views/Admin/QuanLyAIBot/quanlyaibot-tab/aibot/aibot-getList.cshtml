@@ -5,6 +5,11 @@
     var thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
 }
 
+<div class="mb-2 toggle-vis-bar">
+    Hiển thị:
+    <a href="#" class="toggle-vis" data-table="aibot-getList" data-column="3">Phân loại</a> |
+    <a href="#" class="toggle-vis" data-table="aibot-getList" data-column="4">Ngày tạo</a>
+</div>
 <table class="table table-hover table-bordered table-sticky w-100" id="aibot-getList" data-page-length="10">
     <thead class="nowrap" style="white-space: nowrap !important">
         <tr>
@@ -63,12 +68,14 @@
                 </td>
                 <td class="text-left">
                     <a class="c-pointer" onclick="quanLyAIBot.aiBot.chayThuNghiem('@aiBot.AIBot.IdAIBot')">
-                        <i class="bi bi-gear-fill"></i>
+                        @aiBot.AIBot.TenAIBot
                     </a>
                 </td>
                 <td class="text-center">
                     @{
-                        string tenLoai = string.Join(", ", aiBot.LoaiAIBots.Select(x => x.TenLoaiAIBot));
+                        string tenLoai = aiBot.LoaiAIBots == null 
+                            ? ""
+                            : string.Join(", ", aiBot.LoaiAIBots?.Select(x => x.TenLoaiAIBot));
                         <span hidden>@tenLoai</span>
                         <span title="@tenLoai">@Public.Handle.TruncateString(input: tenLoai, maxLength: 30)</span>
                     }

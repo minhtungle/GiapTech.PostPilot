@@ -7,6 +7,13 @@
     var thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
 }
 
+<div class="mb-2 toggle-vis-bar">
+    Hiển thị:
+    <a href="#" class="toggle-vis" data-table="baidang-getList" data-column="3">Thời gian đăng</a> |
+    <a href="#" class="toggle-vis" data-table="baidang-getList" data-column="4">Nền tảng</a> |
+    <a href="#" class="toggle-vis" data-table="baidang-getList" data-column="5">Trạng thái đăng</a> |
+    <a href="#" class="toggle-vis" data-table="baidang-getList" data-column="6">URL bài viết</a>
+</div>
 <div class="card-body">
     <table class="table table-hover table-bordered table-sticky w-100" id="baidang-getList" data-page-length="10">
         <thead class="nowrap" style="white-space: nowrap !important">
@@ -35,6 +42,7 @@
                 <th class="text-center">Id bài đăng</th>
                 <th class="text-center">Nội dung</th>
                 <th class="text-center">Thời gian đăng</th>
+                <th class="text-center">Nền tảng</th>
                 <th class="text-center">Trạng thái đăng</th>
                 <th class="text-center">URL bài viết</th>
 
@@ -45,6 +53,7 @@
             <tr>
                 <th class="text-center"><input class="form-check-input checkAll-baidang-getList" type="checkbox" title="Chọn tất cả" /></th>
 
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
                 <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
                 <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
                 <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
@@ -69,6 +78,7 @@
                         @Public.Handle.TruncateString(maxLength: 28, input: baidang.BaiDang.NoiDung)
                     </td>
                     <td class="text-left">@baidang.BaiDang.ThoiGian.Value</td>
+                    <td class="text-left">@baidang.NenTang.TenNenTang</td>
                     <td class="text-center">
                         @{
                             var status = (TrangThaiDangBaiEnum)baidang.BaiDang.TrangThaiDangBai;

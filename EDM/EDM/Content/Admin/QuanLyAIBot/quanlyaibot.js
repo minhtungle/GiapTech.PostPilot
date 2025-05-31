@@ -16,6 +16,34 @@ class QuanLyAIBot {
         quanLyAIBot.aiBot = {
             ...quanLyAIBot.aiBot,
             dataTable: null,
+            handleAI: {
+                taoNoiDungAI: function () {
+                    var $modal = $("#aibot-crud");
+                    var input = {
+                        IdAITool: $(`#select-aitool`, $modal).val(),
+                        Prompt: $(`#input-prompt`, $modal).val().trim(),
+                        Keywords: $(`#input-keywords`, $modal).val().trim(),
+                    };
+
+                    (input.IdAITool && input.Prompt)
+                        && $.ajax({
+                            ...ajaxDefaultProps({
+                                url: "/QuanLyAIBot/taoNoiDungAI",
+                                type: "POST",
+                                contentType: "application/json; charset=utf-8",
+                                data: { input },
+                            }),
+                            success: function (res) {
+                                if (res.status == "success") {
+                                    $(`#input-noidung-ai`, $modal).text(res.NoiDung);
+                                    $(`#input-noidung-ai`, $modal).val(res.NoiDung);
+                                    $(`#input-noidung-ai`, $modal).change();
+                                };
+                                sys.alert({ mess: res.mess, status: res.status, timeout: 1500 });
+                            }
+                        })
+                },
+            },
             getList: function () {
                 $.ajax({
                     ...ajaxDefaultProps({
@@ -93,16 +121,17 @@ class QuanLyAIBot {
                             IdAIBot: $("#input-idaibot", $modal).val(),
                             TenAIBot: $("#input-tenaibot", $modal).val().trim(),
                             Prompt: $("#input-prompt", $modal).val().trim(),
+                            Keywords: $("#input-keywords", $modal).val().trim(),
                             GhiChu: $("#input-ghichu", $modal).val().trim(),
                         },
                     };
-                    let loaiAIBots = $("#select-loaiaibot", $modal).val();
+                    let idLoaiAIBots = $("#select-loaiaibot", $modal).val();
                     sys.confirmDialog({
                         mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
                         callback: function () {
                             var formData = new FormData();
                             formData.append("aiBot", JSON.stringify(aiBot));
-                            formData.append("loaiAIBots", JSON.stringify(loaiAIBots));
+                            formData.append("idLoaiAIBots", JSON.stringify(idLoaiAIBots));
 
                             $.ajax({
                                 ...ajaxDefaultProps({

@@ -107,18 +107,18 @@ namespace Applications.QuanLyAITool.Services
             });
         }
 
-        public async Task<string> WorkWithAITool(string toolCode, string prompt)
+        public async Task<string> WorkWithAITool(WorkWithAITool_Input_Dto input)
         {
             var tool = await _aiToolRepo.Query()
-                .Where(x => x.ToolCode == toolCode && 
-                (x.IsEncrypted.HasValue && x.IsEncrypted.Value))
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(x =>
+                x.IdAITool == input.IdAITool &&
+                (x.IsEncrypted ?? false));
 
             if (tool == null)
-                return $"Không tìm thấy cấu hình cho tool: {toolCode}";
+                return $"Không tìm thấy cấu hình cho AI Tool";
 
             // Giải mã API Key nếu cần
-            var apiKey = (tool.IsEncrypted.HasValue && tool.IsEncrypted.Value) ? CryptoHelper.Decrypt(tool.APIKey) : tool.APIKey;
+            var apiKey = (tool.IsEncrypted ?? false) ? CryptoHelper.Decrypt(tool.APIKey) : tool.APIKey;
 
             using (var client = new HttpClient())
             {
@@ -138,16 +138,13 @@ namespace Applications.QuanLyAITool.Services
                     }
                 }
 
-                // Tạo nội dung body từ template
-                string requestBody = tool.RequestBodyTemplate;
-
-                // Áp dụng dữ liệu động nếu dùng {0} (model), {1} (prompt)
-                if (!string.IsNullOrEmpty(requestBody) && (requestBody.Contains("{0}") || requestBody.Contains("{1}")))
+                var requestBody = AIToolTemplates.GetFormattedRequestBody(toolCode: tool.ToolCode, model: tool.Model, prompt: input.Prompt);
+                if (requestBody.Item1 == false)
                 {
-                    requestBody = string.Format(requestBody, tool.Model ?? "", prompt);
+                    return requestBody.Item2; // Trả về lỗi nếu không lấy được body
                 }
 
-                var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var content = new StringContent(requestBody.Item2, Encoding.UTF8, "application/json");
 
                 // Gửi request
                 var response = await client.PostAsync(tool.ApiEndpoint, content);
@@ -162,11 +159,23 @@ namespace Applications.QuanLyAITool.Services
                 dynamic json = JsonConvert.DeserializeObject(responseString);
                 if (json?.choices != null && json.choices.Count > 0)
                 {
-                    return (string)json.choices[0].message.content;
+                    return (string)(json.choices[0].message?.content ?? json.choices[0]?.text ?? ""); // fallback cho Cohere, Claude
+                }
+
+                // Với Gemini hoặc Claude nếu không có `choices`
+                if (json?.candidates != null && json.candidates.Count > 0)
+                {
+                    return (string)(json.candidates[0]?.content?.parts?[0]?.text ?? "");
+                }
+
+                if (json?.completion != null)
+                {
+                    return (string)json.completion;
                 }
 
                 return "Không nhận được nội dung từ API.";
             }
         }
+
     }
 }

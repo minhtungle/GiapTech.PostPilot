@@ -5,6 +5,12 @@
     var thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
 }
 
+<div class="mb-2 toggle-vis-bar">
+    Hiển thị:
+    <a href="#" class="toggle-vis" data-table="aitool-getList" data-column="3">Tool Name</a> |
+    <a href="#" class="toggle-vis" data-table="aitool-getList" data-column="4">Model</a> |
+    <a href="#" class="toggle-vis" data-table="aitool-getList" data-column="5">Ngày tạo</a>
+</div>
 <table class="table table-hover table-bordered table-sticky w-100" id="aitool-getList" data-page-length="10">
     <thead class="nowrap" style="white-space: nowrap !important">
         <tr>

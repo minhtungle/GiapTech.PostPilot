@@ -22,16 +22,19 @@ namespace Applications.QuanLyAIBot.Services
     {
         private readonly IRepository<tbAIBot, Guid> _aiBotRepo;
         private readonly IRepository<tbLoaiAIBot, Guid> _loaiAIBotRepo;
+        private readonly IRepository<tbAIBotLoaiAIBot, Guid> _aiBotLoaiAIBotRepo;
 
         public QuanLyAIBotAppService(
             IUserContext userContext,
             IUnitOfWork unitOfWork,
-            IRepository<tbAIBot, Guid> AIBotRepo,
-            IRepository<tbLoaiAIBot, Guid> loaiAIBotRepo)
+            IRepository<tbAIBot, Guid> aiBotRepo,
+            IRepository<tbLoaiAIBot, Guid> loaiAIBotRepo,
+            IRepository<tbAIBotLoaiAIBot, Guid> aiBotLoaiAIBotRepo)
             : base(userContext, unitOfWork)
         {
-            _aiBotRepo = AIBotRepo;
+            _aiBotRepo = aiBotRepo;
             _loaiAIBotRepo = loaiAIBotRepo;
+            _aiBotLoaiAIBotRepo = aiBotLoaiAIBotRepo;
         }
 
         public List<ThaoTac> GetThaoTacs(string maChucNang) => GetThaoTacByIdChucNang(maChucNang);
@@ -42,18 +45,31 @@ namespace Applications.QuanLyAIBot.Services
         {
             var query = _aiBotRepo.Query()
                 .Where(x =>
-                x.TrangThai != 0 &&
-                x.MaDonViSuDung == CurrentDonViId);
+                    x.TrangThai != 0 &&
+                    x.MaDonViSuDung == CurrentDonViId)
+                .Join(_aiBotLoaiAIBotRepo.Query(),
+                    aiBot => aiBot.IdAIBot,
+                    aiBotLoaiAIBot => aiBotLoaiAIBot.IdAIBot,
+                    (aiBot, aiBotLoaiAIBot) => new { AIBot = aiBot, Gate = aiBotLoaiAIBot })
+                .Join(_loaiAIBotRepo.Query(),
+                    x => x.Gate.IdLoaiAIBot,
+                    loaiAIBot => loaiAIBot.IdLoaiAIBot,
+                    (x, loaiAIBot) => new { AIBot = x.AIBot, LoaiAIBot = loaiAIBot })
+                .GroupBy(x => x.AIBot.IdAIBot)
+                .Select(gr => new tbAIBotExtend
+                {
+                    AIBot = gr.FirstOrDefault().AIBot,
+                    LoaiAIBots = gr.Select(x => x.LoaiAIBot).ToList(),
+                });
 
             if (loai == "single" && idAIBot != null)
             {
-                query = query.Where(x => idAIBot.Contains(x.IdAIBot));
+                query = query.Where(x => idAIBot.Contains(x.AIBot.IdAIBot));
             }
             ;
 
             var data = await query
-                .OrderByDescending(x => x.NgayTao)
-                .Select(x => new tbAIBotExtend { AIBot = x })
+                .OrderByDescending(x => x.AIBot.NgayTao)
                 .ToListAsync();
 
             return data;
@@ -96,7 +112,7 @@ namespace Applications.QuanLyAIBot.Services
             && x.TrangThai != 0 && x.MaDonViSuDung == CurrentDonViSuDung.MaDonViSuDung);
             return loaiAiBot_OLD != null;
         }
-        public async Task Create_AIBot(tbAIBotExtend aiBot)
+        public async Task Create_AIBot(tbAIBotExtend aiBot, List<Guid> idLoaiAIBots)
         {
             await _unitOfWork.ExecuteInTransaction(async () =>
             {
@@ -104,6 +120,8 @@ namespace Applications.QuanLyAIBot.Services
                 {
                     IdAIBot = Guid.NewGuid(),
                     TenAIBot = aiBot.AIBot.TenAIBot,
+                    Prompt = aiBot.AIBot.Prompt,
+                    Keywords = aiBot.AIBot.Keywords,
                     GhiChu = aiBot.AIBot.GhiChu,
 
                     TrangThai = 1,
@@ -114,6 +132,23 @@ namespace Applications.QuanLyAIBot.Services
                 };
 
                 await _unitOfWork.InsertAsync<tbAIBot, Guid>(entity);
+
+                foreach (var idLoaiAIBot in idLoaiAIBots)
+                {
+                    var aiBotLoaiAIBot = new tbAIBotLoaiAIBot
+                    {
+                        IdAIBotLoaiAIBot = Guid.NewGuid(),
+                        IdAIBot = entity.IdAIBot,
+                        IdLoaiAIBot = idLoaiAIBot,
+
+                        TrangThai = 1,
+                        MaDonViSuDung = CurrentDonViSuDung.MaDonViSuDung,
+                        IdNguoiTao = CurrentNguoiDung.IdNguoiDung,
+                        NgayTao = DateTime.Now
+                    };
+
+                    await _unitOfWork.InsertAsync<tbAIBotLoaiAIBot, Guid>(aiBotLoaiAIBot);
+                }
                 // Thêm các thao tác async khác
             });
         }
@@ -126,7 +161,7 @@ namespace Applications.QuanLyAIBot.Services
                     IdLoaiAIBot = Guid.NewGuid(),
                     TenLoaiAIBot = loaiAIBot.TenLoaiAIBot,
                     GhiChu = loaiAIBot.GhiChu,
-                    
+
                     TrangThai = 1,
                     MaDonViSuDung = CurrentDonViSuDung.MaDonViSuDung,
                     IdNguoiTao = CurrentNguoiDung.IdNguoiDung,

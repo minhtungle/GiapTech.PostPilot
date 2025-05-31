@@ -16,6 +16,6 @@ namespace Applications.QuanLyAITool.Interfaces
             LocThongTinDto locThongTin = null);
         Task<bool> IsExisted_AITool(tbAITool aiTool);
         Task Create_AITool(tbAITool aiTool);
-        Task<string> WorkWithAITool(string toolCode, string prompt);
+        Task<string> WorkWithAITool(WorkWithAITool_Input_Dto input);
     }
 }

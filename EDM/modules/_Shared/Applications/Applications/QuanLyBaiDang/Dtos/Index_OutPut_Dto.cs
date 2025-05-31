@@ -11,5 +11,7 @@ namespace Applications.QuanLyBaiDang.Dtos
     {
         public List<ThaoTac> ThaoTacs { get; set; }
         public List<tbNenTang> NenTangs { get; set; }
+        public List<tbAIBot> AIBots { get; set; } = new List<tbAIBot>();
+        public List<tbAITool> AITools { get; set; } = new List<tbAITool>();
     }
 }

@@ -4,66 +4,107 @@
 <div class="row" intro-container="thongtin-chung">
     <!--Id-->
     <input id="input-idbaidang" value="@Guid.Empty" hidden />
-
-    <!--Prompt-->
+    <!--Loại AI Tool-->
+    <div class="col-sm-12 col-md-6">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="required" for="select-aitool">AI Tool</label>
+                <select class="form-control form-select2"
+                        id="select-aitool" name="select-aitool" required>
+                    <option disabled @(Model.AITools.Count > 0 ? "" : "")>Chọn thông tin</option>
+                    @foreach (var aiTool in Model.AITools)
+                    {
+                        <option value="@aiTool.IdAITool">@aiTool.ToolName</option>
+                    }
+                </select>
+                <div class="invalid-feedback feedback" for="select-loaiaitool">Không được để trống</div>
+            </div>
+        </div>
+    </div>
+    <!--Loại AI Bot-->
+    <div class="col-sm-12 col-md-6">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="required" for="select-aibot">AI Bot</label>
+                <select class="form-control form-select2"
+                        id="select-aibot" name="select-aibot"
+                        onchange="quanLyBaiDang.baiDang.handleAI.chonLoaiAIBot('@Model.BaiDang.RowNumber')"
+                        required>
+                    <option value="">Chọn thông tin</option>
+                    @foreach (var aiBot in Model.AIBots)
+                    {
+                        <option value="@aiBot.IdAIBot">@aiBot.TenAIBot</option>
+                    }
+                </select>
+                <div class="invalid-feedback feedback" for="select-aibot">Không được để trống</div>
+            </div>
+        </div>
+    </div>
+    <!--Keywords-->
     <div class="col-12 col-sm-12 col-md-6">
         <div class="position-relative">
             <div class="form-group mb-3">
-                <label class="" for="input-prompt">Prompt</label>
+                <label class="" for="input-keywords">
+                    Keywords <small class="text-danger fst-italic">(Thông tin yêu cầu)</small>
+                </label>
                 @{
-                    var email = "email@gmail.com";
-                    var website = "https://postpilot.com";
-                    var diaChi = "Hà Nội, Việt Nam";
-                    var chuDe = "Thời trang, Mỹ phẩm";
-                    var prompt = $@"
-Viết một bài đăng fanpage chất lượng cao theo phong cách sau:
-
-1. **Tiêu đề ngắn gọn, mạnh mẽ và thu hút**, có thể dùng biểu tượng cảm xúc (emoji) phù hợp.
-2. **Feedback thực tế hoặc câu chuyện truyền cảm hứng** từ khách hàng hoặc học viên (dạng lời kể, dẫn chứng).
-3. **Danh sách gạch đầu dòng** các lợi ích, kết quả cụ thể mà người dùng đạt được.
-4. **Lý do tại sao người khác cũng nên lựa chọn dịch vụ/sản phẩm này** (USP – điểm mạnh, cam kết...).
-5. **Kêu gọi hành động rõ ràng**: inbox, bình luận, hoặc để lại thông tin để được tư vấn.
-6. **Thông tin liên hệ**, bao gồm:
-7. **Hashtag liên quan ở cuối bài viết** (4–6 hashtag)
-                                   - Email: {email}
-                                   - Website: {website}
-                                   - Địa chỉ: {diaChi}
-
-Nội dung bài viết nói về: ""{chuDe}""
-
-Yêu cầu:
-- Viết bằng tiếng Việt
-- Văn phong thuyết phục, tự nhiên, gần gũi, hướng đến hành động, dành cho fanpage
-- Có thể sử dụng emoji để làm nổi bật
-- Toàn bộ nội dung không quá 500 từ
+                    var plh_keywords = $@"Tên sản phẩm
+Số lượng
+Giảm giá
+...
 ";
-                    var title = $@"Viết prompt của bạn để AI hỗ trợ tạo nội dung phù hợp";
                 }
-                <textarea class="form-control min-h-100 max-h-300" id="input-prompt" rows="10"
-                          title="@title"
-                          placeholder="Nhập nội dung prompt ...">@prompt</textarea>
+                <textarea class="form-control min-h-100 max-h-300" id="input-keywords" rows="5"
+                          placeholder="@plh_keywords" title="@plh_keywords" readonly></textarea>
+                <div class="invalid-feedback feedback" for="input-keywords">Không được để trống</div>
+            </div>
+        </div>
+    </div>
+    <!--Nhập Keywords-->
+    <div class="col-12 col-sm-12 col-md-6">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="" for="input-keywords-danhap">
+                    Nhập Keywords <small class="text-danger fst-italic">(Nhập theo mẫu)</small>
+                </label>
+                @{
+                    var plh_nhapkeywords = $@"Tên sản phẩm: Quà lưu niệm
+Số lượng: 1000 hộp
+Giảm giá: 50%
+...
+";
+                }
+                <textarea class="form-control min-h-100 max-h-300" id="input-keywords-danhap" rows="5"
+                          placeholder="@plh_nhapkeywords" title="@plh_nhapkeywords"></textarea>
                 <a class="btn btn-sm btn-success" id="btn-taonoidung-ai"
                    style="position: absolute; z-index: 1; right: .6rem; top: 2rem;"
                    onclick="quanLyBaiDang.baiDang.handleAI.taoNoiDungAI('@Model.BaiDang.RowNumber')">
                     <i class="bi bi-fast-forward-fill"></i>
                 </a>
-                <div class="invalid-feedback feedback" for="input-prompt">Không được để trống</div>
+                <div class="invalid-feedback feedback" for="input-keywords-danhap">Không được để trống</div>
             </div>
         </div>
     </div>
-    <!--Nội dung AI-->
-    <div class="col-12 col-sm-12 col-md-6">
+    <!--Nội dung-->
+    <div class="col-12 col-sm-12 col-md-12">
         <div class="position-relative">
             <div class="form-group mb-3">
                 <label class="required" for="input-noidung-ai">Nội dung</label>
+                @{
+                    var plh_noidung = $@"1. Chọn AI Tool
+2. Chọn AI bot
+3. Nhập keywords yêu cầu (nếu có)
+4. Nhấn mũi tên để tạo nội dung
+";
+                }
                 <textarea class="form-control min-h-100 max-h-300" id="input-noidung-ai" rows="10"
-                          placeholder="Nhấn mũi tên để AI tiến hành tạo nội dung ..." required></textarea>
+                          placeholder="@plh_noidung" title="@plh_noidung" required></textarea>
                 <div class="invalid-feedback feedback" for="input-noidung-ai">Không được để trống</div>
             </div>
         </div>
     </div>
     <!--Thời gian-->
-    <div class="col-12 col-sm-12 col-md-6">
+    <div class="col-12 col-sm-12 col-md-12">
         <div class="position-relative">
             <div class="form-group mb-3">
                 <label class="required" for="input-thoigian">Thời gian</label>
@@ -80,14 +121,14 @@ Yêu cầu:
         </div>
     </div>
     <!--Nền tảng-->
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12 col-md-12">
         <div class="position-relative">
             <div class="form-group mb-3">
                 <label class="required" for="select-nentang">Nền tảng</label>
                 <select class="form-control form-select2"
-                        id="select-nentang" name="select-nentang" 
+                        id="select-nentang" name="select-nentang"
                         multiple required>
-                    <option disabled @(Model.NenTangs.Count > 0 ? "" : "selected")>Chọn thông tin</option>
+                    <option disabled>Chọn thông tin</option>
                     @foreach (var nenTang in Model.NenTangs)
                     {
                         <option value="@nenTang.IdNenTang">@nenTang.TenNenTang</option>

@@ -15,32 +15,16 @@ namespace EDM_DB
 using System;
     using System.Collections.Generic;
     
-public partial class tbBaiDang
+public partial class tbAIBotLoaiAIBot
 {
 
     public int Stt { get; set; }
 
-    public System.Guid IdBaiDang { get; set; }
+    public System.Guid IdAIBotLoaiAIBot { get; set; }
 
-    public Nullable<System.Guid> IdChienDich { get; set; }
+    public Nullable<System.Guid> IdAIBot { get; set; }
 
-    public Nullable<System.Guid> IdNenTang { get; set; }
-
-    public string IdBaiDang_TrenNenTang { get; set; }
-
-    public string LienKetBaiDang_TrenNenTang { get; set; }
-
-    public Nullable<bool> TuTaoAnhAI { get; set; }
-
-    public string NoiDung { get; set; }
-
-    public Nullable<System.DateTime> ThoiGian { get; set; }
-
-    public Nullable<int> SoLuongLike { get; set; }
-
-    public Nullable<int> SoLuongComment { get; set; }
-
-    public Nullable<int> TrangThaiDangBai { get; set; }
+    public Nullable<System.Guid> IdLoaiAIBot { get; set; }
 
     public Nullable<int> TrangThai { get; set; }
 

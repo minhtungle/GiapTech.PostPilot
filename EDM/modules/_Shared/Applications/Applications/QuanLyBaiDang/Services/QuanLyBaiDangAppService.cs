@@ -28,6 +28,7 @@ namespace Applications.QuanLyBaiDang.Serivices
         private readonly IRepository<tbBaiDang, Guid> _baiDangRepo;
         private readonly IRepository<tbTepDinhKem, Guid> _tepDinhKemRepo;
         private readonly IRepository<tbBaiDangTepDinhKem, Guid> _baiDangTepDinhKemRepo;
+        private readonly IRepository<tbNenTang, Guid> _nenTangRepo;
 
         private readonly IRepository<tbApiCredential, Guid> _apiCredentialRepo;
 
@@ -37,33 +38,43 @@ namespace Applications.QuanLyBaiDang.Serivices
             IRepository<tbBaiDang, Guid> baiDangRepo,
             IRepository<tbTepDinhKem, Guid> tepDinhKemRepo,
             IRepository<tbBaiDangTepDinhKem, Guid> baiDangTepDinhKemRepo,
+            IRepository<tbNenTang, Guid> nenTangRepo,
             IRepository<tbApiCredential, Guid> apiCredentialRepo)
             : base(userContext, unitOfWork)
         {
             _baiDangRepo = baiDangRepo;
             _apiCredentialRepo = apiCredentialRepo;
             _tepDinhKemRepo = tepDinhKemRepo;
+            _nenTangRepo = nenTangRepo;
             _baiDangTepDinhKemRepo = baiDangTepDinhKemRepo;
         }
         public List<ThaoTac> GetThaoTacs(string maChucNang) => GetThaoTacByIdChucNang(maChucNang);
         public async Task<IEnumerable<tbBaiDangExtend>> GetBaiDangs(
-            string loai = "all", 
-            List<Guid> idBaiDangs = null, 
+            string loai = "all",
+            List<Guid> idBaiDangs = null,
             LocThongTinDto locThongTin = null)
         {
             var query = _baiDangRepo.Query()
                 .Where(x =>
-                x.TrangThai != 0 &&
-                x.MaDonViSuDung == CurrentDonViId);
+                    x.TrangThai != 0 &&
+                    x.MaDonViSuDung == CurrentDonViId)
+                .Join(_nenTangRepo.Query(),
+                    bd => bd.IdNenTang,
+                    nt => nt.IdNenTang,
+                    (bd, nt) => new tbBaiDangExtend
+                    {
+                        BaiDang = bd,
+                        NenTang = nt
+                    });
 
             if (loai == "single" && idBaiDangs != null)
             {
-                query = query.Where(x => idBaiDangs.Contains(x.IdBaiDang));
-            };
+                query = query.Where(x => idBaiDangs.Contains(x.BaiDang.IdBaiDang));
+            }
+            ;
 
             var data = await query
-                .OrderByDescending(x => x.ThoiGian)
-                .Select(x => new tbBaiDangExtend { BaiDang = x })
+                .OrderByDescending(x => x.BaiDang.ThoiGian)
                 .ToListAsync();
 
             return data;
@@ -167,12 +178,12 @@ namespace Applications.QuanLyBaiDang.Serivices
                     }
                 }
 
+
                 var baiDang = new tbBaiDang
                 {
                     IdBaiDang = Guid.NewGuid(),
                     IdChienDich = baiDang_NEW.BaiDang.IdChienDich,
                     IdNenTang = baiDang_NEW.BaiDang.IdNenTang,
-                    Prompt = baiDang_NEW.BaiDang.Prompt,
                     NoiDung = baiDang_NEW.BaiDang.NoiDung,
                     ThoiGian = baiDang_NEW.BaiDang.ThoiGian,
                     TuTaoAnhAI = baiDang_NEW.BaiDang.TuTaoAnhAI,
@@ -182,7 +193,6 @@ namespace Applications.QuanLyBaiDang.Serivices
                     NgayTao = DateTime.Now,
                     MaDonViSuDung = CurrentDonViId
                 };
-
                 tepDinhKemMappings.Add((baiDang, tepList));
             }
 
@@ -256,7 +266,5 @@ namespace Applications.QuanLyBaiDang.Serivices
                 await _unitOfWork.SaveChangesAsync();
             });
         }
-
-
     }
 }

@@ -11,6 +11,8 @@ namespace Applications.QuanLyBaiDang.Dtos
     {
         public tbBaiDangExtend BaiDang { get; set; }
         public List<tbNenTang> NenTangs { get; set; } = new List<tbNenTang>();
+        public List<tbAIBot> AIBots { get; set; } = new List<tbAIBot>();
+        public List<tbAITool> AITools { get; set; } = new List<tbAITool>();
         public string LoaiView { get; set; }
     }
 }

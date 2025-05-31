@@ -45,6 +45,8 @@ public partial class EDM_DBEntities : DbContext
 
     public virtual DbSet<tbAIBot> tbAIBots { get; set; }
 
+    public virtual DbSet<tbAIBotLoaiAIBot> tbAIBotLoaiAIBots { get; set; }
+
     public virtual DbSet<tbAITool> tbAITools { get; set; }
 
     public virtual DbSet<tbApiCredential> tbApiCredentials { get; set; }

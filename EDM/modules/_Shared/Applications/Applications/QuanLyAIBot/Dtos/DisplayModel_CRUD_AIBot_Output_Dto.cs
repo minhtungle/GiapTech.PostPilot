@@ -12,6 +12,7 @@ namespace Applications.QuanLyAIBot.Dtos
     {
         public tbAIBotExtend AIBot { get; set; } = new tbAIBotExtend();
         public List<tbLoaiAIBot> LoaiAIBot { get; set; } = new List<tbLoaiAIBot>();
+        public List<tbAITool> AITools { get; set; } = new List<tbAITool>();
         public string Loai { get; set; }
     }
 }

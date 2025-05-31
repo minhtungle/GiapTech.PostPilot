@@ -79,8 +79,23 @@
           <Property Name="IdAIBot" Type="uniqueidentifier" Nullable="false" />
           <Property Name="TenAIBot" Type="nvarchar(max)" />
           <Property Name="Prompt" Type="nvarchar(max)" />
-          <Property Name="APIKey" Type="nvarchar(max)" />
+          <Property Name="Keywords" Type="nvarchar(max)" />
           <Property Name="GhiChu" Type="nvarchar(max)" />
+          <Property Name="TrangThai" Type="int" />
+          <Property Name="MaDonViSuDung" Type="uniqueidentifier" />
+          <Property Name="NgayTao" Type="datetime" />
+          <Property Name="IdNguoiTao" Type="uniqueidentifier" />
+          <Property Name="NgaySua" Type="datetime" />
+          <Property Name="IdNguoiSua" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="tbAIBotLoaiAIBot">
+          <Key>
+            <PropertyRef Name="IdAIBotLoaiAIBot" />
+          </Key>
+          <Property Name="Stt" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdAIBotLoaiAIBot" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IdAIBot" Type="uniqueidentifier" />
+          <Property Name="IdLoaiAIBot" Type="uniqueidentifier" />
           <Property Name="TrangThai" Type="int" />
           <Property Name="MaDonViSuDung" Type="uniqueidentifier" />
           <Property Name="NgayTao" Type="datetime" />
@@ -139,7 +154,6 @@
           <Property Name="IdBaiDang_TrenNenTang" Type="nvarchar(max)" />
           <Property Name="LienKetBaiDang_TrenNenTang" Type="nvarchar(max)" />
           <Property Name="TuTaoAnhAI" Type="bit" />
-          <Property Name="Prompt" Type="nvarchar(max)" />
           <Property Name="NoiDung" Type="nvarchar(max)" />
           <Property Name="ThoiGian" Type="datetime" />
           <Property Name="SoLuongLike" Type="int" />
@@ -451,6 +465,7 @@
           <EntitySet Name="default_tbChucVu" EntityType="Self.default_tbChucVu" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="default_tbQuocGia" EntityType="Self.default_tbQuocGia" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbAIBot" EntityType="Self.tbAIBot" Schema="vietstarter_admin" store:Type="Tables" />
+          <EntitySet Name="tbAIBotLoaiAIBot" EntityType="Self.tbAIBotLoaiAIBot" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbAITool" EntityType="Self.tbAITool" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbApiCredentials" EntityType="Self.tbApiCredentials" Schema="vietstarter_admin" store:Type="Tables" />
           <EntitySet Name="tbBaiDang" EntityType="Self.tbBaiDang" Schema="vietstarter_admin" store:Type="Tables" />
@@ -488,6 +503,7 @@
           <EntitySet Name="default_tbChucVu" EntityType="EDM_DBModel.default_tbChucVu" />
           <EntitySet Name="default_tbQuocGia" EntityType="EDM_DBModel.default_tbQuocGia" />
           <EntitySet Name="tbAIBots" EntityType="EDM_DBModel.tbAIBot" />
+          <EntitySet Name="tbAIBotLoaiAIBots" EntityType="EDM_DBModel.tbAIBotLoaiAIBot" />
           <EntitySet Name="tbAITools" EntityType="EDM_DBModel.tbAITool" />
           <EntitySet Name="tbApiCredentials" EntityType="EDM_DBModel.tbApiCredential" />
           <EntitySet Name="tbBaiDangs" EntityType="EDM_DBModel.tbBaiDang" />
@@ -587,8 +603,23 @@
           <Property Name="IdAIBot" Type="Guid" Nullable="false" />
           <Property Name="TenAIBot" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Prompt" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="APIKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Keywords" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="GhiChu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TrangThai" Type="Int32" />
+          <Property Name="MaDonViSuDung" Type="Guid" />
+          <Property Name="NgayTao" Type="DateTime" Precision="3" />
+          <Property Name="IdNguoiTao" Type="Guid" />
+          <Property Name="NgaySua" Type="DateTime" Precision="3" />
+          <Property Name="IdNguoiSua" Type="Guid" />
+        </EntityType>
+        <EntityType Name="tbAIBotLoaiAIBot">
+          <Key>
+            <PropertyRef Name="IdAIBotLoaiAIBot" />
+          </Key>
+          <Property Name="Stt" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdAIBotLoaiAIBot" Type="Guid" Nullable="false" />
+          <Property Name="IdAIBot" Type="Guid" />
+          <Property Name="IdLoaiAIBot" Type="Guid" />
           <Property Name="TrangThai" Type="Int32" />
           <Property Name="MaDonViSuDung" Type="Guid" />
           <Property Name="NgayTao" Type="DateTime" Precision="3" />
@@ -647,7 +678,6 @@
           <Property Name="IdBaiDang_TrenNenTang" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="LienKetBaiDang_TrenNenTang" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TuTaoAnhAI" Type="Boolean" />
-          <Property Name="Prompt" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="NoiDung" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ThoiGian" Type="DateTime" Precision="3" />
           <Property Name="SoLuongLike" Type="Int32" />
@@ -1039,10 +1069,26 @@
                 <ScalarProperty Name="MaDonViSuDung" ColumnName="MaDonViSuDung" />
                 <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
                 <ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
-                <ScalarProperty Name="APIKey" ColumnName="APIKey" />
+                <ScalarProperty Name="Keywords" ColumnName="Keywords" />
                 <ScalarProperty Name="Prompt" ColumnName="Prompt" />
                 <ScalarProperty Name="TenAIBot" ColumnName="TenAIBot" />
                 <ScalarProperty Name="IdAIBot" ColumnName="IdAIBot" />
+                <ScalarProperty Name="Stt" ColumnName="Stt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbAIBotLoaiAIBots">
+            <EntityTypeMapping TypeName="EDM_DBModel.tbAIBotLoaiAIBot">
+              <MappingFragment StoreEntitySet="tbAIBotLoaiAIBot">
+                <ScalarProperty Name="IdNguoiSua" ColumnName="IdNguoiSua" />
+                <ScalarProperty Name="NgaySua" ColumnName="NgaySua" />
+                <ScalarProperty Name="IdNguoiTao" ColumnName="IdNguoiTao" />
+                <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
+                <ScalarProperty Name="MaDonViSuDung" ColumnName="MaDonViSuDung" />
+                <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
+                <ScalarProperty Name="IdLoaiAIBot" ColumnName="IdLoaiAIBot" />
+                <ScalarProperty Name="IdAIBot" ColumnName="IdAIBot" />
+                <ScalarProperty Name="IdAIBotLoaiAIBot" ColumnName="IdAIBotLoaiAIBot" />
                 <ScalarProperty Name="Stt" ColumnName="Stt" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1103,7 +1149,6 @@
                 <ScalarProperty Name="SoLuongLike" ColumnName="SoLuongLike" />
                 <ScalarProperty Name="ThoiGian" ColumnName="ThoiGian" />
                 <ScalarProperty Name="NoiDung" ColumnName="NoiDung" />
-                <ScalarProperty Name="Prompt" ColumnName="Prompt" />
                 <ScalarProperty Name="TuTaoAnhAI" ColumnName="TuTaoAnhAI" />
                 <ScalarProperty Name="LienKetBaiDang_TrenNenTang" ColumnName="LienKetBaiDang_TrenNenTang" />
                 <ScalarProperty Name="IdBaiDang_TrenNenTang" ColumnName="IdBaiDang_TrenNenTang" />

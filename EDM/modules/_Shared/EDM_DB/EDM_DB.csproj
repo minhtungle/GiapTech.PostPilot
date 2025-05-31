@@ -124,6 +124,9 @@
     <Compile Include="tbAIBot.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>
+    <Compile Include="tbAIBotLoaiAIBot.cs">
+      <DependentUpon>EDM_DB.tt</DependentUpon>
+    </Compile>
     <Compile Include="tbAITool.cs">
       <DependentUpon>EDM_DB.tt</DependentUpon>
     </Compile>

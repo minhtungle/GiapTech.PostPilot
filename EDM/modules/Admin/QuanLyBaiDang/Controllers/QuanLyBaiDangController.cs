@@ -1,4 +1,6 @@
 ﻿using Applications._Others.Interfaces;
+using Applications.QuanLyAIBot.Interfaces;
+using Applications.QuanLyAITool.Dtos;
 using Applications.QuanLyAITool.Interfaces;
 using Applications.QuanLyBaiDang.Dtos;
 using Applications.QuanLyBaiDang.Interfaces;
@@ -60,14 +62,17 @@ namespace QuanLyBaiDang.Controllers
         // GET: Default
         private readonly IQuanLyBaiDangAppService _quanLyBaiDangService;
         private readonly IQuanLyAIToolAppService _quanLyAIToolAppService;
+        private readonly IQuanLyAIBotAppService _quanLyAIBotAppService;
         private readonly IOtherAppService _otherAppService;
         public QuanLyBaiDangController(
             IQuanLyBaiDangAppService quanLyBaiDangService,
             IQuanLyAIToolAppService quanLyAIToolAppService,
+            IQuanLyAIBotAppService quanLyAIBotAppService,
             IOtherAppService otherAppService)
         {
             _quanLyBaiDangService = quanLyBaiDangService;
             _quanLyAIToolAppService = quanLyAIToolAppService;
+            _quanLyAIBotAppService = quanLyAIBotAppService;
             _otherAppService = otherAppService;
         }
         #endregion
@@ -79,24 +84,30 @@ namespace QuanLyBaiDang.Controllers
             #region Thao tác
             var thaoTacs = _quanLyBaiDangService.GetThaoTacs(maChucNang: "QuanLyBaiDang");
             #endregion
-            
-            #region Thao tác
+
+            #region ##
             var nenTangs = await _otherAppService.GetNenTangs();
+            var aiTools = await _quanLyAIToolAppService.GetAITools();
+            var aiBots = await _quanLyAIBotAppService.GetAIBots();
+
+            var aiBots_ = aiBots.Select(x => x.AIBot).ToList();
             #endregion
 
             #endregion
 
             THAOTACs = thaoTacs.ToList();
-            var output = new Index_OutPut_Dto
+            var output = new Applications.QuanLyBaiDang.Dtos.Index_OutPut_Dto
             {
                 ThaoTacs = thaoTacs,
                 NenTangs = nenTangs,
+                AITools = aiTools,
+                AIBots = aiBots_
             };
             return View($"{VIEW_PATH}/baidang.cshtml", output);
         }
 
         [HttpGet]
-        public async Task<ActionResult> getList_BaiDang(LocThongTinDto locThongTin)
+        public async Task<ActionResult> getList_BaiDang(Applications.QuanLyBaiDang.Dtos.LocThongTinDto locThongTin)
         {
             var baiDangs = await _quanLyBaiDangService.GetBaiDangs(loai: "all", locThongTin: locThongTin);
             return PartialView($"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-getList.cshtml", baiDangs);
@@ -105,7 +116,6 @@ namespace QuanLyBaiDang.Controllers
         public ActionResult displayModal_CRUD_BaiDang(DisplayModel_CRUD_BaiDang_Input_Dto input)
         {
             var baiDang = new tbBaiDangExtend();
-
             var output = new DisplayModel_CRUD_BaiDang_Output_Dto
             {
                 Loai = input.Loai,
@@ -118,19 +128,28 @@ namespace QuanLyBaiDang.Controllers
         {
             var baiDang = new tbBaiDangExtend { BaiDang = new tbBaiDang() };
             var nenTangs = await _otherAppService.GetNenTangs();
-            var html_baidang_row = Public.Handle.RenderViewToString(this, $"{VIEW_PATH}/baidang-crud/form-addbaidang.cshtml",
+            var aiTools = await _quanLyAIToolAppService.GetAITools();
+            var aiBots = await _quanLyAIBotAppService.GetAIBots();
+
+            var aiBots_ = aiBots.Select(x => x.AIBot).ToList();
+            var html_baidang_row = Public.Handle.RenderViewToString(
+                this,
+                $"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-crud/form-addbaidang.cshtml",
                 new FormAddBaiDangDto
                 {
                     LoaiView = "row",
                     BaiDang = baiDang,
-                    NenTangs = nenTangs,
                 });
-            var html_baidang_read = Public.Handle.RenderViewToString(this, $"{VIEW_PATH}/baidang-crud/form-addbaidang.cshtml",
+            var html_baidang_read = Public.Handle.RenderViewToString(
+                this,
+                $"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-crud/form-addbaidang.cshtml",
                 new FormAddBaiDangDto
                 {
                     LoaiView = "read",
                     BaiDang = baiDang,
                     NenTangs = nenTangs,
+                    AITools = aiTools,
+                    AIBots = aiBots_
                 });
             var output = new
             {
@@ -183,176 +202,30 @@ namespace QuanLyBaiDang.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> _create_BaiDang(HttpPostedFileBase[] files, Guid[] rowNumbers)
-        {
-            using (var scope = db.Database.BeginTransaction())
-            {
-                try
-                {
-                    var baiDang_NEWs = JsonConvert.DeserializeObject<List<tbBaiDangExtend>>(Request.Form["baiDangs"]);
-
-                    if (baiDang_NEWs == null)
-                    {
-                        return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
-                    }
-
-                    foreach (var baiDang_NEW in baiDang_NEWs)
-                    {
-                        var baiDang = new tbBaiDang
-                        {
-                            IdBaiDang = Guid.NewGuid(),
-                            IdChienDich = baiDang_NEW.BaiDang.IdChienDich,
-                            IdNenTang = baiDang_NEW.BaiDang.IdNenTang,
-                            Prompt = baiDang_NEW.BaiDang.Prompt,
-                            NoiDung = baiDang_NEW.BaiDang.NoiDung,
-                            ThoiGian = baiDang_NEW.BaiDang.ThoiGian,
-                            TuTaoAnhAI = baiDang_NEW.BaiDang.TuTaoAnhAI,
-                            TrangThaiDangBai = (int?)TrangThaiDangBaiEnum.WaitToPost,
-                            TrangThai = 1,
-                            IdNguoiTao = per.NguoiDung.IdNguoiDung,
-                            NgayTao = DateTime.Now,
-                            MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
-                        };
-                        db.tbBaiDangs.Add(baiDang);
-
-                        if (files != null && (baiDang_NEW.BaiDang.TuTaoAnhAI.HasValue && !baiDang_NEW.BaiDang.TuTaoAnhAI.Value))
-                        {
-                            for (int i = 0; i < files.Length; i++)
-                            {
-                                var rowNumber = rowNumbers[i];
-                                if (baiDang_NEW.RowNumber == rowNumber)
-                                {
-                                    var file = files[i];
-                                    if (file == null || file.ContentLength <= 0)
-                                    {
-                                        return Json(new { status = "error", mess = "Chưa có file nào được chọn" }, JsonRequestBehavior.AllowGet);
-                                    }
-
-                                    var result = await _quanLyBaiDangService.UploadToFreeImageHost(file: file);
-
-                                    if (result == null)
-                                    {
-                                        return Json(new { status = "error", mess = "Không nhận được phản hồi từ server." }, JsonRequestBehavior.AllowGet);
-                                    }
-
-                                    if (result.StatusCode != 200)
-                                    {
-                                        return Json(new { status = "error", mess = "Upload thất bại: " + (result.StatusText ?? "Lỗi không xác định") }, JsonRequestBehavior.AllowGet);
-                                    }
-
-                                    string imageUrl = result.Image.Url;
-                                    var tepDinhKem = new tbTepDinhKem
-                                    {
-                                        IdTep = Guid.NewGuid(),
-                                        FileName = Path.GetFileNameWithoutExtension(file.FileName),
-                                        DuongDanTepOnline = imageUrl,
-                                        TrangThai = 1,
-                                        IdNguoiTao = per.NguoiDung.IdNguoiDung,
-                                        NgayTao = DateTime.Now,
-                                        MaDonViSuDung = per.DonViSuDung.MaDonViSuDung
-                                    };
-                                    db.tbTepDinhKems.Add(tepDinhKem);
-
-                                    var baiDangTepDinhKem = new tbBaiDangTepDinhKem
-                                    {
-                                        IdBaiDangTepDinhKem = Guid.NewGuid(),
-                                        IdBaiDang = baiDang.IdBaiDang,
-                                        IdTepDinhKem = tepDinhKem.IdTep,
-                                    };
-                                    db.tbBaiDangTepDinhKems.Add(baiDangTepDinhKem);
-                                }
-                            }
-                        }
-                    }
-
-                    db.SaveChanges();
-                    scope.Commit();
-
-                    return Json(new { status = "success", mess = "Thêm mới bản ghi thành công" }, JsonRequestBehavior.AllowGet);
-                }
-                catch (Exception ex)
-                {
-                    return Json(new { status = "error", mess = ex.Message }, JsonRequestBehavior.AllowGet);
-                }
-            }
-        }
-        [HttpPost]
-        public async Task<JsonResult> _delete_BaiDangs()
-        {
-            string status = "success";
-            string mess = "Xóa bản ghi thành công";
-            using (var scope = db.Database.BeginTransaction())
-            {
-                try
-                {
-                    List<Guid> idBaiDangs = JsonConvert.DeserializeObject<List<Guid>>(Request.Form["idBaiDangs"]);
-                    if (idBaiDangs.Count > 0)
-                    {
-                        foreach (var idBaiDang in idBaiDangs)
-                        {
-                            var baiDang_OLD = db.tbBaiDangs.Find(idBaiDang);
-                            if (baiDang_OLD != null)
-                            {
-                                baiDang_OLD.TrangThaiDangBai = (int?)TrangThaiDangBaiEnum.WaitToDelete; // Chờ xóa trên nền tảng
-                                baiDang_OLD.TrangThai = 0;
-                                baiDang_OLD.IdNguoiSua = per.NguoiDung.IdNguoiDung;
-                                baiDang_OLD.NgaySua = DateTime.Now;
-
-                                var baiDangTepDinhKems = db.tbBaiDangTepDinhKems
-                                       .Where(x => x.IdBaiDang == baiDang_OLD.IdBaiDang)
-                                       .ToList();
-
-                                // Ép danh sách ID tệp về danh sách Guid
-                                var tepIds = baiDangTepDinhKems.Select(y => y.IdTepDinhKem).ToList();
-
-                                var tepDinhKems = db.tbTepDinhKems
-                                    .Where(x => tepIds.Contains(x.IdTep))
-                                    .ToList();
-                                foreach (var tepDinhKem in tepDinhKems)
-                                {
-                                    tepDinhKem.TrangThai = 0;
-                                    tepDinhKem.IdNguoiSua = per.NguoiDung.IdNguoiDung;
-                                    tepDinhKem.NgaySua = DateTime.Now;
-                                    // Xóa file trong server
-                                    string duongDanTepVatLy = tepDinhKem.DuongDanTepVatLy;
-                                    string duongDanThuMucGoc = Path.GetDirectoryName(duongDanTepVatLy);
-                                    string inputFilePath_SERVER = Request.MapPath(duongDanTepVatLy);
-                                    if (System.IO.File.Exists(inputFilePath_SERVER))
-                                        System.IO.File.Delete(inputFilePath_SERVER);
-                                    // Xóa bản ghi trong DB
-                                    db.tbTepDinhKems.Remove(tepDinhKem);
-                                }
-                                ;
-                            }
-                            ;
-                        }
-                        ;
-                        db.SaveChanges();
-                        scope.Commit();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    status = "error";
-                    mess = ex.Message;
-                    scope.Rollback();
-                }
-            }
-            return Json(new
-            {
-                status,
-                mess
-            }, JsonRequestBehavior.AllowGet);
-        }
-        [HttpPost]
-        public async Task<JsonResult> taoNoiDungAI(string toolCode = "OpenAI_ChatGPT", string prompt = "")
+        public async Task<JsonResult> taoNoiDungAI(TaoNoiDungAI_Input_Dto input)
         {
             string status = "success";
             string mess = "Đã tạo nội dung AI";
             string noiDung = "";
             try
             {
-                noiDung = await _quanLyAIToolAppService.WorkWithAITool(toolCode: toolCode, prompt: prompt);
+                var aiBot = await _quanLyAIBotAppService.GetAIBots(loai: "single", idAIBot: new List<Guid> { input.IdAIBot });
+                if (aiBot == null || !aiBot.Any() || aiBot.FirstOrDefault().AIBot.IdAIBot == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        status = "error",
+                        mess = "Không tìm thấy thông tin AI Bot"
+                    });
+                }
+               string prompt = aiBot.FirstOrDefault().AIBot.Prompt += string.Format("\n {0}: {1}",
+                    "[THÔNG TIN CUNG CẤP] (nếu không có gì thì bỏ qua)",
+                    input.Keywords);
+                noiDung = await _quanLyAIToolAppService.WorkWithAITool(input: new WorkWithAITool_Input_Dto
+                {
+                    IdAITool = input.IdAITool,
+                    Prompt = prompt,
+                });
             }
             catch (Exception ex)
             {
@@ -366,6 +239,37 @@ namespace QuanLyBaiDang.Controllers
                 status,
                 mess
             });
+        }
+        [HttpPost]
+        public async Task<JsonResult> chonLoaiAIBot(Guid idAIBot)
+        {
+            try
+            {
+                var aiBot = await _quanLyAIBotAppService.GetAIBots(loai: "single", idAIBot: new List<Guid> { idAIBot });
+                if (aiBot != null && aiBot.FirstOrDefault().AIBot.IdAIBot != Guid.Empty)
+                    return Json(new
+                    {
+                        status = "success",
+                        mess = "Lựa chọn AI Bot thành công, hãy nhập keywords để tạo nội dung",
+                        Keywords = aiBot.FirstOrDefault().AIBot.Keywords,
+                    });
+                return Json(new
+                {
+                    status = "warning",
+                    mess = "Không tìm thấy thông tin AI Bot",
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    status = "error",
+                    mess = ex.ToString()
+                });
+            }
+            ;
+
         }
 
         public void SaveEncryptedCredential(string serviceName, string credentialType, string rawKeyJson, Guid? userId = null)

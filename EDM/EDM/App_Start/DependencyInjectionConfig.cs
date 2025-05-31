@@ -106,6 +106,9 @@ namespace EDM.App_Start
             builder.RegisterType<EfRepository<tbLoaiAIBot, Guid>>()
                    .As<IRepository<tbLoaiAIBot, Guid>>()
                    .InstancePerRequest();
+            builder.RegisterType<EfRepository<tbAIBotLoaiAIBot, Guid>>()
+                   .As<IRepository<tbAIBotLoaiAIBot, Guid>>()
+                   .InstancePerRequest();
             builder.RegisterType<EfRepository<tbAITool, Guid>>()
                    .As<IRepository<tbAITool, Guid>>()
                    .InstancePerRequest();

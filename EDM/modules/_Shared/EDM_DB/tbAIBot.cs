@@ -26,7 +26,7 @@ public partial class tbAIBot
 
     public string Prompt { get; set; }
 
-    public string APIKey { get; set; }
+    public string Keywords { get; set; }
 
     public string GhiChu { get; set; }
 

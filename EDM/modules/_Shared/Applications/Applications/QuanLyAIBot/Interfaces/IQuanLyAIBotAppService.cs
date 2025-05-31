@@ -21,7 +21,7 @@ namespace Applications.QuanLyAIBot.Interfaces
            LocThongTinDto locThongTin = null);
         Task<bool> IsExisted_AIBot(tbAIBot aiBot);
         Task<bool> IsExisted_LoaiAIBot(tbLoaiAIBot loaiAIBot);
-        Task Create_AIBot(tbAIBotExtend aiBot);
+        Task Create_AIBot(tbAIBotExtend aiBot, List<Guid> idLoaiAIBots);
         Task Create_LoaiAIBot(tbLoaiAIBot loaiAIBot);
     }
 }

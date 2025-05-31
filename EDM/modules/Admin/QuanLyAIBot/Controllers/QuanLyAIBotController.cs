@@ -1,19 +1,17 @@
 ﻿using Applications.QuanLyAIBot.Dtos;
 using Applications.QuanLyAIBot.Interfaces;
 using Applications.QuanLyAIBot.Models;
+using Applications.QuanLyAITool.Dtos;
+using Applications.QuanLyAITool.Interfaces;
 using EDM_DB;
 using Newtonsoft.Json;
 using Public.Controllers;
-using Public.Enums;
 using Public.Helpers;
 using Public.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace QuanLyAIBot.Controllers
@@ -35,9 +33,13 @@ namespace QuanLyAIBot.Controllers
             }
         }
         public readonly IQuanLyAIBotAppService _quanLyAIBotAppService;
-        public QuanLyAIBotController(IQuanLyAIBotAppService quanLyAIBotAppService)
+        private readonly IQuanLyAIToolAppService _quanLyAIToolAppService;
+        public QuanLyAIBotController(
+            IQuanLyAIBotAppService quanLyAIBotAppService,
+            IQuanLyAIToolAppService quanLyAIToolAppService)
         {
             _quanLyAIBotAppService = quanLyAIBotAppService;
+            _quanLyAIToolAppService = quanLyAIToolAppService;
         }
         #endregion
 
@@ -52,7 +54,7 @@ namespace QuanLyAIBot.Controllers
             #endregion
 
             THAOTACs = thaoTacs;
-            var output = new Index_OutPut_Dto
+            var output = new Applications.QuanLyAIBot.Dtos.Index_OutPut_Dto
             {
                 ThaoTacs = thaoTacs,
             };
@@ -76,6 +78,7 @@ namespace QuanLyAIBot.Controllers
         {
             var aiBot = await _quanLyAIBotAppService.GetAIBots(loai: "single", idAIBot: new List<Guid> { input.IdAIBot });
             var loaiAIBot = await _quanLyAIBotAppService.GetLoaiAIBots(loai: "all");
+            var aiTools = await _quanLyAIToolAppService.GetAITools();
             var output = new DisplayModel_CRUD_AIBot_Output_Dto
             {
                 Loai = input.Loai,
@@ -84,6 +87,7 @@ namespace QuanLyAIBot.Controllers
                 {
                     AIBot = new tbAIBot()
                 },
+                AITools = aiTools,
             };
             return PartialView($"{VIEW_PATH}/quanlyaibot-tab/aibot/aibot-crud.cshtml", output);
         }
@@ -104,14 +108,18 @@ namespace QuanLyAIBot.Controllers
             try
             {
                 var aiBot_NEW = JsonConvert.DeserializeObject<tbAIBotExtend>(Request.Form["aiBot"]);
+                var idLoaiAIBots_NEW = JsonConvert.DeserializeObject<List<Guid>>(Request.Form["idLoaiAIBots"]);
                 if (aiBot_NEW == null)
                     return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
 
-                var isExisted = await _quanLyAIBotAppService.IsExisted_AIBot(aiBot: aiBot_NEW.AIBot);
+                var isExisted = await _quanLyAIBotAppService.IsExisted_AIBot(
+                    aiBot: aiBot_NEW.AIBot);
                 if (isExisted)
                     return Json(new { status = "error", mess = "Tên đã tồn tại" }, JsonRequestBehavior.AllowGet);
 
-                await _quanLyAIBotAppService.Create_AIBot(aiBot: aiBot_NEW);
+                await _quanLyAIBotAppService.Create_AIBot(
+                    aiBot: aiBot_NEW,
+                    idLoaiAIBots: idLoaiAIBots_NEW);
                 return Json(new { status = "success", mess = "Thêm mới thành công" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -142,5 +150,36 @@ namespace QuanLyAIBot.Controllers
             }
             ;
         }
+        [HttpPost]
+        public async Task<JsonResult> taoNoiDungAI(TaoNoiDungAI_Input_Dto input)
+        {
+            string status = "success";
+            string mess = "Đã tạo nội dung AI";
+            string noiDung = "";
+            try
+            {
+                input.Prompt += string.Format("{0}: {1}",
+                    "[THÔNG TIN CUNG CẤP] (nếu không có gì thì bỏ qua)",
+                    input.Keywords);
+                noiDung = await _quanLyAIToolAppService.WorkWithAITool(input: new WorkWithAITool_Input_Dto
+                {
+                    IdAITool = input.IdAITool,
+                    Prompt = input.Prompt,
+                });
+            }
+            catch (Exception ex)
+            {
+                status = "error";
+                mess = ex.ToString();
+            }
+         ;
+            return Json(new
+            {
+                NoiDung = noiDung,
+                status,
+                mess
+            });
+        }
+
     }
 }
