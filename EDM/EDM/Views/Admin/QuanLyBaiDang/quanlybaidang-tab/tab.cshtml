@@ -10,20 +10,31 @@
          aria-labelledby="tongquan-getList-list">
         <div class="row">
             <div class="col-12">
-                <div class="divider divider-right" data-bs-toggle="collapse" href="#choxeplop-collapse">
+                <div class="divider divider-right" data-bs-toggle="collapse" href="#tongquan-collapse">
                     <div class="divider-text font-bold">
                         <div class="badges">
                             <span class="badge bg-primary c-pointer">Nhấn xem bộ lọc</span>
                         </div>
                     </div>
                 </div>
-                <div class="collapse" id="choxeplop-collapse">
+                <div class="collapse" id="tongquan-collapse">
                     <div class="row">
-                        <!--Loại thống kế-->
-                        <div class="col-sm-12 col-md-6">
+                        <!--Nội dung-->
+                        <div class="col-12 col-sm-12 col-md-12">
                             <div class="position-relative">
                                 <div class="form-group mb-3">
-                                    <label class="" for="select-loaithongke">Chọn loại thống kê</label>
+                                    <label class="" for="input-noidung">Nội dung</label>
+                                    <textarea class="form-control min-h-100 max-h-300" id="input-noidung" rows="5"
+                                              placeholder="Nhập thông tin ..."></textarea>
+                                    <div class="invalid-feedback feedback" for="input-noidung">Không được để trống</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Chiến dịch-->
+                        <div class="col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="select-loaithongke">Chọn chiến dịch</label>
                                     <select class="form-control form-select2"
                                             id="select-loaithongke" name="select-loaithongke">
                                         <option value="theonam" selected>Theo năm</option>
@@ -32,14 +43,25 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Thời gian-->
-                        <div class="col-sm-12 col-md-6">
+                        <!--Ngày tạo-->
+                        <div class="col-sm-12 col-md-4">
                             <div class="position-relative">
                                 <div class="form-group">
-                                    <label class="">Thời gian</label>
-                                    <input type="text" class="form-control monthformat" placeholder="Nhập thông tin ..."
-                                           id="input-thoigian" name="input-thoigian"
+                                    <label class="">Ngày tạo</label>
+                                    <input type="text" class="form-control dateformat" placeholder="Nhập thông tin ..."
+                                           id="input-ngaytao" name="input-ngaytao"
                                            value="@DateTime.Now.ToString("MM/yyyy")">
+                                </div>
+                            </div>
+                        </div>
+                        <!--Ngày đăng bài-->
+                        <div class="col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group">
+                                    <label class="">Ngày đăng bài</label>
+                                    <input type="text" class="form-control dateformat" placeholder="Nhập thông tin ..."
+                                           id="input-ngaydangbai" name="input-ngaydangbai"
+                                           value="">
                                 </div>
                             </div>
                         </div>
@@ -62,14 +84,14 @@
         <div class="row">
             <div class="col-12">
                 <div class="divider divider-right
-             " data-bs-toggle="collapse" href="#daxeplop-collapse">
+             " data-bs-toggle="collapse" href="#chiendich-collapse">
                     <div class="divider-text font-bold">
                         <div class="badges">
                             <span class="badge bg-primary c-pointer">Nhấn xem bộ lọc</span>
                         </div>
                     </div>
                 </div>
-                <div class="collapse" id="daxeplop-collapse">
+                <div class="collapse" id="chiendich-collapse">
                     <div class="row">
                         <!--Loại thống kế-->
                         <div class="col-sm-12 col-md-6">
@@ -89,9 +111,9 @@
                             <div class="position-relative">
                                 <div class="form-group">
                                     <label class="">Thời gian</label>
-                                    <input type="text" class="form-control monthformat" placeholder="Nhập thông tin ..."
+                                    <input type="text" class="form-control datetime" placeholder="Nhập thông tin ..."
                                            id="input-thoigian" name="input-thoigian"
-                                           value="@DateTime.Now.ToString("MM/yyyy")">
+                                           value="">
                                 </div>
                             </div>
                         </div>

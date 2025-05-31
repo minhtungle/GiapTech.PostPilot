@@ -1,31 +1,18 @@
-﻿using Applications._Others.AppServices;
-using Applications.OpenAIApi.AppServices;
+﻿using Applications._Others.Interfaces;
 using Applications.QuanLyAITool.Interfaces;
 using Applications.QuanLyBaiDang.Dtos;
 using Applications.QuanLyBaiDang.Interfaces;
 using Applications.QuanLyBaiDang.Models;
-using Applications.QuanLyBaiDang.Serivices;
-using Applications.QuanLyChienDich.Models;
-using Applications.UserType.Interfaces;
 using EDM_DB;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Services;
-using Google.Apis.Sheets.v4;
-using Google.Apis.Sheets.v4.Data;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Public.Controllers;
 using Public.Enums;
 using Public.Helpers;
 using Public.Models;
 using System;
 using System.Collections.Generic;
-using System.EnterpriseServices.Internal;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -71,29 +58,30 @@ namespace QuanLyBaiDang.Controllers
             }
         }
         // GET: Default
-        private readonly OpenAIApiService _openAIApiService;
         private readonly IQuanLyBaiDangAppService _quanLyBaiDangService;
         private readonly IQuanLyAIToolAppService _quanLyAIToolAppService;
-        private readonly OtherAppService _otherAppService;
+        private readonly IOtherAppService _otherAppService;
         public QuanLyBaiDangController(
-            IQuanLyBaiDangAppService baiDangService,
+            IQuanLyBaiDangAppService quanLyBaiDangService,
             IQuanLyAIToolAppService quanLyAIToolAppService,
-            OtherAppService otherAppService
-            )
+            IOtherAppService otherAppService)
         {
-            _openAIApiService = new OpenAIApiService(); // Hoặc inject bằng DI nếu bạn dùng Autofac
-            _quanLyBaiDangService = baiDangService;
+            _quanLyBaiDangService = quanLyBaiDangService;
             _quanLyAIToolAppService = quanLyAIToolAppService;
             _otherAppService = otherAppService;
         }
         #endregion
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             #region Lấy các danh sách
 
             #region Thao tác
             var thaoTacs = _quanLyBaiDangService.GetThaoTacs(maChucNang: "QuanLyBaiDang");
+            #endregion
+            
+            #region Thao tác
+            var nenTangs = await _otherAppService.GetNenTangs();
             #endregion
 
             #endregion
@@ -102,6 +90,7 @@ namespace QuanLyBaiDang.Controllers
             var output = new Index_OutPut_Dto
             {
                 ThaoTacs = thaoTacs,
+                NenTangs = nenTangs,
             };
             return View($"{VIEW_PATH}/baidang.cshtml", output);
         }
@@ -113,7 +102,7 @@ namespace QuanLyBaiDang.Controllers
             return PartialView($"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-getList.cshtml", baiDangs);
         }
         [HttpPost]
-        public async Task<ActionResult> displayModal_CRUD_BaiDang(DisplayModel_CRUD_BaiDang_Input_Dto input)
+        public ActionResult displayModal_CRUD_BaiDang(DisplayModel_CRUD_BaiDang_Input_Dto input)
         {
             var baiDang = new tbBaiDangExtend();
 

@@ -3,13 +3,11 @@
 @{
     ViewBag.Title = "Quản lý bài đăng";
     Layout = "~/Views/_Shared/Admin/admin.cshtml";
-    var thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
 }
 @section hTitle {}
 @section hBreadcrumb {
     <li class="breadcrumb-item"><a href="~/Home/Index">Trang chủ</a></li>
-    <li class="breadcrumb-item"><a href="~/QuanLyChienDich/Index">Quản lý chiến dịch</a></li>
-    <li class="breadcrumb-item active" aria-current="page">@string.Format("{0}", Model.ChienDich.TenChienDich)</li>
+    <li class="breadcrumb-item active" aria-current="page">Quản lý bài đăng</li>
 }
 @section styles {
     @*<link href="~/Content/Admin/QuanLyBaiDang/quanlybaidang.css" rel="stylesheet" />*@
@@ -34,4 +32,4 @@
 <!--chiendich-crud-->
 <div class="modal fade text-left" id="chiendich-crud" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static" removeBody="true">
 </div>
-@Html.Partial("~/Views/Admin/QuanLyBaiDang/baidang-crud/baidang-crud-capnhattruong.cshtml")
+@Html.Partial("~/Views/Admin/QuanLyBaiDang/quanlybaidang-tab/baidang/baidang-crud/baidang-crud-capnhattruong.cshtml", Model)

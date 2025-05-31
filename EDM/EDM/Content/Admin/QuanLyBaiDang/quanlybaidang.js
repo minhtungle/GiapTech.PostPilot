@@ -10,7 +10,6 @@ class QuanLyBaiDang {
     }
     init() {
         var quanLyBaiDang = this;
-        var idChienDich = $("#input-idchiendich").val();
         var idNguoiDung_DangSuDung = $("#input-idnguoidung-dangsudung").val();
         quanLyBaiDang.page = $("#page-quanlybaidang");
 
@@ -244,7 +243,7 @@ class QuanLyBaiDang {
                         url: "/QuanLyBaiDang/getList_BaiDang",
                         type: "GET", // Phải là POST để gửi JSON
                         contentType: "application/json; charset=utf-8",  // Định dạng JSON
-                        data: { idChienDich }
+                        //data: { idChienDich }
                         //dataType: "json",
                     }),
                     //contentType: false,
@@ -361,7 +360,6 @@ class QuanLyBaiDang {
     }
     createModalCRUD_BaiDang() {
         var quanLyBaiDang = this;
-        var idChienDich = $("#input-idchiendich").val();
 
         quanLyBaiDang.handleModal_CRUD = {
             dataTable: new DataTableCustom({
@@ -542,9 +540,9 @@ class QuanLyBaiDang {
                     var baiDang = {
                         RowNumber: rowNumber,
                         BaiDang: {
-                            IdChienDich: idChienDich,
                             IdBaiDang: $("#input-idbaidang", $div).val(),
                             IdNenTang: $("#select-nentang", $div).val(),
+                            IdChienDich: $("#select-chiendich", $div).val(),
                             Prompt: $("#input-prompt", $div).val().trim(),
                             NoiDung: $("#input-noidung-ai", $div).val().trim(),
                             ThoiGian: $("#input-thoigian", $div).val(),
@@ -555,12 +553,6 @@ class QuanLyBaiDang {
                     baiDangs.push(baiDang);
                 });
 
-                //$.each($(`#tbody-anhmota-container tbody tr`), function () {
-                //    let idTep = $(this).data("id");
-                //    baiDang.TepDinhKems.push({
-                //        IdTep: idTep,
-                //    });
-                //});
                 sys.confirmDialog({
                     mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
                     callback: function () {
