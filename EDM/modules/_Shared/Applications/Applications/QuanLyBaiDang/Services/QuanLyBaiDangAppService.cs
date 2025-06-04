@@ -1,5 +1,4 @@
 ﻿using Applications.Enums;
-using Applications.QuanLyAITool.Extensions;
 using Applications.QuanLyBaiDang.Dtos;
 using Applications.QuanLyBaiDang.Interfaces;
 using Applications.QuanLyBaiDang.Models;
@@ -7,9 +6,7 @@ using EDM_DB;
 using Infrastructure.Interfaces;
 using Newtonsoft.Json;
 using Public.AppServices;
-using Public.Enums;
 using Public.Helpers;
-using Public.Interfaces;
 using Public.Models;
 using System;
 using System.Collections.Generic;
@@ -20,15 +17,21 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
+using TrangThaiDangBai_BaiDang = Applications.QuanLyBaiDang.Enums.TrangThaiDangBaiEnum;
+using TrangThaiDangBai_ChienDich = Applications.QuanLyChienDich.Enums.TrangThaiDangBaiEnum;
 
 namespace Applications.QuanLyBaiDang.Serivices
 {
     public class QuanLyBaiDangAppService : BaseAppService, IQuanLyBaiDangAppService
     {
         private readonly IRepository<tbBaiDang, Guid> _baiDangRepo;
+        private readonly IRepository<tbChienDich, Guid> _chienDichRepo;
         private readonly IRepository<tbTepDinhKem, Guid> _tepDinhKemRepo;
         private readonly IRepository<tbBaiDangTepDinhKem, Guid> _baiDangTepDinhKemRepo;
         private readonly IRepository<tbNenTang, Guid> _nenTangRepo;
+        private readonly IRepository<tbNguoiDung, Guid> _nguoiDungRepo;
+        private readonly IRepository<tbAIBot, Guid> _aiBotRepo;
+        private readonly IRepository<tbAITool, Guid> _aiToolRepo;
 
         private readonly IRepository<tbApiCredential, Guid> _apiCredentialRepo;
 
@@ -36,19 +39,42 @@ namespace Applications.QuanLyBaiDang.Serivices
             IUserContext userContext,
             IUnitOfWork unitOfWork,
             IRepository<tbBaiDang, Guid> baiDangRepo,
+            IRepository<tbChienDich, Guid> chienDichRepo,
             IRepository<tbTepDinhKem, Guid> tepDinhKemRepo,
             IRepository<tbBaiDangTepDinhKem, Guid> baiDangTepDinhKemRepo,
             IRepository<tbNenTang, Guid> nenTangRepo,
+            IRepository<tbNguoiDung, Guid> nguoiDungRepo,
+            IRepository<tbAIBot, Guid> aiBotRepo,
+            IRepository<tbAITool, Guid> aiToolRepo,
             IRepository<tbApiCredential, Guid> apiCredentialRepo)
             : base(userContext, unitOfWork)
         {
             _baiDangRepo = baiDangRepo;
-            _apiCredentialRepo = apiCredentialRepo;
+            _chienDichRepo = chienDichRepo;
             _tepDinhKemRepo = tepDinhKemRepo;
-            _nenTangRepo = nenTangRepo;
             _baiDangTepDinhKemRepo = baiDangTepDinhKemRepo;
+            _nenTangRepo = nenTangRepo;
+            _nguoiDungRepo = nguoiDungRepo;
+            _aiBotRepo = aiBotRepo;
+            _aiToolRepo = aiToolRepo;
+            _apiCredentialRepo = apiCredentialRepo;
         }
         public List<ThaoTac> GetThaoTacs(string maChucNang) => GetThaoTacByIdChucNang(maChucNang);
+        #region Bài đăng
+        public async Task<Index_OutPut_Dto> Index_OutPut()
+        {
+            var thaoTacs = GetThaoTacs(maChucNang: "QuanLyBaiDang");
+            var nenTangs = await _nenTangRepo.Query().ToListAsync();
+            var nguoiTaos = await _nguoiDungRepo.Query().ToListAsync();
+            var chienDichs = await _chienDichRepo.Query().ToListAsync();
+            return new Index_OutPut_Dto
+            {
+                ThaoTacs = thaoTacs,
+                NenTangs = nenTangs,
+                NguoiTaos = nguoiTaos,
+                ChienDichs = chienDichs
+            };
+        }
         public async Task<IEnumerable<tbBaiDangExtend>> GetBaiDangs(
             string loai = "all",
             List<Guid> idBaiDangs = null,
@@ -58,12 +84,21 @@ namespace Applications.QuanLyBaiDang.Serivices
                 .Where(x =>
                     x.TrangThai != 0 &&
                     x.MaDonViSuDung == CurrentDonViId)
+                .Join(_nguoiDungRepo.Query(),
+                    bd => bd.IdNguoiTao,
+                    nd => nd.IdNguoiDung,
+                    (bd, nd) => new
+                    {
+                        BaiDang = bd,
+                        NguoiTao = nd,
+                    })
                 .Join(_nenTangRepo.Query(),
-                    bd => bd.IdNenTang,
+                    bd => bd.BaiDang.IdNenTang,
                     nt => nt.IdNenTang,
                     (bd, nt) => new tbBaiDangExtend
                     {
-                        BaiDang = bd,
+                        BaiDang = bd.BaiDang,
+                        NguoiTao = bd.NguoiTao,
                         NenTang = nt
                     });
 
@@ -137,7 +172,10 @@ namespace Applications.QuanLyBaiDang.Serivices
 
             return CryptoHelper.Decrypt(cred.KeyJson);
         }
-        public async Task Create_BaiDang(List<tbBaiDangExtend> baiDangs, HttpPostedFileBase[] files, Guid[] rowNumbers)
+        public async Task Create_BaiDang(
+            List<tbBaiDangExtend> baiDangs,
+            HttpPostedFileBase[] files,
+            Guid[] rowNumbers)
         {
             if (baiDangs == null || !baiDangs.Any())
                 throw new ArgumentException("Danh sách bài đăng không được để trống.");
@@ -187,7 +225,7 @@ namespace Applications.QuanLyBaiDang.Serivices
                     NoiDung = baiDang_NEW.BaiDang.NoiDung,
                     ThoiGian = baiDang_NEW.BaiDang.ThoiGian,
                     TuTaoAnhAI = baiDang_NEW.BaiDang.TuTaoAnhAI,
-                    TrangThaiDangBai = (int?)TrangThaiDangBaiEnum.WaitToPost,
+                    TrangThaiDangBai = (int?)TrangThaiDangBai_BaiDang.WaitToPost,
                     TrangThai = 1,
                     IdNguoiTao = CurrentUserId,
                     NgayTao = DateTime.Now,
@@ -232,7 +270,7 @@ namespace Applications.QuanLyBaiDang.Serivices
                     if (baiDang == null) continue;
 
                     // Cập nhật trạng thái bài đăng
-                    baiDang.TrangThaiDangBai = (int?)TrangThaiDangBaiEnum.WaitToDelete;
+                    baiDang.TrangThaiDangBai = (int?)TrangThaiDangBai_BaiDang.WaitToDelete;
                     baiDang.TrangThai = 0;
                     baiDang.IdNguoiSua = CurrentUserId;
                     baiDang.NgaySua = DateTime.Now;
@@ -266,5 +304,118 @@ namespace Applications.QuanLyBaiDang.Serivices
                 await _unitOfWork.SaveChangesAsync();
             });
         }
+        public async Task Create_ChienDich(tbChienDich chienDich)
+        {
+            await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                var entity = new tbChienDich
+                {
+                    IdChienDich = Guid.NewGuid(),
+                    TenChienDich = chienDich.TenChienDich,
+                    GhiChu = chienDich.GhiChu,
+
+                    TrangThaiHoatDong = (int)TrangThaiDangBai_ChienDich.WaitToPost,
+                    TrangThai = 1,
+                    MaDonViSuDung = CurrentDonViSuDung.MaDonViSuDung,
+                    IdNguoiTao = CurrentNguoiDung.IdNguoiDung,
+                    NgayTao = DateTime.Now,
+                };
+
+                await _unitOfWork.InsertAsync<tbChienDich, Guid>(entity);
+            });
+        }
+        public async Task Delete_ChienDichs(List<Guid> idChienDichs)
+        {
+            if (idChienDichs == null || !idChienDichs.Any())
+                throw new ArgumentException("Danh sách chiến dịch không được để trống.");
+
+            await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                foreach (var id in idChienDichs)
+                {
+                    var chienDich = await _chienDichRepo.GetByIdAsync(id);
+                    if (chienDich == null) continue;
+
+                    // Cập nhật trạng thái bài đăng
+                    chienDich.TrangThaiHoatDong = (int?)TrangThaiDangBai_ChienDich.WaitToDelete;
+                    chienDich.TrangThai = 0;
+                    chienDich.IdNguoiSua = CurrentNguoiDung.IdNguoiDung;
+                    chienDich.NgaySua = DateTime.Now;
+                    _chienDichRepo.Update(chienDich);
+
+                    var baiDangs = _baiDangRepo.Query()
+                    .Where(x => x.IdChienDich == chienDich.IdChienDich).ToList();
+                    foreach (var baiDang in baiDangs)
+                    {
+                        baiDang.TrangThaiDangBai = (int)TrangThaiDangBai_ChienDich.WaitToDelete; // Chờ xóa trên nền tảng
+                        baiDang.TrangThai = 0;
+                        baiDang.IdNguoiSua = CurrentNguoiDung.IdNguoiDung;
+                        baiDang.NgaySua = DateTime.Now;
+
+                        // Lấy các bản ghi liên kết Tệp - Bài đăng
+                        var baiDangTepDinhKems = await _baiDangTepDinhKemRepo.Query()
+                            .Where(x => x.IdBaiDang == baiDang.IdBaiDang)
+                            .ToListAsync();
+
+                        if (!baiDangTepDinhKems.Any()) continue;
+
+                        var tepIds = baiDangTepDinhKems.Select(x => x.IdTepDinhKem).Distinct().ToList();
+
+                        var tepDinhKems = await _tepDinhKemRepo.Query()
+                            .Where(x => tepIds.Contains(x.IdTep))
+                            .ToListAsync();
+
+                        foreach (var tep in tepDinhKems)
+                        {
+                            tep.TrangThai = 0;
+                            tep.IdNguoiSua = CurrentNguoiDung.IdNguoiDung;
+                            tep.NgaySua = DateTime.Now;
+                            _tepDinhKemRepo.Update(tep);
+                        }
+                        ;
+                    }
+
+                }
+
+                await _unitOfWork.SaveChangesAsync();
+            });
+        }
+
+        #endregion
+
+        #region Chiến dịch
+        public async Task<IEnumerable<tbChienDich>> GetChienDichs(
+            string loai = "all",
+            List<Guid> idChienDichs = null,
+            QuanLyChienDich.Dtos.LocThongTinDto locThongTin = null)
+        {
+            var query = _chienDichRepo.Query()
+                .Where(x =>
+                    x.TrangThai != 0 &&
+                    x.MaDonViSuDung == CurrentDonViId);
+
+            if (loai == "single" && idChienDichs != null)
+            {
+                query = query.Where(x => idChienDichs.Contains(x.IdChienDich));
+            }
+        ;
+
+            var data = await query
+                .OrderByDescending(x => x.IdChienDich)
+                .ToListAsync();
+
+            return data;
+        }
+        public async Task<bool> IsExisted_ChienDich(tbChienDich chienDich)
+        {
+            // Kiểm tra còn hồ sơ khác có trùng mã không
+            var chienDich_OLD = await _chienDichRepo.Query()
+                .FirstOrDefaultAsync(x =>
+                x.TenChienDich == chienDich.TenChienDich
+                && x.IdChienDich != chienDich.IdChienDich
+                && x.TrangThai != 0 && x.MaDonViSuDung == CurrentDonViSuDung.MaDonViSuDung);
+            return chienDich_OLD != null;
+        }
+        #endregion
     }
 }

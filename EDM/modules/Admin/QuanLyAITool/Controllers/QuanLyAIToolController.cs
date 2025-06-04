@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace QuanLyAITool.Controllers
 {
+    [CustomAuthorize]
     public class QuanLyAIToolController : Controller
     {
         #region Biến public để in hoa

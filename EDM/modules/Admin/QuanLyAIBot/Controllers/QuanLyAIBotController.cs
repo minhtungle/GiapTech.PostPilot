@@ -17,7 +17,7 @@ using System.Web.Mvc;
 namespace QuanLyAIBot.Controllers
 {
     [CustomAuthorize]
-    public class QuanLyAIBotController : StaticArgController
+    public class QuanLyAIBotController : Controller
     {
         #region Biến public để in hoa
         private readonly string VIEW_PATH = "~/Views/Admin/QuanLyAIBot";

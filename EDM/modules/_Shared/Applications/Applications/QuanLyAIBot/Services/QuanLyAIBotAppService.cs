@@ -1,26 +1,23 @@
-﻿using Applications.QuanLyAIBot.Dtos;
-using Applications.QuanLyAIBot.Interfaces;
+﻿using Applications.QuanLyAIBot.Interfaces;
 using Applications.QuanLyAIBot.Models;
-using Applications.QuanLyBaiDang.Models;
 using EDM_DB;
 using Infrastructure.Interfaces;
-using Infrastructure.Repositories;
-using Newtonsoft.Json;
 using Public.AppServices;
-using Public.Enums;
-using Public.Interfaces;
 using Public.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using LocThongTin_AIBot = Applications.QuanLyAIBot.Dtos.LocThongTinDto;
+using LocThongTin_AITool = Applications.QuanLyAITool.Dtos.LocThongTinDto;
 
 namespace Applications.QuanLyAIBot.Services
 {
     public class QuanLyAIBotAppService : BaseAppService, IQuanLyAIBotAppService
     {
         private readonly IRepository<tbAIBot, Guid> _aiBotRepo;
+        private readonly IRepository<tbAITool, Guid> _aiToolRepo;
         private readonly IRepository<tbLoaiAIBot, Guid> _loaiAIBotRepo;
         private readonly IRepository<tbAIBotLoaiAIBot, Guid> _aiBotLoaiAIBotRepo;
 
@@ -29,19 +26,21 @@ namespace Applications.QuanLyAIBot.Services
             IUnitOfWork unitOfWork,
             IRepository<tbAIBot, Guid> aiBotRepo,
             IRepository<tbLoaiAIBot, Guid> loaiAIBotRepo,
-            IRepository<tbAIBotLoaiAIBot, Guid> aiBotLoaiAIBotRepo)
+            IRepository<tbAIBotLoaiAIBot, Guid> aiBotLoaiAIBotRepo,
+            IRepository<tbAITool, Guid> aiToolRepo
+            )
             : base(userContext, unitOfWork)
         {
             _aiBotRepo = aiBotRepo;
             _loaiAIBotRepo = loaiAIBotRepo;
             _aiBotLoaiAIBotRepo = aiBotLoaiAIBotRepo;
+            _aiToolRepo = aiToolRepo;
         }
-
         public List<ThaoTac> GetThaoTacs(string maChucNang) => GetThaoTacByIdChucNang(maChucNang);
         public async Task<List<tbAIBotExtend>> GetAIBots(
             string loai = "all",
             List<Guid> idAIBot = null,
-            LocThongTinDto locThongTin = null)
+            LocThongTin_AIBot locThongTin = null)
         {
             var query = _aiBotRepo.Query()
                 .Where(x =>
@@ -77,7 +76,7 @@ namespace Applications.QuanLyAIBot.Services
         public async Task<List<tbLoaiAIBot>> GetLoaiAIBots(
             string loai = "all",
             List<Guid> idLoaiAIBot = null,
-            LocThongTinDto locThongTin = null)
+            LocThongTin_AITool locThongTin = null)
         {
             var query = _loaiAIBotRepo.Query()
                 .Where(x =>

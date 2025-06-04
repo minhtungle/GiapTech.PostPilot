@@ -5,19 +5,20 @@ using Applications.QuanLyAITool.Interfaces;
 using Applications.QuanLyBaiDang.Dtos;
 using Applications.QuanLyBaiDang.Interfaces;
 using Applications.QuanLyBaiDang.Models;
+using Applications.QuanLyChienDich.Dtos;
 using EDM_DB;
 using Newtonsoft.Json;
 using Public.Controllers;
-using Public.Enums;
 using Public.Helpers;
 using Public.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using LocThongTin_BaiDang = Applications.QuanLyBaiDang.Dtos.LocThongTinDto;
+using LocThongTin_ChienDich = Applications.QuanLyChienDich.Dtos.LocThongTinDto;
 
 namespace QuanLyBaiDang.Controllers
 {
@@ -26,40 +27,6 @@ namespace QuanLyBaiDang.Controllers
     {
         #region Biến public để in hoa
         private readonly string VIEW_PATH = "~/Views/Admin/QuanLyBaiDang";
-        private List<default_tbChucNang> CHUCNANGs
-        {
-            get
-            {
-                return Session["CHUCNANGs"] as List<default_tbChucNang> ?? new List<default_tbChucNang>();
-            }
-            set
-            {
-                Session["CHUCNANGs"] = value;
-            }
-        }
-        private List<ThaoTac> THAOTACs
-        {
-            get
-            {
-                return Session["THAOTACs"] as List<ThaoTac> ?? new List<ThaoTac>();
-            }
-            set
-            {
-                Session["THAOTACs"] = value;
-            }
-        }
-        private List<tbNenTang> NENTANGs
-        {
-            get
-            {
-                return Session["NENTANGs"] as List<tbNenTang> ?? new List<tbNenTang>();
-            }
-            set
-            {
-                Session["NENTANGs"] = value;
-            }
-        }
-        // GET: Default
         private readonly IQuanLyBaiDangAppService _quanLyBaiDangService;
         private readonly IQuanLyAIToolAppService _quanLyAIToolAppService;
         private readonly IQuanLyAIBotAppService _quanLyAIBotAppService;
@@ -79,38 +46,31 @@ namespace QuanLyBaiDang.Controllers
 
         public async Task<ActionResult> Index()
         {
-            #region Lấy các danh sách
-
-            #region Thao tác
-            var thaoTacs = _quanLyBaiDangService.GetThaoTacs(maChucNang: "QuanLyBaiDang");
-            #endregion
-
-            #region ##
-            var nenTangs = await _otherAppService.GetNenTangs();
-            var aiTools = await _quanLyAIToolAppService.GetAITools();
-            var aiBots = await _quanLyAIBotAppService.GetAIBots();
-
-            var aiBots_ = aiBots.Select(x => x.AIBot).ToList();
-            #endregion
-
-            #endregion
-
-            THAOTACs = thaoTacs.ToList();
-            var output = new Applications.QuanLyBaiDang.Dtos.Index_OutPut_Dto
-            {
-                ThaoTacs = thaoTacs,
-                NenTangs = nenTangs,
-                AITools = aiTools,
-                AIBots = aiBots_
-            };
+            var output = await _quanLyBaiDangService.Index_OutPut();
             return View($"{VIEW_PATH}/baidang.cshtml", output);
         }
 
         [HttpGet]
-        public async Task<ActionResult> getList_BaiDang(Applications.QuanLyBaiDang.Dtos.LocThongTinDto locThongTin)
+        public async Task<ActionResult> getList_BaiDang(LocThongTin_BaiDang locThongTin)
         {
             var baiDangs = await _quanLyBaiDangService.GetBaiDangs(loai: "all", locThongTin: locThongTin);
-            return PartialView($"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-getList.cshtml", baiDangs);
+            var output = new GetList_BaiDang_Output_Dto
+            {
+                BaiDangs = baiDangs.ToList(),
+                ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyBaiDang"),
+            };
+            return PartialView($"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-getList.cshtml", output);
+        }
+        [HttpGet]
+        public async Task<ActionResult> getList_ChienDich(LocThongTin_ChienDich locThongTin)
+        {
+            var chienDichs = await _quanLyBaiDangService.GetChienDichs(loai: "all", locThongTin: locThongTin);
+            var output = new GetList_ChienDich_Output_Dto
+            {
+                ChienDichs = chienDichs.ToList(),
+                ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyChienDich"),
+            };
+            return PartialView($"{VIEW_PATH}/quanlybaidang-tab/chiendich/chiendich-getList.cshtml", output);
         }
         [HttpPost]
         public ActionResult displayModal_CRUD_BaiDang(DisplayModel_CRUD_BaiDang_Input_Dto input)

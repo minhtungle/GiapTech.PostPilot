@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
-namespace Public.Enums
+namespace Applications.QuanLyBaiDang.Enums
 {
     public enum TrangThaiDangBaiEnum
     {

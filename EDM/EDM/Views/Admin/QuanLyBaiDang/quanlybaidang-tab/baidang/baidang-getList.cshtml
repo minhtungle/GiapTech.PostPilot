@@ -1,18 +1,17 @@
-﻿@using Applications.QuanLyBaiDang.Models
-@using Public.Enums
+﻿@model Applications.QuanLyBaiDang.Dtos.GetList_BaiDang_Output_Dto
+@using Applications.QuanLyBaiDang.Models
+@using Applications.Enums
 @using Public.Helpers
-@model IEnumerable<tbBaiDangExtend>
 @using Public.Models
-@{
-    var thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
-}
+@using TrangThaiDangBai_BaiDang = Applications.QuanLyBaiDang.Enums.TrangThaiDangBaiEnum;
 
 <div class="mb-2 toggle-vis-bar">
     Hiển thị:
     <a href="#" class="toggle-vis" data-table="baidang-getList" data-column="3">Thời gian đăng</a> |
     <a href="#" class="toggle-vis" data-table="baidang-getList" data-column="4">Nền tảng</a> |
     <a href="#" class="toggle-vis" data-table="baidang-getList" data-column="5">Trạng thái đăng</a> |
-    <a href="#" class="toggle-vis" data-table="baidang-getList" data-column="6">URL bài viết</a>
+    <a href="#" class="toggle-vis" data-table="baidang-getList" data-column="6">URL bài viết</a> |
+    <a href="#" class="toggle-vis" data-table="baidang-getList" data-column="7">Người tạo</a>
 </div>
 <div class="card-body">
     <table class="table table-hover table-bordered table-sticky w-100" id="baidang-getList" data-page-length="10">
@@ -20,7 +19,7 @@
             <tr>
                 <th class="text-center" data-orderable="false">
                     <div style="white-space: nowrap">
-                        @if (thaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-themmoi"))
+                        @if (Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-themmoi"))
                         {
                             <a class="btn btn-sm btn-success"
                                title="Thêm mới"
@@ -28,7 +27,7 @@
                                 <i class="bi bi-plus-circle-fill"></i>
                             </a>
                         }
-                        @if (thaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-xoabo"))
+                        @if (Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-xoabo"))
                         {
                             <a class="btn btn-sm btn-danger"
                                title="Xóa bỏ"
@@ -44,6 +43,7 @@
                 <th class="text-center">Thời gian đăng</th>
                 <th class="text-center">Nền tảng</th>
                 <th class="text-center">Trạng thái đăng</th>
+                <th class="text-center">Người tạo</th>
                 <th class="text-center">URL bài viết</th>
 
                 @*<th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>*@
@@ -59,20 +59,21 @@
                 <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
                 <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
                 <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
+                <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
 
                 @*<th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>*@
             </tr>
         </tfoot>
         <tbody>
-            @foreach (var baidang in Model)
+            @foreach (var baidang in Model.BaiDangs)
             {
                 <tr id="@baidang.BaiDang.IdBaiDang">
                     <td class="text-center"><input class="form-check-input checkRow-baidang-getList" type="checkbox" /></td>
                     <td class="text-left c-pointer"
-                        onclick="copyTextFromElement(this)"
+                        onclick="sys.copyTextFromElement(this)"
                         title="Click để sao chép"
                         data-copy="@baidang.BaiDang.IdBaiDang.ToString()">
-                        @Public.Handle.TruncateString(maxLength: 10, input: baidang.BaiDang.IdBaiDang.ToString())
+                        <a href="#"><i class="bi bi-copy"></i> @Public.Handle.TruncateString(maxLength: 10, input: baidang.BaiDang.IdBaiDang.ToString())</a>
                     </td>
                     <td class="text-left" title="@baidang.BaiDang.NoiDung">
                         @Public.Handle.TruncateString(maxLength: 28, input: baidang.BaiDang.NoiDung)
@@ -81,25 +82,26 @@
                     <td class="text-left">@baidang.NenTang.TenNenTang</td>
                     <td class="text-center">
                         @{
-                            var status = (TrangThaiDangBaiEnum)baidang.BaiDang.TrangThaiDangBai;
+                            var status = (TrangThaiDangBai_BaiDang)baidang.BaiDang.TrangThaiDangBai;
                             var description = status.GetDescription();
 
                             string iconClass = "badge bg-primary";
-                            if (status == TrangThaiDangBaiEnum.Success)
+                            if (status == TrangThaiDangBai_BaiDang.Success)
                             {
                                 iconClass = "badge bg-success";
                             }
-                            else if (status == TrangThaiDangBaiEnum.WaitToPost)
+                            else if (status == TrangThaiDangBai_BaiDang.WaitToPost)
                             {
                                 iconClass = "badge bg-primary";
                             }
-                            else if (status == TrangThaiDangBaiEnum.Error)
+                            else if (status == TrangThaiDangBai_BaiDang.Error)
                             {
                                 iconClass = "badge bg-danger";
                             }
                         }
                         <span class="@iconClass">@description</span>
                     </td>
+                    <td class="text-left">@baidang.NguoiTao.TenNguoiDung</td>
                     <td class="text-left">
                         <a href="@baidang.BaiDang.LienKetBaiDang_TrenNenTang" target="_blank" rel="noopener noreferrer">
                             @Public.Handle.TruncateString(maxLength: 28, input: baidang.BaiDang.LienKetBaiDang_TrenNenTang)

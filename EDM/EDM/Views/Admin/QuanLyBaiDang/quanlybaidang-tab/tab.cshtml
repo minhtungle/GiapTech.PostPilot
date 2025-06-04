@@ -1,4 +1,6 @@
-﻿<div class="list-group list-group-horizontal mb-1 text-center col-md-6 col-sm-12 justify-content-sm-start justify-content-center"
+﻿@model Applications.QuanLyBaiDang.Dtos.Index_OutPut_Dto
+
+<div class="list-group list-group-horizontal mb-1 text-center col-md-6 col-sm-12 justify-content-sm-start justify-content-center"
      id="tab-loaithongke" role="tablist">
     <a class="list-group-item list-group-item-action active" id="tongquan-getList-list"
        data-bs-toggle="list" href="#tongquan-getList" role="tab">Bài đăng</a>
@@ -34,17 +36,49 @@
                         <div class="col-sm-12 col-md-4">
                             <div class="position-relative">
                                 <div class="form-group mb-3">
-                                    <label class="" for="select-loaithongke">Chọn chiến dịch</label>
+                                    <label class="" for="select-chiendich">Chọn chiến dịch</label>
                                     <select class="form-control form-select2"
-                                            id="select-loaithongke" name="select-loaithongke">
-                                        <option value="theonam" selected>Theo năm</option>
-                                        <option value="theothang">Theo tháng</option>
+                                            id="select-chiendich" name="select-chiendich">
+                                        @foreach (var chienDich in Model.ChienDichs)
+                                        {
+                                            <option value="@chienDich.IdChienDich">@chienDich.TenChienDich</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Người tạo-->
+                        <div class="col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="select-nguoitao">Người tạo</label>
+                                    <select class="form-control form-select2"
+                                            id="select-nguoitao" name="select-nguoitao">
+                                        @foreach (var nguoiTao in Model.NguoiTaos)
+                                        {
+                                            <option value="@nguoiTao.IdNguoiDung">@nguoiTao.TenNguoiDung</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Nền tảng-->
+                        <div class="col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="select-nentang">Người tạo</label>
+                                    <select class="form-control form-select2"
+                                            id="select-nentang" name="select-nentang">
+                                        @foreach (var nenTang in Model.NenTangs)
+                                        {
+                                            <option value="@nenTang.IdNenTang">@nenTang.TenNenTang</option>
+                                        }
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <!--Ngày tạo-->
-                        <div class="col-sm-12 col-md-4">
+                        <div class="col-sm-12 col-md-6">
                             <div class="position-relative">
                                 <div class="form-group">
                                     <label class="">Ngày tạo</label>
@@ -55,7 +89,7 @@
                             </div>
                         </div>
                         <!--Ngày đăng bài-->
-                        <div class="col-sm-12 col-md-4">
+                        <div class="col-sm-12 col-md-6">
                             <div class="position-relative">
                                 <div class="form-group">
                                     <label class="">Ngày đăng bài</label>
