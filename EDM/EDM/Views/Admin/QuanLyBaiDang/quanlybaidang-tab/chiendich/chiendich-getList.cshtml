@@ -1,15 +1,13 @@
 ﻿@using Applications.QuanLyChienDich.Models
-@model List<tbChienDichExtend>
+@model Applications.QuanLyChienDich.Dtos.GetList_ChienDich_Output_Dto
 @using Public.Models
-@{
-    var thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
-}
+
 <table class="table table-hover table-bordered table-sticky w-100" id="chiendich-getList" data-page-length="10">
     <thead class="nowrap" style="white-space: nowrap !important">
         <tr>
             <th class="text-center" data-orderable="false">
                 <div style="white-space: nowrap">
-                    @if (thaoTacs.Exists(x => x.MaThaoTac == "quanlychiendich-themmoi"))
+                    @if (Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlychiendich-themmoi"))
                     {
                         <a class="btn btn-sm btn-success"
                            title="Thêm mới"
@@ -17,7 +15,7 @@
                             <i class="bi bi-plus-circle-fill"></i>
                         </a>
                     }
-                    @if (thaoTacs.Exists(x => x.MaThaoTac == "quanlychiendich-xoabo"))
+                    @if (Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlychiendich-xoabo"))
                     {
                         <a class="btn btn-sm btn-danger"
                            title="Xóa bỏ"
@@ -49,25 +47,25 @@
         </tr>
     </tfoot>
     <tbody>
-        @foreach (var chienDich in Model)
+        @foreach (var chienDich in Model.ChienDichs)
         {
-            <tr id="@chienDich.ChienDich.IdChienDich">
+            <tr id="@chienDich.IdChienDich">
                 <td class="text-center"><input class="form-check-input checkRow-chiendich-getList" type="checkbox" /></td>
 
-                <td class="text-left">@chienDich.ChienDich.IdChienDich</td>
+                <td class="text-left">@chienDich.IdChienDich</td>
                 <td class="text-left">
-                    <a class="c-pointer" href="~/QuanLyBaiDang/Index?idChienDich=@chienDich.ChienDich.IdChienDich">
-                        <i class="bi bi-eye-fill"></i> @chienDich.ChienDich.TenChienDich
+                    <a class="c-pointer" href="#">
+                        <i class="bi bi-eye-fill"></i> @chienDich.TenChienDich
                     </a>
                 </td>
-                <td class="text-left">@chienDich.ChienDich.NgayTao</td>
+                <td class="text-left">@chienDich.NgayTao</td>
                 <td class="text-center">
                     @{
-                        if (chienDich.ChienDich.TrangThaiHoatDong == -1)
+                        if (chienDich.TrangThaiHoatDong == -1)
                         {
                             <span class="text-danger"><i class="bi bi-flag-fill"></i> Đã kết thúc</span>
                         }
-                        else if (chienDich.ChienDich.TrangThaiHoatDong == 1)
+                        else if (chienDich.TrangThaiHoatDong == 1)
                         {
                             <span class="text-success"><i class="bi bi-arrow-clockwise"></i> Đang tiến hành</span>@*<span class="text-success"><i class="bi bi-check-circle-fill"></i> Đã kết thúc</span>*@
                         }

@@ -6,6 +6,8 @@ using Applications.QuanLyBaiDang.Dtos;
 using Applications.QuanLyBaiDang.Interfaces;
 using Applications.QuanLyBaiDang.Models;
 using Applications.QuanLyChienDich.Dtos;
+using Applications.QuanLyChienDich.Interfaces;
+using Applications.QuanLyChienDich.Models;
 using EDM_DB;
 using Newtonsoft.Json;
 using Public.Controllers;
@@ -27,17 +29,20 @@ namespace QuanLyBaiDang.Controllers
     {
         #region Biến public để in hoa
         private readonly string VIEW_PATH = "~/Views/Admin/QuanLyBaiDang";
-        private readonly IQuanLyBaiDangAppService _quanLyBaiDangService;
+        private readonly IQuanLyBaiDangAppService _quanLyBaiDangAppService;
+        private readonly IQuanLyChienDichAppService _quanLyChienDichAppService;
         private readonly IQuanLyAIToolAppService _quanLyAIToolAppService;
         private readonly IQuanLyAIBotAppService _quanLyAIBotAppService;
         private readonly IOtherAppService _otherAppService;
         public QuanLyBaiDangController(
             IQuanLyBaiDangAppService quanLyBaiDangService,
+            IQuanLyChienDichAppService quanLyChienDichService,
             IQuanLyAIToolAppService quanLyAIToolAppService,
             IQuanLyAIBotAppService quanLyAIBotAppService,
             IOtherAppService otherAppService)
         {
-            _quanLyBaiDangService = quanLyBaiDangService;
+            _quanLyBaiDangAppService = quanLyBaiDangService;
+            _quanLyChienDichAppService = quanLyChienDichService;
             _quanLyAIToolAppService = quanLyAIToolAppService;
             _quanLyAIBotAppService = quanLyAIBotAppService;
             _otherAppService = otherAppService;
@@ -46,14 +51,15 @@ namespace QuanLyBaiDang.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var output = await _quanLyBaiDangService.Index_OutPut();
+            var output = await _quanLyBaiDangAppService.Index_OutPut();
             return View($"{VIEW_PATH}/baidang.cshtml", output);
         }
 
-        [HttpGet]
-        public async Task<ActionResult> getList_BaiDang(LocThongTin_BaiDang locThongTin)
+        #region Bài đăng
+        [HttpPost]
+        public async Task<ActionResult> getList_BaiDang(LocThongTin_BaiDang input)
         {
-            var baiDangs = await _quanLyBaiDangService.GetBaiDangs(loai: "all", locThongTin: locThongTin);
+            var baiDangs = await _quanLyBaiDangAppService.GetBaiDangs(loai: "all", locThongTin: input);
             var output = new GetList_BaiDang_Output_Dto
             {
                 BaiDangs = baiDangs.ToList(),
@@ -61,62 +67,38 @@ namespace QuanLyBaiDang.Controllers
             };
             return PartialView($"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-getList.cshtml", output);
         }
-        [HttpGet]
-        public async Task<ActionResult> getList_ChienDich(LocThongTin_ChienDich locThongTin)
-        {
-            var chienDichs = await _quanLyBaiDangService.GetChienDichs(loai: "all", locThongTin: locThongTin);
-            var output = new GetList_ChienDich_Output_Dto
-            {
-                ChienDichs = chienDichs.ToList(),
-                ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyChienDich"),
-            };
-            return PartialView($"{VIEW_PATH}/quanlybaidang-tab/chiendich/chiendich-getList.cshtml", output);
-        }
         [HttpPost]
-        public ActionResult displayModal_CRUD_BaiDang(DisplayModel_CRUD_BaiDang_Input_Dto input)
+        public async Task<ActionResult> displayModal_CRUD_BaiDang(DisplayModel_CRUD_BaiDang_Input_Dto input)
         {
-            var baiDang = new tbBaiDangExtend();
+            //var baiDang = await _quanLyBaiDangAppService.GetBaiDangs(loai: "single", idBaiDangs: new List<Guid> { input.IdBaiDang });
             var output = new DisplayModel_CRUD_BaiDang_Output_Dto
             {
                 Loai = input.Loai,
-                BaiDang = baiDang,
+                //BaiDang = baiDang.FirstOrDefault().BaiDang,
             };
             return PartialView($"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-crud/baidang-crud.cshtml", output);
         }
         [HttpGet]
         public async Task<ActionResult> addBanGhi_Modal_CRUD()
         {
-            var baiDang = new tbBaiDangExtend { BaiDang = new tbBaiDang() };
-            var nenTangs = await _otherAppService.GetNenTangs();
-            var aiTools = await _quanLyAIToolAppService.GetAITools();
-            var aiBots = await _quanLyAIBotAppService.GetAIBots();
+            var output = await _quanLyBaiDangAppService.AddBanGhi_Modal_CRUD_Output();
 
-            var aiBots_ = aiBots.Select(x => x.AIBot).ToList();
+            output.LoaiView = "row";
             var html_baidang_row = Public.Handle.RenderViewToString(
-                this,
-                $"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-crud/form-addbaidang.cshtml",
-                new FormAddBaiDangDto
-                {
-                    LoaiView = "row",
-                    BaiDang = baiDang,
-                });
+                controller: this,
+                viewName: $"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-crud/form-addbaidang.cshtml",
+                model: output);
+
+            output.LoaiView = "read";
             var html_baidang_read = Public.Handle.RenderViewToString(
-                this,
-                $"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-crud/form-addbaidang.cshtml",
-                new FormAddBaiDangDto
-                {
-                    LoaiView = "read",
-                    BaiDang = baiDang,
-                    NenTangs = nenTangs,
-                    AITools = aiTools,
-                    AIBots = aiBots_
-                });
-            var output = new
+                controller: this,
+                viewName: $"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-crud/form-addbaidang.cshtml",
+                model: output);
+            return Json(new
             {
                 html_baidang_row,
                 html_baidang_read
-            };
-            return Json(output, JsonRequestBehavior.AllowGet);
+            }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public async Task<ActionResult> create_BaiDang(HttpPostedFileBase[] files, Guid[] rowNumbers)
@@ -124,12 +106,13 @@ namespace QuanLyBaiDang.Controllers
             try
             {
                 var baiDang_NEWs = JsonConvert.DeserializeObject<List<tbBaiDangExtend>>(Request.Form["baiDangs"]);
+                var loai = Request.Form["loai"];
                 if (baiDang_NEWs == null || !baiDang_NEWs.Any())
                 {
                     return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
                 }
 
-                await _quanLyBaiDangService.Create_BaiDang(baiDangs: baiDang_NEWs, files: files, rowNumbers: rowNumbers);
+                await _quanLyBaiDangAppService.Create_BaiDang(loai: loai,baiDangs: baiDang_NEWs, files: files, rowNumbers: rowNumbers);
 
                 return Json(new { status = "success", mess = "Thêm mới bản ghi thành công" }, JsonRequestBehavior.AllowGet);
             }
@@ -151,7 +134,7 @@ namespace QuanLyBaiDang.Controllers
                     return Json(new { status = "error", mess = "Chưa chọn bản ghi nào." }, JsonRequestBehavior.AllowGet);
 
                 // Gọi AppService xử lý logic chính
-                await _quanLyBaiDangService.Delete_BaiDangs(idBaiDangs: idBaiDangs);
+                await _quanLyBaiDangAppService.Delete_BaiDangs(idBaiDangs: idBaiDangs);
 
                 return Json(new { status, mess }, JsonRequestBehavior.AllowGet);
             }
@@ -178,9 +161,9 @@ namespace QuanLyBaiDang.Controllers
                         mess = "Không tìm thấy thông tin AI Bot"
                     });
                 }
-               string prompt = aiBot.FirstOrDefault().AIBot.Prompt += string.Format("\n {0}: {1}",
-                    "[THÔNG TIN CUNG CẤP] (nếu không có gì thì bỏ qua)",
-                    input.Keywords);
+                string prompt = aiBot.FirstOrDefault().AIBot.Prompt += string.Format("\n {0}: {1}",
+                     "[THÔNG TIN CUNG CẤP] (nếu không có gì thì bỏ qua)",
+                     input.Keywords);
                 noiDung = await _quanLyAIToolAppService.WorkWithAITool(input: new WorkWithAITool_Input_Dto
                 {
                     IdAITool = input.IdAITool,
@@ -231,6 +214,74 @@ namespace QuanLyBaiDang.Controllers
             ;
 
         }
+        #endregion
+
+        #region Chiến dịch
+        [HttpPost]
+        public async Task<ActionResult> getList_ChienDich(LocThongTin_ChienDich input)
+        {
+            var chienDichs = await _quanLyChienDichAppService.GetChienDichs(loai: "all", locThongTin: input);
+            var output = new GetList_ChienDich_Output_Dto
+            {
+                ChienDichs = chienDichs.ToList(),
+                ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyChienDich"),
+            };
+            return PartialView($"{VIEW_PATH}/quanlybaidang-tab/chiendich/chiendich-getList.cshtml", output);
+        }
+        [HttpPost]
+        public async Task<ActionResult> displayModal_CRUD_ChienDich(DisplayModel_CRUD_ChienDich_Input_Dto input)
+        {
+            var chienDich = await _quanLyChienDichAppService.GetChienDichs(loai: "single", idChienDichs: new List<Guid> { input.IdChienDich });
+            var output = new DisplayModel_CRUD_ChienDich_Output_Dto
+            {
+                Loai = input.Loai,
+                ChienDich = chienDich.FirstOrDefault(),
+            };
+            return PartialView($"{VIEW_PATH}/quanlybaidang-tab/chiendich/chiendich-crud.cshtml", output);
+        }
+        [HttpPost]
+        public async Task<ActionResult> create_ChienDich()
+        {
+            try
+            {
+                var chienDich_NEW = JsonConvert.DeserializeObject<tbChienDich>(Request.Form["chienDich"]);
+                if (chienDich_NEW == null)
+                {
+                    return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
+                }
+
+                await _quanLyChienDichAppService.Create_ChienDich(chienDich: chienDich_NEW);
+
+                return Json(new { status = "success", mess = "Thêm mới bản ghi thành công" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error", mess = "Lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        [HttpPost]
+        public async Task<JsonResult> delete_ChienDichs()
+        {
+            string status = "success";
+            string mess = "Xóa bản ghi thành công";
+
+            try
+            {
+                var idChienDichs = JsonConvert.DeserializeObject<List<Guid>>(Request.Form["idChienDichs"]);
+                if (idChienDichs == null || idChienDichs.Count == 0)
+                    return Json(new { status = "error", mess = "Chưa chọn bản ghi nào." }, JsonRequestBehavior.AllowGet);
+
+                // Gọi AppService xử lý logic chính
+                await _quanLyChienDichAppService.Delete_ChienDichs(idChienDichs: idChienDichs);
+
+                return Json(new { status, mess }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error", mess = "Lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
 
         public void SaveEncryptedCredential(string serviceName, string credentialType, string rawKeyJson, Guid? userId = null)
         {

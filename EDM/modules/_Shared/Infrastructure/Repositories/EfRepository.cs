@@ -93,6 +93,40 @@ namespace Infrastructure.Repositories
 
             return _dbSet;
         }
+        public IQueryable<TEntity> QueryByTenant<TEntity>(bool isGetAll = true) where TEntity : class
+        {
+            if (isGetAll) return _context.Set<TEntity>();
+
+            var parameter = Expression.Parameter(typeof(TEntity), "e");
+
+            var trangThaiProp = typeof(TEntity).GetProperty("TrangThai");
+            var maDonViProp = typeof(TEntity).GetProperty("MaDonViSuDung");
+
+            if (trangThaiProp != null && maDonViProp != null)
+            {
+                var trangThai = Expression.NotEqual(
+                    Expression.Property(parameter, "TrangThai"),
+                    Expression.Constant(0));
+
+                var maDonVi = Expression.Equal(
+                    Expression.Property(parameter, "MaDonViSuDung"),
+                    Expression.Constant(_userContext.DonViSuDung.MaDonViSuDung));
+
+                var andExp = Expression.AndAlso(trangThai, maDonVi);
+
+                var lambda = Expression.Lambda<Func<TEntity, bool>>(andExp, parameter);
+
+                return _context.Set<TEntity>().Where(lambda);
+            }
+
+            return _context.Set<TEntity>();
+        }
+
+
+        public async Task<List<TEntity>> GetAllByTenantAsync<TEntity>() where TEntity : class
+        {
+            return await QueryByTenant<TEntity>().ToListAsync();
+        }
 
         // Sync methods
         public TEntity GetById(TKey id) => _dbSet.Find(id);

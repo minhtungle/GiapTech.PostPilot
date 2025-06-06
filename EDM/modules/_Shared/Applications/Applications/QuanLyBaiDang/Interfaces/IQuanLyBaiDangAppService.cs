@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
 using LocThongTin_BaiDang = Applications.QuanLyBaiDang.Dtos.LocThongTinDto;
-using LocThongTin_ChienDich = Applications.QuanLyChienDich.Dtos.LocThongTinDto;
 
 namespace Applications.QuanLyBaiDang.Interfaces
 {
@@ -15,28 +14,20 @@ namespace Applications.QuanLyBaiDang.Interfaces
     {
         List<ThaoTac> GetThaoTacs(string maChucNang);
         Task<Index_OutPut_Dto> Index_OutPut();
+        Task<FormAddBaiDangDto> AddBanGhi_Modal_CRUD_Output();
         Task<IEnumerable<tbBaiDangExtend>> GetBaiDangs
            (string loai = "all",
            List<Guid> idBaiDangs = null,
            LocThongTin_BaiDang locThongTin = null);
-     
+
         Task<FreeImageUploadResponse> UploadToFreeImageHost(
             HttpPostedFileBase file);
         Task Create_BaiDang(
+            string loai,
             List<tbBaiDangExtend> baiDangs,
-            HttpPostedFileBase[] files, 
+            HttpPostedFileBase[] files,
             Guid[] rowNumbers);
         Task Delete_BaiDangs(
             List<Guid> idBaiDangs);
-
-
-        Task<IEnumerable<tbChienDich>> GetChienDichs
-        (string loai = "all",
-        List<Guid> idChienDichs = null,
-        LocThongTin_ChienDich locThongTin = null);
-        Task Create_ChienDich(
-            List<tbChienDich> chienDichs);
-        Task Delete_ChienDichs(
-            List<Guid> idChienDichs);
     }
 }

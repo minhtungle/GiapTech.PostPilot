@@ -10,7 +10,6 @@ class QuanLyChienDich {
     }
     init() {
         var quanLyChienDich = this;
-        var idNguoiDung_DangSuDung = $("#input-idnguoidung-dangsudung").val();
         quanLyChienDich.page = $("#page-quanlychiendich");
 
         quanLyChienDich.chienDich = {
@@ -202,9 +201,9 @@ class QuanLyChienDich {
         };
 
         quanLyChienDich.chienDich.getList();
-        sys.activePage({
-            page: quanLyChienDich.page.attr("id"),
-            pageGroup: quanLyChienDich.pageGroup
-        });
+        //sys.activePage({
+        //    page: quanLyChienDich.page.attr("id"),
+        //    pageGroup: quanLyChienDich.pageGroup
+        //});
     }
 };

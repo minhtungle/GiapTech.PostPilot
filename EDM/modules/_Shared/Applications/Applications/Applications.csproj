@@ -117,6 +117,8 @@
     <Compile Include="QuanLyBaiDang\Enums\TrangThaiDangBaiEnum.cs" />
     <Compile Include="QuanLyChienDich\Dtos\GetList_ChienDich_Output_Dto.cs" />
     <Compile Include="QuanLyChienDich\Enums\TrangThaiDangBaiEnum.cs" />
+    <Compile Include="QuanLyChienDich\Interfaces\IQuanLyChienDichAppService.cs" />
+    <Compile Include="QuanLyChienDich\Services\QuanLyChienDichAppService.cs" />
     <Compile Include="UserAccount\Dtos\DisplayModel_CRUD_NguoiDung_Output_Dto.cs" />
     <Compile Include="UserAccount\Dtos\DisplayModel_CRUD_NguoiDung_Input_Dto.cs" />
     <Compile Include="UserType\AppServices\QuanLyKieuNguoiDungService.cs" />

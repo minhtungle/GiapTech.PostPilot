@@ -12,6 +12,7 @@ class QuanLyBaiDang {
         var quanLyBaiDang = this;
         var idNguoiDung_DangSuDung = $("#input-idnguoidung-dangsudung").val();
         quanLyBaiDang.page = $("#page-quanlybaidang");
+        htmlEl = new HtmlElement();
 
         quanLyBaiDang.baiDang = {
             ...quanLyBaiDang.baiDang,
@@ -270,12 +271,21 @@ class QuanLyBaiDang {
                 $(`.carousel-item${itemId}`, $modal).addClass('active');
             },
             getList: function () {
+                var $timKiem = $("#baidang-tab");
+                var input = {
+                    NoiDung: $("#input-noidung-timkiem", $timKiem).val().trim(),
+                    IdChienDich: $("#select-chiendich-timkiem", $timKiem).val(),
+                    IdNguoiTao: $("#select-nguoitao-timkiem", $timKiem).val(),
+                    IdNenTang: $("#select-nentang-timkiem", $timKiem).val(),
+                    NgayTao: $("#input-ngaytao-timkiem", $timKiem).val().trim(),
+                    NgayDangBai: $("#input-ngaydangbai-timkiem", $timKiem).val().trim(),
+                };
                 $.ajax({
                     ...ajaxDefaultProps({
                         url: "/QuanLyBaiDang/getList_BaiDang",
-                        type: "GET", // Phải là POST để gửi JSON
+                        type: "POST", // Phải là POST để gửi JSON
                         contentType: "application/json; charset=utf-8",  // Định dạng JSON
-                        //data: { idChienDich }
+                        data: { input }
                         //dataType: "json",
                     }),
                     //contentType: false,
@@ -420,12 +430,15 @@ class QuanLyBaiDang {
                 };
             },
             updateMultipleCell: function () {
-                var $modal = $("#baidang-crud");
-                var $modal_CapNhatTruong = $("#baidang-crud-capnhattruong");
+                var $modal = $("#baidang-crud"),
+                    endName = 'capnhattruong';
 
-                var idNenTang = $("#select-nentang-capnhattruong", $modal_CapNhatTruong).val(),
-                    idAITool = $("#select-aitool", $modal_CapNhatTruong).val(),
-                    idAIBot = $("#select-aibot", $modal_CapNhatTruong).val();
+                var $modal_CapNhatTruong = $(`#baidang-crud-${endName}`);
+
+                var idNenTang = $(`#select-nentang-${endName}`, $modal_CapNhatTruong).val(),
+                    idAITool = $(`#select-aitool-${endName}`, $modal_CapNhatTruong).val(),
+                    idAIBot = $(`#select-aibot-${endName}`, $modal_CapNhatTruong).val();
+                idChienDich = $(`#select-chiendich-${endName}`, $modal_CapNhatTruong).val();
                 var rows = quanLyBaiDang.handleModal_CRUD.dataTable.rows().nodes().toArray(),
                     $rowChecks = $(`.checkRow-baidang-getList:checked`, rows);
                 if ($rowChecks.length == 0) {
@@ -436,9 +449,10 @@ class QuanLyBaiDang {
                             rowNumber = $rowCheck.attr("row"),
                             $div = $(`.baidang-read[row=${rowNumber}]`, $modal);
                         // Thay đổi value cho những dòng được chọn
-                        $("#select-nentang", $div).val(idNenTang); $("#select-nentang", $div).trigger("change");
-                        $("#select-aitool", $div).val(idAITool); $("#select-aitool", $div).trigger("change");
-                        $("#select-aibot", $div).val(idAIBot); $("#select-aibot", $div).trigger("change");
+                        $(`#select-nentang-${endName}`, $div).val(idNenTang); $(`#select-nentang-${endName}`, $div).trigger("change");
+                        $(`#select-aitool-${endName}`, $div).val(idAITool); $(`#select-aitool-${endName}`, $div).trigger("change");
+                        $(`#select-aibot-${endName}`, $div).val(idAIBot); $(`#select-aibot-${endName}`, $div).trigger("change");
+                        $(`#select-chiendich-${endName}`, $div).val(idChienDich); $(`#select-chiendich-${idChienDich}`, $div).trigger("change");
                     });
 
                     sys.alert({ status: "success", mess: "Cập nhật trường dữ liệu thành công" })
@@ -566,12 +580,12 @@ class QuanLyBaiDang {
                     };
                 });
             },
-            save: function () {
+            save: function (loai) {
                 var baiDangs = [];
                 $.each($(".baidang-read", $("#baidang-crud")), function () {
                     var $div = $(this),
                         rowNumber = $div.attr("row");
-                    var idNenTangs = $("#select-nentang", $div).val();
+                    var idNenTangs = $(`#select-nentang-${rowNumber}`, $div).val();
                     $.each(idNenTangs, function (i, idNenTang) {
                         var baiDang = {
                             RowNumber: rowNumber,
@@ -593,6 +607,7 @@ class QuanLyBaiDang {
                     callback: function () {
                         var formData = new FormData();
                         formData.append("baiDangs", JSON.stringify(baiDangs));
+                        formData.append("loai", loai);
 
                         $.each(quanLyBaiDang.baiDang.handleAnhMoTa.arrAnh, function (idx, anh) {
                             formData.append("files", anh.file);
@@ -623,6 +638,229 @@ class QuanLyBaiDang {
                     }
                 });
             },
+            close: function () {
+                sys.confirmDialog({
+                    mess: `<p>Bản ghi chưa hoàn thiện</p><br />
+                    <p>Bạn có muốn tiếp tục không ?</p>`,
+                    callback_no: function () {
+                        sys.displayModal({
+                            name: "#confirmdialog",
+                            displayStatus: "hide",
+                            level: 100
+                        });
+                        sys.displayModal({
+                            name: '#baidang-crud',
+                            displayStatus: "hide"
+                        });
+                    }
+                });
+            }
         };
+    }
+};
+
+class QuanLyChienDich {
+    constructor() {
+        this.page;
+        this.pageGroup;
+        this.chienDich = {}
+    }
+    init() {
+        var quanLyChienDich = this;
+        quanLyChienDich.page = $("#page-quanlychiendich");
+        htmlEl = new HtmlElement();
+
+        quanLyChienDich.chienDich = {
+            ...quanLyChienDich.chienDich,
+            dataTable: null,
+            getList: function () {
+                var $timKiem = $("#chiendich-tab");
+                var input = {
+                    IdNguoiTao: $("#select-nguoitao-timkiem", $timKiem).val(),
+                    NgayTao: $("#input-ngaytao-timkiem", $timKiem).val().trim(),
+                };
+                $.ajax({
+                    ...ajaxDefaultProps({
+                        url: "/QuanLyBaiDang/getList_ChienDich",
+                        type: "POST", // Phải là POST để gửi JSON
+                        contentType: "application/json; charset=utf-8",  // Định dạng JSON
+                        data: { input }
+                        //dataType: "json",
+                    }),
+                    //contentType: false,
+                    //processData: false,
+                    success: function (res) {
+                        $("#chiendich-getList-container").html(res);
+                        quanLyChienDich.chienDich.dataTable = new DataTableCustom({
+                            name: "chiendich-getList",
+                            table: $("#chiendich-getList"),
+                            props: {
+                                dom: `
+                                <'row'<'col-sm-12'rt>>
+                                <'row'<'col-sm-12 col-md-6 text-left'i><'col-sm-12 col-md-6 pt-2'p>>`,
+                                lengthMenu: [
+                                    [5, 10],
+                                    [5, 10],
+                                ],
+                            }
+                        }).dataTable;
+                    }
+                });
+            },
+            displayModal_CRUD: function (loai = "", idChienDich = '00000000-0000-0000-0000-000000000000') {
+                if (loai == "update") {
+                    var idChienDichs = [];
+                    quanLyChienDich.chienDich.dataTable.rows().iterator('row', function (context, index) {
+                        var $row = $(this.row(index).node());
+                        if ($row.has("input.checkRow-chiendich-getList:checked").length > 0) {
+                            idChienDichs.push($row.attr('id'));
+                        };
+                    });
+                    if (idChienDichs.length != 1) {
+                        sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
+                        return;
+                    }
+                    else idChienDich = idChienDichs[0];
+                };
+                var input = {
+                    Loai: loai,
+                    IdChienDich: idChienDich,
+                };
+                $.ajax({
+                    ...ajaxDefaultProps({
+                        url: "/QuanLyBaiDang/displayModal_CRUD_ChienDich",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            input
+                        },
+                    }),
+                    success: function (res) {
+                        $("#chiendich-crud").html(res);
+                        /**
+                          * Gán các thuộc tính
+                          */
+                        sys.displayModal({
+                            name: '#chiendich-crud'
+                        });
+                    }
+                })
+            },
+            save: function (loai) {
+                var modalValidtion = htmlEl.activeValidationStates("#chiendich-crud");
+                if (modalValidtion) {
+                    var chienDich = {
+                        IdChienDich: $("#input-idchiendich").val(),
+                        TenChienDich: $("#input-tenchiendich").val().trim(),
+                    }
+                    sys.confirmDialog({
+                        mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
+                        callback: function () {
+                            var formData = new FormData();
+                            formData.append("chienDich", JSON.stringify(chienDich));
+                            formData.append("loai", loai);
+
+                            $.ajax({
+                                ...ajaxDefaultProps({
+                                    url: loai == "create" ? "/QuanLyBaiDang/create_ChienDich" : "/QuanLyBaiDang/update_ChienDich",
+                                    type: "POST",
+                                    data: formData,
+                                }),
+                                //contentType: "application/json; charset=utf-8",  // Chỉ định kiểu nội dung là JSON
+                                contentType: false,
+                                processData: false,
+                                success: function (res) {
+                                    if (res.status == "success") {
+                                        quanLyChienDich.chienDich.getList();
+
+                                        sys.displayModal({
+                                            name: '#chiendich-crud',
+                                            displayStatus: "hide"
+                                        });
+                                        sys.alert({ status: res.status, mess: res.mess });
+                                    } else {
+                                        if (res.status == "warning") {
+                                            htmlEl.inputValidationStates(
+                                                $("#input-tenchiendich"),
+                                                "#chiendich-crud",
+                                                res.mess,
+                                                {
+                                                    status: true,
+                                                    isvalid: false
+                                                }
+                                            )
+                                        };
+                                        sys.alert({ status: res.status, mess: res.mess });
+                                    };
+
+                                }
+                            });
+                        }
+                    });
+                };
+            },
+            delete: function (loai, idChienDich = '00000000-0000-0000-0000-000000000000') {
+                var idChienDichs = [];
+                // Lấy id
+                if (loai == "single") {
+                    idChienDichs.push(idChienDich)
+                } else {
+                    quanLyChienDich.chienDich.dataTable.rows().iterator('row', function (context, index) {
+                        var $row = $(this.row(index).node());
+                        if ($row.has("input.checkRow-chiendich-getList:checked").length > 0) {
+                            idChienDichs.push($row.attr('id'));
+                        };
+                    });
+                };
+                // Kiểm tra id
+                if (idChienDichs.length > 0) {
+                    var f = new FormData();
+                    f.append("idChienDichs", JSON.stringify(idChienDichs));
+                    sys.confirmDialog({
+                        mess: `Bạn có thực sự muốn xóa bản ghi này hay không ?`,
+                        callback: function () {
+                            $.ajax({
+                                ...ajaxDefaultProps({
+                                    url: "/QuanLyBaiDang/delete_ChienDichs",
+                                    type: "POST",
+                                    data: f,
+                                }),
+                                contentType: false,
+                                processData: false,
+                                success: function (res) {
+                                    sys.alert({ status: res.status, mess: res.mess })
+                                    quanLyChienDich.chienDich.getList();
+                                }
+                            })
+                        }
+                    })
+                } else {
+                    sys.alert({ mess: "Bạn chưa chọn bản ghi nào", status: "warning", timeout: 1500 })
+                }
+            },
+            xemChiTiet: function (idChienDich = '00000000-0000-0000-0000-000000000000') {
+                $.ajax({
+                    ...ajaxDefaultProps({
+                        url: "/QuanLyBaiDang/displayModal_CRUD_ChienDich",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        data: {
+                            idChienDich
+                        },
+                    }),
+                    success: function (res) {
+                        $("#chiendich-crud").html(res);
+                        /**
+                          * Gán các thuộc tính
+                          */
+                        sys.displayModal({
+                            name: '#chiendich-crud'
+                        });
+                    }
+                })
+            }
+        };
+
+        quanLyChienDich.chienDich.getList();
     }
 };

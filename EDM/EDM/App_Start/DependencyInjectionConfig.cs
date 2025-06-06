@@ -6,6 +6,8 @@ using Applications.QuanLyAITool.Interfaces;
 using Applications.QuanLyAITool.Services;
 using Applications.QuanLyBaiDang.Interfaces;
 using Applications.QuanLyBaiDang.Serivices;
+using Applications.QuanLyChienDich.Interfaces;
+using Applications.QuanLyChienDich.Services;
 using Autofac;
 using Autofac.Integration.Mvc;
 using EDM_DB;
@@ -18,6 +20,7 @@ using Public.Interfaces;
 using QuanLyAIBot.Controllers;
 using QuanLyAITool.Controllers;
 using QuanLyBaiDang.Controllers;
+using QuanLyChienDich.Controllers;
 using System;
 using System.Data.Entity;
 using System.Web.Mvc;
@@ -33,6 +36,7 @@ namespace EDM.App_Start
             #region ✅ Đăng ký các Controller MVC
             //builder.RegisterControllers(Assembly.GetExecutingAssembly());
             //builder.RegisterControllers(typeof(MvcApplication).Assembly);
+            builder.RegisterControllers(typeof(QuanLyChienDichController).Assembly);
             builder.RegisterControllers(typeof(QuanLyBaiDangController).Assembly);
             builder.RegisterControllers(typeof(QuanLyAIBotController).Assembly);
             builder.RegisterControllers(typeof(QuanLyAIToolController).Assembly);
@@ -70,6 +74,9 @@ namespace EDM.App_Start
             builder.RegisterType<PermissionCheckerAppService>()
                    .As<IPermissionCheckerAppService>()
                    .InstancePerRequest(); // hoặc InstancePerLifetimeScope()
+            builder.RegisterType<QuanLyChienDichAppService>()
+                   .As<IQuanLyChienDichAppService>()
+                   .InstancePerRequest();
             builder.RegisterType<QuanLyBaiDangAppService>()
                    .As<IQuanLyBaiDangAppService>()
                    .InstancePerRequest();
@@ -85,6 +92,9 @@ namespace EDM.App_Start
             #endregion
 
             #region Đăng ký IRepositories
+            builder.RegisterType<EfRepository<tbChienDich, Guid>>()
+                   .As<IRepository<tbChienDich, Guid>>()
+                   .InstancePerRequest();
             builder.RegisterType<EfRepository<tbBaiDang, Guid>>()
                    .As<IRepository<tbBaiDang, Guid>>()
                    .InstancePerRequest();

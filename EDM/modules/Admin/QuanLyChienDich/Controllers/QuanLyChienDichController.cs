@@ -86,7 +86,7 @@ namespace QuanLyChienDich.Controllers
         public ActionResult displayModal_CRUD_ChienDich(DisplayModel_CRUD_ChienDich_Input_Dto input)
         {
             //var baiDang = getChienDichs(loai: "single", idChienDichs: new List<Guid> { input.IdBaiDang })?.FirstOrDefault() ?? new tbBaiDangExtend();
-            var chienDich = new tbChienDichExtend();
+            var chienDich = new tbChienDich();
             var output = new DisplayModel_CRUD_ChienDich_Output_Dto
             {
                 Loai = input.Loai,

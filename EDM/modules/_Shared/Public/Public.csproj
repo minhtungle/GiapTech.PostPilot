@@ -181,6 +181,7 @@
     <Compile Include="Handle\Handle.cs" />
     <Compile Include="Helpers\CryptoHelper.cs" />
     <Compile Include="Helpers\CustomAuthorizeAttribute.cs" />
+    <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Interfaces\IPermissionCheckerAppService.cs" />
     <Compile Include="Interfaces\ISoftDeleteAndTenant.cs" />

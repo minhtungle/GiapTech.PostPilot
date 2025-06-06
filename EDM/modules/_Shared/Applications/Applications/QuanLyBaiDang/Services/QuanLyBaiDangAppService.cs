@@ -1,5 +1,4 @@
-﻿using Applications.Enums;
-using Applications.QuanLyBaiDang.Dtos;
+﻿using Applications.QuanLyBaiDang.Dtos;
 using Applications.QuanLyBaiDang.Interfaces;
 using Applications.QuanLyBaiDang.Models;
 using EDM_DB;
@@ -18,7 +17,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using TrangThaiDangBai_BaiDang = Applications.QuanLyBaiDang.Enums.TrangThaiDangBaiEnum;
-using TrangThaiDangBai_ChienDich = Applications.QuanLyChienDich.Enums.TrangThaiDangBaiEnum;
 
 namespace Applications.QuanLyBaiDang.Serivices
 {
@@ -60,19 +58,60 @@ namespace Applications.QuanLyBaiDang.Serivices
             _apiCredentialRepo = apiCredentialRepo;
         }
         public List<ThaoTac> GetThaoTacs(string maChucNang) => GetThaoTacByIdChucNang(maChucNang);
+
         #region Bài đăng
         public async Task<Index_OutPut_Dto> Index_OutPut()
         {
             var thaoTacs = GetThaoTacs(maChucNang: "QuanLyBaiDang");
-            var nenTangs = await _nenTangRepo.Query().ToListAsync();
-            var nguoiTaos = await _nguoiDungRepo.Query().ToListAsync();
-            var chienDichs = await _chienDichRepo.Query().ToListAsync();
+            var nenTangs = await _nenTangRepo.Query().Where(x =>
+                    x.TrangThai != 0 &&
+                    x.MaDonViSuDung == CurrentDonViId).ToListAsync();
+            var nguoiTaos = await _nguoiDungRepo.Query().Where(x =>
+                    x.TrangThai != 0 &&
+                    x.MaDonViSuDung == CurrentDonViId).ToListAsync();
+            var chienDichs = await _chienDichRepo.Query().Where(x =>
+                    x.TrangThai != 0 &&
+                    x.MaDonViSuDung == CurrentDonViId).ToListAsync();
+            var aiTools = await _aiToolRepo.Query().Where(x =>
+                    x.TrangThai != 0 &&
+                    x.MaDonViSuDung == CurrentDonViId).ToListAsync();
+            var aiBots = await _aiBotRepo.Query().Where(x =>
+                    x.TrangThai != 0 &&
+                    x.MaDonViSuDung == CurrentDonViId).ToListAsync();
+
             return new Index_OutPut_Dto
             {
                 ThaoTacs = thaoTacs,
                 NenTangs = nenTangs,
                 NguoiTaos = nguoiTaos,
-                ChienDichs = chienDichs
+                ChienDichs = chienDichs,
+                AIBots = aiBots,
+                AITools = aiTools
+            };
+        }
+        public async Task<FormAddBaiDangDto> AddBanGhi_Modal_CRUD_Output()
+        {
+            var baiDang = new tbBaiDangExtend { BaiDang = new tbBaiDang() };
+            var nenTangs = await _nenTangRepo.Query().Where(x =>
+                    x.TrangThai != 0 &&
+                    x.MaDonViSuDung == CurrentDonViId).ToListAsync();
+            var chienDichs = await _chienDichRepo.Query().Where(x =>
+                x.TrangThai != 0 &&
+                x.MaDonViSuDung == CurrentDonViId).ToListAsync();
+            var aiTools = await _aiToolRepo.Query().Where(x =>
+                    x.TrangThai != 0 &&
+                    x.MaDonViSuDung == CurrentDonViId).ToListAsync();
+            var aiBots = await _aiBotRepo.Query().Where(x =>
+                    x.TrangThai != 0 &&
+                    x.MaDonViSuDung == CurrentDonViId).ToListAsync();
+
+            return new FormAddBaiDangDto
+            {
+                BaiDang = baiDang,
+                ChienDichs = chienDichs,
+                NenTangs = nenTangs,
+                AIBots = aiBots,
+                AITools = aiTools,
             };
         }
         public async Task<IEnumerable<tbBaiDangExtend>> GetBaiDangs(
@@ -83,7 +122,48 @@ namespace Applications.QuanLyBaiDang.Serivices
             var query = _baiDangRepo.Query()
                 .Where(x =>
                     x.TrangThai != 0 &&
-                    x.MaDonViSuDung == CurrentDonViId)
+                    x.MaDonViSuDung == CurrentDonViId);
+
+            // Áp dụng lọc trước khi join để tối ưu
+            if (locThongTin != null)
+            {
+                if (!string.IsNullOrWhiteSpace(locThongTin.NoiDung))
+                    query = query.Where(x => x.NoiDung.Contains(locThongTin.NoiDung));
+
+                if (locThongTin.IdChienDich.HasValue)
+                    query = query.Where(x => x.IdChienDich == locThongTin.IdChienDich.Value);
+
+                if (locThongTin.IdNguoiTao.HasValue)
+                    query = query.Where(x => x.IdNguoiTao == locThongTin.IdNguoiTao.Value);
+
+                if (locThongTin.IdNenTang.HasValue)
+                    query = query.Where(x => x.IdNenTang == locThongTin.IdNenTang.Value);
+
+                var ngayTaoRange = DateHelper.ParseThangNam(locThongTin.NgayTao);
+                if (ngayTaoRange.Start.HasValue && ngayTaoRange.End.HasValue)
+                {
+                    query = query.Where(x =>
+                        x.ThoiGian >= ngayTaoRange.Start.Value &&
+                        x.ThoiGian <= ngayTaoRange.End.Value);
+                }
+
+                var ngayDangRange = DateHelper.ParseThangNam(locThongTin.NgayDangBai);
+                if (ngayDangRange.Start.HasValue && ngayDangRange.End.HasValue)
+                {
+                    query = query.Where(x =>
+                        x.ThoiGian.HasValue &&
+                        x.ThoiGian.Value >= ngayDangRange.Start.Value &&
+                        x.ThoiGian.Value <= ngayDangRange.End.Value);
+                }
+
+            }
+
+            if (loai == "single" && idBaiDangs != null && idBaiDangs.Any())
+            {
+                query = query.Where(x => idBaiDangs.Contains(x.IdBaiDang));
+            }
+
+            var result = query
                 .Join(_nguoiDungRepo.Query(),
                     bd => bd.IdNguoiTao,
                     nd => nd.IdNguoiDung,
@@ -102,18 +182,11 @@ namespace Applications.QuanLyBaiDang.Serivices
                         NenTang = nt
                     });
 
-            if (loai == "single" && idBaiDangs != null)
-            {
-                query = query.Where(x => idBaiDangs.Contains(x.BaiDang.IdBaiDang));
-            }
-            ;
-
-            var data = await query
+            return await result
                 .OrderByDescending(x => x.BaiDang.ThoiGian)
                 .ToListAsync();
-
-            return data;
         }
+
         public async Task<FreeImageUploadResponse> UploadToFreeImageHost(HttpPostedFileBase file)
         {
             if (file == null || file.ContentLength == 0)
@@ -173,6 +246,7 @@ namespace Applications.QuanLyBaiDang.Serivices
             return CryptoHelper.Decrypt(cred.KeyJson);
         }
         public async Task Create_BaiDang(
+            string loai,
             List<tbBaiDangExtend> baiDangs,
             HttpPostedFileBase[] files,
             Guid[] rowNumbers)
@@ -225,7 +299,9 @@ namespace Applications.QuanLyBaiDang.Serivices
                     NoiDung = baiDang_NEW.BaiDang.NoiDung,
                     ThoiGian = baiDang_NEW.BaiDang.ThoiGian,
                     TuTaoAnhAI = baiDang_NEW.BaiDang.TuTaoAnhAI,
-                    TrangThaiDangBai = (int?)TrangThaiDangBai_BaiDang.WaitToPost,
+                    TrangThaiDangBai = loai == "create"
+                        ? (int?)TrangThaiDangBai_BaiDang.WaitToPost
+                        : (int?)TrangThaiDangBai_BaiDang.Draft,
                     TrangThai = 1,
                     IdNguoiTao = CurrentUserId,
                     NgayTao = DateTime.Now,
@@ -303,118 +379,6 @@ namespace Applications.QuanLyBaiDang.Serivices
 
                 await _unitOfWork.SaveChangesAsync();
             });
-        }
-        public async Task Create_ChienDich(tbChienDich chienDich)
-        {
-            await _unitOfWork.ExecuteInTransaction(async () =>
-            {
-                var entity = new tbChienDich
-                {
-                    IdChienDich = Guid.NewGuid(),
-                    TenChienDich = chienDich.TenChienDich,
-                    GhiChu = chienDich.GhiChu,
-
-                    TrangThaiHoatDong = (int)TrangThaiDangBai_ChienDich.WaitToPost,
-                    TrangThai = 1,
-                    MaDonViSuDung = CurrentDonViSuDung.MaDonViSuDung,
-                    IdNguoiTao = CurrentNguoiDung.IdNguoiDung,
-                    NgayTao = DateTime.Now,
-                };
-
-                await _unitOfWork.InsertAsync<tbChienDich, Guid>(entity);
-            });
-        }
-        public async Task Delete_ChienDichs(List<Guid> idChienDichs)
-        {
-            if (idChienDichs == null || !idChienDichs.Any())
-                throw new ArgumentException("Danh sách chiến dịch không được để trống.");
-
-            await _unitOfWork.ExecuteInTransaction(async () =>
-            {
-                foreach (var id in idChienDichs)
-                {
-                    var chienDich = await _chienDichRepo.GetByIdAsync(id);
-                    if (chienDich == null) continue;
-
-                    // Cập nhật trạng thái bài đăng
-                    chienDich.TrangThaiHoatDong = (int?)TrangThaiDangBai_ChienDich.WaitToDelete;
-                    chienDich.TrangThai = 0;
-                    chienDich.IdNguoiSua = CurrentNguoiDung.IdNguoiDung;
-                    chienDich.NgaySua = DateTime.Now;
-                    _chienDichRepo.Update(chienDich);
-
-                    var baiDangs = _baiDangRepo.Query()
-                    .Where(x => x.IdChienDich == chienDich.IdChienDich).ToList();
-                    foreach (var baiDang in baiDangs)
-                    {
-                        baiDang.TrangThaiDangBai = (int)TrangThaiDangBai_ChienDich.WaitToDelete; // Chờ xóa trên nền tảng
-                        baiDang.TrangThai = 0;
-                        baiDang.IdNguoiSua = CurrentNguoiDung.IdNguoiDung;
-                        baiDang.NgaySua = DateTime.Now;
-
-                        // Lấy các bản ghi liên kết Tệp - Bài đăng
-                        var baiDangTepDinhKems = await _baiDangTepDinhKemRepo.Query()
-                            .Where(x => x.IdBaiDang == baiDang.IdBaiDang)
-                            .ToListAsync();
-
-                        if (!baiDangTepDinhKems.Any()) continue;
-
-                        var tepIds = baiDangTepDinhKems.Select(x => x.IdTepDinhKem).Distinct().ToList();
-
-                        var tepDinhKems = await _tepDinhKemRepo.Query()
-                            .Where(x => tepIds.Contains(x.IdTep))
-                            .ToListAsync();
-
-                        foreach (var tep in tepDinhKems)
-                        {
-                            tep.TrangThai = 0;
-                            tep.IdNguoiSua = CurrentNguoiDung.IdNguoiDung;
-                            tep.NgaySua = DateTime.Now;
-                            _tepDinhKemRepo.Update(tep);
-                        }
-                        ;
-                    }
-
-                }
-
-                await _unitOfWork.SaveChangesAsync();
-            });
-        }
-
-        #endregion
-
-        #region Chiến dịch
-        public async Task<IEnumerable<tbChienDich>> GetChienDichs(
-            string loai = "all",
-            List<Guid> idChienDichs = null,
-            QuanLyChienDich.Dtos.LocThongTinDto locThongTin = null)
-        {
-            var query = _chienDichRepo.Query()
-                .Where(x =>
-                    x.TrangThai != 0 &&
-                    x.MaDonViSuDung == CurrentDonViId);
-
-            if (loai == "single" && idChienDichs != null)
-            {
-                query = query.Where(x => idChienDichs.Contains(x.IdChienDich));
-            }
-        ;
-
-            var data = await query
-                .OrderByDescending(x => x.IdChienDich)
-                .ToListAsync();
-
-            return data;
-        }
-        public async Task<bool> IsExisted_ChienDich(tbChienDich chienDich)
-        {
-            // Kiểm tra còn hồ sơ khác có trùng mã không
-            var chienDich_OLD = await _chienDichRepo.Query()
-                .FirstOrDefaultAsync(x =>
-                x.TenChienDich == chienDich.TenChienDich
-                && x.IdChienDich != chienDich.IdChienDich
-                && x.TrangThai != 0 && x.MaDonViSuDung == CurrentDonViSuDung.MaDonViSuDung);
-            return chienDich_OLD != null;
         }
         #endregion
     }

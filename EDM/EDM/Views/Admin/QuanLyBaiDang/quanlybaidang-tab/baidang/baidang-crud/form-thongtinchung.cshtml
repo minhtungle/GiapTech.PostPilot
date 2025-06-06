@@ -4,8 +4,25 @@
 <div class="row" intro-container="thongtin-chung">
     <!--Id-->
     <input id="input-idbaidang" value="@Guid.Empty" hidden />
+    <!--Chiến dịch-->
+    <div class="col-sm-12 col-md-4">
+        <div class="position-relative">
+            <div class="form-group mb-3">
+                <label class="" for="select-chiendich">Chiến dịch</label>
+                <select class="form-control form-select2"
+                        id="select-chiendich" name="select-chiendich">
+                    <option disabled @(Model.ChienDichs.Count > 0 ? "" : "")>Chọn thông tin</option>
+                    @foreach (var chienDich in Model.ChienDichs)
+                    {
+                        <option value="@chienDich.IdChienDich">@chienDich.TenChienDich</option>
+                    }
+                </select>
+                <div class="invalid-feedback feedback" for="select-loaiaitool">Không được để trống</div>
+            </div>
+        </div>
+    </div>
     <!--Loại AI Tool-->
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12 col-md-4">
         <div class="position-relative">
             <div class="form-group mb-3">
                 <label class="required" for="select-aitool">AI Tool</label>
@@ -22,7 +39,7 @@
         </div>
     </div>
     <!--Loại AI Bot-->
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12 col-md-4">
         <div class="position-relative">
             <div class="form-group mb-3">
                 <label class="required" for="select-aibot">AI Bot</label>
@@ -124,9 +141,9 @@ Giảm giá: 50%
     <div class="col-sm-12 col-md-12">
         <div class="position-relative">
             <div class="form-group mb-3">
-                <label class="required" for="select-nentang">Nền tảng</label>
+                <label class="required" for="select-nentang-@Model.BaiDang.RowNumber">Nền tảng</label>
                 <select class="form-control form-select2"
-                        id="select-nentang" name="select-nentang"
+                        id="select-nentang" name="select-nentang-@Model.BaiDang.RowNumber"
                         multiple required>
                     <option disabled>Chọn thông tin</option>
                     @foreach (var nenTang in Model.NenTangs)
@@ -134,7 +151,7 @@ Giảm giá: 50%
                         <option value="@nenTang.IdNenTang">@nenTang.TenNenTang</option>
                     }
                 </select>
-                <div class="invalid-feedback feedback" for="select-nentang">Không được để trống</div>
+                <div class="invalid-feedback feedback" for="select-nentang-@Model.BaiDang.RowNumber">Không được để trống</div>
             </div>
         </div>
     </div>

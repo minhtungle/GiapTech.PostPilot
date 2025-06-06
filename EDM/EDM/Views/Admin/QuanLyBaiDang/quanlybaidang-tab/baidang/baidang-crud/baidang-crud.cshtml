@@ -7,10 +7,10 @@
         <div class="modal-header justify-content-start gap-1">
             <!--#-->
             <div class="btn-group btn-group-sm" role="group">
-                <a class="btn btn-primary" title="Làm mới"><i class="bi bi-fast-forward-fill"></i></a>
+                @*<a class="btn btn-primary" title="Làm mới"><i class="bi bi-fast-forward-fill"></i></a>
                 <a class="btn btn-light-secondary" onclick="quanLyBaiDang.baiDang.handleAI.taoNoiDungAI_Multiple()">
                     Tạo nội dung AI hàng loạt
-                </a>
+                </a>*@
                 @*<a class="btn btn-primary" title="Làm mới"><i class="bi bi-repeat"></i></a>
                 <a class="btn btn-light-secondary" onclick="quanLyBaiDang.baiDang.reload()">
                     Làm mới
@@ -41,7 +41,7 @@
         </div>
         <div class="modal-body table-responsive">
             <div class="row">
-                <div class="col-sm-12 col-md-4">
+                <div class="col-sm-12 col-md-3">
                     <table class="table table-hover table-bordered w-100 nowrap" id="baidang-getList" data-page-length="10" data-order="[[ 1, &quot;asc&quot; ]]">
                         <thead>
                             <tr>
@@ -61,18 +61,19 @@
                         <tbody></tbody>
                     </table>
                 </div>
-                <div class="col-sm-12 col-md-8" id="baidang-read-container"
+                <div class="col-sm-12 col-md-9" id="baidang-read-container"
                      style="overflow-y: scroll; border: 1px solid #d3d3d35c;">
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" onclick="quanLyBaiDang.handleModal_CRUD.save(@string.Format("'{0}'", "create"))">
-                @*<i class="bi bi-check d-flex d-sm-none"></i>*@
+            <button type="button" class="btn btn-outline-primary" onclick="quanLyBaiDang.handleModal_CRUD.save('draft')">
+                <span class="">Lưu nháp</span>
+            </button>
+            <button type="button" class="btn btn-primary" onclick="quanLyBaiDang.handleModal_CRUD.save('create')">
                 <span class="">Lưu</span>
             </button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                @*<i class="bi bi-x d-flex d-sm-none"></i>*@
+            <button type="button" class="btn btn-secondary" onclick="quanLyBaiDang.handleModal_CRUD.close()">
                 <span class="">Đóng</span>
             </button>
         </div>
