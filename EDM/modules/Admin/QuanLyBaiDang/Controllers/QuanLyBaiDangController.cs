@@ -68,7 +68,7 @@ namespace QuanLyBaiDang.Controllers
             return PartialView($"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-getList.cshtml", output);
         }
         [HttpPost]
-        public async Task<ActionResult> displayModal_CRUD_BaiDang(DisplayModel_CRUD_BaiDang_Input_Dto input)
+        public ActionResult displayModal_CRUD_BaiDang(DisplayModel_CRUD_BaiDang_Input_Dto input)
         {
             //var baiDang = await _quanLyBaiDangAppService.GetBaiDangs(loai: "single", idBaiDangs: new List<Guid> { input.IdBaiDang });
             var output = new DisplayModel_CRUD_BaiDang_Output_Dto
