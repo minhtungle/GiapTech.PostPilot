@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Quản lý AI Bot";
     Layout = "~/Views/_Shared/Admin/admin.cshtml";
-    var thaoTacs = Model.ThaoTacs;
 }
 @section hTitle {}
 @section hBreadcrumb {
@@ -23,7 +22,7 @@
 <section class="section" page-group="page-group-quanlyaibot" id="page-quanlyaibot" data-aos="fade-up">
     <div class="card">
         <div class="card-body">
-            @Html.Partial("~/Views/Admin/QuanLyAIBot/quanlyaibot-tab/tab.cshtml")
+            @Html.Partial("~/Views/Admin/QuanLyAIBot/quanlyaibot-tab/tab.cshtml", Model)
         </div>
     </div>
 </section>

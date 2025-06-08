@@ -95,6 +95,8 @@
     <Compile Include="QuanLyAIBot\Dtos\DisplayModel_CRUD_AIBot_Input_Dto.cs" />
     <Compile Include="QuanLyAIBot\Dtos\DisplayModel_CRUD_LoaiAIBot_Output_Dto.cs" />
     <Compile Include="QuanLyAIBot\Dtos\DisplayModel_CRUD_AIBot_Output_Dto.cs" />
+    <Compile Include="QuanLyAIBot\Dtos\GetList_LoaiAIBot_Output_Dto.cs" />
+    <Compile Include="QuanLyAIBot\Dtos\GetList_AIBot_Output_Dto.cs" />
     <Compile Include="QuanLyAIBot\Dtos\Index_OutPut_Dto.cs" />
     <Compile Include="QuanLyAIBot\Dtos\LocThongTinDto.cs" />
     <Compile Include="QuanLyAIBot\Interfaces\IQuanLyAIBotAppService.cs" />
@@ -102,6 +104,7 @@
     <Compile Include="QuanLyAIBot\Services\QuanLyAIBotAppService.cs" />
     <Compile Include="QuanLyAITool\Dtos\DisplayModel_CRUD_AITool_Input_Dto.cs" />
     <Compile Include="QuanLyAITool\Dtos\DisplayModel_CRUD_AITool_Output_Dto.cs" />
+    <Compile Include="QuanLyAITool\Dtos\GetList_AITool_Output_Dto.cs" />
     <Compile Include="QuanLyAITool\Dtos\Index_OutPut_Dto.cs" />
     <Compile Include="QuanLyAITool\Dtos\LocThongTinDto.cs" />
     <Compile Include="QuanLyAIBot\Dtos\TaoNoiDungAI_Input_Dto.cs" />

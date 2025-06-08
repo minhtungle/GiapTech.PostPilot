@@ -10,6 +10,7 @@ namespace Applications.QuanLyAITool.Interfaces
     public interface IQuanLyAIToolAppService
     {
         List<ThaoTac> GetThaoTacs(string maChucNang);
+        Task<Index_OutPut_Dto> Index_OutPut();
         Task<List<tbAITool>> GetAITools(
             string loai = "all",
             List<Guid> idAITool = null,

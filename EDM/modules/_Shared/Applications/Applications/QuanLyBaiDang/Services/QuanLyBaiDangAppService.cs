@@ -1,4 +1,5 @@
 ﻿using Applications.QuanLyBaiDang.Dtos;
+using Applications.QuanLyBaiDang.Enums;
 using Applications.QuanLyBaiDang.Interfaces;
 using Applications.QuanLyBaiDang.Models;
 using EDM_DB;
@@ -59,7 +60,6 @@ namespace Applications.QuanLyBaiDang.Serivices
         }
         public List<ThaoTac> GetThaoTacs(string maChucNang) => GetThaoTacByIdChucNang(maChucNang);
 
-        #region Bài đăng
         public async Task<Index_OutPut_Dto> Index_OutPut()
         {
             var thaoTacs = GetThaoTacs(maChucNang: "QuanLyBaiDang");
@@ -78,6 +78,7 @@ namespace Applications.QuanLyBaiDang.Serivices
             var aiBots = await _aiBotRepo.Query().Where(x =>
                     x.TrangThai != 0 &&
                     x.MaDonViSuDung == CurrentDonViId).ToListAsync();
+            var trangThaiDangBaiEnums = EnumHelper.GetEnumInfoList<TrangThaiDangBaiEnum>();
 
             return new Index_OutPut_Dto
             {
@@ -86,7 +87,8 @@ namespace Applications.QuanLyBaiDang.Serivices
                 NguoiTaos = nguoiTaos,
                 ChienDichs = chienDichs,
                 AIBots = aiBots,
-                AITools = aiTools
+                AITools = aiTools,
+                TrangThaiDangBais = trangThaiDangBaiEnums,
             };
         }
         public async Task<FormAddBaiDangDto> AddBanGhi_Modal_CRUD_Output()
@@ -133,6 +135,9 @@ namespace Applications.QuanLyBaiDang.Serivices
                 if (locThongTin.IdChienDich.HasValue)
                     query = query.Where(x => x.IdChienDich == locThongTin.IdChienDich.Value);
 
+                if (locThongTin.TrangThaiDangBai.HasValue)
+                    query = query.Where(x => x.TrangThaiDangBai == locThongTin.TrangThaiDangBai.Value);
+
                 if (locThongTin.IdNguoiTao.HasValue)
                     query = query.Where(x => x.IdNguoiTao == locThongTin.IdNguoiTao.Value);
 
@@ -163,28 +168,47 @@ namespace Applications.QuanLyBaiDang.Serivices
                 query = query.Where(x => idBaiDangs.Contains(x.IdBaiDang));
             }
 
-            var result = query
-                .Join(_nguoiDungRepo.Query(),
+            var result = await query
+                .GroupJoin(
+                    _nguoiDungRepo.Query(),
                     bd => bd.IdNguoiTao,
                     nd => nd.IdNguoiDung,
-                    (bd, nd) => new
-                    {
-                        BaiDang = bd,
-                        NguoiTao = nd,
-                    })
-                .Join(_nenTangRepo.Query(),
-                    bd => bd.BaiDang.IdNenTang,
+                    (bd, nds) => new { BaiDang = bd, NguoiTao = nds.DefaultIfEmpty() }
+                )
+                .SelectMany(
+                    x => x.NguoiTao,
+                    (x, nd) => new { x.BaiDang, NguoiTao = nd }
+                )
+                .GroupJoin(
+                    _chienDichRepo.Query(),
+                    x => x.BaiDang.IdChienDich,
+                    cd => cd.IdChienDich,
+                    (x, cds) => new { x.BaiDang, x.NguoiTao, ChienDich = cds.DefaultIfEmpty() }
+                )
+                .SelectMany(
+                    x => x.ChienDich,
+                    (x, cd) => new { x.BaiDang, x.NguoiTao, ChienDich = cd }
+                )
+                .GroupJoin(
+                    _nenTangRepo.Query(),
+                    x => x.BaiDang.IdNenTang,
                     nt => nt.IdNenTang,
-                    (bd, nt) => new tbBaiDangExtend
+                    (x, nts) => new { x.BaiDang, x.NguoiTao, x.ChienDich, NenTang = nts.DefaultIfEmpty() }
+                )
+                .SelectMany(
+                    x => x.NenTang,
+                    (x, nt) => new tbBaiDangExtend
                     {
-                        BaiDang = bd.BaiDang,
-                        NguoiTao = bd.NguoiTao,
+                        BaiDang = x.BaiDang,
+                        NguoiTao = x.NguoiTao,
+                        ChienDich = x.ChienDich,
                         NenTang = nt
-                    });
-
-            return await result
+                    }
+                )
                 .OrderByDescending(x => x.BaiDang.ThoiGian)
                 .ToListAsync();
+
+            return result;
         }
 
         public async Task<FreeImageUploadResponse> UploadToFreeImageHost(HttpPostedFileBase file)
@@ -346,7 +370,9 @@ namespace Applications.QuanLyBaiDang.Serivices
                     if (baiDang == null) continue;
 
                     // Cập nhật trạng thái bài đăng
-                    baiDang.TrangThaiDangBai = (int?)TrangThaiDangBai_BaiDang.WaitToDelete;
+                    if (baiDang.TrangThaiDangBai == (int?)TrangThaiDangBai_BaiDang.WaitToPost) // Đang chờ đăng thì xóa luôn
+                        baiDang.TrangThaiDangBai = (int?)TrangThaiDangBai_BaiDang.Deleted;
+                    else baiDang.TrangThaiDangBai = (int?)TrangThaiDangBai_BaiDang.WaitToDelete; // Đã đăng thì chuyển sang trạng thái chờ xóa
                     baiDang.TrangThai = 0;
                     baiDang.IdNguoiSua = CurrentUserId;
                     baiDang.NgaySua = DateTime.Now;
@@ -380,6 +406,5 @@ namespace Applications.QuanLyBaiDang.Serivices
                 await _unitOfWork.SaveChangesAsync();
             });
         }
-        #endregion
     }
 }

@@ -5,7 +5,9 @@
     <a class="list-group-item list-group-item-action active" id="baidang-tab-list"
        data-bs-toggle="list" href="#baidang-tab" role="tab">Bài đăng</a>
     <a class="list-group-item list-group-item-action" id="chiendich-tab-list"
-       data-bs-toggle="list" href="#chiendich-tab" role="tab">Phân loại</a>
+       data-bs-toggle="list" href="#chiendich-tab" role="tab">Chiến dịch</a>
+    <a class="list-group-item list-group-item-action" id="phantich-tab-list"
+       data-bs-toggle="list" href="#phantich-tab" role="tab">Phân tích</a>
 </div>
 <div class="tab-content text-justify mt-2">
     <div class="tab-pane fade show active py-2" id="baidang-tab" role="tabpanel"
@@ -47,6 +49,38 @@
                                 </div>
                             </div>
                         </div>
+                        <!--Trạng thái đăng bài-->
+                        <div class="col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="select-trangthaidangbai-timkiem">Trạng thái đăng bài</label>
+                                    <select class="form-control form-select2"
+                                            id="select-trangthaidangbai-timkiem" name="select-trangthaidangbai-timkiem">
+                                        <option value="" selected>Chọn tất cả</option>
+                                        @foreach (var trangThaiDangBai in Model.TrangThaiDangBais)
+                                        {
+                                            <option value="@trangThaiDangBai.Value">@trangThaiDangBai.Description</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Nền tảng-->
+                        <div class="col-sm-12 col-md-4">
+                            <div class="position-relative">
+                                <div class="form-group mb-3">
+                                    <label class="" for="select-nentang-timkiem">Nền tảng</label>
+                                    <select class="form-control form-select2"
+                                            id="select-nentang-timkiem" name="select-nentang-timkiem">
+                                        <option value="" selected>Chọn tất cả</option>
+                                        @foreach (var nenTang in Model.NenTangs)
+                                        {
+                                            <option value="@nenTang.IdNenTang">@nenTang.TenNenTang</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <!--Người tạo-->
                         <div class="col-sm-12 col-md-4">
                             <div class="position-relative">
@@ -63,24 +97,8 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Nền tảng-->
-                        <div class="col-sm-12 col-md-4">
-                            <div class="position-relative">
-                                <div class="form-group mb-3">
-                                    <label class="" for="select-nentang-timkiem">Người tạo</label>
-                                    <select class="form-control form-select2"
-                                            id="select-nentang-timkiem" name="select-nentang-timkiem">
-                                        <option value="" selected>Chọn tất cả</option>
-                                        @foreach (var nenTang in Model.NenTangs)
-                                        {
-                                            <option value="@nenTang.IdNenTang">@nenTang.TenNenTang</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                         <!--Ngày tạo-->
-                        <div class="col-sm-12 col-md-6">
+                        <div class="col-sm-12 col-md-4">
                             <div class="position-relative">
                                 <div class="form-group">
                                     <label class="">Ngày tạo</label>
@@ -91,7 +109,7 @@
                             </div>
                         </div>
                         <!--Ngày đăng bài-->
-                        <div class="col-sm-12 col-md-6">
+                        <div class="col-sm-12 col-md-4">
                             <div class="position-relative">
                                 <div class="form-group">
                                     <label class="">Ngày đăng bài</label>
@@ -169,5 +187,8 @@
         <div class="row py-2">
             <div class="col-12" id="chiendich-getList-container"></div>
         </div>
+    </div>
+    <div class="tab-pane fade py-2" id="phantich-tab" role="tabpanel"
+         aria-labelledby="phantich-tab-list">
     </div>
 </div>

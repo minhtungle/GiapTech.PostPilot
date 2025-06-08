@@ -1,5 +1,6 @@
 ﻿using Applications.QuanLyAITool.Dtos;
 using Applications.QuanLyAITool.Interfaces;
+using Applications.QuanLyBaiDang.Dtos;
 using EDM_DB;
 using Newtonsoft.Json;
 using Public.Helpers;
@@ -18,17 +19,6 @@ namespace QuanLyAITool.Controllers
     {
         #region Biến public để in hoa
         private readonly string VIEW_PATH = "~/Views/Admin/QuanLyAITool";
-        private List<ThaoTac> THAOTACs
-        {
-            get
-            {
-                return Session["THAOTACs"] as List<ThaoTac> ?? new List<ThaoTac>();
-            }
-            set
-            {
-                Session["THAOTACs"] = value;
-            }
-        }
         public readonly IQuanLyAIToolAppService _quanLyAIToolAppService;
         public QuanLyAIToolController(IQuanLyAIToolAppService quanLyAIToolAppService)
         {
@@ -36,21 +26,9 @@ namespace QuanLyAITool.Controllers
         }
         #endregion
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            #region Lấy các danh sách
-
-            #region Thao tác
-            var thaoTacs = _quanLyAIToolAppService.GetThaoTacs(maChucNang: "QuanLyAITool").ToList();
-            #endregion
-
-            #endregion
-
-            THAOTACs = thaoTacs;
-            var output = new Index_OutPut_Dto
-            {
-                ThaoTacs = thaoTacs,
-            };
+            var output = await _quanLyAIToolAppService.Index_OutPut();
             return View($"{VIEW_PATH}/aitool.cshtml", output);
         }
 
@@ -58,6 +36,11 @@ namespace QuanLyAITool.Controllers
         public async Task<ActionResult> getList_AITool()
         {
             var data = await _quanLyAIToolAppService.GetAITools(loai: "all");
+            var output = new GetList_AITool_Output_Dto
+            {
+                AITools = data.ToList(),
+                ThaoTacs = _quanLyAIToolAppService.GetThaoTacs(maChucNang: "QuanLyAITool"),
+            };
             return PartialView($"{VIEW_PATH}/aitool-getList.cshtml", data);
         }
        

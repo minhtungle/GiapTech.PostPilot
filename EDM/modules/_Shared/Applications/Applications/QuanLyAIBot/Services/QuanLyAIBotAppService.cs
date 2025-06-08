@@ -1,8 +1,10 @@
-﻿using Applications.QuanLyAIBot.Interfaces;
+﻿using Applications.QuanLyAIBot.Dtos;
+using Applications.QuanLyAIBot.Interfaces;
 using Applications.QuanLyAIBot.Models;
 using EDM_DB;
 using Infrastructure.Interfaces;
 using Public.AppServices;
+using Public.Helpers;
 using Public.Models;
 using System;
 using System.Collections.Generic;
@@ -37,42 +39,64 @@ namespace Applications.QuanLyAIBot.Services
             _aiToolRepo = aiToolRepo;
         }
         public List<ThaoTac> GetThaoTacs(string maChucNang) => GetThaoTacByIdChucNang(maChucNang);
+        public async Task<Index_OutPut_Dto> Index_OutPut()
+        {
+            var thaoTacs = GetThaoTacs(maChucNang: "QuanLyAIBot");
+            
+            return new Index_OutPut_Dto
+            {
+                ThaoTacs = thaoTacs,
+            };
+        }
         public async Task<List<tbAIBotExtend>> GetAIBots(
-            string loai = "all",
-            List<Guid> idAIBot = null,
-            LocThongTin_AIBot locThongTin = null)
+         string loai = "all",
+         List<Guid> idAIBot = null,
+         LocThongTin_AIBot locThongTin = null)
         {
             var query = _aiBotRepo.Query()
                 .Where(x =>
                     x.TrangThai != 0 &&
-                    x.MaDonViSuDung == CurrentDonViId)
-                .Join(_aiBotLoaiAIBotRepo.Query(),
+                    x.MaDonViSuDung == CurrentDonViId);
+
+            if (loai == "single" && idAIBot != null && idAIBot.Any())
+            {
+                query = query.Where(x => idAIBot.Contains(x.IdAIBot));
+            }
+
+            // LEFT JOIN với bảng trung gian AIBot_LoaiAIBot
+            var result = await query
+                .GroupJoin(
+                    _aiBotLoaiAIBotRepo.Query(),
                     aiBot => aiBot.IdAIBot,
-                    aiBotLoaiAIBot => aiBotLoaiAIBot.IdAIBot,
-                    (aiBot, aiBotLoaiAIBot) => new { AIBot = aiBot, Gate = aiBotLoaiAIBot })
-                .Join(_loaiAIBotRepo.Query(),
-                    x => x.Gate.IdLoaiAIBot,
+                    gate => gate.IdAIBot,
+                    (aiBot, gates) => new { AIBot = aiBot, Gates = gates.DefaultIfEmpty() }
+                )
+                .SelectMany(
+                    x => x.Gates,
+                    (x, gate) => new { x.AIBot, Gate = gate }
+                )
+                .GroupJoin(
+                    _loaiAIBotRepo.Query(),
+                    x => x.Gate != null ? x.Gate.IdLoaiAIBot : Guid.Empty, // tránh null
                     loaiAIBot => loaiAIBot.IdLoaiAIBot,
-                    (x, loaiAIBot) => new { AIBot = x.AIBot, LoaiAIBot = loaiAIBot })
+                    (x, loais) => new { x.AIBot, x.Gate, LoaiAIBots = loais.DefaultIfEmpty() }
+                )
+                .SelectMany(
+                    x => x.LoaiAIBots,
+                    (x, loaiAIBot) => new { x.AIBot, LoaiAIBot = loaiAIBot }
+                )
                 .GroupBy(x => x.AIBot.IdAIBot)
                 .Select(gr => new tbAIBotExtend
                 {
                     AIBot = gr.FirstOrDefault().AIBot,
-                    LoaiAIBots = gr.Select(x => x.LoaiAIBot).ToList(),
-                });
-
-            if (loai == "single" && idAIBot != null)
-            {
-                query = query.Where(x => idAIBot.Contains(x.AIBot.IdAIBot));
-            }
-            ;
-
-            var data = await query
+                    LoaiAIBots = gr.Select(x => x.LoaiAIBot).Where(x => x != null).Distinct().ToList()
+                })
                 .OrderByDescending(x => x.AIBot.NgayTao)
                 .ToListAsync();
 
-            return data;
+            return result;
         }
+
         public async Task<List<tbLoaiAIBot>> GetLoaiAIBots(
             string loai = "all",
             List<Guid> idLoaiAIBot = null,

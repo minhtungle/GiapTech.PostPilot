@@ -643,7 +643,7 @@ table {
     table.table-sticky tfoot tr th:last-child,
     table.table-sticky tbody tr td:last-child {
         z-index: 1 !important;
-        position: sticky !important;
+        /*position: sticky !important;*/
         right: 0 !important;
         background-color: var(--bs-card-bg) !important;
         border-left: 1px solid #d3d3d35c !important;

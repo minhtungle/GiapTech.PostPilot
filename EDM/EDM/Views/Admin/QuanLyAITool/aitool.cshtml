@@ -1,9 +1,7 @@
 ﻿@using Public.Models
-@model Applications.QuanLyAITool.Dtos.Index_OutPut_Dto
 @{
     ViewBag.Title = "Quản lý AI Tool";
     Layout = "~/Views/_Shared/Admin/admin.cshtml";
-    var thaoTacs = Model.ThaoTacs;
 }
 @section hTitle {}
 @section hBreadcrumb {
@@ -22,8 +20,7 @@
 }
 <section class="section" page-group="page-group-quanlyaitool" id="page-quanlyaitool" data-aos="fade-up">
     <div class="card">
-        <div class="card-body" id="aitool-getList-container">
-        </div>
+        <div class="card-body" id="aitool-getList-container"></div>
     </div>
 </section>
 <!--aitool-crud-->

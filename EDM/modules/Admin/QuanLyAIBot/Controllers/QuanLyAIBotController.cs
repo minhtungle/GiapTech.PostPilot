@@ -21,17 +21,6 @@ namespace QuanLyAIBot.Controllers
     {
         #region Biến public để in hoa
         private readonly string VIEW_PATH = "~/Views/Admin/QuanLyAIBot";
-        private List<ThaoTac> THAOTACs
-        {
-            get
-            {
-                return Session["THAOTACs"] as List<ThaoTac> ?? new List<ThaoTac>();
-            }
-            set
-            {
-                Session["THAOTACs"] = value;
-            }
-        }
         public readonly IQuanLyAIBotAppService _quanLyAIBotAppService;
         private readonly IQuanLyAIToolAppService _quanLyAIToolAppService;
         public QuanLyAIBotController(
@@ -43,21 +32,10 @@ namespace QuanLyAIBot.Controllers
         }
         #endregion
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            #region Lấy các danh sách
+            var output = await _quanLyAIBotAppService.Index_OutPut();
 
-            #region Thao tác
-            var thaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyAIBot").ToList();
-            #endregion
-
-            #endregion
-
-            THAOTACs = thaoTacs;
-            var output = new Applications.QuanLyAIBot.Dtos.Index_OutPut_Dto
-            {
-                ThaoTacs = thaoTacs,
-            };
             return View($"{VIEW_PATH}/aibot.cshtml", output);
         }
 
@@ -65,12 +43,22 @@ namespace QuanLyAIBot.Controllers
         public async Task<ActionResult> getList_AIBot()
         {
             var data = await _quanLyAIBotAppService.GetAIBots(loai: "all");
+            var output = new GetList_AIBot_Output_Dto
+            {
+                AIBots = data.ToList(),
+                ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyAIBot"),
+            };
             return PartialView($"{VIEW_PATH}/quanlyaibot-tab/aibot/aibot-getList.cshtml", data);
         }
         [HttpGet]
         public async Task<ActionResult> getList_LoaiAIBot()
         {
             var data = await _quanLyAIBotAppService.GetLoaiAIBots(loai: "all");
+            var output = new GetList_LoaiAIBot_Output_Dto
+            {
+                LoaiAIBots = data.ToList(),
+                ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyAIBot"),
+            };
             return PartialView($"{VIEW_PATH}/quanlyaibot-tab/loaiaibot/loaiaibot-getList.cshtml", data);
         }
         [HttpPost]

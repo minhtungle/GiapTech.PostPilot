@@ -275,6 +275,7 @@ class QuanLyBaiDang {
                 var input = {
                     NoiDung: $("#input-noidung-timkiem", $timKiem).val().trim(),
                     IdChienDich: $("#select-chiendich-timkiem", $timKiem).val(),
+                    TrangThaiDangBai: $("#select-trangthaidangbai-timkiem", $timKiem).val(),
                     IdNguoiTao: $("#select-nguoitao-timkiem", $timKiem).val(),
                     IdNenTang: $("#select-nentang-timkiem", $timKiem).val(),
                     NgayTao: $("#input-ngaytao-timkiem", $timKiem).val().trim(),
@@ -437,8 +438,14 @@ class QuanLyBaiDang {
 
                 var idNenTang = $(`#select-nentang-${endName}`, $modal_CapNhatTruong).val(),
                     idAITool = $(`#select-aitool-${endName}`, $modal_CapNhatTruong).val(),
-                    idAIBot = $(`#select-aibot-${endName}`, $modal_CapNhatTruong).val();
-                idChienDich = $(`#select-chiendich-${endName}`, $modal_CapNhatTruong).val();
+                    idAIBot = $(`#select-aibot-${endName}`, $modal_CapNhatTruong).val(),
+                    idChienDich = $(`#select-chiendich-${endName}`, $modal_CapNhatTruong).val();
+
+                var isCheck_NenTang = $(`#checkbox-nentang-${endName}`, $modal_CapNhatTruong).is(":checked"),
+                    isCheck_AIBot = $(`#checkbox-aibot-${endName}`, $modal_CapNhatTruong).is(":checked"),
+                    isCheck_AITool = $(`#checkbox-aitool-${endName}`, $modal_CapNhatTruong).is(":checked"),
+                    isCheck_ChienDich = $(`#checkbox-chiendich-${endName}`, $modal_CapNhatTruong).is(":checked");
+
                 var rows = quanLyBaiDang.handleModal_CRUD.dataTable.rows().nodes().toArray(),
                     $rowChecks = $(`.checkRow-baidang-getList:checked`, rows);
                 if ($rowChecks.length == 0) {
@@ -449,10 +456,22 @@ class QuanLyBaiDang {
                             rowNumber = $rowCheck.attr("row"),
                             $div = $(`.baidang-read[row=${rowNumber}]`, $modal);
                         // Thay đổi value cho những dòng được chọn
-                        $(`#select-nentang-${endName}`, $div).val(idNenTang); $(`#select-nentang-${endName}`, $div).trigger("change");
-                        $(`#select-aitool-${endName}`, $div).val(idAITool); $(`#select-aitool-${endName}`, $div).trigger("change");
-                        $(`#select-aibot-${endName}`, $div).val(idAIBot); $(`#select-aibot-${endName}`, $div).trigger("change");
-                        $(`#select-chiendich-${endName}`, $div).val(idChienDich); $(`#select-chiendich-${idChienDich}`, $div).trigger("change");
+                        if (isCheck_NenTang) {
+                            $(`#select-nentang-${rowNumber}`, $div).val(idNenTang);
+                            $(`#select-nentang-${rowNumber}`, $div).trigger("change");
+                        };
+                        if (isCheck_AIBot) {
+                            $(`#select-aibot`, $div).val(idAIBot);
+                            $(`#select-aibot`, $div).trigger("change");
+                        };
+                        if (isCheck_AITool) {
+                            $(`#select-aitool`, $div).val(idAITool);
+                            $(`#select-aitool`, $div).trigger("change");
+                        };
+                        if (isCheck_ChienDich) {
+                            $(`#select-chiendich`, $div).val(idChienDich);
+                            $(`#select-chiendich`, $div).trigger("change");
+                        };
                     });
 
                     sys.alert({ status: "success", mess: "Cập nhật trường dữ liệu thành công" })
@@ -603,7 +622,9 @@ class QuanLyBaiDang {
                 });
 
                 sys.confirmDialog({
-                    mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
+                    mess: loai == 'create'
+                        ? `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`
+                        : `<p>Bản ghi sẽ được lưu nháp cho lần sử dụng tiếp theo ?</p>`,
                     callback: function () {
                         var formData = new FormData();
                         formData.append("baiDangs", JSON.stringify(baiDangs));
@@ -640,7 +661,7 @@ class QuanLyBaiDang {
             },
             close: function () {
                 sys.confirmDialog({
-                    mess: `<p>Bản ghi chưa hoàn thiện</p><br />
+                    mess: `<span class="font-bold">Bản ghi chưa hoàn thiện</span><br />
                     <p>Bạn có muốn tiếp tục không ?</p>`,
                     callback_no: function () {
                         sys.displayModal({

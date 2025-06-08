@@ -33,6 +33,15 @@ namespace Applications.QuanLyAITool.Services
         }
 
         public List<ThaoTac> GetThaoTacs(string maChucNang) => GetThaoTacByIdChucNang(maChucNang);
+        public async Task<Index_OutPut_Dto> Index_OutPut()
+        {
+            var thaoTacs = GetThaoTacs(maChucNang: "QuanLyAITool");
+
+            return new Index_OutPut_Dto
+            {
+                ThaoTacs = thaoTacs,
+            };
+        }
         public async Task<List<tbAITool>> GetAITools(
             string loai = "all",
             List<Guid> idAITool = null,

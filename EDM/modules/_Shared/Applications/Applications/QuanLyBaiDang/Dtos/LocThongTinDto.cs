@@ -6,6 +6,7 @@ namespace Applications.QuanLyBaiDang.Dtos
     {
         public string NoiDung { get; set; }
         public Guid? IdChienDich { get; set; }
+        public int? TrangThaiDangBai { get; set; }
         public Guid? IdNguoiTao { get; set; }
         public Guid? IdNenTang { get; set; }
         public string NgayTao { get; set; } = DateTime.Now.ToString("MM/yyyy");

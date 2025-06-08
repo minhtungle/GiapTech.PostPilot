@@ -11,6 +11,7 @@ namespace Applications.QuanLyBaiDang.Models
     {
         public Guid RowNumber { get; set; } = Guid.NewGuid();
         public tbBaiDang BaiDang { get; set; } = new tbBaiDang();
+        public tbChienDich ChienDich { get; set; } = new tbChienDich();
         public tbNenTang NenTang { get; set; } = new tbNenTang();
         public tbNguoiDung NguoiTao { get; set; } = new tbNguoiDung();
         public List<tbTepDinhKem> TepDinhKems { get; set; } = new List<tbTepDinhKem>();

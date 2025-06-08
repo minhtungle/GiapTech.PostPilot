@@ -63,7 +63,7 @@ namespace QuanLyBaiDang.Controllers
             var output = new GetList_BaiDang_Output_Dto
             {
                 BaiDangs = baiDangs.ToList(),
-                ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyBaiDang"),
+                ThaoTacs = _quanLyBaiDangAppService.GetThaoTacs(maChucNang: "QuanLyBaiDang"),
             };
             return PartialView($"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-getList.cshtml", output);
         }

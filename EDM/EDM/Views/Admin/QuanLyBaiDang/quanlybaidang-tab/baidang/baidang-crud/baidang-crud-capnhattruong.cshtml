@@ -1,9 +1,8 @@
 ﻿@using EDM_DB
 @model Applications.QuanLyBaiDang.Dtos.Index_OutPut_Dto
 @{ 
-    string endName = "@endName";
+    string endName = "capnhattruong";
 }
-
 
 <div class="modal fade text-left" id="baidang-crud-@endName" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
@@ -13,12 +12,12 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <p class="text-danger">Lưu ý: Tích chọn các bản ghi trước khi cập nhật</p>
+                    <p class="text-danger">Lưu ý: Tích chọn các trường dữ liệu muốn cập nhật</p>
                     <!--Chiến dịch-->
                     <div class="col-sm-12 col-md-12">
                         <div class="position-relative">
                             <div class="form-group mb-3">
-                                <label class="" for="select-chiendich">
+                                <label class="mb-1" for="select-chiendich">
                                     <input class="form-check-input" type="checkbox" name="checkbox-chiendich-@endName" id="checkbox-chiendich-@endName" />
                                     <label class="form-check-label" for="checkbox-chiendich-@endName">
                                         Chiến dịch
@@ -40,7 +39,12 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="position-relative">
                             <div class="form-group mb-3">
-                                <label class="" for="select-aitool-@endName">AI Tool</label>
+                                <label class="mb-1" for="select-aitool-@endName">
+                                    <input class="form-check-input" type="checkbox" name="checkbox-aitool-@endName" id="checkbox-aitool-@endName" />
+                                    <label class="form-check-label" for="checkbox-aitool-@endName">
+                                        AI Tool
+                                    </label>
+                                </label>
                                 <select class="form-control form-select2"
                                         id="select-aitool-@endName" name="select-aitool-@endName">
                                     <option disabled @(Model.AITools.Count > 0 ? "" : "")>Chọn thông tin</option>
@@ -57,7 +61,12 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="position-relative">
                             <div class="form-group mb-3">
-                                <label class="" for="select-aibot-@endName">AI Bot</label>
+                                <label class="mb-1" for="select-aibot-@endName">
+                                    <input class="form-check-input" type="checkbox" name="checkbox-aibot-@endName" id="checkbox-aibot-@endName" />
+                                    <label class="form-check-label" for="checkbox-aibot-@endName">
+                                        AI Bot
+                                    </label>
+                                </label>
                                 <select class="form-control form-select2"
                                         id="select-aibot-@endName" name="select-aibot-@endName">
                                     <option value="">Chọn thông tin</option>
@@ -74,7 +83,12 @@
                     <div class="col-sm-12 col-md-12">
                         <div class="position-relative">
                             <div class="form-group mb-3">
-                                <label class="" for="select-nentang-@endName">Nền tảng</label>
+                                <label class="mb-1" for="select-nentang-@endName">
+                                    <input class="form-check-input" type="checkbox" name="checkbox-nentang-@endName" id="checkbox-nentang-@endName" />
+                                    <label class="form-check-label" for="checkbox-nentang-@endName">
+                                        Nền tảng
+                                    </label>
+                                </label>
                                 <select class="form-control form-select2"
                                         id="select-nentang-@endName" name="select-nentang-@endName"
                                         multiple>

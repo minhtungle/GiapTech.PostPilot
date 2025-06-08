@@ -13,6 +13,7 @@ namespace Applications.QuanLyAIBot.Interfaces
     public interface IQuanLyAIBotAppService
     {
         List<ThaoTac> GetThaoTacs(string maChucNang);
+        Task<Index_OutPut_Dto> Index_OutPut();
         Task<List<tbAIBotExtend>> GetAIBots(
             string loai = "all",
             List<Guid> idAIBot = null,

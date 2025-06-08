@@ -1,22 +1,30 @@
 ﻿@using EDM_DB
-@model List<tbAITool>
-@using Public.Models
-@{
-    var thaoTacs = Session["THAOTACs"] as List<ThaoTac>;
-}
+@model Applications.QuanLyAITool.Dtos.GetList_AITool_Output_Dto
 
 <div class="mb-2 toggle-vis-bar">
     Hiển thị:
-    <a href="#" class="toggle-vis" data-table="aitool-getList" data-column="3">Tool Name</a> |
-    <a href="#" class="toggle-vis" data-table="aitool-getList" data-column="4">Model</a> |
-    <a href="#" class="toggle-vis" data-table="aitool-getList" data-column="5">Ngày tạo</a>
+    @{
+        var columns = new[] {
+      "Id Tool", "Tool Code", "Tool Name", "Model", "Ngày tạo"
+      };
+    }
+
+    @Public.Helpers.HtmlHelper.RenderToggleLinks("aitool-getList", columns)
 </div>
 <table class="table table-hover table-bordered table-sticky w-100" id="aitool-getList" data-page-length="10">
     <thead class="nowrap" style="white-space: nowrap !important">
         <tr>
-            <th class="text-center" data-orderable="false">
+            <th class="text-center" data-orderable="false"></th>
+
+            <th class="text-center">Id Tool</th>
+            <th class="text-center">Tool Code</th>
+            <th class="text-center">Tool Name</th>
+            <th class="text-center">Model</th>
+            <th class="text-center">Ngày tạo</th>
+
+            <th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">
                 <div style="white-space: nowrap">
-                    @if (thaoTacs.Exists(x => x.MaThaoTac == "quanlyaitool-themmoi"))
+                    @if (Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlyaitool-themmoi"))
                     {
                         <a class="btn btn-sm btn-success"
                            title="Thêm mới"
@@ -24,7 +32,7 @@
                             <i class="bi bi-plus-circle-fill"></i>
                         </a>
                     }
-                    @if (thaoTacs.Exists(x => x.MaThaoTac == "quanlyaitool-xoabo"))
+                    @if (Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlyaitool-xoabo"))
                     {
                         <a class="btn btn-sm btn-danger"
                            title="Xóa bỏ"
@@ -34,14 +42,6 @@
                     }
                 </div>
             </th>
-
-            <th class="text-center">Id Tool</th>
-            <th class="text-center">Tool Code</th>
-            <th class="text-center">Tool Name</th>
-            <th class="text-center">Model</th>
-            <th class="text-center">Ngày tạo</th>
-
-            @*    <th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">Tác vụ</th>*@
         </tr>
     </thead>
     <tfoot class="show-footer-above">
@@ -54,11 +54,11 @@
             <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
             <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
 
-            @*  <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>*@
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
         </tr>
     </tfoot>
     <tbody>
-        @foreach (var aiTool in Model)
+        @foreach (var aiTool in Model.AITools)
         {
             <tr id="@aiTool.IdAITool">
                 <td class="text-center"><input class="form-check-input checkRow-aitool-getList" type="checkbox" /></td>
@@ -77,14 +77,29 @@
                 <td class="text-left">@aiTool.ToolName</td>
                 <td class="text-left">@aiTool.Model</td>
                 <td class="text-left">@aiTool.NgayTao</td>
-                @*<td class="text-center">
-            <div style="white-space: nowrap">
-                <a class="btn btn-sm btn-light-secondary" title="Xem chi tiết"
-                   onclick="quanLyAITool.aiTool.xemChiTiet(@string.Format("'{0}'", aiTool.AITool.IdAITool))">
-                    <i class="bi bi-eye-fill"></i>
-                </a>
-            </div>
-        </td>*@
+
+                <td class="text-center">
+                    <div style="white-space: nowrap">
+                        <div class="btn-group btn-group-sm dropstart">
+                            <button type="button" title="Thêm mới" class="btn btn-light-secondary dropdown-toggle dropdown-toggle-split"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    data-reference="parent">
+                                <i class="bi bi-gear-fill"></i>
+                            </button>
+                            <div class="dropdown-menu me-2" style="border: 1px solid black;">
+                                @{
+                                    if (Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlyaitool-xoabo"))
+                                    {
+                                        <a class="dropdown-item c-pointer"
+                                           onclick="quanLyAITool.aiTool.delete('single', '@aiTool.IdAITool')">
+                                            <i class="bi bi-trash3-fill"></i> Xóa bỏ
+                                        </a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </td>
             </tr>
         }
     </tbody>
