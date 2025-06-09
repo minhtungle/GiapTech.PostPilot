@@ -148,8 +148,8 @@ namespace Applications.QuanLyBaiDang.Serivices
                 if (ngayTaoRange.Start.HasValue && ngayTaoRange.End.HasValue)
                 {
                     query = query.Where(x =>
-                        x.ThoiGian >= ngayTaoRange.Start.Value &&
-                        x.ThoiGian <= ngayTaoRange.End.Value);
+                        x.NgayTao >= ngayTaoRange.Start.Value &&
+                        x.NgayTao <= ngayTaoRange.End.Value);
                 }
 
                 var ngayDangRange = DateHelper.ParseThangNam(locThongTin.NgayDangBai);

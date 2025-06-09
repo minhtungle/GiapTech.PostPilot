@@ -4,6 +4,7 @@ using Applications.QuanLyChienDich.Interfaces;
 using EDM_DB;
 using Infrastructure.Interfaces;
 using Public.AppServices;
+using Public.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -27,7 +28,7 @@ namespace Applications.QuanLyChienDich.Services
             IRepository<tbBaiDang, Guid> baiDangRepo,
             IRepository<tbChienDich, Guid> chienDichRepo,
             IRepository<tbTepDinhKem, Guid> tepDinhKemRepo,
-            IRepository<tbBaiDangTepDinhKem, Guid> baiDangTepDinhKemRepo) 
+            IRepository<tbBaiDangTepDinhKem, Guid> baiDangTepDinhKemRepo)
             : base(userContext, unitOfWork)
         {
             _baiDangRepo = baiDangRepo;
@@ -44,6 +45,21 @@ namespace Applications.QuanLyChienDich.Services
                 .Where(x =>
                     x.TrangThai != 0 &&
                     x.MaDonViSuDung == CurrentDonViId);
+
+            // Áp dụng lọc trước khi join để tối ưu
+            if (locThongTin != null)
+            {
+                if (locThongTin.IdNguoiTao.HasValue)
+                    query = query.Where(x => x.IdNguoiTao == locThongTin.IdNguoiTao.Value);
+
+                var ngayTaoRange = DateHelper.ParseThangNam(locThongTin.NgayTao);
+                if (ngayTaoRange.Start.HasValue && ngayTaoRange.End.HasValue)
+                {
+                    query = query.Where(x =>
+                        x.NgayTao >= ngayTaoRange.Start.Value &&
+                        x.NgayTao <= ngayTaoRange.End.Value);
+                }
+            }
 
             if (loai == "single" && idChienDichs != null)
             {
