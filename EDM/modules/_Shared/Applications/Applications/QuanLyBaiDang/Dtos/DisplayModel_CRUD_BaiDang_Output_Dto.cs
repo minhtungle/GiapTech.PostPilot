@@ -7,6 +7,6 @@ namespace Applications.QuanLyBaiDang.Dtos
     public class DisplayModel_CRUD_BaiDang_Output_Dto
     {
         public string Loai { get; set; }
-        public tbBaiDang BaiDang { get; set; } = new tbBaiDang();
+        public List<tbBaiDangExtend> BaiDangs { get; set; }
     }
 }

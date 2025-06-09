@@ -68,20 +68,23 @@ namespace QuanLyBaiDang.Controllers
             return PartialView($"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-getList.cshtml", output);
         }
         [HttpPost]
-        public ActionResult displayModal_CRUD_BaiDang(DisplayModel_CRUD_BaiDang_Input_Dto input)
+        public async Task<ActionResult> displayModal_CRUD_BaiDang(DisplayModel_CRUD_BaiDang_Input_Dto input)
         {
-            //var baiDang = await _quanLyBaiDangAppService.GetBaiDangs(loai: "single", idBaiDangs: new List<Guid> { input.IdBaiDang });
-            var output = new DisplayModel_CRUD_BaiDang_Output_Dto
+            var output = await _quanLyBaiDangAppService.DisplayModal_CRUD_BaiDang_Output(input: input);
+            var html = Public.Handle.RenderViewToString(
+              controller: this,
+              viewName: $"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-crud/baidang-crud.cshtml",
+              model: output);
+            return Json(new
             {
-                Loai = input.Loai,
-                //BaiDang = baiDang.FirstOrDefault().BaiDang,
-            };
-            return PartialView($"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-crud/baidang-crud.cshtml", output);
+                html,
+                output
+            }, JsonRequestBehavior.AllowGet);
         }
-        [HttpGet]
-        public async Task<ActionResult> addBanGhi_Modal_CRUD()
+        [HttpPost]
+        public async Task<ActionResult> addBanGhi_Modal_CRUD(List<tbBaiDangExtend> input)
         {
-            var output = await _quanLyBaiDangAppService.AddBanGhi_Modal_CRUD_Output();
+            var output = await _quanLyBaiDangAppService.AddBanGhi_Modal_CRUD_Output(baiDangs: input);
 
             output.LoaiView = "row";
             var html_baidang_row = Public.Handle.RenderViewToString(
@@ -94,6 +97,7 @@ namespace QuanLyBaiDang.Controllers
                 controller: this,
                 viewName: $"{VIEW_PATH}/quanlybaidang-tab/baidang/baidang-crud/form-addbaidang.cshtml",
                 model: output);
+
             return Json(new
             {
                 html_baidang_row,

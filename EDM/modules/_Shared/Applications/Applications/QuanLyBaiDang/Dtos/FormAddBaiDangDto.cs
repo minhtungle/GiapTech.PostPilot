@@ -9,7 +9,7 @@ namespace Applications.QuanLyBaiDang.Dtos
 {
     public class FormAddBaiDangDto
     {
-        public tbBaiDangExtend BaiDang { get; set; }
+        public List<tbBaiDangExtend> BaiDangs { get; set; }
         public List<tbChienDich> ChienDichs { get; set; } = new List<tbChienDich>();
         public List<tbNenTang> NenTangs { get; set; } = new List<tbNenTang>();
         public List<tbAIBot> AIBots { get; set; } = new List<tbAIBot>();

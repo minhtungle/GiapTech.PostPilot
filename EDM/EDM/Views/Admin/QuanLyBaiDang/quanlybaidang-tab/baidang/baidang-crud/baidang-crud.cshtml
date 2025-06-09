@@ -1,36 +1,8 @@
-﻿@using EDM_DB
-@{
-    var guid = Guid.NewGuid();
-}
+﻿@model Applications.QuanLyBaiDang.Dtos.DisplayModel_CRUD_BaiDang_Output_Dto
+
 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document" style="align-items: normal !important">
     <div class="modal-content">
         <div class="modal-header justify-content-start gap-1">
-            <!--#-->
-            <div class="btn-group btn-group-sm" role="group">
-                @*<a class="btn btn-primary" title="Làm mới"><i class="bi bi-fast-forward-fill"></i></a>
-                <a class="btn btn-light-secondary" onclick="quanLyBaiDang.baiDang.handleAI.taoNoiDungAI_Multiple()">
-                    Tạo nội dung AI hàng loạt
-                </a>*@
-                @*<a class="btn btn-primary" title="Làm mới"><i class="bi bi-repeat"></i></a>
-                <a class="btn btn-light-secondary" onclick="quanLyBaiDang.baiDang.reload()">
-                    Làm mới
-                </a>
-                <a class="btn btn-primary" title="Thêm tệp"><i class="bi bi-upload"></i></a>
-                <label class="btn btn-light-secondary" for="select-file">
-                    Thêm tệp
-                </label>
-                <input class="btn btn-success" id="select-file" type="file" accept=".xlsx, .xls" onchange="quanLyBaiDang.baiDang.upload()" hidden>
-                <a class="btn btn-primary" title="Tải xuống"><i class="bi bi-download"></i></a>
-                <div class="btn-group btn-group-sm dropdown">
-                    <a class="btn btn-light-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" title="Tải xuống">
-                        Tải xuống
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#" onclick="quanLyBaiDang.baiDang.download('data')"><i class="bi bi-file-bar-graph"></i> Xuất dữ liệu <span class="text-danger">(Bản ghi đang chọn)</span></a>
-                        <a class="dropdown-item" href="#" onclick="quanLyBaiDang.baiDang.download('no-data')"><i class="bi bi-file-earmark"></i> Tải tệp mẫu</a>
-                    </div>
-                </div>*@
-            </div>
             <!--#-->
             <div class="btn-group btn-group-sm" role="group">
                 <a class="btn btn-primary" title="Cập nhật trường thông tin"><i class="bi bi-pencil-square"></i></a>
@@ -42,12 +14,22 @@
         <div class="modal-body table-responsive">
             <div class="row">
                 <div class="col-sm-12 col-md-3">
-                    <table class="table table-hover table-bordered w-100 nowrap" id="baidang-getList" data-page-length="10" data-order="[[ 1, &quot;asc&quot; ]]">
+                    <table class="table table-hover table-bordered w-100 nowrap" id="baidang-getList"
+                           data-page-length="10" data-order="[[ 1, &quot;asc&quot; ]]">
                         <thead>
                             <tr>
                                 <th class="text-center" data-orderable="false">
-                                    <a href="#" class="btn btn-sm btn-success" title="Thêm" onclick="quanLyBaiDang.handleModal_CRUD.addBanGhi()"><i class="bi bi-plus-square-fill"></i></a>
-                                    <a href="#" class="btn btn-sm btn-danger" title="Xóa" onclick="quanLyBaiDang.handleModal_CRUD.deleteBanGhi()"><i class="bi bi-trash3-fill"></i></a>
+                                    @if (Model.Loai == "create")
+                                    {
+                                        <a href="#" class="btn btn-sm btn-success" title="Thêm"
+                                           onclick="quanLyBaiDang.handleModal_CRUD.addBanGhi()">
+                                            <i class="bi bi-plus-square-fill"></i>
+                                        </a>
+                                    }
+                                    <a href="#" class="btn btn-sm btn-danger" title="Xóa"
+                                       onclick="quanLyBaiDang.handleModal_CRUD.deleteBanGhi()">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </a>
                                 </th>
                                 <th class="text-center w-70" style="min-width: 10rem!important">Id bài viết</th>
                             </tr>
@@ -66,15 +48,36 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-primary" onclick="quanLyBaiDang.handleModal_CRUD.save('draft')">
-                <span class="">Lưu nháp</span>
-            </button>
-            <button type="button" class="btn btn-primary" onclick="quanLyBaiDang.handleModal_CRUD.save('create')">
-                <span class="">Lưu</span>
-            </button>
-            <button type="button" class="btn btn-secondary" onclick="quanLyBaiDang.handleModal_CRUD.close()">
-                <span class="">Đóng</span>
-            </button>
+            @if (Model.Loai == "create")
+            {
+                <button type="button" class="btn btn-outline-primary" onclick="quanLyBaiDang.handleModal_CRUD.save('draft')">
+                    <span class="">Lưu nháp</span>
+                </button>
+                <button type="button" class="btn btn-primary" onclick="quanLyBaiDang.handleModal_CRUD.save('@Model.Loai')">
+                    <span class="">Lưu</span>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="quanLyBaiDang.handleModal_CRUD.close()">
+                    <span class="">Đóng</span>
+                </button>
+            }
+            else if (Model.Loai == "update")
+            {
+                <button type="button" class="btn btn-primary" onclick="quanLyBaiDang.handleModal_CRUD.save('@Model.Loai')">
+                    <span class="">Cập nhật</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <span class="">Đóng</span>
+                </button>
+            }
+            else if (Model.Loai == "draftToSave")
+            {
+                <button type="button" class="btn btn-primary" onclick="quanLyBaiDang.handleModal_CRUD.save('@Model.Loai')">
+                    <span class="">Chuyển đăng bài</span>
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <span class="">Đóng</span>
+                </button>
+            }
         </div>
     </div>
 </div>

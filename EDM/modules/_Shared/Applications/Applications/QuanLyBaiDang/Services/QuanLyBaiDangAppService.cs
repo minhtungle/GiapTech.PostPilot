@@ -91,9 +91,36 @@ namespace Applications.QuanLyBaiDang.Serivices
                 TrangThaiDangBais = trangThaiDangBaiEnums,
             };
         }
-        public async Task<FormAddBaiDangDto> AddBanGhi_Modal_CRUD_Output()
+        public async Task<DisplayModel_CRUD_BaiDang_Output_Dto> DisplayModal_CRUD_BaiDang_Output(
+            DisplayModel_CRUD_BaiDang_Input_Dto input)
         {
-            var baiDang = new tbBaiDangExtend { BaiDang = new tbBaiDang() };
+            var output = new DisplayModel_CRUD_BaiDang_Output_Dto
+            {
+                Loai = input.Loai,
+            };
+            if (input.Loai == "create")
+            {
+                output.BaiDangs = new List<tbBaiDangExtend>
+                {
+                    new tbBaiDangExtend()
+                };
+            }
+            else
+            {
+                var baiDang = await GetBaiDangs(
+                    loai: "single",
+                    idBaiDangs: input.IdBaiDangs);
+                // Chỉ lấy những bài đăng có trạng thái (nháp, chờ đăng)
+                output.BaiDangs = baiDang
+                    .Where(x => x.BaiDang.TrangThaiDangBai == (int?)TrangThaiDangBai_BaiDang.Draft
+                        || x.BaiDang.TrangThaiDangBai == (int?)TrangThaiDangBai_BaiDang.WaitToPost)
+                    .ToList();
+            }
+            return output;
+        }
+        public async Task<FormAddBaiDangDto> AddBanGhi_Modal_CRUD_Output(List<tbBaiDangExtend> baiDangs)
+        {
+            //var baiDang = new tbBaiDangExtend { BaiDang = new tbBaiDang() };
             var nenTangs = await _nenTangRepo.Query().Where(x =>
                     x.TrangThai != 0 &&
                     x.MaDonViSuDung == CurrentDonViId).ToListAsync();
@@ -109,7 +136,7 @@ namespace Applications.QuanLyBaiDang.Serivices
 
             return new FormAddBaiDangDto
             {
-                BaiDang = baiDang,
+                BaiDangs = baiDangs,
                 ChienDichs = chienDichs,
                 NenTangs = nenTangs,
                 AIBots = aiBots,

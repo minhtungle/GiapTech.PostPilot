@@ -1,5 +1,10 @@
 ﻿@using EDM_DB
-@model Applications.QuanLyBaiDang.Dtos.FormAddBaiDangDto
+@model Applications.QuanLyBaiDang.Dtos.FormThongTinChung_Dto
+
+@{
+    var baiDang = Model.BaiDang;
+    var data = Model.Data;
+}
 
 <div class="row" intro-container="thongtin-chung">
     <!--Id-->
@@ -11,10 +16,13 @@
                 <label class="" for="select-chiendich">Chiến dịch</label>
                 <select class="form-control form-select2"
                         id="select-chiendich" name="select-chiendich">
-                    <option disabled @(Model.ChienDichs.Count > 0 ? "" : "")>Chọn thông tin</option>
-                    @foreach (var chienDich in Model.ChienDichs)
+                    <option disabled @(data.ChienDichs.Count > 0 ? "" : "")>Chọn thông tin</option>
+                    @foreach (var chienDich in data.ChienDichs)
                     {
-                        <option value="@chienDich.IdChienDich">@chienDich.TenChienDich</option>
+                        <option value="@chienDich.IdChienDich"
+                                @(chienDich.IdChienDich == baiDang.BaiDang.IdChienDich ? "selected" : "")>
+                            @chienDich.TenChienDich
+                        </option>
                     }
                 </select>
                 <div class="invalid-feedback feedback" for="select-loaiaitool">Không được để trống</div>
@@ -28,10 +36,12 @@
                 <label class="required" for="select-aitool">AI Tool</label>
                 <select class="form-control form-select2"
                         id="select-aitool" name="select-aitool" required>
-                    <option disabled @(Model.AITools.Count > 0 ? "" : "")>Chọn thông tin</option>
-                    @foreach (var aiTool in Model.AITools)
+                    <option disabled @(data.AITools.Count > 0 ? "" : "")>Chọn thông tin</option>
+                    @foreach (var aiTool in data.AITools)
                     {
-                        <option value="@aiTool.IdAITool">@aiTool.ToolName</option>
+                        <option value="@aiTool.IdAITool">
+                            @aiTool.ToolName
+                        </option>
                     }
                 </select>
                 <div class="invalid-feedback feedback" for="select-loaiaitool">Không được để trống</div>
@@ -45,12 +55,14 @@
                 <label class="required" for="select-aibot">AI Bot</label>
                 <select class="form-control form-select2"
                         id="select-aibot" name="select-aibot"
-                        onchange="quanLyBaiDang.baiDang.handleAI.chonLoaiAIBot('@Model.BaiDang.RowNumber')"
+                        onchange="quanLyBaiDang.baiDang.handleAI.chonLoaiAIBot('@baiDang.RowNumber')"
                         required>
                     <option value="">Chọn thông tin</option>
-                    @foreach (var aiBot in Model.AIBots)
+                    @foreach (var aiBot in data.AIBots)
                     {
-                        <option value="@aiBot.IdAIBot">@aiBot.TenAIBot</option>
+                        <option value="@aiBot.IdAIBot">
+                            @aiBot.TenAIBot
+                        </option>
                     }
                 </select>
                 <div class="invalid-feedback feedback" for="select-aibot">Không được để trống</div>
@@ -115,7 +127,8 @@ Giảm giá: 50%
 ";
                 }
                 <textarea class="form-control min-h-100 max-h-300" id="input-noidung-ai" rows="10"
-                          placeholder="@plh_noidung" title="@plh_noidung" required></textarea>
+                          placeholder="@plh_noidung" title="@plh_noidung"
+                          value="@(baiDang.BaiDang.NoiDung ?? "")" required>@(baiDang.BaiDang.NoiDung ?? "")</textarea>
                 <div class="invalid-feedback feedback" for="input-noidung-ai">Không được để trống</div>
             </div>
         </div>
@@ -127,11 +140,15 @@ Giảm giá: 50%
                 <label class="required" for="input-thoigian">Thời gian</label>
                 @{
                     var minTime = DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm");
+                    var thoiGian = baiDang.BaiDang.ThoiGian.HasValue
+                        ? baiDang.BaiDang.ThoiGian
+                        : DateTime.Now.AddHours(1);
                 }
                 <input type="datetime-local" class="form-control input-thoigian"
                        id="input-thoigian"
                        name="input-thoigian"
                        min="@minTime"
+                       value="@thoiGian"
                        required />
                 <div class="invalid-feedback feedback" for="input-thoigian">Không được để trống</div>
             </div>
@@ -146,9 +163,12 @@ Giảm giá: 50%
                         id="select-nentang-@Model.BaiDang.RowNumber" name="select-nentang-@Model.BaiDang.RowNumber"
                         multiple required>
                     <option disabled>Chọn thông tin</option>
-                    @foreach (var nenTang in Model.NenTangs)
+                    @foreach (var nenTang in data.NenTangs)
                     {
-                        <option value="@nenTang.IdNenTang">@nenTang.TenNenTang</option>
+                        <option value="@nenTang.IdNenTang"
+                                @(nenTang.IdNenTang == baiDang.BaiDang.IdNenTang ? "selected" : "")>
+                            @nenTang.TenNenTang
+                        </option>
                     }
                 </select>
                 <div class="invalid-feedback feedback" for="select-nentang-@Model.BaiDang.RowNumber">Không được để trống</div>
@@ -162,8 +182,10 @@ Giảm giá: 50%
     <div class="col-12 col-sm-12 col-md-12">
         <div class="position-relative mb-3">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="checkbox-sudunganh-ai" id="checkbox-sudunganh-ai"
-                       onchange="quanLyBaiDang.baiDang.handleAI.kichHoatSuDungAnhAI()" />
+                <input class="form-check-input" type="checkbox" name="checkbox-sudunganh-ai"
+                       id="checkbox-sudunganh-ai"
+                       onchange="quanLyBaiDang.baiDang.handleAI.kichHoatSuDungAnhAI()"
+                       checked="@baiDang.BaiDang.TuTaoAnhAI" />
                 <label class="form-check-label" for="checkbox-sudunganh-ai">
                     Tự tạo ảnh bằng AI
                 </label>

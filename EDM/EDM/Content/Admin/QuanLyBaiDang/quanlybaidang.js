@@ -314,37 +314,40 @@ class QuanLyBaiDang {
                 // Reset lại các thuộc tính
                 quanLyBaiDang.baiDang.handleAnhMoTa.arrAnh = [];
 
-                if (loai == "update") {
-                    var idBaiDangs = [];
-                    quanLyBaiDang.baiDang.dataTable.rows().iterator('row', function (context, index) {
-                        var $row = $(this.row(index).node());
-                        if ($row.has("input.checkRow-baidang-getList:checked").length > 0) {
-                            idBaiDangs.push($row.attr('id'));
-                        };
-                    });
+                var idBaiDangs = [];
+                if (loai == "create")
+                    idBaiDangs.push(idBaiDang) // Chỉ có 1 bản ghi được chọn)
+                else {
+                    if (idBaiDang != '00000000-0000-0000-0000-000000000000')
+                        idBaiDangs.push(idBaiDang); // Chỉ có 1 bản ghi được chọn
+                    else
+                        quanLyBaiDang.baiDang.dataTable.rows().iterator('row', function (context, index) {
+                            var $row = $(this.row(index).node());
+                            if ($row.has("input.checkRow-baidang-getList:checked").length > 0) {
+                                idBaiDangs.push($row.attr('id'));
+                            };
+                        });
                     if (idBaiDangs.length != 1) {
                         sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
                         return;
                     }
-                    else idBaiDang = idBaiDangs[0];
+                    //else idBaiDang = idBaiDangs[0];
                 };
                 var input = {
                     Loai: loai,
-                    IdBaiDang: idBaiDang,
+                    IdBaiDangs: idBaiDangs,
                 };
                 $.ajax({
                     ...ajaxDefaultProps({
                         url: "/QuanLyBaiDang/displayModal_CRUD_BaiDang",
                         type: "POST",
                         contentType: "application/json; charset=utf-8",
-                        data: {
-                            input
-                        },
+                        data: { input },
                     }),
                     success: function (res) {
-                        $("#baidang-crud").html(res);
+                        $("#baidang-crud").html(res.html);
                         quanLyBaiDang.createModalCRUD_BaiDang();
-                        quanLyBaiDang.handleModal_CRUD.addBanGhi();
+                        quanLyBaiDang.handleModal_CRUD.addBanGhi(res.output.BaiDangs);
                         /**
                           * Gán các thuộc tính
                           */
@@ -482,7 +485,7 @@ class QuanLyBaiDang {
                     });
                 };
             },
-            addBanGhi: function () {
+            addBanGhi: function (baiDangs) {
                 // Tạo mã guid cho bản ghi
                 //var guid = sys.generateGUID();
                 //#region Thêm bản ghi
@@ -490,8 +493,9 @@ class QuanLyBaiDang {
                 $.ajax({
                     ...ajaxDefaultProps({
                         url: "/QuanLyBaiDang/addBanGhi_Modal_CRUD",
-                        type: "GET",
-                        //contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        data: { input: baiDangs },
                     }),
                     success: function (res) {
                         quanLyBaiDang.handleModal_CRUD.dataTable.destroy();

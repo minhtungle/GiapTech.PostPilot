@@ -31,22 +31,34 @@
 
             <th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">
                 <div style="white-space: nowrap">
-                    @if (Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-themmoi"))
-                    {
-                        <a class="btn btn-sm btn-success"
-                           title="Thêm mới"
-                           onclick="quanLyBaiDang.baiDang.displayModal_CRUD('create')">
-                            <i class="bi bi-plus-circle-fill"></i>
-                        </a>
-                    }
-                    @if (Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-xoabo"))
-                    {
-                        <a class="btn btn-sm btn-danger"
-                           title="Xóa bỏ"
-                           onclick="quanLyBaiDang.baiDang.delete('multiple')">
-                            <i class="bi bi-trash3-fill"></i>
-                        </a>
-                    }
+                    <div class="btn-group btn-group-sm dropstart">
+                        <button type="button" title="Thêm mới" class="btn btn-light-secondary dropdown-toggle dropdown-toggle-split"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                data-reference="parent">
+                            <i class="bi bi-gear-fill"></i>
+                        </button>
+                        <div class="dropdown-menu me-2" style="border: 1px solid black;">
+                            @{
+                                bool themMoi = Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-themmoi");
+                                bool capNhat_Multiple = Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-capnhat");
+                                bool xoaBo_Multiple = Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-xoabo");
+                                if (themMoi)
+                                {
+                                    <a class="dropdown-item c-pointer"
+                                       onclick="quanLyBaiDang.baiDang.displayModal_CRUD('create')">
+                                        <i class="bi bi-plus-circle-fill"></i> Thêm mới
+                                    </a>
+                                }
+                                if (xoaBo_Multiple)
+                                {
+                                    <a class="dropdown-item c-pointer"
+                                       onclick="quanLyBaiDang.baiDang.delete('multiple')">
+                                        <i class="bi bi-trash3-fill"></i> Xóa bỏ
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </div>
                 </div>
             </th>
         </tr>
@@ -148,14 +160,14 @@
                                     if (capNhat)
                                     {
                                         <a class="dropdown-item c-pointer"
-                                           onclick="quanLyBaiDang.baiDang.save('update', '@baidang.BaiDang.IdBaiDang')">
+                                           onclick="quanLyBaiDang.baiDang.displayModal_CRUD('update', '@baidang.BaiDang.IdBaiDang')">
                                             <i class="bi bi-pencil-square"></i> Cập nhật
                                         </a>
                                     }
                                     if (chuyenDangBai)
                                     {
                                         <a class="dropdown-item c-pointer"
-                                           onclick="quanLyBaiDang.baiDang.createFromDraft('single', '@baidang.BaiDang.IdBaiDang')">
+                                           onclick="quanLyBaiDang.baiDang.displayModal_CRUD('draftToSave', '@baidang.BaiDang.IdBaiDang')">
                                             <i class="bi bi-plus-circle-fill"></i> Chuyển đăng bài
                                         </a>
                                     }

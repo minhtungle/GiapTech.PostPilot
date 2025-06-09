@@ -14,7 +14,10 @@ namespace Applications.QuanLyBaiDang.Interfaces
     {
         List<ThaoTac> GetThaoTacs(string maChucNang);
         Task<Index_OutPut_Dto> Index_OutPut();
-        Task<FormAddBaiDangDto> AddBanGhi_Modal_CRUD_Output();
+        Task<DisplayModel_CRUD_BaiDang_Output_Dto> DisplayModal_CRUD_BaiDang_Output(
+            DisplayModel_CRUD_BaiDang_Input_Dto input);
+        Task<FormAddBaiDangDto> AddBanGhi_Modal_CRUD_Output(
+            List<tbBaiDangExtend> baiDangs);
         Task<IEnumerable<tbBaiDangExtend>> GetBaiDangs
            (string loai = "all",
            List<Guid> idBaiDangs = null,

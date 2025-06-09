@@ -114,6 +114,7 @@
     <Compile Include="QuanLyAITool\Interfaces\IQuanLyAIToolAppService.cs" />
     <Compile Include="QuanLyAITool\Services\QuanLyAIToolAppService.cs" />
     <Compile Include="QuanLyBaiDang\Dtos\FormAddBaiDangDto.cs" />
+    <Compile Include="QuanLyBaiDang\Dtos\FormThongTinChung_Dto.cs" />
     <Compile Include="QuanLyBaiDang\Dtos\GetList_BaiDang_Output_Dto.cs" />
     <Compile Include="QuanLyBaiDang\Dtos\Index_OutPut_Dto.cs" />
     <Compile Include="QuanLyBaiDang\Dtos\TaoNoiDungAI_Input_Dto.cs" />
