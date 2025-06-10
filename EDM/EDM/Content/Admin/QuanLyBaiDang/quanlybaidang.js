@@ -433,6 +433,19 @@ class QuanLyBaiDang {
                     });
                 };
             },
+            updateSingleCell: function (el) {
+                var rows = quanLyBaiDang.handleModal_CRUD.dataTable.rows().nodes().toArray(),
+                    $div = $(el).closest(".baidang-read"),
+                    rowNumber = $div.attr("row"),
+                    val = $(el).val();
+                $.each(rows, function () {
+                    if ($(this).attr("row") == rowNumber) {
+                        let $span = $('span[data-tentruong="IdTamThoi"]', $(this));
+                        if (val) $span.text(sys.truncateString(val, 12));
+                        else $span.text(sys.truncateString(rowNumber, 12));
+                    }
+                });
+            },
             updateMultipleCell: function () {
                 var $modal = $("#baidang-crud"),
                     endName = 'capnhattruong';

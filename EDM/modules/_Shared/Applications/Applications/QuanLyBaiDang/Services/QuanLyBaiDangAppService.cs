@@ -107,9 +107,7 @@ namespace Applications.QuanLyBaiDang.Serivices
             }
             else
             {
-                var baiDang = await GetBaiDangs(
-                    loai: "single",
-                    idBaiDangs: input.IdBaiDangs);
+                var baiDang = await GetDetail_BaiDangs(idBaiDangs: input.IdBaiDangs);
                 // Chỉ lấy những bài đăng có trạng thái (nháp, chờ đăng)
                 output.BaiDangs = baiDang
                     .Where(x => x.BaiDang.TrangThaiDangBai == (int?)TrangThaiDangBai_BaiDang.Draft
@@ -143,10 +141,62 @@ namespace Applications.QuanLyBaiDang.Serivices
                 AITools = aiTools,
             };
         }
+        public async Task<IEnumerable<tbBaiDangExtend>> GetDetail_BaiDangs(
+            List<Guid> idBaiDangs = null)
+        {
+            var query = _baiDangRepo.Query()
+                .Where(x =>
+                    idBaiDangs.Contains(x.IdBaiDang) &&
+                    x.TrangThai != 0 &&
+                    x.MaDonViSuDung == CurrentDonViId);
+
+            // 1. Lấy danh sách bài đăng đã join các bảng liên quan (chưa gán TepDinhKems)
+            var tempResult = await (
+                from bd in query
+                join nd in _nguoiDungRepo.Query() on bd.IdNguoiTao equals nd.IdNguoiDung into ndGroup
+                from nd in ndGroup.DefaultIfEmpty()
+                join cd in _chienDichRepo.Query() on bd.IdChienDich equals cd.IdChienDich into cdGroup
+                from cd in cdGroup.DefaultIfEmpty()
+                join nt in _nenTangRepo.Query() on bd.IdNenTang equals nt.IdNenTang into ntGroup
+                from nt in ntGroup.DefaultIfEmpty()
+                select new tbBaiDangExtend
+                {
+                    BaiDang = bd,
+                    NguoiTao = nd,
+                    ChienDich = cd,
+                    NenTang = nt,
+                    //TepDinhKems = new List<tbTepDinhKem>() // Tạm để trống
+                }
+            )
+            .OrderByDescending(x => x.BaiDang.ThoiGian)
+            .ToListAsync();
+
+            // 2. Lấy IdBaiDang
+            var baiDangIds = tempResult.Select(x => x.BaiDang.IdBaiDang).ToList();
+
+            // 3. Truy vấn bảng liên kết + bảng tệp đính kèm
+            var tepLienKet = await (
+                from lk in _baiDangTepDinhKemRepo.Query()
+                join tep in _tepDinhKemRepo.Query() on lk.IdTepDinhKem equals tep.IdTep
+                where baiDangIds.Contains(lk.IdBaiDang.Value)
+                select new { lk.IdBaiDang, Tep = tep }
+            ).ToListAsync();
+
+            // 4. Gán TepDinhKem vào từng BaiDang
+            foreach (var item in tempResult)
+            {
+                item.TepDinhKems = tepLienKet
+                    .Where(x => x.IdBaiDang == item.BaiDang.IdBaiDang)
+                    .Select(x => x.Tep)
+                    .ToList();
+            }
+
+            return tempResult;
+        }
         public async Task<IEnumerable<tbBaiDangExtend>> GetBaiDangs(
-            string loai = "all",
-            List<Guid> idBaiDangs = null,
-            LocThongTinDto locThongTin = null)
+          string loai = "all",
+          List<Guid> idBaiDangs = null,
+          LocThongTinDto locThongTin = null)
         {
             var query = _baiDangRepo.Query()
                 .Where(x =>
@@ -195,45 +245,28 @@ namespace Applications.QuanLyBaiDang.Serivices
                 query = query.Where(x => idBaiDangs.Contains(x.IdBaiDang));
             }
 
-            var result = await query
-                .GroupJoin(
-                    _nguoiDungRepo.Query(),
-                    bd => bd.IdNguoiTao,
-                    nd => nd.IdNguoiDung,
-                    (bd, nds) => new { BaiDang = bd, NguoiTao = nds.DefaultIfEmpty() }
-                )
-                .SelectMany(
-                    x => x.NguoiTao,
-                    (x, nd) => new { x.BaiDang, NguoiTao = nd }
-                )
-                .GroupJoin(
-                    _chienDichRepo.Query(),
-                    x => x.BaiDang.IdChienDich,
-                    cd => cd.IdChienDich,
-                    (x, cds) => new { x.BaiDang, x.NguoiTao, ChienDich = cds.DefaultIfEmpty() }
-                )
-                .SelectMany(
-                    x => x.ChienDich,
-                    (x, cd) => new { x.BaiDang, x.NguoiTao, ChienDich = cd }
-                )
-                .GroupJoin(
-                    _nenTangRepo.Query(),
-                    x => x.BaiDang.IdNenTang,
-                    nt => nt.IdNenTang,
-                    (x, nts) => new { x.BaiDang, x.NguoiTao, x.ChienDich, NenTang = nts.DefaultIfEmpty() }
-                )
-                .SelectMany(
-                    x => x.NenTang,
-                    (x, nt) => new tbBaiDangExtend
-                    {
-                        BaiDang = x.BaiDang,
-                        NguoiTao = x.NguoiTao,
-                        ChienDich = x.ChienDich,
-                        NenTang = nt
-                    }
-                )
-                .OrderByDescending(x => x.BaiDang.ThoiGian)
-                .ToListAsync();
+            var result = await (
+               from bd in query
+
+               join nd in _nguoiDungRepo.Query() on bd.IdNguoiTao equals nd.IdNguoiDung into ndGroup
+               from nd in ndGroup.DefaultIfEmpty()
+
+               join cd in _chienDichRepo.Query() on bd.IdChienDich equals cd.IdChienDich into cdGroup
+               from cd in cdGroup.DefaultIfEmpty()
+
+               join nt in _nenTangRepo.Query() on bd.IdNenTang equals nt.IdNenTang into ntGroup
+               from nt in ntGroup.DefaultIfEmpty()
+
+               select new tbBaiDangExtend
+               {
+                   BaiDang = bd,
+                   NguoiTao = nd,
+                   ChienDich = cd,
+                   NenTang = nt
+               }
+           )
+           .OrderByDescending(x => x.BaiDang.ThoiGian)
+           .ToListAsync();
 
             return result;
         }

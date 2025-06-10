@@ -128,7 +128,9 @@ Giảm giá: 50%
                 }
                 <textarea class="form-control min-h-100 max-h-300" id="input-noidung-ai" rows="10"
                           placeholder="@plh_noidung" title="@plh_noidung"
-                          value="@(baiDang.BaiDang.NoiDung ?? "")" required>@(baiDang.BaiDang.NoiDung ?? "")</textarea>
+                          value="@(baiDang.BaiDang.NoiDung ?? "")" 
+                          onchange="quanLyBaiDang.handleModal_CRUD.updateSingleCell(this)"
+                          required>@(baiDang.BaiDang.NoiDung ?? "")</textarea>
                 <div class="invalid-feedback feedback" for="input-noidung-ai">Không được để trống</div>
             </div>
         </div>
@@ -141,14 +143,15 @@ Giảm giá: 50%
                 @{
                     var minTime = DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm");
                     var thoiGian = baiDang.BaiDang.ThoiGian.HasValue
-                        ? baiDang.BaiDang.ThoiGian
+                        ? baiDang.BaiDang.ThoiGian.Value
                         : DateTime.Now.AddHours(1);
+                    var valueTime = thoiGian.ToString("yyyy-MM-ddTHH:mm");
                 }
                 <input type="datetime-local" class="form-control input-thoigian"
                        id="input-thoigian"
                        name="input-thoigian"
                        min="@minTime"
-                       value="@thoiGian"
+                       value="@valueTime"
                        required />
                 <div class="invalid-feedback feedback" for="input-thoigian">Không được để trống</div>
             </div>
@@ -214,20 +217,20 @@ Giảm giá: 50%
                     </tr>
                 </thead>
                 <tbody id="tbody-anhmota-container">
-                    @*@for (int i = 0; i < baiDang.TepDinhKems.Count; i++)
-                        {
-                            var tep = baiDang.TepDinhKems[i];
-                            <tr data-id="@tep .IdTep" data-idtamthoi="0">
-                                <td class="text-center">@(i+1)</td>
-                                <td class="w-90">@tep.FileName</td>
-                                <td class="text-center">
-                                    <a class="btn c-pointer"
-                                       onclick="quanLyBaiDang.baiDang.handleAnhMoTa.delete('anhmota', this)">
-                                        <i class="bi bi-trash3-fill"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }*@
+                    @for (int i = 0; i < baiDang.TepDinhKems.Count; i++)
+                    {
+                        var tep = baiDang.TepDinhKems[i];
+                        <tr data-id="@tep.IdTep" data-idtamthoi="0">
+                            <td class="text-center">@(i+1)</td>
+                            <td class="w-90">@tep.FileName</td>
+                            <td class="text-center">
+                                <a class="btn c-pointer"
+                                   onclick="quanLyBaiDang.baiDang.handleAnhMoTa.delete('anhmota', this)">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
