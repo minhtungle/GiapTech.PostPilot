@@ -105,13 +105,20 @@ namespace Applications.QuanLyBaiDang.Serivices
                     new tbBaiDangExtend()
                 };
             }
-            else
+            else if (input.Loai == "update")
             {
                 var baiDang = await GetDetail_BaiDangs(idBaiDangs: input.IdBaiDangs);
-                // Chỉ lấy những bài đăng có trạng thái (nháp, chờ đăng)
+                // Chỉ lấy những bài đăng có trạng thái (chờ đăng)
                 output.BaiDangs = baiDang
-                    .Where(x => x.BaiDang.TrangThaiDangBai == (int?)TrangThaiDangBai_BaiDang.Draft
-                        || x.BaiDang.TrangThaiDangBai == (int?)TrangThaiDangBai_BaiDang.WaitToPost)
+                    .Where(x => x.BaiDang.TrangThaiDangBai == (int?)TrangThaiDangBai_BaiDang.WaitToPost)
+                    .ToList();
+            }
+            else if (input.Loai == "draftToSave")
+            {
+                var baiDang = await GetDetail_BaiDangs(idBaiDangs: input.IdBaiDangs);
+                // Chỉ lấy những bài đăng có trạng thái (nháp)
+                output.BaiDangs = baiDang
+                    .Where(x => x.BaiDang.TrangThaiDangBai == (int?)TrangThaiDangBai_BaiDang.Draft)
                     .ToList();
             }
             return output;

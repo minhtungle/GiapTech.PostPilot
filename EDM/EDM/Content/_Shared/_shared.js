@@ -582,9 +582,19 @@ class _Modal {
 class System {
     constructor() {
         this.chatService = $.connection.chatService;
+        this.lottieInstance = null; // Biến toàn cục để lưu trữ instance của Lottie
     }
     init() {
         var sys = this;
+        // Khởi tạo animation
+        sys.lottieInstance = lottie.loadAnimation({
+            container: document.getElementById("lottie-animation"),
+            renderer: "svg",
+            loop: true,
+            autoplay: false, // chỉ chạy khi gọi
+            //path: "/Assets/json/loading_yoga.json", // file JSON animation
+            path: "/Assets/json/loading_robot.json" // file JSON animation
+        });
         // Hiển thị khung chat
         $("#khungchat-active").css({
             "display": "flex"
@@ -670,8 +680,17 @@ class System {
     }
     // Trạng thái loading của hệ thống
     loading(stt = true) {
+        var sys = this;
         const $loading = $('#sys-loading');
-        stt ? $loading.show() : $loading.hide();
+        if (stt) {
+            $("#lottie-loading").show();
+            sys.lottieInstance.play();
+            $loading.show();
+        } else {
+            $("#lottie-loading").hide();
+            sys.lottieInstance.stop();
+            $loading.hide();
+        }
     }
     // Modal hỏi trước khi thực hiện hành động
     confirmDialog({

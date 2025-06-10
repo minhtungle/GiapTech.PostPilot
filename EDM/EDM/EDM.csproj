@@ -1904,6 +1904,7 @@
     <Content Include="Content\Admin\admin.js" />
     <Content Include="Content\Admin\QuanLyAITool\quanlyaitool.js" />
     <Content Include="Content\Admin\QuanLyAIBot\quanlyaibot.js" />
+    <Content Include="Content\Admin\QuanLyBaiDang\quanlybaidang.css" />
     <Content Include="Content\Admin\QuanLyChienDich\quanlychiendich.js" />
     <Content Include="Content\Admin\QuanLyBaiDang\quanlybaidang.js" />
     <Content Include="Content\Admin\UnitManage\unitmanage.js" />
@@ -1944,6 +1945,8 @@
     <Content Include="Assets\plugins\main\scripts\bootstrap.min.js.map" />
     <Content Include="Assets\files\[Mẫu thư mục văn bản].rar" />
     <Content Include="Assets\files\[Mẫu danh sách lương].xlsx" />
+    <Content Include="Assets\json\loading_run.json" />
+    <Content Include="Assets\json\loading_robot.json" />
     <None Include="Assets\plugins\main\scripts\jquery-3.6.3.intellisense.js" />
     <Content Include="Assets\plugins\main\scripts\jquery-3.6.3.js" />
     <Content Include="Assets\plugins\main\scripts\jquery-3.6.3.min.js" />
@@ -7829,6 +7832,7 @@
     <Content Include="Views\Admin\QuanLyBaiDang\quanlybaidang-tab\chiendich\chiendich-crud.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\quanlybaidang-tab\chiendich\chiendich-getList.cshtml" />
     <Content Include="Views\Admin\QuanLyBaiDang\quanlybaidang-tab\tab.cshtml" />
+    <Content Include="Views\Auth\_ViewStart.cshtml" />
     <None Include="Views\User\TrangTaiLieu\404.cshtml" />
     <None Include="Views\User\TrangTaiLieu\about.cshtml" />
     <None Include="Views\User\TrangTaiLieu\checkout.cshtml" />
@@ -7880,6 +7884,7 @@
     <None Include="Views\User\TrangTaiLieu\wishlist.cshtml" />
     <Content Include="Views\User\TrangTaiLieu\__Home\home.cshtml" />
     <Content Include="Views\User\_ViewStart.cshtml" />
+    <Content Include="Assets\json\loading_dino.json" />
     <None Include="Views\_Shared\User\TrangTaiLieu\lib\lib.js.cshtml" />
     <None Include="Views\_Shared\User\TrangTaiLieu\lib\lib.css.cshtml" />
     <Content Include="Web.config" />

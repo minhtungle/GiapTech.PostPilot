@@ -41,12 +41,27 @@
                             @{
                                 bool themMoi = Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-themmoi");
                                 bool capNhat_Multiple = Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-capnhat");
+                                bool chuyenDangBai_Multiple = Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-chuyendangbai");
                                 bool xoaBo_Multiple = Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlybaidang-xoabo");
                                 if (themMoi)
                                 {
                                     <a class="dropdown-item c-pointer"
                                        onclick="quanLyBaiDang.baiDang.displayModal_CRUD('create')">
                                         <i class="bi bi-plus-circle-fill"></i> Thêm mới
+                                    </a>
+                                }
+                                if (capNhat_Multiple)
+                                {
+                                    <a class="dropdown-item c-pointer"
+                                       onclick="quanLyBaiDang.baiDang.displayModal_CRUD('create')">
+                                        <i class="bi bi-pencil-square"></i> Cập nhật
+                                    </a>
+                                }
+                                if (chuyenDangBai_Multiple)
+                                {
+                                    <a class="dropdown-item c-pointer"
+                                       onclick="quanLyBaiDang.baiDang.displayModal_CRUD('draftToSave')">
+                                        <i class="bi bi-plus-circle-fill"></i> Chuyển đăng bài
                                     </a>
                                 }
                                 if (xoaBo_Multiple)

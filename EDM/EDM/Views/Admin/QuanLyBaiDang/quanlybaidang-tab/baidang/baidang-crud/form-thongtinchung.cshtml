@@ -128,7 +128,7 @@ Giảm giá: 50%
                 }
                 <textarea class="form-control min-h-100 max-h-300" id="input-noidung-ai" rows="10"
                           placeholder="@plh_noidung" title="@plh_noidung"
-                          value="@(baiDang.BaiDang.NoiDung ?? "")" 
+                          value="@(baiDang.BaiDang.NoiDung ?? "")"
                           onchange="quanLyBaiDang.handleModal_CRUD.updateSingleCell(this)"
                           required>@(baiDang.BaiDang.NoiDung ?? "")</textarea>
                 <div class="invalid-feedback feedback" for="input-noidung-ai">Không được để trống</div>
@@ -197,42 +197,74 @@ Giảm giá: 50%
     </div>
     <!--Ảnh mô tả-->
     <div class="col-12" id="anhmota-container">
-        <div class="form-group mb-3">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <td colspan="2" class="w-90 text-center">
-                            Ảnh mô tả
-                            <small class="text-danger fst-italic">(Tối đa 10 ảnh)</small>
-                        </td>
-                        <td class="text-center">
-                            <label class="btn c-pointer" for="image-anhmota-@Model.BaiDang.RowNumber">
-                                <i class="bi bi-plus-circle-fill"></i>
-                            </label>
-                            <input type="file" id="image-anhmota-@Model.BaiDang.RowNumber" class="form-control"
-                                   multiple accept=".png, .jpg, .jpeg"
-                                   onchange="quanLyBaiDang.baiDang.handleAnhMoTa.add(this, 'anhmota', '@Model.BaiDang.RowNumber')"
-                                   hidden />
-                        </td>
-                    </tr>
-                </thead>
-                <tbody id="tbody-anhmota-container">
-                    @for (int i = 0; i < baiDang.TepDinhKems.Count; i++)
-                    {
-                        var tep = baiDang.TepDinhKems[i];
-                        <tr data-id="@tep.IdTep" data-idtamthoi="0">
-                            <td class="text-center">@(i+1)</td>
-                            <td class="w-90">@tep.FileName</td>
-                            <td class="text-center">
-                                <a class="btn c-pointer"
-                                   onclick="quanLyBaiDang.baiDang.handleAnhMoTa.delete('anhmota', this)">
-                                    <i class="bi bi-trash3-fill"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <label class="form-label d-block">
+            Ảnh mô tả
+            <small class="text-danger fst-italic">(Tối đa 10 ảnh)</small>
+        </label>
+
+        <div class="image-grid" id="anhmota-grid-@Model.BaiDang.RowNumber">
+            <!-- Ô thêm ảnh -->
+            <label class="image-item add-image-item" for="image-anhmota-@Model.BaiDang.RowNumber">
+                <i class="bi bi-plus-circle-fill"></i>
+            </label>
+            <input type="file" id="image-anhmota-@Model.BaiDang.RowNumber" class="form-control"
+                   multiple accept=".png, .jpg, .jpeg"
+                   onchange="quanLyBaiDang.baiDang.handleAnhMoTa.add(this, 'anhmota', '@Model.BaiDang.RowNumber')"
+                   hidden />
+
+            <!-- VÙNG ẢNH -->
+            <div id="anhmota-items" style="display: contents;">
+                @for (int i = 0; i < baiDang.TepDinhKems.Count; i++)
+                {
+                    var tep = baiDang.TepDinhKems[i];
+                    <div class="image-item" data-id="@tep.IdTep" data-idtamthoi="0">
+                        <img src="@tep.DuongDanTepOnline" alt="@tep.FileName" />
+                        <button class="delete-btn"
+                                onclick="quanLyBaiDang.baiDang.handleAnhMoTa.delete('anhmota', this)">
+                            &times;
+                        </button>
+                    </div>
+                }
+            </div>
         </div>
     </div>
+    @*<div class="col-12" id="anhmota-container">
+            <div class="form-group mb-3">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <td colspan="2" class="w-90 text-center">
+                                Ảnh mô tả
+                                <small class="text-danger fst-italic">(Tối đa 10 ảnh)</small>
+                            </td>
+                            <td class="text-center">
+                                <label class="btn c-pointer" for="image-anhmota-@Model.BaiDang.RowNumber">
+                                    <i class="bi bi-plus-circle-fill"></i>
+                                </label>
+                                <input type="file" id="image-anhmota-@Model.BaiDang.RowNumber" class="form-control"
+                                       multiple accept=".png, .jpg, .jpeg"
+                                       onchange="quanLyBaiDang.baiDang.handleAnhMoTa.add(this, 'anhmota', '@Model.BaiDang.RowNumber')"
+                                       hidden />
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-anhmota-container">
+                        @for (int i = 0; i < baiDang.TepDinhKems.Count; i++)
+                        {
+                            var tep = baiDang.TepDinhKems[i];
+                            <tr data-id="@tep.IdTep" data-idtamthoi="0">
+                                <td class="text-center">@(i+1)</td>
+                                <td class="w-90">@tep.FileName</td>
+                                <td class="text-center">
+                                    <a class="btn c-pointer"
+                                       onclick="quanLyBaiDang.baiDang.handleAnhMoTa.delete('anhmota', this)">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>*@
 </div>

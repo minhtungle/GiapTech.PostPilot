@@ -1,0 +1,52 @@
+﻿.image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 100%; /* đảm bảo không giới hạn chiều rộng */
+}
+
+    .image-grid .image-item,
+    .image-grid .add-image-item {
+        width: 100px;
+        height: 100px;
+        position: relative;
+        border: 1px solid #ddd;
+        overflow: hidden;
+        border-radius: 8px;
+        background-color: #f8f8f8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .image-grid .image-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+    .image-grid .delete-btn {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 18px;
+        display: none;
+    }
+
+    .image-grid .image-item:hover .delete-btn {
+        display: block;
+    }
+
+    .image-grid .add-image-item {
+        cursor: pointer;
+        font-size: 24px;
+        color: #28a745;
+    }

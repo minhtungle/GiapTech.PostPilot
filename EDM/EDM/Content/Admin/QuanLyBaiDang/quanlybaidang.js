@@ -21,13 +21,13 @@ class QuanLyBaiDang {
             handleAnhMoTa: {
                 maxDungLuongAnh: 1024 * 1024 * 30, // 30MB,
                 maxAnhDaiDien: 1,
-                maxAnhMoTa: 6,
+                maxAnhMoTa: 10,
                 arrAnh: [],
                 add: function (e, loaiAnh = 'anhdaidien', rowNumber = '00000000-0000-0000-0000-000000000000') {
                     var $modal = $("#baidang-crud");
 
-                    var $imgContainer = $(`.baidang-read[row='${rowNumber}'] #tbody-${loaiAnh}-container`, $modal),
-                        soAnhDangCo = $("tr", $imgContainer).length;
+                    var $imgContainer = $(`.baidang-read[row='${rowNumber}'] #anhmota-items`, $modal),
+                        soAnhDangCo = $(".image-item", $imgContainer).length;
 
                     var addTr = function (files) {
                         let kiemTra = true,
@@ -57,21 +57,24 @@ class QuanLyBaiDang {
 
                             // Thêm ảnh vào mảng
                             let idTamThoi = sys.generateGUID();
+                            var tempImageUrl = URL.createObjectURL(f);
+
                             var data = {
                                 rowNumber,
                                 idTamThoi,
                                 file: f,
                                 LaAnhDaiDien: loaiAnh == 'anhdaidien' ? true : false,
-                                html: `<tr data-id="00000000-0000-0000-0000-000000000000" data-idtamthoi='${idTamThoi}'>
-                                    <td class="text-center">#</td>
-                                    <td class="w-90">${f.name}</td>
-                                    <td class="text-center">
-                                        <a class="btn c-pointer" onclick="quanLyBaiDang.baiDang.handleAnhMoTa.delete('${loaiAnh}', this, ${rowNumber})">
-                                            <i class="bi bi-trash3-fill"></i>
-                                        </a>
-                                    </td>
-                                </tr>`,
+                                html: `
+                                    <div class="image-item" data-id="00000000-0000-0000-0000-000000000000" data-idtamthoi="${idTamThoi}">
+                                        <img src="${tempImageUrl}" alt="${f.name}" />
+                                        <button class="delete-btn"
+                                            onclick="quanLyBaiDang.baiDang.handleAnhMoTa.delete('${loaiAnh}', this, ${rowNumber})">
+                                            &times;
+                                        </button>
+                                    </div>
+                                `
                             };
+
                             quanLyBaiDang.baiDang.handleAnhMoTa.arrAnh.push(data);
                             arrAnh.push(data);
                         });
@@ -128,18 +131,27 @@ class QuanLyBaiDang {
                     };
                     $fileInput.value = ''; // xóa giá trị của input file
                 },
-                delete: function (loaiAnh, e) {
-                    var $tr = $(e).closest("tr"),
-                        id = $tr.attr("data-id"),
-                        idTamThoi = $tr.attr("data-idtamthoi");
+                delete: function (loaiAnh, e, rowNumber) {
+                    var $item = $(e).closest(".image-item"),
+                        id = $item.attr("data-id"),
+                        idTamThoi = $item.attr("data-idtamthoi");
+
+                    // Lấy thẻ <img> để lấy URL tạm
+                    var img = $item.find("img")[0];
+                    if (img && img.src.startsWith("blob:")) {
+                        URL.revokeObjectURL(img.src); // Giải phóng bộ nhớ URL tạm 
+                    }
+
                     // Xóa ảnh trên giao diện
-                    $tr.remove();
-                    // Xóa ảnh trong mảng
+                    $item.remove();
+
+                    // Xóa ảnh trong mảng tạm
                     quanLyBaiDang.baiDang.handleAnhMoTa.arrAnh = quanLyBaiDang.baiDang.handleAnhMoTa.arrAnh
                         .filter(function (anh) {
                             return anh.idTamThoi != idTamThoi;
                         });
-                },
+                }
+
             },
             handleAI: {
                 chonLoaiAIBot: function (rowNumber) {
@@ -354,6 +366,11 @@ class QuanLyBaiDang {
                         sys.displayModal({
                             name: '#baidang-crud'
                         });
+
+                        setTimeout(function () {
+                            var containerHeight = $("#baidang-crud .modal-body").height() - 10;
+                            $("#baidang-read-container", $("#baidang-crud")).height(containerHeight);
+                        }, 500)
                     }
                 })
             },
@@ -441,8 +458,10 @@ class QuanLyBaiDang {
                 $.each(rows, function () {
                     if ($(this).attr("row") == rowNumber) {
                         let $span = $('span[data-tentruong="IdTamThoi"]', $(this));
-                        if (val) $span.text(sys.truncateString(val, 12));
-                        else $span.text(sys.truncateString(rowNumber, 12));
+
+                        if (!val) val = rowNumber;
+                        $span.text(sys.truncateString(val, 12));
+                        $span.closest("td").attr("title", sys.truncateString(val, 12));
                     }
                 });
             },
