@@ -41,7 +41,7 @@ namespace QuanLyAITool.Controllers
                 AITools = data.ToList(),
                 ThaoTacs = _quanLyAIToolAppService.GetThaoTacs(maChucNang: "QuanLyAITool"),
             };
-            return PartialView($"{VIEW_PATH}/aitool-getList.cshtml", data);
+            return PartialView($"{VIEW_PATH}/aitool-getList.cshtml", output);
         }
        
         [HttpPost]

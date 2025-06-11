@@ -16,15 +16,15 @@ namespace Applications.QuanLyAIBot.Interfaces
         Task<Index_OutPut_Dto> Index_OutPut();
         Task<List<tbAIBotExtend>> GetAIBots(
             string loai = "all",
-            List<Guid> idAIBot = null,
+            List<Guid> idAIBots = null,
             LocThongTin_AIBot locThongTin = null);
         Task<List<tbLoaiAIBot>> GetLoaiAIBots(
            string loai = "all",
-           List<Guid> idLoaiAIBot = null,
+           List<Guid> idLoaiAIBots = null,
            LocThongTin_AITool locThongTin = null);
         Task<bool> IsExisted_AIBot(tbAIBot aiBot);
         Task<bool> IsExisted_LoaiAIBot(tbLoaiAIBot loaiAIBot);
-        Task Create_AIBot(tbAIBotExtend aiBot, List<Guid> idLoaiAIBots);
+        Task Create_AIBot(tbAIBotExtend aiBot);
         Task Create_LoaiAIBot(tbLoaiAIBot loaiAIBot);
     }
 }

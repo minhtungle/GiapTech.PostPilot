@@ -46,9 +46,12 @@ class QuanLyAITool {
             },
 
             displayModal_CRUD: function (loai = "", idAITool = '00000000-0000-0000-0000-000000000000') {
-                if (loai == "update") {
-                    var idAITools = [];
-                    if (idAITool == '00000000-0000-0000-0000-000000000000') {
+                var idAITools = [];
+                if (loai == "create") idAITools.push(idAITool);
+                else {
+                    if (idAIBot != '00000000-0000-0000-0000-000000000000')
+                        idAITools.push(idAIBot);
+                    else {
                         quanLyAITool.aiTool.dataTable.rows().iterator('row', function (context, index) {
                             var $row = $(this.row(index).node());
                             if ($row.has("input.checkRow-aitool-getList:checked").length > 0) {
@@ -59,12 +62,12 @@ class QuanLyAITool {
                             sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
                             return;
                         }
-                        else idAITool = idAITools[0];
                     }
-                };
+                }
+
                 var input = {
                     Loai: loai,
-                    IdAITool: idAITool,
+                    IdAITool: idAITools[0],
                 };
                 $.ajax({
                     ...ajaxDefaultProps({

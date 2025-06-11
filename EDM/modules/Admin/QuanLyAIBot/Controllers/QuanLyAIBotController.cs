@@ -48,7 +48,7 @@ namespace QuanLyAIBot.Controllers
                 AIBots = data.ToList(),
                 ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyAIBot"),
             };
-            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/aibot/aibot-getList.cshtml", data);
+            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/aibot/aibot-getList.cshtml", output);
         }
         [HttpGet]
         public async Task<ActionResult> getList_LoaiAIBot()
@@ -59,12 +59,12 @@ namespace QuanLyAIBot.Controllers
                 LoaiAIBots = data.ToList(),
                 ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyAIBot"),
             };
-            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/loaiaibot/loaiaibot-getList.cshtml", data);
+            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/loaiaibot/loaiaibot-getList.cshtml", output);
         }
         [HttpPost]
         public async Task<ActionResult> displayModal_CRUD_AIBot(DisplayModel_CRUD_AIBot_Input_Dto input)
         {
-            var aiBot = await _quanLyAIBotAppService.GetAIBots(loai: "single", idAIBot: new List<Guid> { input.IdAIBot });
+            var aiBot = await _quanLyAIBotAppService.GetAIBots(loai: "single", idAIBots: new List<Guid> { input.IdAIBot });
             var loaiAIBot = await _quanLyAIBotAppService.GetLoaiAIBots(loai: "all");
             var aiTools = await _quanLyAIToolAppService.GetAITools();
             var output = new DisplayModel_CRUD_AIBot_Output_Dto
@@ -82,7 +82,7 @@ namespace QuanLyAIBot.Controllers
         [HttpPost]
         public async Task<ActionResult> displayModal_CRUD_LoaiAIBot(DisplayModel_CRUD_LoaiAIBot_Input_Dto input)
         {
-            var loaiAIBot = await _quanLyAIBotAppService.GetLoaiAIBots(loai: "single", idLoaiAIBot: new List<Guid> { input.IdLoaiAIBot });
+            var loaiAIBot = await _quanLyAIBotAppService.GetLoaiAIBots(loai: "single", idLoaiAIBots: new List<Guid> { input.IdLoaiAIBot });
             var output = new DisplayModel_CRUD_LoaiAIBot_Output_Dto
             {
                 Loai = input.Loai,
@@ -96,7 +96,6 @@ namespace QuanLyAIBot.Controllers
             try
             {
                 var aiBot_NEW = JsonConvert.DeserializeObject<tbAIBotExtend>(Request.Form["aiBot"]);
-                var idLoaiAIBots_NEW = JsonConvert.DeserializeObject<List<Guid>>(Request.Form["idLoaiAIBots"]);
                 if (aiBot_NEW == null)
                     return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
 
@@ -105,9 +104,7 @@ namespace QuanLyAIBot.Controllers
                 if (isExisted)
                     return Json(new { status = "error", mess = "Tên đã tồn tại" }, JsonRequestBehavior.AllowGet);
 
-                await _quanLyAIBotAppService.Create_AIBot(
-                    aiBot: aiBot_NEW,
-                    idLoaiAIBots: idLoaiAIBots_NEW);
+                await _quanLyAIBotAppService.Create_AIBot(aiBot: aiBot_NEW);
                 return Json(new { status = "success", mess = "Thêm mới thành công" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

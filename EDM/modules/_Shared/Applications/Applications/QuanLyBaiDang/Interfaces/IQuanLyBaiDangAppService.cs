@@ -30,6 +30,11 @@ namespace Applications.QuanLyBaiDang.Interfaces
             List<tbBaiDangExtend> baiDangs,
             HttpPostedFileBase[] files,
             Guid[] rowNumbers);
+        Task Update_BaiDang(
+            string loai,
+            List<tbBaiDangExtend> baiDangs,
+            HttpPostedFileBase[] files,
+            Guid[] rowNumbers);
         Task Delete_BaiDangs(
             List<Guid> idBaiDangs);
     }

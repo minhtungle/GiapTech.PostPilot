@@ -42,25 +42,27 @@ namespace Applications.QuanLyAIBot.Services
         public async Task<Index_OutPut_Dto> Index_OutPut()
         {
             var thaoTacs = GetThaoTacs(maChucNang: "QuanLyAIBot");
-            
+
             return new Index_OutPut_Dto
             {
                 ThaoTacs = thaoTacs,
             };
         }
+
+        #region AIBot
         public async Task<List<tbAIBotExtend>> GetAIBots(
-         string loai = "all",
-         List<Guid> idAIBot = null,
-         LocThongTin_AIBot locThongTin = null)
+           string loai = "all",
+           List<Guid> idAIBots = null,
+           LocThongTin_AIBot locThongTin = null)
         {
             var query = _aiBotRepo.Query()
                 .Where(x =>
                     x.TrangThai != 0 &&
                     x.MaDonViSuDung == CurrentDonViId);
 
-            if (loai == "single" && idAIBot != null && idAIBot.Any())
+            if (loai == "single" && idAIBots != null && idAIBots.Any())
             {
-                query = query.Where(x => idAIBot.Contains(x.IdAIBot));
+                query = query.Where(x => idAIBots.Contains(x.IdAIBot));
             }
 
             // LEFT JOIN với bảng trung gian AIBot_LoaiAIBot
@@ -96,29 +98,6 @@ namespace Applications.QuanLyAIBot.Services
 
             return result;
         }
-
-        public async Task<List<tbLoaiAIBot>> GetLoaiAIBots(
-            string loai = "all",
-            List<Guid> idLoaiAIBot = null,
-            LocThongTin_AITool locThongTin = null)
-        {
-            var query = _loaiAIBotRepo.Query()
-                .Where(x =>
-                x.TrangThai != 0 &&
-                x.MaDonViSuDung == CurrentDonViId);
-
-            if (loai == "single" && idLoaiAIBot != null)
-            {
-                query = query.Where(x => idLoaiAIBot.Contains(x.IdLoaiAIBot));
-            }
-            ;
-
-            var data = await query
-                .OrderByDescending(x => x.NgayTao)
-                .ToListAsync();
-
-            return data;
-        }
         public async Task<bool> IsExisted_AIBot(tbAIBot aiBot)
         {
             var aiBot_OLD = await _aiBotRepo.Query()
@@ -127,15 +106,7 @@ namespace Applications.QuanLyAIBot.Services
             && x.TrangThai != 0 && x.MaDonViSuDung == CurrentDonViSuDung.MaDonViSuDung);
             return aiBot_OLD != null;
         }
-        public async Task<bool> IsExisted_LoaiAIBot(tbLoaiAIBot loaiAIBot)
-        {
-            var loaiAiBot_OLD = await _loaiAIBotRepo.Query()
-                .FirstOrDefaultAsync(x => x.TenLoaiAIBot == loaiAIBot.TenLoaiAIBot
-            && x.IdLoaiAIBot != loaiAIBot.IdLoaiAIBot
-            && x.TrangThai != 0 && x.MaDonViSuDung == CurrentDonViSuDung.MaDonViSuDung);
-            return loaiAiBot_OLD != null;
-        }
-        public async Task Create_AIBot(tbAIBotExtend aiBot, List<Guid> idLoaiAIBots)
+        public async Task Create_AIBot(tbAIBotExtend aiBot)
         {
             await _unitOfWork.ExecuteInTransaction(async () =>
             {
@@ -156,13 +127,13 @@ namespace Applications.QuanLyAIBot.Services
 
                 await _unitOfWork.InsertAsync<tbAIBot, Guid>(entity);
 
-                foreach (var idLoaiAIBot in idLoaiAIBots)
+                foreach (var idLoaiAIBot in aiBot.LoaiAIBots)
                 {
                     var aiBotLoaiAIBot = new tbAIBotLoaiAIBot
                     {
                         IdAIBotLoaiAIBot = Guid.NewGuid(),
                         IdAIBot = entity.IdAIBot,
-                        IdLoaiAIBot = idLoaiAIBot,
+                        IdLoaiAIBot = idLoaiAIBot.IdLoaiAIBot,
 
                         TrangThai = 1,
                         MaDonViSuDung = CurrentDonViSuDung.MaDonViSuDung,
@@ -174,6 +145,103 @@ namespace Applications.QuanLyAIBot.Services
                 }
                 // Thêm các thao tác async khác
             });
+        }
+        public async Task Update_AIBot(tbAIBotExtend aiBot)
+        {
+            await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                var entity = await _aiBotRepo.GetByIdAsync(aiBot.AIBot.IdAIBot);
+
+                if (entity == null)
+                    throw new Exception("AI Bot không tồn tại.");
+
+                // Cập nhật thông tin chính
+                entity.TenAIBot = aiBot.AIBot.TenAIBot;
+                entity.Prompt = aiBot.AIBot.Prompt;
+                entity.Keywords = aiBot.AIBot.Keywords;
+                entity.GhiChu = aiBot.AIBot.GhiChu;
+                entity.NgaySua = DateTime.Now;
+                entity.IdNguoiSua = CurrentNguoiDung.IdNguoiDung;
+
+                await _unitOfWork.UpdateAsync<tbAIBot, Guid>(entity);
+
+                // Xóa liên kết loại cũ
+                var oldMappings = await _aiBotLoaiAIBotRepo.Query()
+                    .Where(x => x.IdAIBot == entity.IdAIBot)
+                    .ToListAsync();
+                foreach (var old in oldMappings)
+                {
+                    await _unitOfWork.DeleteAsync<tbAIBotLoaiAIBot, Guid>(old);
+                }
+
+                // Thêm liên kết loại mới
+                foreach (var loai in aiBot.LoaiAIBots)
+                {
+                    var newMapping = new tbAIBotLoaiAIBot
+                    {
+                        IdAIBotLoaiAIBot = Guid.NewGuid(),
+                        IdAIBot = entity.IdAIBot,
+                        IdLoaiAIBot = loai.IdLoaiAIBot,
+                        TrangThai = 1,
+                        MaDonViSuDung = CurrentDonViSuDung.MaDonViSuDung,
+                        IdNguoiTao = CurrentNguoiDung.IdNguoiDung,
+                        NgayTao = DateTime.Now
+                    };
+                    await _unitOfWork.InsertAsync<tbAIBotLoaiAIBot, Guid>(newMapping);
+                }
+            });
+        }
+        public async Task Delete_AIBot(List<Guid> idAIBots)
+        {
+            await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                var entities = await _aiBotRepo.Query()
+                .Where(x => idAIBots.Contains(x.IdAIBot))
+                .ToListAsync();
+
+                foreach (var entity in entities)
+                {
+                    entity.TrangThai = 0;
+                    entity.NgaySua = DateTime.Now;
+                    entity.IdNguoiSua = CurrentNguoiDung.IdNguoiDung;
+
+                    await _unitOfWork.UpdateAsync<tbAIBot, Guid>(entity);
+                }
+            });
+        }
+
+        #endregion
+
+        #region Loại AIBot
+        public async Task<List<tbLoaiAIBot>> GetLoaiAIBots(
+        string loai = "all",
+        List<Guid> idLoaiAIBots = null,
+        LocThongTin_AITool locThongTin = null)
+        {
+            var query = _loaiAIBotRepo.Query()
+                .Where(x =>
+                x.TrangThai != 0 &&
+                x.MaDonViSuDung == CurrentDonViId);
+
+            if (loai == "single" && idLoaiAIBots != null)
+            {
+                query = query.Where(x => idLoaiAIBots.Contains(x.IdLoaiAIBot));
+            }
+        ;
+
+            var data = await query
+                .OrderByDescending(x => x.NgayTao)
+                .ToListAsync();
+
+            return data;
+        }
+        public async Task<bool> IsExisted_LoaiAIBot(tbLoaiAIBot loaiAIBot)
+        {
+            var loaiAiBot_OLD = await _loaiAIBotRepo.Query()
+                .FirstOrDefaultAsync(x => x.TenLoaiAIBot == loaiAIBot.TenLoaiAIBot
+            && x.IdLoaiAIBot != loaiAIBot.IdLoaiAIBot
+            && x.TrangThai != 0 && x.MaDonViSuDung == CurrentDonViSuDung.MaDonViSuDung);
+            return loaiAiBot_OLD != null;
         }
         public async Task Create_LoaiAIBot(tbLoaiAIBot loaiAIBot)
         {
@@ -195,5 +263,26 @@ namespace Applications.QuanLyAIBot.Services
                 // Thêm các thao tác async khác
             });
         }
+
+        public async Task Delete_LoaiAIBot(List<Guid> idLoaiAIBots)
+        {
+            await _unitOfWork.ExecuteInTransaction(async () =>
+            {
+                var entities = await _loaiAIBotRepo.Query()
+                    .Where(x => idLoaiAIBots.Contains(x.IdLoaiAIBot))
+                    .ToListAsync();
+
+                foreach (var entity in entities)
+                {
+                    entity.TrangThai = 0;
+                    entity.NgaySua = DateTime.Now;
+                    entity.IdNguoiSua = CurrentNguoiDung.IdNguoiDung;
+
+                    await _unitOfWork.UpdateAsync<tbLoaiAIBot, Guid>(entity);
+                }
+            });
+        }
+
+        #endregion
     }
 }

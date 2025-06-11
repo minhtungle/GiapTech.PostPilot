@@ -23,22 +23,41 @@
 
             <th class="text-center" intro-container="dulieu-tacvu" data-orderable="false">
                 <div style="white-space: nowrap">
-                    @if (Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlyaibot-loaiaibot-themmoi"))
-                    {
-                        <a class="btn btn-sm btn-success"
-                           title="Thêm mới"
-                           onclick="quanLyAIBot.loaiAiBot.displayModal_CRUD('create')">
-                            <i class="bi bi-plus-circle-fill"></i>
-                        </a>
-                    }
-                    @if (Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlyaibot-loaiaibot-xoabo"))
-                    {
-                        <a class="btn btn-sm btn-danger"
-                           title="Xóa bỏ"
-                           onclick="quanLyAIBot.loaiAiBot.delete('multiple')">
-                            <i class="bi bi-trash3-fill"></i>
-                        </a>
-                    }
+                    <div class="btn-group btn-group-sm dropstart">
+                        <button type="button" title="Thêm mới" class="btn btn-light-secondary dropdown-toggle dropdown-toggle-split"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                data-reference="parent">
+                            <i class="bi bi-gear-fill"></i>
+                        </button>
+                        <div class="dropdown-menu me-2" style="border: 1px solid black;">
+                            @{
+                                bool themMoi = Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlyaibot-loaiaibot-themmoi");
+                                bool capNhat_Multiple = Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlyaibot-loaiaibot-capnhat");
+                                bool xoaBo_Multiple = Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlyaibot-loaiaibot-xoabo");
+                                if (themMoi)
+                                {
+                                    <a class="dropdown-item c-pointer"
+                                       onclick="quanLyAIBot.loaiAiBot.displayModal_CRUD('create')">
+                                        <i class="bi bi-plus-circle-fill"></i> Thêm mới
+                                    </a>
+                                }
+                                if (capNhat_Multiple)
+                                {
+                                    <a class="dropdown-item c-pointer"
+                                       onclick="quanLyAIBot.loaiAiBot.displayModal_CRUD('update')">
+                                        <i class="bi bi-pencil-square"></i> Cập nhật
+                                    </a>
+                                }
+                                if (xoaBo_Multiple)
+                                {
+                                    <a class="dropdown-item c-pointer"
+                                       onclick="quanLyAIBot.loaiAiBot.delete('multiple')">
+                                        <i class="bi bi-trash3-fill"></i> Xóa bỏ
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </div>
                 </div>
             </th>
         </tr>
@@ -51,7 +70,7 @@
             <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
             <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." /></th>
 
-              <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
+            <th><input type="text" class="form-control dt-search-col" placeholder="Tìm kiếm ..." disabled /></th>
         </tr>
     </tfoot>
     <tbody>
@@ -79,7 +98,16 @@
                             </button>
                             <div class="dropdown-menu me-2" style="border: 1px solid black;">
                                 @{
-                                    if (Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlyaibot-xoabo"))
+                                    bool capNhat = Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlyaibot-loaiaibot-capnhat");
+                                    bool xoaBo = Model.ThaoTacs.Exists(x => x.MaThaoTac == "quanlyaibot-loaiaibot-xoabo");
+                                    if (capNhat)
+                                    {
+                                        <a class="dropdown-item c-pointer"
+                                           onclick="quanLyAIBot.loaiAiBot.displayModal_CRUD('update', '@loaiAiBot.IdLoaiAIBot')">
+                                            <i class="bi bi-pencil-square"></i> Cập nhật
+                                        </a>
+                                    }
+                                    if (xoaBo)
                                     {
                                         <a class="dropdown-item c-pointer"
                                            onclick="quanLyAIBot.loaiAiBot.delete('single', '@loaiAiBot.IdLoaiAIBot')">

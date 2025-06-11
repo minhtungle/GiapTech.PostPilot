@@ -156,7 +156,7 @@ namespace QuanLyBaiDang.Controllers
             string noiDung = "";
             try
             {
-                var aiBot = await _quanLyAIBotAppService.GetAIBots(loai: "single", idAIBot: new List<Guid> { input.IdAIBot });
+                var aiBot = await _quanLyAIBotAppService.GetAIBots(loai: "single", idAIBots: new List<Guid> { input.IdAIBot });
                 if (aiBot == null || !aiBot.Any() || aiBot.FirstOrDefault().AIBot.IdAIBot == Guid.Empty)
                 {
                     return Json(new
@@ -192,7 +192,7 @@ namespace QuanLyBaiDang.Controllers
         {
             try
             {
-                var aiBot = await _quanLyAIBotAppService.GetAIBots(loai: "single", idAIBot: new List<Guid> { idAIBot });
+                var aiBot = await _quanLyAIBotAppService.GetAIBots(loai: "single", idAIBots: new List<Guid> { idAIBot });
                 if (aiBot != null && aiBot.FirstOrDefault().AIBot.IdAIBot != Guid.Empty)
                     return Json(new
                     {

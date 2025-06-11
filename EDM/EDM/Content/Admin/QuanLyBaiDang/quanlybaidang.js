@@ -327,21 +327,22 @@ class QuanLyBaiDang {
                 quanLyBaiDang.baiDang.handleAnhMoTa.arrAnh = [];
 
                 var idBaiDangs = [];
-                if (loai == "create")
-                    idBaiDangs.push(idBaiDang) // Chỉ có 1 bản ghi được chọn)
+                if (loai == "create") idBaiDangs.push(idBaiDang) // Chỉ có 1 bản ghi được chọn)
                 else {
                     if (idBaiDang != '00000000-0000-0000-0000-000000000000')
                         idBaiDangs.push(idBaiDang); // Chỉ có 1 bản ghi được chọn
-                    else
+                    else {
+
                         quanLyBaiDang.baiDang.dataTable.rows().iterator('row', function (context, index) {
                             var $row = $(this.row(index).node());
                             if ($row.has("input.checkRow-baidang-getList:checked").length > 0) {
                                 idBaiDangs.push($row.attr('id'));
                             };
                         });
-                    if (idBaiDangs.length != 1) {
-                        sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
-                        return;
+                        if (idBaiDangs.length != 1) {
+                            sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
+                            return;
+                        }
                     }
                     //else idBaiDang = idBaiDangs[0];
                 };
@@ -640,6 +641,18 @@ class QuanLyBaiDang {
                 $.each($(".baidang-read", $("#baidang-crud")), function () {
                     var $div = $(this),
                         rowNumber = $div.attr("row");
+
+                    var tepDinhKems = [];
+                    $.each($(`.image-item`, $div), function () {
+                        let idTep = $(this).attr("data-id");
+                        // Chỉ lấy những tệp đã tồn tại trong CSDL
+                        if (idTep != "00000000-0000-0000-0000-000000000000") {
+                            tepDinhKems.push({
+                                IdTep: idTep,
+                            });
+                        };
+                    });
+
                     var idNenTangs = $(`#select-nentang-${rowNumber}`, $div).val();
                     $.each(idNenTangs, function (i, idNenTang) {
                         var baiDang = {
@@ -654,7 +667,7 @@ class QuanLyBaiDang {
                             },
                         };
                         baiDangs.push(baiDang);
-                    })
+                    });
                 });
 
                 sys.confirmDialog({

@@ -424,6 +424,105 @@ namespace Applications.QuanLyBaiDang.Serivices
                 }
             });
         }
+        public async Task Update_BaiDang(
+            string loai,
+            List<tbBaiDangExtend> baiDangs,
+            HttpPostedFileBase[] files,
+            Guid[] rowNumbers)
+                {
+                    if (baiDangs == null || !baiDangs.Any())
+                        throw new ArgumentException("Danh sách bài đăng không được để trống.");
+
+                    var tepDinhKemMappings = new List<(tbBaiDangExtend baiDang, List<tbTepDinhKem> teps)>();
+                    await _unitOfWork.ExecuteInTransaction(async () =>
+                    {
+                        foreach (var baiDang_NEW in baiDangs)
+                        {
+                            var tepList = new List<tbTepDinhKem>();
+
+                            if (files != null && baiDang_NEW.BaiDang.TuTaoAnhAI == false)
+                            {
+                                for (int i = 0; i < files.Length; i++)
+                                {
+                                    if (baiDang_NEW.RowNumber == rowNumbers[i])
+                                    {
+                                        var file = files[i];
+                                        if (file == null || file.ContentLength <= 0) continue;
+
+                                        var result = await UploadToFreeImageHost(file);
+                                        if (result == null || result.StatusCode != 200)
+                                            throw new Exception("Upload ảnh thất bại hoặc không có phản hồi từ server.");
+
+                                        var tep = new tbTepDinhKem
+                                        {
+                                            IdTep = Guid.NewGuid(),
+                                            FileName = Path.GetFileNameWithoutExtension(file.FileName),
+                                            DuongDanTepOnline = result.Image.Url,
+                                            TrangThai = 1,
+                                            IdNguoiTao = CurrentUserId,
+                                            NgayTao = DateTime.Now,
+                                            MaDonViSuDung = CurrentDonViId
+                                        };
+
+                                        tepList.Add(tep);
+                                    }
+                                }
+                            }
+
+                            var baiDang = await _baiDangRepo.GetByIdAsync(baiDang_NEW.BaiDang.IdBaiDang);
+                            if (baiDang == null)
+                                throw new Exception($"Bài đăng với Id {baiDang_NEW.BaiDang.IdBaiDang} không tồn tại.");
+
+                            baiDang.IdChienDich = baiDang_NEW.BaiDang.IdChienDich;
+                            baiDang.IdNenTang = baiDang_NEW.BaiDang.IdNenTang;
+                            baiDang.NoiDung = baiDang_NEW.BaiDang.NoiDung;
+                            baiDang.ThoiGian = baiDang_NEW.BaiDang.ThoiGian;
+                            baiDang.TuTaoAnhAI = baiDang_NEW.BaiDang.TuTaoAnhAI;
+                            baiDang.TrangThaiDangBai = loai == "draftToSave"
+                                ? (int?)TrangThaiDangBai_BaiDang.WaitToPost
+                                : baiDang.TrangThaiDangBai;
+
+                            baiDang.TrangThai = 1;
+                            baiDang.IdNguoiSua = CurrentUserId;
+                            baiDang.NgaySua = DateTime.Now;
+
+                            _baiDangRepo.Update(baiDang);
+
+                            tepDinhKemMappings.Add((baiDang_NEW, tepList));
+                        }
+
+                        foreach (var (baiDang, tepList) in tepDinhKemMappings)
+                        {
+                            // Xóa têp đính kèm cũ không còn trong danh sách mới
+                            var baiDangTepDinhKems_Delete = await _baiDangTepDinhKemRepo.Query()
+                                .Where(x => x.IdBaiDang == baiDang.BaiDang.IdBaiDang
+                                    && !baiDang.TepDinhKems.Any(t => t.IdTep == x.IdTepDinhKem))
+                                .ToListAsync();
+
+                            foreach (var baiDangTep in baiDangTepDinhKems_Delete)
+                            {
+                                var tepToDelete = await _tepDinhKemRepo.GetByIdAsync((Guid)baiDangTep.IdTepDinhKem);
+                                if (tepToDelete != null) _tepDinhKemRepo.Delete(tepToDelete);
+                                _baiDangTepDinhKemRepo.Delete(baiDangTep);
+                            }
+
+                            // Cập nhật hoặc thêm tệp đính kèm mới
+                            foreach (var tep in tepList)
+                            {
+                                await _unitOfWork.InsertAsync<tbTepDinhKem, Guid>(tep);
+
+                                var baiDangTep = new tbBaiDangTepDinhKem
+                                {
+                                    IdBaiDangTepDinhKem = Guid.NewGuid(),
+                                    IdBaiDang = baiDang.BaiDang.IdBaiDang,
+                                    IdTepDinhKem = tep.IdTep
+                                };
+
+                                await _unitOfWork.InsertAsync<tbBaiDangTepDinhKem, Guid>(baiDangTep);
+                            }
+                        }
+                    });
+                }
         public async Task Delete_BaiDangs(List<Guid> idBaiDangs)
         {
             if (idBaiDangs == null || !idBaiDangs.Any())

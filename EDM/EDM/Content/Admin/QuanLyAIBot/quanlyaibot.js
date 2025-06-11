@@ -74,23 +74,27 @@ class QuanLyAIBot {
             },
 
             displayModal_CRUD: function (loai = "", idAIBot = '00000000-0000-0000-0000-000000000000') {
-                if (loai == "update") {
-                    var idAIBots = [];
-                    quanLyAIBot.aiBot.dataTable.rows().iterator('row', function (context, index) {
-                        var $row = $(this.row(index).node());
-                        if ($row.has("input.checkRow-aibot-getList:checked").length > 0) {
-                            idAIBots.push($row.attr('id'));
-                        };
-                    });
-                    if (idAIBots.length != 1) {
-                        sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
-                        return;
+                var idAIBots = [];
+                if (loai == "create") idAIBots.push(idAIBot);
+                else {
+                    if (idAIBot != '00000000-0000-0000-0000-000000000000')
+                        idAIBots.push(idAIBot);
+                    else {
+                        quanLyAIBot.aiBot.dataTable.rows().iterator('row', function (context, index) {
+                            var $row = $(this.row(index).node());
+                            if ($row.has("input.checkRow-aibot-getList:checked").length > 0) {
+                                idAIBots.push($row.attr('id'));
+                            };
+                        });
+                        if (idAIBots.length != 1) {
+                            sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
+                            return;
+                        }
                     }
-                    else idAIBot = idAIBots[0];
-                };
+                }
                 var input = {
                     Loai: loai,
-                    IdAIBot: idAIBot,
+                    IdAIBot: idAIBots[0],
                 };
                 $.ajax({
                     ...ajaxDefaultProps({
@@ -116,6 +120,9 @@ class QuanLyAIBot {
                 var modalValidtion = htmlEl.activeValidationStates("#aibot-crud");
                 if (modalValidtion) {
                     let $modal = $("#aibot-crud");
+                    let LoaiAIBots = $("#select-loaiaibot", $modal).val().map(x => ({
+                        IdLoaiAIBot: x,
+                    }));
                     let aiBot = {
                         AIBot: {
                             IdAIBot: $("#input-idaibot", $modal).val(),
@@ -124,14 +131,14 @@ class QuanLyAIBot {
                             Keywords: $("#input-keywords", $modal).val().trim(),
                             GhiChu: $("#input-ghichu", $modal).val().trim(),
                         },
+                        LoaiAIBots: LoaiAIBots,
                     };
-                    let idLoaiAIBots = $("#select-loaiaibot", $modal).val();
+                 
                     sys.confirmDialog({
                         mess: `<p>Bạn có thực sự muốn thêm bản ghi này hay không ?</p>`,
                         callback: function () {
                             var formData = new FormData();
                             formData.append("aiBot", JSON.stringify(aiBot));
-                            formData.append("idLoaiAIBots", JSON.stringify(idLoaiAIBots));
 
                             $.ajax({
                                 ...ajaxDefaultProps({
