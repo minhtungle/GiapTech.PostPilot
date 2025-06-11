@@ -116,7 +116,7 @@ namespace QuanLyBaiDang.Controllers
                     return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
                 }
 
-                await _quanLyBaiDangAppService.Create_BaiDang(loai: loai,baiDangs: baiDang_NEWs, files: files, rowNumbers: rowNumbers);
+                await _quanLyBaiDangAppService.Create_BaiDang(loai: loai, baiDangs: baiDang_NEWs, files: files, rowNumbers: rowNumbers);
 
                 return Json(new { status = "success", mess = "Thêm mới bản ghi thành công" }, JsonRequestBehavior.AllowGet);
             }
@@ -128,9 +128,6 @@ namespace QuanLyBaiDang.Controllers
         [HttpPost]
         public async Task<JsonResult> delete_BaiDangs()
         {
-            string status = "success";
-            string mess = "Xóa bản ghi thành công";
-
             try
             {
                 var idBaiDangs = JsonConvert.DeserializeObject<List<Guid>>(Request.Form["idBaiDangs"]);
@@ -140,7 +137,7 @@ namespace QuanLyBaiDang.Controllers
                 // Gọi AppService xử lý logic chính
                 await _quanLyBaiDangAppService.Delete_BaiDangs(idBaiDangs: idBaiDangs);
 
-                return Json(new { status, mess }, JsonRequestBehavior.AllowGet);
+                return Json(new { status = "success", mess = "Xóa bản ghi thành công" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -266,9 +263,6 @@ namespace QuanLyBaiDang.Controllers
         [HttpPost]
         public async Task<JsonResult> delete_ChienDichs()
         {
-            string status = "success";
-            string mess = "Xóa bản ghi thành công";
-
             try
             {
                 var idChienDichs = JsonConvert.DeserializeObject<List<Guid>>(Request.Form["idChienDichs"]);
@@ -278,7 +272,7 @@ namespace QuanLyBaiDang.Controllers
                 // Gọi AppService xử lý logic chính
                 await _quanLyChienDichAppService.Delete_ChienDichs(idChienDichs: idChienDichs);
 
-                return Json(new { status, mess }, JsonRequestBehavior.AllowGet);
+                return Json(new { status = "success", mess = "Xóa bản ghi thành công" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

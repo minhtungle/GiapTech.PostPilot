@@ -360,18 +360,31 @@ class QuanLyBaiDang {
                     success: function (res) {
                         $("#baidang-crud").html(res.html);
                         quanLyBaiDang.createModalCRUD_BaiDang();
-                        quanLyBaiDang.handleModal_CRUD.addBanGhi(res.output.BaiDangs);
-                        /**
-                          * Gán các thuộc tính
-                          */
-                        sys.displayModal({
-                            name: '#baidang-crud'
-                        });
 
-                        setTimeout(function () {
-                            var containerHeight = $("#baidang-crud .modal-body").height() - 10;
-                            $("#baidang-read-container", $("#baidang-crud")).height(containerHeight);
-                        }, 500)
+                        if (!res.output.BaiDangs || res.output.BaiDangs.length == 0)
+                            sys.alert({
+                                mess: `Không có bản ghi hợp lệ với lệnh ${(loai == "create"
+                                    ? "[Thêm mới]"
+                                    : loai == "update"
+                                        ? "[Cập nhật]"
+                                        : "Chuyển đăng bài")
+                                    }`,
+                                status: "warning", timeout: 1500
+                            })
+                        else {
+                            quanLyBaiDang.handleModal_CRUD.addBanGhi(res.output.BaiDangs);
+                            /**
+                              * Gán các thuộc tính
+                              */
+                            sys.displayModal({
+                                name: '#baidang-crud'
+                            });
+
+                            setTimeout(function () {
+                                var containerHeight = $("#baidang-crud .modal-body").height() - 10;
+                                $("#baidang-read-container", $("#baidang-crud")).height(containerHeight);
+                            }, 500)
+                        }
                     }
                 })
             },

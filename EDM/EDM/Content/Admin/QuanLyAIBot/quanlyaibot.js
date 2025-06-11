@@ -91,7 +91,7 @@ class QuanLyAIBot {
                             return;
                         }
                     }
-                }
+                };
                 var input = {
                     Loai: loai,
                     IdAIBot: idAIBots[0],
@@ -251,23 +251,27 @@ class QuanLyAIBot {
             },
 
             displayModal_CRUD: function (loai = "", idLoaiAIBot = '00000000-0000-0000-0000-000000000000') {
-                if (loai == "update") {
-                    var idLoaiAIBots = [];
-                    quanLyAIBot.loaiAiBot.dataTable.rows().iterator('row', function (context, index) {
-                        var $row = $(this.row(index).node());
-                        if ($row.has("input.checkRow-aibot-getList:checked").length > 0) {
-                            idLoaiAIBots.push($row.attr('id'));
-                        };
-                    });
-                    if (idLoaiAIBots.length != 1) {
-                        sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
-                        return;
+                var idLoaiAIBots = [];
+                if (loai == "create") idLoaiAIBots.push(idLoaiAIBot);
+                else {
+                    if (idLoaiAIBot != '00000000-0000-0000-0000-000000000000')
+                        idLoaiAIBots.push(idLoaiAIBot);
+                    else {
+                        quanLyAIBot.loaiAiBot.dataTable.rows().iterator('row', function (context, index) {
+                            var $row = $(this.row(index).node());
+                            if ($row.has("input.checkRow-loaiaibot-getList:checked").length > 0) {
+                                idLoaiAIBots.push($row.attr('id'));
+                            };
+                        });
+                        if (idLoaiAIBots.length != 1) {
+                            sys.alert({ mess: "Yêu cầu chọn 1 bản ghi", status: "warning", timeout: 1500 });
+                            return;
+                        }
                     }
-                    else idLoaiAIBot = idLoaiAIBots[0];
                 };
                 var input = {
                     Loai: loai,
-                    IdLoaiAIBot: idLoaiAIBot,
+                    IdLoaiAIBot: idLoaiAIBots[0],
                 };
                 $.ajax({
                     ...ajaxDefaultProps({
@@ -347,7 +351,7 @@ class QuanLyAIBot {
                 } else {
                     quanLyAIBot.aiBot.dataTable.rows().iterator('row', function (context, index) {
                         var $row = $(this.row(index).node());
-                        if ($row.has("input.checkRow-aibot-getList:checked").length > 0) {
+                        if ($row.has("input.checkRow-loaiaibot-getList:checked").length > 0) {
                             idLoaiAIBots.push($row.attr('id'));
                         };
                     });

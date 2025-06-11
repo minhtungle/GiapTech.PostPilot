@@ -109,9 +109,7 @@ namespace Applications.QuanLyBaiDang.Serivices
             {
                 var baiDang = await GetDetail_BaiDangs(idBaiDangs: input.IdBaiDangs);
                 // Chỉ lấy những bài đăng có trạng thái (chờ đăng)
-                output.BaiDangs = baiDang
-                    .Where(x => x.BaiDang.TrangThaiDangBai == (int?)TrangThaiDangBai_BaiDang.WaitToPost)
-                    .ToList();
+                output.BaiDangs = baiDang.ToList();
             }
             else if (input.Loai == "draftToSave")
             {

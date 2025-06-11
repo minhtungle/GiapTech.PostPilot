@@ -38,103 +38,6 @@ namespace QuanLyAIBot.Controllers
 
             return View($"{VIEW_PATH}/aibot.cshtml", output);
         }
-
-        [HttpGet]
-        public async Task<ActionResult> getList_AIBot()
-        {
-            var data = await _quanLyAIBotAppService.GetAIBots(loai: "all");
-            var output = new GetList_AIBot_Output_Dto
-            {
-                AIBots = data.ToList(),
-                ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyAIBot"),
-            };
-            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/aibot/aibot-getList.cshtml", output);
-        }
-        [HttpGet]
-        public async Task<ActionResult> getList_LoaiAIBot()
-        {
-            var data = await _quanLyAIBotAppService.GetLoaiAIBots(loai: "all");
-            var output = new GetList_LoaiAIBot_Output_Dto
-            {
-                LoaiAIBots = data.ToList(),
-                ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyAIBot"),
-            };
-            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/loaiaibot/loaiaibot-getList.cshtml", output);
-        }
-        [HttpPost]
-        public async Task<ActionResult> displayModal_CRUD_AIBot(DisplayModel_CRUD_AIBot_Input_Dto input)
-        {
-            var aiBot = await _quanLyAIBotAppService.GetAIBots(loai: "single", idAIBots: new List<Guid> { input.IdAIBot });
-            var loaiAIBot = await _quanLyAIBotAppService.GetLoaiAIBots(loai: "all");
-            var aiTools = await _quanLyAIToolAppService.GetAITools();
-            var output = new DisplayModel_CRUD_AIBot_Output_Dto
-            {
-                Loai = input.Loai,
-                LoaiAIBot = loaiAIBot.ToList(),
-                AIBot = aiBot.FirstOrDefault() ?? new tbAIBotExtend()
-                {
-                    AIBot = new tbAIBot()
-                },
-                AITools = aiTools,
-            };
-            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/aibot/aibot-crud.cshtml", output);
-        }
-        [HttpPost]
-        public async Task<ActionResult> displayModal_CRUD_LoaiAIBot(DisplayModel_CRUD_LoaiAIBot_Input_Dto input)
-        {
-            var loaiAIBot = await _quanLyAIBotAppService.GetLoaiAIBots(loai: "single", idLoaiAIBots: new List<Guid> { input.IdLoaiAIBot });
-            var output = new DisplayModel_CRUD_LoaiAIBot_Output_Dto
-            {
-                Loai = input.Loai,
-                LoaiAIBot = loaiAIBot.FirstOrDefault() ?? new tbLoaiAIBot()
-            };
-            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/loaiaibot/loaiaibot-crud.cshtml", output);
-        }
-        [HttpPost]
-        public async Task<ActionResult> create_AIBot()
-        {
-            try
-            {
-                var aiBot_NEW = JsonConvert.DeserializeObject<tbAIBotExtend>(Request.Form["aiBot"]);
-                if (aiBot_NEW == null)
-                    return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
-
-                var isExisted = await _quanLyAIBotAppService.IsExisted_AIBot(
-                    aiBot: aiBot_NEW.AIBot);
-                if (isExisted)
-                    return Json(new { status = "error", mess = "Tên đã tồn tại" }, JsonRequestBehavior.AllowGet);
-
-                await _quanLyAIBotAppService.Create_AIBot(aiBot: aiBot_NEW);
-                return Json(new { status = "success", mess = "Thêm mới thành công" }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new { status = "error", mess = "Đã xảy ra lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
-            }
-            ;
-        }
-        [HttpPost]
-        public async Task<ActionResult> create_LoaiAIBot()
-        {
-            try
-            {
-                var loaiAiBot_NEW = JsonConvert.DeserializeObject<tbLoaiAIBot>(Request.Form["loaiAiBot"]);
-                if (loaiAiBot_NEW == null)
-                    return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
-
-                var isExisted = await _quanLyAIBotAppService.IsExisted_LoaiAIBot(loaiAIBot: loaiAiBot_NEW);
-                if (isExisted)
-                    return Json(new { status = "error", mess = "Tên đã tồn tại" }, JsonRequestBehavior.AllowGet);
-
-                await _quanLyAIBotAppService.Create_LoaiAIBot(loaiAIBot: loaiAiBot_NEW);
-                return Json(new { status = "success", mess = "Thêm mới thành công" }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new { status = "error", mess = "Đã xảy ra lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
-            }
-            ;
-        }
         [HttpPost]
         public async Task<JsonResult> taoNoiDungAI(TaoNoiDungAI_Input_Dto input)
         {
@@ -166,5 +69,190 @@ namespace QuanLyAIBot.Controllers
             });
         }
 
+        #region AIBot
+        [HttpGet]
+        public async Task<ActionResult> getList_AIBot()
+        {
+            var data = await _quanLyAIBotAppService.GetAIBots(loai: "all");
+            var output = new GetList_AIBot_Output_Dto
+            {
+                AIBots = data.ToList(),
+                ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyAIBot"),
+            };
+            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/aibot/aibot-getList.cshtml", output);
+        }
+        [HttpPost]
+        public async Task<ActionResult> displayModal_CRUD_AIBot(DisplayModel_CRUD_AIBot_Input_Dto input)
+        {
+            var aiBot = await _quanLyAIBotAppService.GetAIBots(loai: "single", idAIBots: new List<Guid> { input.IdAIBot });
+            var loaiAIBot = await _quanLyAIBotAppService.GetLoaiAIBots(loai: "all");
+            var aiTools = await _quanLyAIToolAppService.GetAITools();
+            var output = new DisplayModel_CRUD_AIBot_Output_Dto
+            {
+                Loai = input.Loai,
+                LoaiAIBot = loaiAIBot.ToList(),
+                AIBot = aiBot.FirstOrDefault() ?? new tbAIBotExtend()
+                {
+                    AIBot = new tbAIBot()
+                },
+                AITools = aiTools,
+            };
+            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/aibot/aibot-crud.cshtml", output);
+        }
+        [HttpPost]
+        public async Task<ActionResult> create_AIBot()
+        {
+            try
+            {
+                var aiBot_NEW = JsonConvert.DeserializeObject<tbAIBotExtend>(Request.Form["aiBot"]);
+                if (aiBot_NEW == null)
+                    return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
+
+                var isExisted = await _quanLyAIBotAppService.IsExisted_AIBot(
+                    aiBot: aiBot_NEW.AIBot);
+                if (isExisted)
+                    return Json(new { status = "error", mess = "Tên đã tồn tại" }, JsonRequestBehavior.AllowGet);
+
+                await _quanLyAIBotAppService.Create_AIBot(aiBot: aiBot_NEW);
+                return Json(new { status = "success", mess = "Thêm mới thành công" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error", mess = "Đã xảy ra lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+       ;
+        }
+        [HttpPost]
+        public async Task<ActionResult> update_AIBot()
+        {
+            try
+            {
+                var aiBot_NEW = JsonConvert.DeserializeObject<tbAIBotExtend>(Request.Form["aiBot"]);
+                if (aiBot_NEW == null)
+                    return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
+
+                var isExisted = await _quanLyAIBotAppService.IsExisted_AIBot(
+                    aiBot: aiBot_NEW.AIBot);
+                if (isExisted)
+                    return Json(new { status = "error", mess = "Tên đã tồn tại" }, JsonRequestBehavior.AllowGet);
+
+                await _quanLyAIBotAppService.Update_AIBot(aiBot: aiBot_NEW);
+                return Json(new { status = "success", mess = "Cập nhật thành công" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error", mess = "Đã xảy ra lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+       ;
+        }
+        [HttpPost]
+        public async Task<JsonResult> delete_AIBot()
+        {
+            try
+            {
+                var idAIBots = JsonConvert.DeserializeObject<List<Guid>>(Request.Form["idAIBots"]);
+                if (idAIBots == null || idAIBots.Count == 0)
+                    return Json(new { status = "error", mess = "Chưa chọn bản ghi nào." }, JsonRequestBehavior.AllowGet);
+
+                // Gọi AppService xử lý logic chính
+                await _quanLyAIBotAppService.Delete_AIBot(idAIBots: idAIBots);
+
+                return Json(new { status = "success", mess = "Xóa bản ghi thành công" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error", mess = "Lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
+
+        #region Loại AIBot
+        [HttpGet]
+        public async Task<ActionResult> getList_LoaiAIBot()
+        {
+            var data = await _quanLyAIBotAppService.GetLoaiAIBots(loai: "all");
+            var output = new GetList_LoaiAIBot_Output_Dto
+            {
+                LoaiAIBots = data.ToList(),
+                ThaoTacs = _quanLyAIBotAppService.GetThaoTacs(maChucNang: "QuanLyAIBot"),
+            };
+            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/loaiaibot/loaiaibot-getList.cshtml", output);
+        }
+        [HttpPost]
+        public async Task<ActionResult> displayModal_CRUD_LoaiAIBot(DisplayModel_CRUD_LoaiAIBot_Input_Dto input)
+        {
+            var loaiAIBot = await _quanLyAIBotAppService.GetLoaiAIBots(loai: "single", idLoaiAIBots: new List<Guid> { input.IdLoaiAIBot });
+            var output = new DisplayModel_CRUD_LoaiAIBot_Output_Dto
+            {
+                Loai = input.Loai,
+                LoaiAIBot = loaiAIBot.FirstOrDefault() ?? new tbLoaiAIBot()
+            };
+            return PartialView($"{VIEW_PATH}/quanlyaibot-tab/loaiaibot/loaiaibot-crud.cshtml", output);
+        }
+        [HttpPost]
+        public async Task<ActionResult> create_LoaiAIBot()
+        {
+            try
+            {
+                var loaiAiBot_NEW = JsonConvert.DeserializeObject<tbLoaiAIBot>(Request.Form["loaiAiBot"]);
+                if (loaiAiBot_NEW == null)
+                    return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
+
+                var isExisted = await _quanLyAIBotAppService.IsExisted_LoaiAIBot(loaiAIBot: loaiAiBot_NEW);
+                if (isExisted)
+                    return Json(new { status = "error", mess = "Tên đã tồn tại" }, JsonRequestBehavior.AllowGet);
+
+                await _quanLyAIBotAppService.Create_LoaiAIBot(loaiAIBot: loaiAiBot_NEW);
+                return Json(new { status = "success", mess = "Thêm mới thành công" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error", mess = "Đã xảy ra lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+            ;
+        }
+        [HttpPost]
+        public async Task<ActionResult> update_LoaiAIBot()
+        {
+            try
+            {
+                var loaiAIBot_NEW = JsonConvert.DeserializeObject<tbLoaiAIBot>(Request.Form["loaiAIBot"]);
+                if (loaiAIBot_NEW == null)
+                    return Json(new { status = "error", mess = "Chưa có bản ghi nào" }, JsonRequestBehavior.AllowGet);
+
+                var isExisted = await _quanLyAIBotAppService.IsExisted_LoaiAIBot(
+                    loaiAIBot: loaiAIBot_NEW);
+                if (isExisted)
+                    return Json(new { status = "error", mess = "Tên đã tồn tại" }, JsonRequestBehavior.AllowGet);
+
+                await _quanLyAIBotAppService.Update_LoaiAIBot(loaiAIBot: loaiAIBot_NEW);
+                return Json(new { status = "success", mess = "Cập nhật thành công" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error", mess = "Đã xảy ra lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+       ;
+        }
+        [HttpPost]
+        public async Task<JsonResult> delete_LoaiAIBot()
+        {
+            try
+            {
+                var idLoaiAIBots = JsonConvert.DeserializeObject<List<Guid>>(Request.Form["idLoaiAIBots"]);
+                if (idLoaiAIBots == null || idLoaiAIBots.Count == 0)
+                    return Json(new { status = "error", mess = "Chưa chọn bản ghi nào." }, JsonRequestBehavior.AllowGet);
+
+                // Gọi AppService xử lý logic chính
+                await _quanLyAIBotAppService.Delete_LoaiAIBot(idLoaiAIBots: idLoaiAIBots);
+
+                return Json(new { status = "success", mess = "Xóa bản ghi thành công" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = "error", mess = "Lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
     }
 }
